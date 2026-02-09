@@ -15,7 +15,7 @@ public class Ventana extends JFrame{
 		//Establece si la ventana puede redimensionarse
 		setResizable(false);
 		//Cambia el título de la ventana
-		setTitle("Mi Aplicación");
+		setTitle("Mi Aplicación 2.0");
 		//Coloca la ventana al centro de la pantalla
 		setLocationRelativeTo(null);
 		
