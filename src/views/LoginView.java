@@ -28,18 +28,28 @@ public class LoginView extends JPanel{
 		instrucciones.setBounds(40,60,500,100);
 		add(instrucciones);
 		
+		JLabel usuarioLabel = new JLabel("Ingrese el usuario: ");
+		usuarioLabel.setFont(new Font("Arial", Font.BOLD,20));
+		usuarioLabel.setBounds(80,130,500,100);
+		add(usuarioLabel);
+		
 		JTextField usuario = new JTextField();
 		usuario.setFont(new Font("Arial", Font.BOLD,25));
-		usuario.setBounds(80,150,220,40);
+		usuario.setBounds(80,200,220,40);
 		add(usuario);
+		
+		JLabel contrasenaLabel = new JLabel("Ingrese la contraseña: ");
+		contrasenaLabel.setFont(new Font("Arial", Font.BOLD,20));
+		contrasenaLabel.setBounds(80,230,500,100);
+		add(contrasenaLabel);
 		
 		JPasswordField contrasena = new JPasswordField();
 		contrasena.setFont(new Font("Arial", Font.BOLD,25));
-		contrasena.setBounds(80,220,220,40);
+		contrasena.setBounds(80,300,220,40);
 		add(contrasena);
 		
 		JButton botonIniciarSesion = new JButton("Iniciar sesión", new ImageIcon("src/img/login-icon.png"));
-		botonIniciarSesion.setBounds(80, 300, 220, 40);
+		botonIniciarSesion.setBounds(80, 370, 220, 40);
 		botonIniciarSesion.setBackground(new Color(201, 162, 77));
 		botonIniciarSesion.setForeground(Color.BLACK);
 		botonIniciarSesion.setToolTipText("Haz click aquí");
@@ -56,7 +66,7 @@ public class LoginView extends JPanel{
 		add(botonIniciarSesion);	
 		
 		JButton botonCrearCuenta = new JButton("Crear cuenta", new ImageIcon("src/img/login-icon.png"));
-		botonCrearCuenta.setBounds(80, 370, 220, 40);
+		botonCrearCuenta.setBounds(80, 430, 220, 40);
 		botonCrearCuenta.setBackground(new Color(201, 162, 77));
 		botonCrearCuenta.setForeground(Color.BLACK);
 		botonCrearCuenta.setToolTipText("Haz click aquí");
