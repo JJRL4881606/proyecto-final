@@ -38,21 +38,30 @@ public class LoginView extends JPanel{
 		contrasena.setBounds(80,220,220,40);
 		add(contrasena);
 		
-		JButton boton = new JButton("Iniciar sesión", new ImageIcon("src/img/login-icon.png"));
-		boton.setBounds(80, 300, 220, 30);
-		boton.setBackground(new Color(201, 162, 77));
-		boton.setForeground(Color.BLACK);
-		boton.setToolTipText("Haz click aquí");
-		boton.setFont(new Font("Arial", Font.BOLD, 20));
+		JButton botonIniciarSesion = new JButton("Iniciar sesión", new ImageIcon("src/img/login-icon.png"));
+		botonIniciarSesion.setBounds(80, 300, 220, 40);
+		botonIniciarSesion.setBackground(new Color(201, 162, 77));
+		botonIniciarSesion.setForeground(Color.BLACK);
+		botonIniciarSesion.setToolTipText("Haz click aquí");
+		botonIniciarSesion.setFont(new Font("Arial", Font.BOLD, 20));
 		
 		try{
 			Image icono = ImageIO.read(getClass().getResource("/img/login-icon.png"));
 			icono = icono.getScaledInstance(30,30, Image.SCALE_SMOOTH);
-			boton.setIcon(new ImageIcon(icono));
+			botonIniciarSesion.setIcon(new ImageIcon(icono));
 		}catch(Exception ex) {
 			System.out.println("No está la imagen del ícono");
 		}
 		
-		add(boton);	
+		add(botonIniciarSesion);	
+		
+		JButton botonCrearCuenta = new JButton("Crear cuenta", new ImageIcon("src/img/login-icon.png"));
+		botonCrearCuenta.setBounds(80, 370, 220, 40);
+		botonCrearCuenta.setBackground(new Color(201, 162, 77));
+		botonCrearCuenta.setForeground(Color.BLACK);
+		botonCrearCuenta.setToolTipText("Haz click aquí");
+		botonCrearCuenta.setFont(new Font("Arial", Font.BOLD, 20));
+		
+		add(botonCrearCuenta);
 	}
 }
