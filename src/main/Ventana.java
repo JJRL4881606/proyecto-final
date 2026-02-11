@@ -1,14 +1,13 @@
 package main;
 
 import javax.swing.JFrame;
-
 import views.LoginView;
 import views.MiPanel;
 
-public class Ventana extends JFrame {
-
-    public Ventana() {
-
+public class Ventana extends JFrame 
+{
+    public Ventana() 
+    {
         this.setSize(800, 800);
 		this.setLocation(100,100); 
         this.setLocationRelativeTo(null);
@@ -21,7 +20,6 @@ public class Ventana extends JFrame {
         
         this.setVisible(true);
     }
-
 }
 
 

@@ -10,12 +10,12 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class MiPanel extends JPanel{
-	
-	public MiPanel() {
+public class MiPanel extends JPanel
+{
+	public MiPanel() 
+	{
 		JFrame ventana = new JFrame();
-		setBackground(new Color(201, 131, 75));
+		setBackground(new Color(173, 216, 230));
 		setLayout(null);
-
 	}
 }
