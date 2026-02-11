@@ -9,7 +9,7 @@ public class Ventana extends JFrame {
 
     public Ventana() {
 
-        this.setSize(700, 700);
+        this.setSize(800, 800);
 		this.setLocation(100,100); 
         this.setLocationRelativeTo(null);
         this.setTitle("Aplicación de Hotel");
