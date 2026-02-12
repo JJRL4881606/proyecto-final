@@ -8,7 +8,9 @@ public class Ventana extends JFrame
 {
     public Ventana() 
     {
-        this.setSize(800, 800);
+    	int ventanaW = 800;
+    	int ventanaH = 800;
+        this.setSize(ventanaW, ventanaH);
 		this.setLocation(100,100); 
         this.setLocationRelativeTo(null);
         this.setTitle("Aplicación de Hotel");
