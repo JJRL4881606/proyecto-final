@@ -1,10 +1,12 @@
 package views;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,71 +20,30 @@ public class LoginView extends JPanel
 	public LoginView() 
 	{
 		this.setBackground(new Color(151, 210, 251)); 
-		this.setLayout(null);
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		inicializarComponentes();
 	}
 		
 	private void inicializarComponentes() 
 	{
 		crearTitulo();
-		crearBotones();
 		crearFormulario();
-		crearMensajesError();
+		crearBotones();
 	}
 	
-	private void crearBotones() 
-	{
-		JButton botonIniciarSesion = new JButton("Iniciar sesión", new ImageIcon("src/img/login-icon.png"));
-		botonIniciarSesion.setBounds(ventanaCentroW - 210, 440, 200, 30);
-		botonIniciarSesion.setBackground(new Color(241, 171, 134));
-		botonIniciarSesion.setForeground(Color.BLACK);
-		botonIniciarSesion.setToolTipText("Haz click aquí");
-		botonIniciarSesion.setFont(new Font("Arial", Font.BOLD, 20));
+	private void crearBotones() {
+		PanelBotones botonesLogin = new PanelBotones();
+		add(botonesLogin);
 		
-		JButton botonCrearCuenta = new JButton("Crear cuenta", new ImageIcon("src/img/login-icon.png"));
-		botonCrearCuenta.setBounds(ventanaCentroW + 10, 440, 200, 30);
-		botonCrearCuenta.setBackground(new Color(241, 171, 134));
-		botonCrearCuenta.setForeground(Color.BLACK);
-		botonCrearCuenta.setToolTipText("Haz click aquí");
-		botonCrearCuenta.setFont(new Font("Arial", Font.BOLD, 20));
-		
-		try
-		{
-			Image icono = ImageIO.read(getClass().getResource("/img/login-icon.png"));
-			icono = icono.getScaledInstance(30,30, Image.SCALE_SMOOTH);
-			botonIniciarSesion.setIcon(new ImageIcon(icono));
-		}
-		catch(Exception ex) 
-		{
-			System.out.println("No está la imagen del ícono");
-		}
-		
-		add(botonIniciarSesion);	
-		add(botonCrearCuenta);
 	}
-	
+
 	private void crearFormulario() 
 	{
-		JLabel lblUsuario = new JLabel("Ingrese el usuario: ");
-		lblUsuario.setFont(new Font("Arial", Font.BOLD,20));
-		lblUsuario.setBounds(ventanaCentroW - 125,200,250,30);
-		add(lblUsuario);
-		
-		JTextField usuario = new JTextField();
-		usuario.setFont(new Font("Arial", Font.BOLD,25));
-		usuario.setBounds(ventanaCentroW - 125,240,250,35);
-		add(usuario);
-		
-		JLabel lblContrasena = new JLabel("Ingrese la contraseña: ");
-		lblContrasena.setFont(new Font("Arial", Font.BOLD,20));
-		lblContrasena.setBounds(ventanaCentroW - 125,305,250,30);
-		add(lblContrasena);
-		
-		JPasswordField contrasena = new JPasswordField();
-		contrasena.setFont(new Font("Arial", Font.BOLD,25));
-		contrasena.setBounds(ventanaCentroW - 125,340,250,25);
-		add(contrasena);
+		//setLayout(new FlowLayout(FlowLayout.RIGHT, 50, 50));
+
+
 	}
+	
 
 	private void crearTitulo() 
 	{
@@ -96,26 +57,5 @@ public class LoginView extends JPanel
 		lblInstrucciones.setBounds(ventanaCentroW - 175,150,350,20);
 		add(lblInstrucciones);	
 	}
-	
-	private void crearMensajesError() 
-	{
-		JLabel lblUsuarioObligatorio = new JLabel("Usuario obligatorio");
-		lblUsuarioObligatorio.setFont(new Font("Arial", Font.BOLD,12));
-		lblUsuarioObligatorio.setBounds(ventanaCentroW - 80,290,160,12);
-		lblUsuarioObligatorio.setForeground(Color.RED);
 
-		add(lblUsuarioObligatorio);
-		
-		JLabel lblContraObligatoria = new JLabel("Contraseña obligatoria");
-		lblContraObligatoria.setFont(new Font("Arial", Font.BOLD,12));
-		lblContraObligatoria.setBounds(ventanaCentroW - 80,380,160,12);
-		lblContraObligatoria.setForeground(Color.RED);
-		add(lblContraObligatoria);
-		
-		JLabel lblCredIncorrectas = new JLabel("Credenciales incorrectas");
-		lblCredIncorrectas.setFont(new Font("Arial", Font.BOLD,12));
-		lblCredIncorrectas.setBounds(ventanaCentroW - 80,500,160,12);
-		lblCredIncorrectas.setForeground(Color.RED);
-		add(lblCredIncorrectas);
-	}
 }
