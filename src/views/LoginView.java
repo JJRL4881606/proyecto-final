@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 public class LoginView extends JPanel
 {
@@ -31,30 +32,29 @@ public class LoginView extends JPanel
 		crearBotones();
 	}
 	
-	private void crearBotones() {
-		PanelBotones botonesLogin = new PanelBotones();
-		add(botonesLogin);
-		
+	private void crearBotones()
+	{
+		add(new PanelBotones());		
 	}
 
 	private void crearFormulario() 
 	{
-		//setLayout(new FlowLayout(FlowLayout.RIGHT, 50, 50));
-
-
+		add(new PanelFormulario());
 	}
-	
 
 	private void crearTitulo() 
 	{
 		JLabel lblTitulo = new JLabel("Bienvenido a la Aplicación de Hotel");
+		lblTitulo.setBorder(new EmptyBorder(30, 20, 20, 20)); 
 		lblTitulo.setFont(new Font("Arial", Font.BOLD,30));
-		lblTitulo.setBounds(ventanaCentroW - 255,100,510,30);
+	    lblTitulo.setAlignmentX(CENTER_ALIGNMENT); 
 		add(lblTitulo);
 		
 		JLabel lblInstrucciones = new JLabel("Ingrese sus datos para iniciar sesión");
+		lblInstrucciones.setBorder(new EmptyBorder(10, 20, 30, 20)); 
 		lblInstrucciones.setFont(new Font("Arial", Font.BOLD,20));
-		lblInstrucciones.setBounds(ventanaCentroW - 175,150,350,20);
+		lblInstrucciones.setAlignmentX(CENTER_ALIGNMENT); 
+
 		add(lblInstrucciones);	
 	}
 

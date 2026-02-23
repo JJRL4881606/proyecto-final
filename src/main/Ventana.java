@@ -2,7 +2,6 @@ package main;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import views.LoginView;
 import views.PanelLogin;
 
 public class Ventana extends JFrame 
@@ -15,11 +14,13 @@ public class Ventana extends JFrame
 		this.setLocation(100,100); 
         this.setLocationRelativeTo(null);
         this.setTitle("Aplicación de Hotel");
-        this.setResizable(false);
+        this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-		PanelLogin login = new PanelLogin();
+        
+        getContentPane().setLayout(
+            new BoxLayout(getContentPane(), BoxLayout.Y_AXIS)
+        );
+	    add(new PanelLogin());
 
         this.setVisible(true);
     }
