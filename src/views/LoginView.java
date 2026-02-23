@@ -45,7 +45,7 @@ public class LoginView extends JPanel
 	private void crearTitulo() 
 	{
 		JLabel lblTitulo = new JLabel("Bienvenido a la Aplicación de Hotel");
-		lblTitulo.setBorder(new EmptyBorder(30, 20, 20, 20)); 
+		lblTitulo.setBorder(new EmptyBorder(50, 20, 20, 20)); 
 		lblTitulo.setFont(new Font("Arial", Font.BOLD,30));
 	    lblTitulo.setAlignmentX(CENTER_ALIGNMENT); 
 		add(lblTitulo);
