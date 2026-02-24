@@ -1,11 +1,15 @@
 package views;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,24 +19,42 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import components.RoundedPanel;
+
 public class LoginView extends JPanel
 {
 	int ventanaCentroW = 400;
 	public LoginView() 
 	{
-		this.setBackground(new Color(151, 210, 251)); 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setBackground(new Color(100,149,237)); 
+		//setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	    setLayout(new GridBagLayout());
 		inicializarComponentes();
 	}
 		
 	private void inicializarComponentes() 
 	{
-		crearTitulo();
+	    JPanel card = new RoundedPanel(50);
+	    card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+	    card.setBackground(new Color(151, 210, 251));
+	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
+	    card.setMaximumSize(new Dimension(450, 350));
+	    card.setAlignmentX(CENTER_ALIGNMENT);
+	    
+		/*crearTitulo();
 		crearFormulario();
-		crearBotones();
+		crearBotones();*/
+		
+	    card.add(crearTitulo());
+	    card.add(Box.createVerticalStrut(15));
+	    card.add(new PanelFormulario());
+	    card.add(Box.createVerticalStrut(20));
+	    card.add(new PanelBotones());
+
+	    add(card); 
 	}
 	
-	private void crearBotones()
+	/*private void crearBotones()
 	{
 		add(new PanelBotones());		
 	}
@@ -40,10 +62,14 @@ public class LoginView extends JPanel
 	private void crearFormulario() 
 	{
 		add(new PanelFormulario());
-	}
+	}*/
 
-	private void crearTitulo() 
+	private JPanel crearTitulo() 
 	{
+	    JPanel panel = new JPanel();
+	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	    panel.setOpaque(false);
+	    
 		JLabel lblTitulo = new JLabel("Bienvenido a la Aplicación de Hotel");
 		lblTitulo.setBorder(new EmptyBorder(50, 20, 20, 20)); 
 		lblTitulo.setFont(new Font("Arial", Font.BOLD,30));
@@ -55,7 +81,12 @@ public class LoginView extends JPanel
 		lblInstrucciones.setFont(new Font("Arial", Font.BOLD,20));
 		lblInstrucciones.setAlignmentX(CENTER_ALIGNMENT); 
 
-		add(lblInstrucciones);	
+	    panel.add(lblTitulo);
+	    panel.add(Box.createVerticalStrut(8));
+	    panel.add(lblInstrucciones);
+
+	    return panel;
+
 	}
 
 }

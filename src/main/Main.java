@@ -1,6 +1,6 @@
 package main;
 
-//import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 public class Main 

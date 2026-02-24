@@ -11,7 +11,7 @@ public class PanelFormulario extends JPanel {
 
     public PanelFormulario() {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setMaximumSize(new Dimension(500, 120));
+		setMaximumSize(new Dimension(420, 120));
 		setOpaque(false);
 		
         add(crearFilaUsuario());
@@ -153,7 +153,7 @@ public class PanelFormulario extends JPanel {
         fila.setOpaque(false);
 
         JLabel lblError = new JLabel("Usuario o contraseña incorrectos");
-        lblError.setForeground(new Color(200,0,0));
+        lblError.setForeground(Color.RED);
         lblError.setFont(new Font("Arial", Font.PLAIN, 12));
 
         fila.add(lblError);
