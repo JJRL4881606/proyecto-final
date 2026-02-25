@@ -1,37 +1,33 @@
 package views;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
-import java.awt.Image;
 
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.border.EmptyBorder;
 
 import components.RoundedPanel;
 
+@SuppressWarnings("serial")
 public class LoginView extends JPanel
 {
 	int ventanaCentroW = 400;
 	public LoginView() 
 	{
 		this.setBackground(new Color(100,149,237)); 
-		//setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    setLayout(new GridBagLayout());
+        
 		inicializarComponentes();
+        setVisible(true);
+
 	}
-		
+
 	private void inicializarComponentes() 
 	{
 	    JPanel card = new RoundedPanel(50);
@@ -40,10 +36,6 @@ public class LoginView extends JPanel
 	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
 	    card.setMaximumSize(new Dimension(450, 350));
 	    card.setAlignmentX(CENTER_ALIGNMENT);
-	    
-		/*crearTitulo();
-		crearFormulario();
-		crearBotones();*/
 		
 	    card.add(crearTitulo());
 	    card.add(Box.createVerticalStrut(15));
@@ -54,16 +46,6 @@ public class LoginView extends JPanel
 	    add(card); 
 	}
 	
-	/*private void crearBotones()
-	{
-		add(new PanelBotones());		
-	}
-
-	private void crearFormulario() 
-	{
-		add(new PanelFormulario());
-	}*/
-
 	private JPanel crearTitulo() 
 	{
 	    JPanel panel = new JPanel();
