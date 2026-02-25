@@ -13,116 +13,110 @@ import javax.swing.JPasswordField;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Image;
 import java.awt.Toolkit;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.Box;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import components.RoundButton;
+import components.RoundedPanel;
 
-public class FormularioUsuario extends JFrame
+public class FormularioUsuario extends JFrame 
 {
-	
-	public FormularioUsuario() 
-	{
-		
-		setSize(500, 500);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(true);
-		setTitle("Registro");
-		setLocationRelativeTo(null);
-		
-		Toolkit tk = Toolkit.getDefaultToolkit();
-		Image icono = tk.getImage("src/img/icono.png");
-		setIconImage(icono);
-		
-		inicializarComponentes();
-		
-		setVisible(true);		
-	}
-	
-	public void inicializarComponentes() 
-	{
-		
-		JLabel lblTitulo = new JLabel("Registro");
-		add(lblTitulo, BorderLayout.NORTH);
-		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		
-		JPanel panelComponentes = new JPanel();
-		panelComponentes.setLayout(new BoxLayout(panelComponentes, BoxLayout.Y_AXIS));
-		panelComponentes.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-		
-		JScrollPane scroll = new JScrollPane(panelComponentes);
-		scroll.setHorizontalScrollBar(null);
-
-        JLabel lblUsuario = new JLabel("Usuario:");
-        lblUsuario.setFont(new Font("Arial", Font.BOLD, 18));
-        panelComponentes.add(lblUsuario);
-
-        JTextField txtUsuario = new JTextField(15);
-        txtUsuario.setFont(new Font("Arial", Font.PLAIN, 18));
-        txtUsuario.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        panelComponentes.add(txtUsuario);
-
-        JLabel lblPassword = new JLabel("Contraseña:");
-        lblPassword.setFont(new Font("Arial", Font.BOLD, 18));
-        panelComponentes.add(lblPassword);
-
-        JPasswordField txtPassword = new JPasswordField(15);
-        txtPassword.setFont(new Font("Arial", Font.PLAIN, 18));
-        txtPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        panelComponentes.add(txtPassword);
-
-        JCheckBox chkMostrar = new JCheckBox("Mostrar");
-        chkMostrar.setOpaque(false);
-        chkMostrar.setFont(new Font("Arial", Font.PLAIN, 12));
-        panelComponentes.add(chkMostrar);
+    public FormularioUsuario() 
+    {
+        setSize(450, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Registro");
+        setLocationRelativeTo(null);
         
-        JLabel lblEmail = new JLabel("Email:");
-        lblEmail.setFont(new Font("Arial", Font.BOLD, 18));
-        panelComponentes.add(lblEmail);
-
-        JTextField txtEmail = new JTextField(15);
-        txtEmail.setFont(new Font("Arial", Font.PLAIN, 18));
-        txtEmail.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        panelComponentes.add(txtEmail);
+        getContentPane().setBackground(new Color(100,149,237)); 
         
-        JLabel lblPais = new JLabel("Pais de residencia:");
-        lblPais.setFont(new Font("Arial", Font.BOLD, 18));
-        panelComponentes.add(lblPais);
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Image icono = tk.getImage("src/img/iconoRegistroUsuario.png");
+        setIconImage(icono);
 
-        JTextField txtPais = new JTextField(15);
-        txtPais.setFont(new Font("Arial", Font.PLAIN, 18));
-        txtPais.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        panelComponentes.add(txtPais);
-        
-        JCheckBox chkAceptarTerminos = new JCheckBox("Aceptar términos y condiciones");
-        chkAceptarTerminos.setFont(new Font("Arial", Font.BOLD, 12));
-        panelComponentes.add(chkAceptarTerminos);
-   
-        JLabel lblOlvido = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
-        lblOlvido.setForeground(new Color(0,0,0));
-        lblOlvido.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblOlvido.setFont(new Font("Arial", Font.PLAIN, 12));
-        panelComponentes.add(lblOlvido);
-        
-        JButton botonCrearCuenta = new RoundButton("Crear cuenta", new ImageIcon("src/img/login-icon.png"));
-		botonCrearCuenta.setBackground(new Color(255, 249, 179));
-		botonCrearCuenta.setForeground(Color.BLACK);
-		botonCrearCuenta.setToolTipText("Haz click aquí");
-		botonCrearCuenta.setFont(new Font("Arial", Font.BOLD, 20));
-		panelComponentes.add(botonCrearCuenta);
+        inicializarComponentes();
+        setVisible(true);
+    }
 
-		add(scroll);
-	}
+    public void inicializarComponentes() 
+    {
+        this.setLayout(new BorderLayout());
+        
+        JPanel panelPrincipal = new JPanel();
+        panelPrincipal.setBackground(new Color(151, 210, 251));
+        panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
+        panelPrincipal.setBorder(new EmptyBorder(30, 40, 30, 40));
+
+        JLabel lblTitulo = new JLabel("NUEVO REGISTRO");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
+        lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelPrincipal.add(lblTitulo);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 25)));
+
+        JLabel lblUsuario = new JLabel("Nombre de Usuario");
+        lblUsuario.setFont(new Font("Arial", Font.BOLD, 13));
+        panelPrincipal.add(lblUsuario);
+        
+        JTextField txtUsuario = new JTextField();
+        panelPrincipal.add(txtUsuario);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        JLabel lblPassword = new JLabel("Contraseña");
+        lblPassword.setFont(new Font("Arial", Font.BOLD, 13));
+        panelPrincipal.add(lblPassword);
+        
+        JPasswordField txtPassword = new JPasswordField();
+        panelPrincipal.add(txtPassword);
+
+        JCheckBox chkMostrar = new JCheckBox("Mostrar contraseña");
+        chkMostrar.setFont(new Font("Arial", Font.PLAIN, 11));
+        panelPrincipal.add(chkMostrar);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        JLabel lblEmail = new JLabel("Correo Electrónico");
+        lblEmail.setFont(new Font("Arial", Font.BOLD, 13));
+        panelPrincipal.add(lblEmail);
+        
+        JTextField txtEmail = new JTextField();
+        panelPrincipal.add(txtEmail);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        JLabel lblPais = new JLabel("País");
+        lblPais.setFont(new Font("Arial", Font.BOLD, 13));
+        panelPrincipal.add(lblPais);
+        
+        JTextField txtPais = new JTextField();
+        panelPrincipal.add(txtPais);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        JCheckBox chkAceptarTerminos = new JCheckBox("Acepto los términos");
+        chkAceptarTerminos.setFont(new Font("Arial", Font.PLAIN, 12));
+        panelPrincipal.add(chkAceptarTerminos);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        JButton botonCrearCuenta = new JButton("CREAR CUENTA");
+        botonCrearCuenta.setBackground(new Color(27, 73, 101));
+        botonCrearCuenta.setForeground(Color.WHITE);
+        botonCrearCuenta.setFont(new Font("Arial", Font.BOLD, 14));
+        botonCrearCuenta.setFocusPainted(false);
+        panelPrincipal.add(botonCrearCuenta);
+        
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        JPanel contenedorConMargen = new JPanel(new BorderLayout());
+        contenedorConMargen.setBorder(new EmptyBorder(40, 40, 40, 40));
+        contenedorConMargen.setOpaque(false);
+        contenedorConMargen.add(panelPrincipal, BorderLayout.CENTER);
+
+        add(contenedorConMargen);
+    }
 }

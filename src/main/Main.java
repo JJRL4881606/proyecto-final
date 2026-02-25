@@ -9,7 +9,7 @@ public class Main
 {
     public static void main(String[] args) {
         FlatLightLaf.setup();
-        //Ventana ventanita = new Ventana();
+        Ventana ventanita = new Ventana();
         FormularioUsuario registro = new FormularioUsuario();
     }
 }
