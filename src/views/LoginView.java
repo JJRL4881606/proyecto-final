@@ -13,6 +13,7 @@ import javax.swing.Box;
 import javax.swing.border.EmptyBorder;
 
 import components.RoundedPanel;
+import utils.AppFont;
 
 @SuppressWarnings("serial")
 public class LoginView extends JPanel
@@ -54,13 +55,13 @@ public class LoginView extends JPanel
 	    
 		JLabel lblTitulo = new JLabel("Bienvenido a la Aplicación de Hotel");
 		lblTitulo.setBorder(new EmptyBorder(50, 20, 20, 20)); 
-		lblTitulo.setFont(new Font("Arial", Font.BOLD,30));
-	    lblTitulo.setAlignmentX(CENTER_ALIGNMENT); 
+		lblTitulo.setFont(AppFont.title());
+	    lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
 		add(lblTitulo);
 		
 		JLabel lblInstrucciones = new JLabel("Ingrese sus datos para iniciar sesión");
 		lblInstrucciones.setBorder(new EmptyBorder(10, 20, 30, 20)); 
-		lblInstrucciones.setFont(new Font("Arial", Font.BOLD,20));
+		lblInstrucciones.setFont(AppFont.subtitle());
 		lblInstrucciones.setAlignmentX(CENTER_ALIGNMENT); 
 
 	    panel.add(lblTitulo);

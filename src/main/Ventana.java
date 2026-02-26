@@ -4,12 +4,13 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import views.PanelLogin;
 
+@SuppressWarnings("serial")
 public class Ventana extends JFrame 
 {
     public Ventana() 
     {
-	    	int ventanaW = 800;
-	    	int ventanaH = 800;
+    	int ventanaW = 800;
+	   	int ventanaH = 800;
         this.setSize(ventanaW, ventanaH);
 		this.setLocation(100,100); 
         this.setLocationRelativeTo(null);

@@ -7,6 +7,9 @@ import java.awt.Font;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import utils.AppFont;
+
+@SuppressWarnings("serial")
 public class PanelFormulario extends JPanel {
 
     public PanelFormulario() {
@@ -32,12 +35,12 @@ public class PanelFormulario extends JPanel {
         fila.setOpaque(false);
 
         JLabel lblUsuario = new JLabel("Usuario:");
-        lblUsuario.setFont(new Font("Arial", Font.BOLD, 18));
+        lblUsuario.setFont(AppFont.big());
 
         JTextField txtUsuario = new JTextField(15);
-        txtUsuario.setFont(new Font("Arial", Font.PLAIN, 18));
+        txtUsuario.setFont(AppFont.big());
         txtUsuario.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        
+        txtUsuario.putClientProperty("JTextField.placeholderText", "Ingrese el usuario");
 
         fila.add(lblUsuario, BorderLayout.WEST);
         fila.add(txtUsuario, BorderLayout.EAST); 
@@ -51,7 +54,7 @@ public class PanelFormulario extends JPanel {
         fila.setOpaque(false);
 
         JLabel lblUsuarioObligatorio = new JLabel("El usuario es obligatorio");
-        lblUsuarioObligatorio.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblUsuarioObligatorio.setFont(AppFont.small());
         lblUsuarioObligatorio.setForeground(Color.RED);
 
         fila.add(lblUsuarioObligatorio, BorderLayout.EAST);
@@ -65,11 +68,12 @@ public class PanelFormulario extends JPanel {
 		fila.setOpaque(false);
 
         JLabel lblPassword = new JLabel("Contraseña:");
-        lblPassword.setFont(new Font("Arial", Font.BOLD, 18));
+        lblPassword.setFont(AppFont.big());
 
         JPasswordField txtPassword = new JPasswordField(15);
-        txtPassword.setFont(new Font("Arial", Font.PLAIN, 18));
+        txtPassword.setFont(AppFont.big());
         txtPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        txtPassword.putClientProperty("JTextField.placeholderText", "Ingrese la contraseña");
 
         fila.add(lblPassword, BorderLayout.WEST);
         fila.add(txtPassword, BorderLayout.EAST);
@@ -84,7 +88,7 @@ public class PanelFormulario extends JPanel {
 
         JCheckBox chkMostrar = new JCheckBox("Mostrar");
         chkMostrar.setOpaque(false);
-        chkMostrar.setFont(new Font("Arial", Font.PLAIN, 12));
+        chkMostrar.setFont(new Font("Arial", Font.BOLD, 12));
         
         fila.add(chkMostrar, BorderLayout.EAST);
     
@@ -98,7 +102,7 @@ public class PanelFormulario extends JPanel {
         fila.setOpaque(false);
 
         JLabel lblContraObligatoria = new JLabel("La contraseña es obligatoria");
-        lblContraObligatoria.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblContraObligatoria.setFont(AppFont.small());
         lblContraObligatoria.setForeground(Color.RED);
         
         fila.add(lblContraObligatoria, BorderLayout.EAST);
@@ -112,7 +116,7 @@ public class PanelFormulario extends JPanel {
 		fila.setOpaque(false);
 		        
         JCheckBox chkAceptarTerminos = new JCheckBox("Aceptar términos y condiciones");
-        chkAceptarTerminos.setFont(new Font("Arial", Font.BOLD, 12));
+        chkAceptarTerminos.setFont(AppFont.normal());
         fila.add(chkAceptarTerminos, BorderLayout.WEST);
 		
 		return fila;
@@ -125,7 +129,7 @@ public class PanelFormulario extends JPanel {
 
         JCheckBox chkRecordar = new JCheckBox("Recordar usuario");
         chkRecordar.setOpaque(false);
-        chkRecordar.setFont(new Font("Arial", Font.BOLD, 12));
+        chkRecordar.setFont(AppFont.normal());
 
         fila.add(chkRecordar, BorderLayout.WEST);
 
@@ -140,7 +144,7 @@ public class PanelFormulario extends JPanel {
         JLabel lblOlvido = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
         lblOlvido.setForeground(new Color(0,0,0));
         lblOlvido.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblOlvido.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblOlvido.setFont(AppFont.small());
 
         fila.add(lblOlvido);
 
@@ -154,7 +158,7 @@ public class PanelFormulario extends JPanel {
 
         JLabel lblError = new JLabel("Usuario o contraseña incorrectos");
         lblError.setForeground(Color.RED);
-        lblError.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblError.setFont(AppFont.small());
 
         fila.add(lblError);
 

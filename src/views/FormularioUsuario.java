@@ -1,12 +1,12 @@
 package views;
 
 import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -15,21 +15,22 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import components.GradientPanel;
 import components.RoundButton;
 import components.RoundedPanel;
+import utils.AppFont;
 
 @SuppressWarnings("serial")
 public class FormularioUsuario extends JFrame 
@@ -41,8 +42,12 @@ public class FormularioUsuario extends JFrame
         setTitle("Registro");
         setLocationRelativeTo(null);
         
-        getContentPane().setBackground(new Color(100,149,237)); 
-	    setLayout(new GridBagLayout());
+        GradientPanel fondo = new GradientPanel(
+                new Color(100,149,237), 
+                new Color(25,25,112)
+        );
+        fondo.setLayout(new GridBagLayout());
+        setContentPane(fondo);        
         
         Toolkit tk = Toolkit.getDefaultToolkit();
         Image icono = tk.getImage("src/img/iconoRegistroUsuario.png");
@@ -59,14 +64,17 @@ public class FormularioUsuario extends JFrame
 	    card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 	    card.setBackground(new Color(151, 210, 251));
 	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
-	    card.setMaximumSize(new Dimension(450, 350));
+	    card.setMaximumSize(new Dimension(450, 700));
 	    card.setAlignmentX(CENTER_ALIGNMENT);
-	    
 	    card.add(crearTitulo());
 	    card.add(panelFormularioCrearCuenta());
 	    card.add(crearBoton());
 
-	    add(card); 
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
+	    gbc.anchor = GridBagConstraints.CENTER;
+	    add(card, gbc);
     }
     
     public JPanel panelFormularioCrearCuenta() {
@@ -74,72 +82,96 @@ public class FormularioUsuario extends JFrame
         panelPrincipal.setBackground(new Color(151, 210, 251));
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
         panelPrincipal.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panelPrincipal.setBorder(new EmptyBorder(30, 40, 30, 40));
+        panelPrincipal.setBorder(new EmptyBorder(0, 40, 10, 40));
 
         
         JLabel lblUsuario = new JLabel("Nombre de Usuario");
-        lblUsuario.setFont(new Font("Arial", Font.BOLD, 13));
+        lblUsuario.setFont(AppFont.normal());
+        lblUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPrincipal.add(lblUsuario);
         
         JTextField txtUsuario = new JTextField();
         txtUsuario.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        txtUsuario.setFont(AppFont.normal());
+        txtUsuario.putClientProperty("JTextField.placeholderText", "Ingrese el usuario");
+        txtUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         panelPrincipal.add(txtUsuario);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
-
+        
         
         JLabel lblPassword = new JLabel("Contraseña");
-        lblPassword.setFont(new Font("Arial", Font.BOLD, 13));
+        lblPassword.setFont(AppFont.normal());
         panelPrincipal.add(lblPassword);
         
         JPasswordField txtPassword = new JPasswordField();
         txtPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        txtPassword.setFont(AppFont.normal());
+        txtPassword.putClientProperty("JTextField.placeholderText", "Ingrese la contraseña");
+        txtPassword.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         panelPrincipal.add(txtPassword);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+        txtPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+    
         
         JCheckBox chkMostrar = new JCheckBox("Mostrar contraseña");
-        chkMostrar.setFont(new Font("Arial", Font.PLAIN, 11));
+        chkMostrar.setFont(AppFont.small());
         panelPrincipal.add(chkMostrar);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+        chkMostrar.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        
         JLabel lblEmail = new JLabel("Correo Electrónico");
-        lblEmail.setFont(new Font("Arial", Font.BOLD, 13));
+        lblEmail.setFont(AppFont.normal());
         panelPrincipal.add(lblEmail);
         
         JTextField txtEmail = new JTextField();
         txtEmail.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        txtEmail.setFont(AppFont.normal());
+        txtEmail.putClientProperty("JTextField.placeholderText", "Ingrese el correo electrónico");
+        txtEmail.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        txtEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPrincipal.add(txtEmail);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
+        
         JLabel lblPais = new JLabel("País");
-        lblPais.setFont(new Font("Arial", Font.BOLD, 13));
+        lblPais.setFont(AppFont.normal());
         panelPrincipal.add(lblPais);
         
         String[] listaPaises = {"Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Esuatini", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guinea", "Guinea-Bisáu", "Guinea Ecuatorial", "Guyana", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Palestina", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumania", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Taiwán", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Vaticano", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"};
         JComboBox<String> comboPais = new JComboBox<>(listaPaises);
         comboPais.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        comboPais.putClientProperty("JComboBox.placeholderText", "Seleccione el país");
+        comboPais.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPrincipal.add(comboPais);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
         
+        
         JPanel radGenero = new JPanel();
-        radGenero.setLayout(new FlowLayout());
+        radGenero.setLayout(new GridLayout(0, 1));
         radGenero.setOpaque(false);
         radGenero.setBorder(BorderFactory.createTitledBorder("Seleccione el género"));
-        radGenero.setFont(new Font("Arial", Font.BOLD, 13));
-        radGenero.setLayout(new GridLayout(0, 1));
+        radGenero.setFont(AppFont.normal());
         JRadioButton hombre = new JRadioButton("Hombre");
         JRadioButton mujer = new JRadioButton("Mujer");
         radGenero.add(hombre);
         radGenero.add(mujer);
+        radGenero.setAlignmentX(Component.CENTER_ALIGNMENT);
+        radGenero.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
         panelPrincipal.add(radGenero);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
-        JCheckBox chkAceptarTerminos = new JCheckBox("Acepto los términos");
-        chkAceptarTerminos.setFont(new Font("Arial", Font.PLAIN, 12));
+        
+        JCheckBox chkAceptarTerminos = new JCheckBox("Acepto los términos y condiciones");
+        chkAceptarTerminos.setFont(AppFont.normal());
+        chkAceptarTerminos.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPrincipal.add(chkAceptarTerminos);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));        
         
+        
         JCheckBox chkNewsletter = new JCheckBox("Suscribirme al newsletter");
-        chkNewsletter.setFont(new Font("Arial", Font.PLAIN, 12));
+        chkNewsletter.setFont(AppFont.normal());
+        chkNewsletter.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPrincipal.add(chkNewsletter);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
@@ -152,8 +184,8 @@ public class FormularioUsuario extends JFrame
 	    panel.setOpaque(false);
 
         JLabel lblTitulo = new JLabel("NUEVO REGISTRO");
-        lblTitulo.setFont(new Font("Arial", Font.BOLD, 20));
-		lblTitulo.setBorder(new EmptyBorder(50, 10, 20, 10)); 
+		lblTitulo.setFont(AppFont.subtitle());
+		lblTitulo.setBorder(new EmptyBorder(20, 10, 10, 10)); 
         lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(lblTitulo);
         panel.add(Box.createRigidArea(new Dimension(0, 25)));
@@ -165,14 +197,26 @@ public class FormularioUsuario extends JFrame
 	    JPanel panel = new JPanel();
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	    panel.setOpaque(false);
+	    panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         RoundButton botonCrearCuenta = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
-        botonCrearCuenta.setBackground(new Color(27, 73, 101));
-        botonCrearCuenta.setForeground(Color.WHITE);
-        botonCrearCuenta.setFont(new Font("Arial", Font.BOLD, 14));
+		botonCrearCuenta.setBackground(new Color(255, 249, 179));
+		botonCrearCuenta.setForeground(Color.BLACK);
+		botonCrearCuenta.setFont(AppFont.big());
         botonCrearCuenta.setFocusPainted(false);
         botonCrearCuenta.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+		
+		try
+		{
+			Image icono = ImageIO.read(getClass().getResource("/img/login-icon.png"));
+			icono = icono.getScaledInstance(30,30, Image.SCALE_SMOOTH);
+			botonCrearCuenta.setIcon(new ImageIcon(icono));
+		}
+		catch(Exception ex) 
+		{
+			System.out.println("No está la imagen del ícono");
+		}
+		
         panel.add(botonCrearCuenta);
         
         return panel;
