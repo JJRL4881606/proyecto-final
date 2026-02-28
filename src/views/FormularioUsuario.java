@@ -1,6 +1,5 @@
 package views;
 
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -14,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 import javax.swing.border.EmptyBorder;
 
 import components.GradientPanel;
@@ -57,7 +58,6 @@ public class FormularioUsuario extends JFrame
         setVisible(true);
     }
     
-
     public void inicializarComponentes() 
     {
 	    JPanel card = new RoundedPanel(50);
@@ -85,28 +85,43 @@ public class FormularioUsuario extends JFrame
         panelPrincipal.setBorder(new EmptyBorder(0, 40, 10, 40));
 
         
-        JLabel lblUsuario = new JLabel("Nombre de Usuario");
-        lblUsuario.setFont(AppFont.normal());
-        lblUsuario.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panelPrincipal.add(lblUsuario);
+        JLabel lblNombre = new JLabel("Nombre(s)");
+        lblNombre.setFont(AppFont.normal());
+        lblNombre.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelPrincipal.add(lblNombre);
         
-        JTextField txtUsuario = new JTextField();
-        txtUsuario.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        txtUsuario.setFont(AppFont.normal());
-        txtUsuario.putClientProperty("JTextField.placeholderText", "Ingrese el usuario");
-        txtUsuario.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        panelPrincipal.add(txtUsuario);
+        JTextField txtNombre = new JTextField();
+        txtNombre.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        txtNombre.setFont(AppFont.normal());
+        txtNombre.putClientProperty("JTextField.placeholderText", "Ingrese su(s) nombre(s)");
+        txtNombre.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        panelPrincipal.add(txtNombre);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+        
+        
+        JLabel lblApellidos = new JLabel("Apellidos");
+        lblApellidos.setFont(AppFont.normal());
+        lblApellidos.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelPrincipal.add(lblApellidos);
+        
+        JTextField txtApellidos = new JTextField();
+        txtApellidos.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        txtApellidos.setFont(AppFont.normal());
+        txtApellidos.putClientProperty("JTextField.placeholderText", "Ingrese sus apellidos");
+        txtApellidos.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        panelPrincipal.add(txtApellidos);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
         
         
         JLabel lblPassword = new JLabel("Contraseña");
+        lblPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblPassword.setFont(AppFont.normal());
         panelPrincipal.add(lblPassword);
         
         JPasswordField txtPassword = new JPasswordField();
         txtPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
         txtPassword.setFont(AppFont.normal());
-        txtPassword.putClientProperty("JTextField.placeholderText", "Ingrese la contraseña");
+        txtPassword.putClientProperty("JTextField.placeholderText", "Ingrese su contraseña");
         txtPassword.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         panelPrincipal.add(txtPassword);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -121,24 +136,39 @@ public class FormularioUsuario extends JFrame
 
         
         JLabel lblEmail = new JLabel("Correo Electrónico");
+        lblEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblEmail.setFont(AppFont.normal());
         panelPrincipal.add(lblEmail);
         
         JTextField txtEmail = new JTextField();
         txtEmail.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
         txtEmail.setFont(AppFont.normal());
-        txtEmail.putClientProperty("JTextField.placeholderText", "Ingrese el correo electrónico");
+        txtEmail.putClientProperty("JTextField.placeholderText", "Ingrese su correo electrónico");
         txtEmail.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         txtEmail.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPrincipal.add(txtEmail);
         panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
+        
+        
+        JLabel lblFechaNacimiento = new JLabel("Fecha de nacimiento");
+        lblFechaNacimiento.setFont(AppFont.normal());
+        lblFechaNacimiento.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panelPrincipal.add(lblFechaNacimiento);
+
+        JSpinner spFechaNacimiento = new JSpinner(new SpinnerDateModel());
+        spFechaNacimiento.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        JSpinner.DateEditor editorFecha = new JSpinner.DateEditor(spFechaNacimiento, "dd/MM/yyyy");
+        spFechaNacimiento.setEditor(editorFecha);
+        panelPrincipal.add(spFechaNacimiento);
+        panelPrincipal.add(Box.createRigidArea(new Dimension(0, 15)));
 
         
         JLabel lblPais = new JLabel("País");
+        lblPais.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblPais.setFont(AppFont.normal());
         panelPrincipal.add(lblPais);
         
-        String[] listaPaises = {"Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Esuatini", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guinea", "Guinea-Bisáu", "Guinea Ecuatorial", "Guyana", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Palestina", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumania", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Taiwán", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Vaticano", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"};
+        String[] listaPaises = {"Seleccione el país", "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Esuatini", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guinea", "Guinea-Bisáu", "Guinea Ecuatorial", "Guyana", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Palestina", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumania", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Taiwán", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Vaticano", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"};
         JComboBox<String> comboPais = new JComboBox<>(listaPaises);
         comboPais.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
         comboPais.putClientProperty("JComboBox.placeholderText", "Seleccione el país");

@@ -1,6 +1,5 @@
 package views;
 
-import java.awt.Font;
 import java.awt.GridBagLayout;
 
 import javax.swing.BoxLayout;
