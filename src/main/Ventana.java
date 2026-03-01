@@ -1,35 +1,60 @@
 package main;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
-import views.PanelLogin;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import components.GradientPanel;
+import views.RegistroView;
+import views.LoginView;
 
 @SuppressWarnings("serial")
 public class Ventana extends JFrame 
 {
     public Ventana() 
     {
-    	int ventanaW = 800;
+    	int ventanaW = 1000;
 	   	int ventanaH = 800;
         this.setSize(ventanaW, ventanaH);
 		this.setLocation(100,100); 
         this.setLocationRelativeTo(null);
-        this.setTitle("Aplicación de Hotel");
+        this.setTitle("HOTEL MJ");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
-	    add(new PanelLogin());
+        // Fondo degradado
+        GradientPanel fondo = new GradientPanel(
+            new Color(100,149,237), 
+            new Color(25,25,112)
+        );
 
+        fondo.setLayout(new BorderLayout());
+        setContentPane(fondo);    
+
+        //Agregar ícono aplicación
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Image icono = tk.getImage("src/img/iconoRegistroUsuario.png");
+        setIconImage(icono);
+                
+        //Agregar el panel
+        //add(crearVistaConScroll(new LoginView()), BorderLayout.CENTER);        
+        add(crearVistaConScroll(new RegistroView()), BorderLayout.CENTER);        
+        
         this.setVisible(true);
     }
+    
+    private JScrollPane crearVistaConScroll(JPanel panel) {
+        JScrollPane scroll = new JScrollPane(panel);
+        scroll.setBorder(null);
+        scroll.getVerticalScrollBar().setUnitIncrement(12);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        return scroll;
+    }
 }
-
-
-
-
-
-
-
-
-

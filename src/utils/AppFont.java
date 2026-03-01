@@ -17,7 +17,7 @@ public class AppFont {
             // Fuente para títulos
             playfair = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    AppFont.class.getResourceAsStream("/fonts/PlayfairDisplay.ttf"));
+                    AppFont.class.getResourceAsStream("/fonts/FiraSans-Black.ttf"));
 			
 		} catch(Exception e) {
             roboto = new Font("SansSerif", Font.PLAIN, 14);
@@ -46,7 +46,7 @@ public class AppFont {
     }
 	
 	public static Font subtitle() {
-		return roboto.deriveFont(Font.BOLD, 23f);
+		return roboto.deriveFont(Font.BOLD, 22f);
 	}
 	
 }

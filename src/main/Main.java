@@ -9,20 +9,14 @@ import javax.swing.plaf.FontUIResource;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
-import views.FormularioUsuario;
 import utils.AppFont;
-
 
 public class Main 
 {
     public static void main(String[] args) {
         FlatLightLaf.setup();
-        
         UIManager.put("defaultFont", new FontUIResource(AppFont.normal()));
-
         Ventana ventanita = new Ventana();
-        FormularioUsuario registro = new FormularioUsuario();
-        
         showOnScreen(1, ventanita);
 }
 
