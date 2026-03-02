@@ -2,12 +2,15 @@ package views;
 
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -32,6 +35,11 @@ import utils.AppFont;
 public class LoginView extends JPanel
 {
 	int ventanaCentroW = 400;
+	JTextField txtCorreo;
+	JPasswordField txtContrasena;
+	JLabel lblCorreoObligatorio;
+	JLabel lblContraObligatoria;
+	
 	public LoginView() 
 	{
 		this.setBackground(new Color(100,149,237)); 
@@ -62,7 +70,6 @@ public class LoginView extends JPanel
         card.add(crearFilaError());
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
         card.add(crearFilaRecordarme());
-        card.add(crearFilaAceptarTerminos());   
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
         card.add(crearFilaOlvido());
         card.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -86,7 +93,6 @@ public class LoginView extends JPanel
 		lblTitulo.setBorder(new EmptyBorder(30, 20, 20, 20)); 
 		lblTitulo.setFont(AppFont.title());
 	    lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
-		add(lblTitulo);
 		
 		JLabel lblInstrucciones = new JLabel("Ingrese sus datos para iniciar sesión");
 		lblInstrucciones.setBorder(new EmptyBorder(10, 20, 30, 20)); 
@@ -109,7 +115,7 @@ public class LoginView extends JPanel
 	    lblCorreo.setFont(AppFont.normal());
 	    lblCorreo.setAlignmentX(CENTER_ALIGNMENT);
 
-	    JTextField txtCorreo = new JTextField();
+	    txtCorreo = new JTextField();
 	    txtCorreo.setFont(AppFont.normal());
 	    txtCorreo.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
 	    txtCorreo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
@@ -128,19 +134,19 @@ public class LoginView extends JPanel
 	    fila.setOpaque(false);
 	    fila.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        JLabel lblPassword = new JLabel("Contraseña:");
-        lblPassword.setFont(AppFont.normal());
-        lblPassword.setAlignmentX(CENTER_ALIGNMENT);
+        JLabel lblContrasena = new JLabel("Contraseña:");
+        lblContrasena.setFont(AppFont.normal());
+        lblContrasena.setAlignmentX(CENTER_ALIGNMENT);
 
-        JPasswordField txtPassword = new JPasswordField();
-        txtPassword.setFont(AppFont.normal());
-        txtPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        txtPassword.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        txtPassword.putClientProperty("JTextField.placeholderText", "Ingrese su contraseña");
+        txtContrasena = new JPasswordField();
+        txtContrasena.setFont(AppFont.normal());
+        txtContrasena.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        txtContrasena.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        txtContrasena.putClientProperty("JTextField.placeholderText", "Ingrese su contraseña");
 
-	    fila.add(lblPassword);
+	    fila.add(lblContrasena);
 	    fila.add(Box.createRigidArea(new Dimension(0, 6)));
-	    fila.add(txtPassword);
+	    fila.add(txtContrasena);
         
         return fila;
     }
@@ -151,12 +157,13 @@ public class LoginView extends JPanel
         fila.setOpaque(false);
         fila.setBorder(new EmptyBorder(0, 20, 10, 20));
 
-        JLabel lblError = new JLabel("El correo electrónico es obligatorio");
-        lblError.setFont(AppFont.small());
-        lblError.setForeground(Color.RED);
-        lblError.setAlignmentX(CENTER_ALIGNMENT);
+        lblCorreoObligatorio = new JLabel("El correo electrónico es obligatorio");
+		lblCorreoObligatorio.setVisible(false);
+		lblCorreoObligatorio.setFont(AppFont.small());
+		lblCorreoObligatorio.setForeground(Color.RED);
+        lblCorreoObligatorio.setAlignmentX(CENTER_ALIGNMENT);
 
-        fila.add(lblError);
+        fila.add(lblCorreoObligatorio);
 
         return fila;
     }
@@ -167,7 +174,8 @@ public class LoginView extends JPanel
         fila.setOpaque(false);
         fila.setBorder(new EmptyBorder(0, 20, 10, 20));
 
-        JLabel lblContraObligatoria = new JLabel("La contraseña es obligatoria");
+        lblContraObligatoria = new JLabel("La contraseña es obligatoria");
+        lblContraObligatoria.setVisible(false);
         lblContraObligatoria.setFont(AppFont.small());
         lblContraObligatoria.setForeground(Color.RED);
         lblContraObligatoria.setAlignmentX(CENTER_ALIGNMENT);
@@ -191,23 +199,6 @@ public class LoginView extends JPanel
         fila.add(chkMostrar);
     
         return fila;
-    }
-    
-    
-    private JPanel crearFilaAceptarTerminos() {
-        JPanel fila = new JPanel();
-        fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-        fila.setOpaque(false);
-        fila.setBorder(new EmptyBorder(0, 20, 10, 20));
-		        
-        JCheckBox chkAceptarTerminos = new JCheckBox("Aceptar términos y condiciones");
-        chkAceptarTerminos.setOpaque(false);
-        chkAceptarTerminos.setFont(AppFont.normal());
-        chkAceptarTerminos.setAlignmentX(CENTER_ALIGNMENT);
-		        
-        fila.add(chkAceptarTerminos);
-
-		return fila;
     }
     
     private JPanel crearFilaRecordarme() {
@@ -291,8 +282,54 @@ public class LoginView extends JPanel
 		fila.add(botonIniciarSesion);	
 		fila.add(botonCrearCuenta);
 		
+		botonIniciarSesion.addActionListener(e -> login());
+		
 		return fila;
 	}
+	
+	private void login() {
+	    if(validarLogin()) {
+	        JOptionPane.showMessageDialog(
+	            this,
+	            "Se inició la sesión",
+	            "Sesión iniciada",
+	            JOptionPane.INFORMATION_MESSAGE
+	        );
+	    }
+	}
+	
+	private void mostrarErrorCorreo(String mensaje) {
+		lblCorreoObligatorio.setText(mensaje);
+		lblCorreoObligatorio.setVisible(true);
+	}	
+	
+	private void mostrarErrorContrasena(String mensaje) {
+		lblContraObligatoria.setText(mensaje);
+		lblContraObligatoria.setVisible(true);
+	}
+	
+	private void resetearMensajeError() {
+	    lblCorreoObligatorio.setVisible(false);
+	    lblContraObligatoria.setVisible(false);
+	}
+	
+	private boolean validarLogin() {
+	    
+	    resetearMensajeError();
+	    boolean valido = true;
 
+	    if(txtCorreo.getText().trim().isEmpty()) {
+	        mostrarErrorCorreo("El correo es obligatorio");
+	        valido = false;
+	    }
 
+	    String contrasena = String.valueOf(txtContrasena.getPassword());
+	    
+	    if(contrasena.trim().isEmpty()) {
+	        mostrarErrorContrasena("La contraseña es obligatoria");
+	        valido = false;
+	    }
+
+	    return valido;
+	}
 }

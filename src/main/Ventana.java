@@ -44,8 +44,8 @@ public class Ventana extends JFrame
         setIconImage(icono);
                 
         //Agregar el panel
-        //add(crearVistaConScroll(new LoginView()), BorderLayout.CENTER);        
-        add(crearVistaConScroll(new RegistroView()), BorderLayout.CENTER);        
+        add(crearVistaConScroll(new LoginView()), BorderLayout.CENTER);        
+        //add(crearVistaConScroll(new RegistroView()), BorderLayout.CENTER);        
         
         this.setVisible(true);
     }

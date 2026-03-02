@@ -17,8 +17,8 @@ public class Main
         FlatLightLaf.setup();
         UIManager.put("defaultFont", new FontUIResource(AppFont.normal()));
         Ventana ventanita = new Ventana();
-        showOnScreen(1, ventanita);
-}
+        showOnScreen(0, ventanita);
+    }
 
 	public static void showOnScreen(int screen, JFrame frame ) {
 	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
