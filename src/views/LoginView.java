@@ -25,7 +25,9 @@ import java.awt.GridBagConstraints;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import components.RoundButton;
 import components.RoundedPanel;
@@ -39,6 +41,13 @@ public class LoginView extends JPanel
 	JPasswordField txtContrasena;
 	JLabel lblCorreoObligatorio;
 	JLabel lblContraObligatoria;
+	
+    Border redBorder = BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.RED, 2),
+            BorderFactory.createEmptyBorder(8, 10, 8, 10)
+    );
+    
+    Border normalBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10);
 	
 	public LoginView() 
 	{
@@ -117,7 +126,7 @@ public class LoginView extends JPanel
 
 	    txtCorreo = new JTextField();
 	    txtCorreo.setFont(AppFont.normal());
-	    txtCorreo.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+	    txtCorreo.setBorder(normalBorder);
 	    txtCorreo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
 	    txtCorreo.putClientProperty("JTextField.placeholderText", "Ingrese su correo electrónico");
 
@@ -140,7 +149,7 @@ public class LoginView extends JPanel
 
         txtContrasena = new JPasswordField();
         txtContrasena.setFont(AppFont.normal());
-        txtContrasena.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        txtContrasena.setBorder(normalBorder);
         txtContrasena.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         txtContrasena.putClientProperty("JTextField.placeholderText", "Ingrese su contraseña");
 
@@ -251,6 +260,8 @@ public class LoginView extends JPanel
         return fila;
     }
     
+    //CREAR LOS BOTONES
+    
 	public JPanel crearBotones() {
         JPanel fila = new JPanel();
         fila.setBorder(new EmptyBorder(5, 20, 10, 20));
@@ -287,6 +298,8 @@ public class LoginView extends JPanel
 		return fila;
 	}
 	
+	//MOSTRAR MENSAJE DE QUE SE INICIÓ SESIÓN
+	
 	private void login() {
 	    if(validarLogin()) {
 	        JOptionPane.showMessageDialog(
@@ -298,23 +311,32 @@ public class LoginView extends JPanel
 	    }
 	}
 	
+	//MOSTRAR LABELS DE ERROR
+	
 	private void mostrarErrorCorreo(String mensaje) {
 		lblCorreoObligatorio.setText(mensaje);
 		lblCorreoObligatorio.setVisible(true);
+		txtCorreo.setBorder(redBorder);
 	}	
 	
 	private void mostrarErrorContrasena(String mensaje) {
 		lblContraObligatoria.setText(mensaje);
 		lblContraObligatoria.setVisible(true);
+		txtContrasena.setBorder(redBorder);
 	}
 	
 	private void resetearMensajeError() {
 	    lblCorreoObligatorio.setVisible(false);
+		txtCorreo.setBorder(normalBorder);
+
 	    lblContraObligatoria.setVisible(false);
+	    txtContrasena.setBorder(normalBorder);
+
 	}
 	
+	//VALIDAR QUE LOS CAMPOS NO ESTÉN VACÍOS
+	
 	private boolean validarLogin() {
-	    
 	    resetearMensajeError();
 	    boolean valido = true;
 
