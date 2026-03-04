@@ -2,11 +2,9 @@ package views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,16 +12,16 @@ import javax.swing.JScrollPane;
 import components.GradientPanel;
 
 @SuppressWarnings("serial")
-public class Ventana extends JFrame 
+public class RegistrationWindow extends JFrame 
 {
-    public Ventana() 
+    public RegistrationWindow() 
     {
     	int ventanaW = 1000;
 	   	int ventanaH = 800;
         this.setSize(ventanaW, ventanaH);
 		this.setLocation(100,100); 
         this.setLocationRelativeTo(null);
-        this.setTitle("HOTEL MJ");
+        this.setTitle("Registro | HOTEL MJ");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -42,7 +40,6 @@ public class Ventana extends JFrame
         setIconImage(icono);
                 
         //Agregar el panel
-        //add(crearVistaConScroll(new LoginView()), BorderLayout.CENTER);        
         add(crearVistaConScroll(new RegistrationView()), BorderLayout.CENTER);        
         
         this.setVisible(true);

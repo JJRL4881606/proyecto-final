@@ -37,6 +37,8 @@ import utils.AppFont;
 public class LoginView extends JPanel
 {
 	int ventanaCentroW = 400;
+	
+	LoginWindow window;
 	JTextField txtCorreo;
 	JPasswordField txtContrasena;
 	JLabel lblCorreoObligatorio;
@@ -50,8 +52,8 @@ public class LoginView extends JPanel
     
     Border normalBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10);
 	
-	public LoginView() 
-	{
+	public LoginView(LoginWindow window) {
+		this.window = window;
 		this.setBackground(new Color(100,149,237)); 
 	    setLayout(new GridBagLayout());
 		inicializarComponentes();
@@ -251,7 +253,7 @@ public class LoginView extends JPanel
 		botonIniciarSesion.setForeground(Color.BLACK);
 		botonIniciarSesion.setToolTipText("Haz click aquí");
 		botonIniciarSesion.setFont(AppFont.big());
-		
+
 		JButton botonCrearCuenta = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
 		botonCrearCuenta.setBackground(new Color(255, 249, 179));
 		botonCrearCuenta.setForeground(Color.BLACK);
@@ -272,22 +274,32 @@ public class LoginView extends JPanel
 		fila.add(botonIniciarSesion);	
 		fila.add(botonCrearCuenta);
 		
-		botonIniciarSesion.addActionListener(e -> login());
-		
+		botonIniciarSesion.addActionListener(e -> handleLogin());
+		botonCrearCuenta.addActionListener(e-> handleRegistration());
+
 		return fila;
 	}
 	
 	//MOSTRAR MENSAJE DE INICIO SESIÓN
 	
-	private void login() {
-	    if(validateLogin()) {
-	        JOptionPane.showMessageDialog(
-	            this,
-	            "Se inició la sesión",
-	            "Sesión iniciada",
-	            JOptionPane.INFORMATION_MESSAGE
-	        );
-	    }
+	private void handleLogin() {
+		
+		if(validateLogin()) {
+			JOptionPane.showMessageDialog(
+				this,
+ 				"Se inició la sesión", 
+ 				"Sesión iniciada", 
+ 				JOptionPane.INFORMATION_MESSAGE
+ 			);
+			
+			new MainWindow();
+			window.dispose();
+		}
+	}
+	
+	private void handleRegistration() {
+		new RegistrationWindow();
+		window.dispose();
 	}
 
 	//MOSTRAR LABELS DE ERROR

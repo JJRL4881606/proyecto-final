@@ -40,6 +40,8 @@ public class RegistrationView extends JPanel
 {
 	int ventanaCentroW = 400;
 	
+	RegistrationView registerWindow;
+
 	JTextField txtName;
 	JTextField txtSurname;
 	JPasswordField txtPassword;
@@ -256,6 +258,22 @@ public class RegistrationView extends JPanel
 		
         panel.add(botonCrearCuenta, BorderLayout.CENTER);
         
+        
+        /*
+        RoundButton btnReturn = new RoundButton("Regresar", new ImageIcon("src/img/login-icon.png"));
+		btnReturn.addActionListener(e -> {
+			
+			int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas regresar? Se perderán todos los datos");
+			
+			if(option == JOptionPane.YES_OPTION) {
+				new LoginWindow();
+				registerWindow.dispose();
+			}
+			
+		});
+		
+		panel.add(btnReturn);*/
+
         return panel;
 	}	
 	
