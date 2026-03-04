@@ -10,7 +10,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -18,7 +17,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -85,7 +83,7 @@ public class RegistrationView extends JPanel
 	    card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 	    card.setBackground(new Color(151, 210, 251));
 	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
-	    card.setMaximumSize(new Dimension(500, Integer.MAX_VALUE));
+	    card.setMaximumSize(new Dimension(700, Integer.MAX_VALUE));
 	    card.setAlignmentX(CENTER_ALIGNMENT);
 	    card.putClientProperty("FlatLaf.style", "arc:20");
 	    
@@ -232,19 +230,35 @@ public class RegistrationView extends JPanel
 	//CREAR EL BOTÓN
 	
 	private JPanel createButton() {
-	    JPanel panel = new JPanel(new BorderLayout());
-	    panel.setOpaque(false);
+		JPanel panel = new JPanel(new GridLayout(2, 1, 0, 10));
+		panel.setOpaque(false);
 	    panel.setBorder(new EmptyBorder(5, 20, 10, 20));
 
         RoundButton botonCrearCuenta = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
 		botonCrearCuenta.setBackground(new Color(255, 249, 179));
-		botonCrearCuenta.setForeground(Color.BLACK);
 		botonCrearCuenta.setFont(AppFont.big());
         botonCrearCuenta.setFocusPainted(false);
-        botonCrearCuenta.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
         botonCrearCuenta.addActionListener(e -> validateRegistration());
+		        
+        RoundButton btnReturn = new RoundButton("REGRESAR", new ImageIcon("src/img/login-icon.png"));
+        btnReturn.setBackground(new Color(255, 249, 179));
+        btnReturn.setFont(AppFont.big());
+        //btnReturn.setFocusPainted(false);
+        btnReturn.addActionListener(e -> {
 
+            int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas regresar? Se perderán todos los datos");
+
+            if (option == JOptionPane.YES_OPTION) {
+                new LoginWindow();
+                java.awt.Window window = 
+                    javax.swing.SwingUtilities.getWindowAncestor(this);
+
+                if (window != null) {
+                    window.dispose();
+                }
+            }
+        });
+		
 		try
 		{
 			Image icono = ImageIO.read(getClass().getResource("/img/login-icon.png"));
@@ -256,23 +270,8 @@ public class RegistrationView extends JPanel
 			System.out.println("No está la imagen del ícono");
 		}
 		
-        panel.add(botonCrearCuenta, BorderLayout.CENTER);
-        
-        
-        /*
-        RoundButton btnReturn = new RoundButton("Regresar", new ImageIcon("src/img/login-icon.png"));
-		btnReturn.addActionListener(e -> {
-			
-			int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas regresar? Se perderán todos los datos");
-			
-			if(option == JOptionPane.YES_OPTION) {
-				new LoginWindow();
-				registerWindow.dispose();
-			}
-			
-		});
-		
-		panel.add(btnReturn);*/
+        panel.add(botonCrearCuenta);
+		panel.add(btnReturn);
 
         return panel;
 	}	
@@ -348,6 +347,13 @@ public class RegistrationView extends JPanel
 
 	    if (valid) {
 	        JOptionPane.showMessageDialog(this, "Registro exitoso");
+	        new MainPageWindow();
+	        java.awt.Window window = 
+	            javax.swing.SwingUtilities.getWindowAncestor(this);
+
+	        if (window != null) {
+	            window.dispose();
+	        }
 	    }
 	}
 

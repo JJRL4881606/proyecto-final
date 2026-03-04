@@ -2,9 +2,6 @@ package views;
 
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,10 +13,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 
 import javax.imageio.ImageIO;
@@ -27,8 +22,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-
 import components.RoundButton;
 import components.RoundedPanel;
 import utils.AppFont;
@@ -66,9 +59,8 @@ public class LoginView extends JPanel
 	    card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 	    card.setBackground(new Color(151, 210, 251));
 	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
-	    card.setMaximumSize(new Dimension(450, 350));
+	    card.setMaximumSize(new Dimension(500, Integer.MAX_VALUE));
 	    card.setAlignmentX(CENTER_ALIGNMENT);
-	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
 	    
 	    card.add(createTitle());
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -292,7 +284,7 @@ public class LoginView extends JPanel
  				JOptionPane.INFORMATION_MESSAGE
  			);
 			
-			new MainWindow();
+			new MainPageWindow();
 			window.dispose();
 		}
 	}
