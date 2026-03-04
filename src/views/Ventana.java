@@ -1,4 +1,4 @@
-package main;
+package views;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,8 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import components.GradientPanel;
-import views.RegistroView;
-import views.LoginView;
 
 @SuppressWarnings("serial")
 public class Ventana extends JFrame 
@@ -44,8 +42,8 @@ public class Ventana extends JFrame
         setIconImage(icono);
                 
         //Agregar el panel
-        add(crearVistaConScroll(new LoginView()), BorderLayout.CENTER);        
-        //add(crearVistaConScroll(new RegistroView()), BorderLayout.CENTER);        
+        //add(crearVistaConScroll(new LoginView()), BorderLayout.CENTER);        
+        add(crearVistaConScroll(new RegistrationView()), BorderLayout.CENTER);        
         
         this.setVisible(true);
     }

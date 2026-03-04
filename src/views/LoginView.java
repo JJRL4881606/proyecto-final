@@ -41,10 +41,11 @@ public class LoginView extends JPanel
 	JPasswordField txtContrasena;
 	JLabel lblCorreoObligatorio;
 	JLabel lblContraObligatoria;
+	JLabel lblError;
 	
     Border redBorder = BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.RED, 2),
-            BorderFactory.createEmptyBorder(8, 10, 8, 10)
+        BorderFactory.createLineBorder(Color.RED, 2),
+        BorderFactory.createEmptyBorder(8, 10, 8, 10)
     );
     
     Border normalBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10);
@@ -67,7 +68,7 @@ public class LoginView extends JPanel
 	    card.setAlignmentX(CENTER_ALIGNMENT);
 	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
 	    
-	    card.add(crearTitulo());
+	    card.add(createTitle());
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
 	    card.add(crearFilaCorreo());
         card.add(crearFilaCorreoObligatorio());   
@@ -82,7 +83,7 @@ public class LoginView extends JPanel
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
         card.add(crearFilaOlvido());
         card.add(Box.createRigidArea(new Dimension(0, 10)));
-        card.add(crearBotones());
+        card.add(createButtons());
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
 
 	    GridBagConstraints gbc = new GridBagConstraints();
@@ -93,7 +94,7 @@ public class LoginView extends JPanel
 	    add(card, gbc);
 	}
 	
-	private JPanel crearTitulo() {
+	private JPanel createTitle() {
 	    JPanel panel = new JPanel();
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	    panel.setOpaque(false);
@@ -120,45 +121,21 @@ public class LoginView extends JPanel
 	    fila.setOpaque(false);
 	    fila.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-	    JLabel lblCorreo = new JLabel("Correo electrónico");
-	    lblCorreo.setFont(AppFont.normal());
-	    lblCorreo.setAlignmentX(CENTER_ALIGNMENT);
-
-	    txtCorreo = new JTextField();
-	    txtCorreo.setFont(AppFont.normal());
-	    txtCorreo.setBorder(normalBorder);
-	    txtCorreo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-	    txtCorreo.putClientProperty("JTextField.placeholderText", "Ingrese su correo electrónico");
-
-	    fila.add(lblCorreo);
-	    fila.add(Box.createRigidArea(new Dimension(0, 6)));
-	    fila.add(txtCorreo);
+	    txtCorreo = createField(fila, "Correo electrónico", "Ingrese su correo electrónico", false);
 
 	    return fila;
 	}
     
-    private JPanel crearFilaContrasena() {
-        JPanel fila = new JPanel(new BorderLayout(10, 10));
+	private JPanel crearFilaContrasena() {
+	    JPanel fila = new JPanel();
 	    fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
 	    fila.setOpaque(false);
 	    fila.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-        JLabel lblContrasena = new JLabel("Contraseña:");
-        lblContrasena.setFont(AppFont.normal());
-        lblContrasena.setAlignmentX(CENTER_ALIGNMENT);
+	    txtContrasena = (JPasswordField) createField(fila, "Contraseña", "Ingrese su contraseña", true);
 
-        txtContrasena = new JPasswordField();
-        txtContrasena.setFont(AppFont.normal());
-        txtContrasena.setBorder(normalBorder);
-        txtContrasena.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        txtContrasena.putClientProperty("JTextField.placeholderText", "Ingrese su contraseña");
-
-	    fila.add(lblContrasena);
-	    fila.add(Box.createRigidArea(new Dimension(0, 6)));
-	    fila.add(txtContrasena);
-        
-        return fila;
-    }
+	    return fila;
+	}
     
     private JPanel crearFilaCorreoObligatorio() {
         JPanel fila = new JPanel();
@@ -250,7 +227,9 @@ public class LoginView extends JPanel
         fila.setOpaque(false);
         fila.setBorder(new EmptyBorder(0, 20, 10, 20));
 
-        JLabel lblError = new JLabel("Usuario o contraseña incorrectos");
+        lblError = new JLabel("Usuario o contraseña incorrectos");
+        lblError.setVisible(false);
+        
         lblError.setForeground(Color.RED);
         lblError.setFont(AppFont.small());
         lblError.setAlignmentX(CENTER_ALIGNMENT);
@@ -262,7 +241,7 @@ public class LoginView extends JPanel
     
     //CREAR LOS BOTONES
     
-	public JPanel crearBotones() {
+	public JPanel createButtons() {
         JPanel fila = new JPanel();
         fila.setBorder(new EmptyBorder(5, 20, 10, 20));
         fila.setOpaque(false);
@@ -298,10 +277,10 @@ public class LoginView extends JPanel
 		return fila;
 	}
 	
-	//MOSTRAR MENSAJE DE QUE SE INICIÓ SESIÓN
+	//MOSTRAR MENSAJE DE INICIO SESIÓN
 	
 	private void login() {
-	    if(validarLogin()) {
+	    if(validateLogin()) {
 	        JOptionPane.showMessageDialog(
 	            this,
 	            "Se inició la sesión",
@@ -310,7 +289,7 @@ public class LoginView extends JPanel
 	        );
 	    }
 	}
-	
+
 	//MOSTRAR LABELS DE ERROR
 	
 	private void mostrarErrorCorreo(String mensaje) {
@@ -336,22 +315,58 @@ public class LoginView extends JPanel
 	
 	//VALIDAR QUE LOS CAMPOS NO ESTÉN VACÍOS
 	
-	private boolean validarLogin() {
+	private boolean validateLogin() {
+
 	    resetearMensajeError();
 	    boolean valido = true;
 
-	    if(txtCorreo.getText().trim().isEmpty()) {
+	    String correo = txtCorreo.getText().trim();
+	    String contrasena = String.valueOf(txtContrasena.getPassword()).trim();
+
+	    // VALIDAR CORREO VACÍO
+	    if (correo.isEmpty()) {
 	        mostrarErrorCorreo("El correo es obligatorio");
 	        valido = false;
 	    }
+	    // VALIDAR FORMATO CORREO
+	    else if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+	        mostrarErrorCorreo("Formato de correo inválido");
+	        valido = false;
+	    }
 
-	    String contrasena = String.valueOf(txtContrasena.getPassword());
-	    
-	    if(contrasena.trim().isEmpty()) {
+	    // VALIDAR CONTRASEÑA VACÍA
+	    if (contrasena.isEmpty()) {
 	        mostrarErrorContrasena("La contraseña es obligatoria");
 	        valido = false;
 	    }
 
 	    return valido;
 	}
+	
+	private JTextField createField(JPanel fila, String labelText, String placeholder, boolean isPassword) {
+
+	    JLabel label = new JLabel(labelText);
+	    label.setFont(AppFont.normal());
+	    label.setAlignmentX(CENTER_ALIGNMENT);
+
+	    JTextField field;
+
+	    if (isPassword) {
+	        field = new JPasswordField();
+	    } else {
+	        field = new JTextField();
+	    }
+
+	    field.setFont(AppFont.normal());
+	    field.setBorder(normalBorder);
+	    field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+	    field.putClientProperty("JTextField.placeholderText", placeholder);
+
+	    fila.add(label);
+	    fila.add(Box.createRigidArea(new Dimension(0, 6)));
+	    fila.add(field);
+
+	    return field;
+	}
+	
 }

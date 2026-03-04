@@ -10,6 +10,7 @@ import javax.swing.plaf.FontUIResource;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import utils.AppFont;
+import views.Ventana;
 
 public class Main 
 {
