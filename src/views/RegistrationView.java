@@ -87,6 +87,7 @@ public class RegistrationView extends JPanel
 	    card.setAlignmentX(CENTER_ALIGNMENT);
 	    card.putClientProperty("FlatLaf.style", "arc:20");
 	    
+	    //AGREGAR LAS COSAS A LA CARD
 	    card.add(createTitle());
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
 	    card.add(createForm());
@@ -103,6 +104,9 @@ public class RegistrationView extends JPanel
     }
     
     public JPanel createForm() {
+    	
+    	//PANEL PRINCIPAL
+    	
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setBackground(new Color(151, 210, 251));
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));

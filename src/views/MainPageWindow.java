@@ -18,7 +18,6 @@ public class MainPageWindow extends JFrame
     {
         // Pantalla completa (maximizada)
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
         this.setTitle("Home | HOTEL MJ");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,12 +33,11 @@ public class MainPageWindow extends JFrame
 
         // Agregar ícono aplicación
         Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icono = tk.getImage("src/img/iconoRegistroUsuario.png");
+        Image icono = tk.getImage("src/img/logoHotel.png");
         setIconImage(icono);
                 
         // Agregar el panel con scroll
-        add(crearVistaConScroll(new MainPageView()), BorderLayout.CENTER);        
-        
+        add(crearVistaConScroll(new MainPageView()), BorderLayout.CENTER);
         this.setVisible(true);
     }
     

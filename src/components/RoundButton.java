@@ -54,10 +54,7 @@ public class RoundButton extends JButton {
         }
 
         g2.setColor(colorBase);
-
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(),
-                         cornerRadius, cornerRadius);
-
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), cornerRadius, cornerRadius);
         g2.dispose();
         super.paintComponent(g);
     }
@@ -66,12 +63,11 @@ public class RoundButton extends JButton {
     protected void paintBorder(Graphics g) {
         if (drawBorder && borderThickness > 0) {
             Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                RenderingHints.VALUE_ANTIALIAS_ON);
-
+            
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setStroke(new BasicStroke(borderThickness));
             g2.setColor(getForeground());
-
+            
             int offset = (int) (borderThickness / 2);
             g2.drawRoundRect(offset, offset,
                     getWidth() - offset * 2 - 1,
