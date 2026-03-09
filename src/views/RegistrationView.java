@@ -28,6 +28,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import components.RoundButton;
 import components.RoundedPanel;
@@ -329,6 +331,8 @@ public class RegistrationView extends JPanel
 		spBirthDate.setBorder(normalBorder);
 		lblGenderError.setText("");
 		lblTermsError.setText("");
+		
+		assignListeners();
 	}
 	
 	//VALIDACIONES DE LOS CAMPOS
@@ -360,6 +364,105 @@ public class RegistrationView extends JPanel
 	        }
 	    }
 	}
+	
+	private void assignListeners() {
+		comboCountry.addActionListener(e -> {
+			validateCountry();
+		});
+		
+		chkTerms.addActionListener(e -> validateTerms());
+				
+		txtName.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validateName();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				validateName();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				validateName();
+			}
+		});		
+		
+		txtSurname.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validateSurname();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				validateSurname();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				validateSurname();
+			}
+		});		
+		
+		txtPassword.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validatePassword();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				validatePassword();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				validatePassword();
+			}
+		});	
+		
+		txtEmail.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validateEmail();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				validateEmail();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				validateEmail();
+			}
+		});		
+		
+		txtPhone.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				validatePhone();
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				validatePhone();
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				validatePhone();
+			}
+		});	
+	}
+
 
 	private boolean validateName() {
 	    String name = txtName.getText().trim();
@@ -375,6 +478,9 @@ public class RegistrationView extends JPanel
 			txtName.setBorder(redBorder);
 	        return false;
 	    }
+	    
+	    lblNameError.setText("");
+		txtName.setBorder(normalBorder);
 
 	    return true;
 	}
@@ -393,6 +499,10 @@ public class RegistrationView extends JPanel
 	        lblSurnameError.setText("Solo se permiten letras");
 	        return false;
 	    }
+	    
+	    lblSurnameError.setText("");
+		txtSurname.setBorder(normalBorder);
+
 
 	    return true;
 	}
@@ -403,6 +513,11 @@ public class RegistrationView extends JPanel
 			txtPassword.setBorder(redBorder);
 	        return false;
 	    }
+	    
+	    lblPasswordError.setText("");
+		txtPassword.setBorder(normalBorder);
+
+
 	    return true;
 	}
 	
@@ -422,6 +537,9 @@ public class RegistrationView extends JPanel
 			txtEmail.setBorder(redBorder);
 	        return false;
 	    }
+	    
+	    lblEmailError.setText("");
+		txtEmail.setBorder(normalBorder);
 
 	    return true;
 	}
@@ -447,6 +565,9 @@ public class RegistrationView extends JPanel
 	        return false;
 	    }
 	    
+	    lblPhoneError.setText("");
+		txtPhone.setBorder(normalBorder);
+	    
 	    return true;
 	}
 	
@@ -455,23 +576,47 @@ public class RegistrationView extends JPanel
 	        lblBirthDateError.setText("La fecha de nacimiento es obligatoria");
 	        return false;
 	    }
+	    
+	    lblBirthDateError.setText("");
+		spBirthDate.setBorder(normalBorder);
+		
 	    return true;
 	}
 	
 	private boolean validateCountry() {
-	    if (comboCountry.getSelectedIndex() == 0) {
-	        lblCountryError.setText("Seleccione un país");
+		if (comboCountry.getSelectedIndex() == 0) {
+			lblCountryError.setText("Seleccione un país");
 	        comboCountry.setBorder(redBorder);
-	        return false;
-	    }
-	    return true;
+			return false;
+		}
+
+		lblCountryError.setText("");
+        comboCountry.setBorder(normalBorder);
+
+		return true;
 	}
+	
+	/*private boolean validateComboBox() {
+		
+		if (comboCountry.getSelectedIndex() == 0) {
+			lblCountryError.setText("Seleccione un país");
+	        comboCountry.setBorder(redBorder);
+			return false;
+		}
+
+		lblCountryError.setText("");
+        comboCountry.setBorder(normalBorder);
+
+		return true;
+	}*/
 	
 	private boolean validateGender() {
 	    if (!rbtnMale.isSelected() && !rbtnFemale.isSelected()) {
 	        lblGenderError.setText("Seleccione un género");
 	        return false;
 	    }
+	    lblGenderError.setText("");
+
 	    return true;
 	}
 	
@@ -480,6 +625,9 @@ public class RegistrationView extends JPanel
 	        lblTermsError.setText("Debe aceptar los términos y condiciones");
 	        return false;
 	    }
+	    
+		lblTermsError.setText("");
+
 	    return true;
 	}
 

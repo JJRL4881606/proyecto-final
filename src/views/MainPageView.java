@@ -3,18 +3,17 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -27,6 +26,8 @@ import utils.AppFont;
 @SuppressWarnings("serial")
 public class MainPageView extends JPanel{
 	
+	JMenuItem cerrarSesion;
+
 	public MainPageView(){
 		this.setBackground(new Color(100,149,237)); 
 	    setLayout(new BorderLayout());
@@ -137,11 +138,27 @@ public class MainPageView extends JPanel{
         mb.add(sistema);
 
         JMenuItem inicio = new JMenuItem("Inicio");
+        inicio.setMnemonic(KeyEvent.VK_I);
         sistema.add(inicio);
-
         sistema.addSeparator();
 
-        JMenuItem cerrarSesion = new JMenuItem("Cerrar sesión");
+        cerrarSesion = new JMenuItem("Cerrar sesión");
+        cerrarSesion.setMnemonic(KeyEvent.VK_C);
+        cerrarSesion.addActionListener(e -> {
+
+            int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas regresar? Se perderán todos los datos");
+
+            if (option == JOptionPane.YES_OPTION) {
+                new LoginWindow();
+                java.awt.Window window = 
+                    javax.swing.SwingUtilities.getWindowAncestor(this);
+
+                if (window != null) {
+                    window.dispose();
+                }
+            }
+        });
+        
         sistema.add(cerrarSesion);
 
         // HABITACIONES
@@ -151,9 +168,11 @@ public class MainPageView extends JPanel{
         mb.add(habitaciones);
 
         JMenuItem verHabitaciones = new JMenuItem("Ver habitaciones");
+        verHabitaciones.setMnemonic(KeyEvent.VK_V);
         habitaciones.add(verHabitaciones);
 
         JMenuItem disponibilidad = new JMenuItem("Disponibilidad");
+        disponibilidad.setMnemonic(KeyEvent.VK_D);
         habitaciones.add(disponibilidad);
 
         // RESERVAS
@@ -163,9 +182,11 @@ public class MainPageView extends JPanel{
         mb.add(reservas);
 
         JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
+        nuevaReserva.setMnemonic(KeyEvent.VK_N);
         reservas.add(nuevaReserva);
 
         JMenuItem misReservas = new JMenuItem("Mis reservas");
+        misReservas.setMnemonic(KeyEvent.VK_M);
         reservas.add(misReservas);
 
         // CLIENTES
@@ -175,6 +196,7 @@ public class MainPageView extends JPanel{
         mb.add(clientes);
 
         JMenuItem registrarCliente = new JMenuItem("Registrar cliente");
+        registrarCliente.setMnemonic(KeyEvent.VK_R);
         clientes.add(registrarCliente);
 
         return mb;
