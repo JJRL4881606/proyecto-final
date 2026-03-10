@@ -248,7 +248,7 @@ public class RegistrationView extends JPanel
         botonCrearCuenta.setFocusPainted(false);
         botonCrearCuenta.addActionListener(e -> validateRegistration());
 		        
-        RoundButton btnReturn = new RoundButton("REGRESAR", new ImageIcon("src/img/login-icon.png"));
+        RoundButton btnReturn = new RoundButton("REGRESAR", new ImageIcon("src/img/back-icon.png"));
         btnReturn.setBackground(new Color(255, 249, 179));
         btnReturn.setFont(AppFont.big());
         //btnReturn.setFocusPainted(false);
@@ -623,5 +623,5 @@ public class RegistrationView extends JPanel
 
 	    return true;
 	}
-
+	
 }

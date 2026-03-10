@@ -7,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
-
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -48,7 +47,6 @@ public class MainPageView extends JPanel{
         JPanel superiorPanel = new JPanel();
         superiorPanel.setLayout(new GridLayout(1,3));
         superiorPanel.setBackground(new Color(30,144,255));
-
         superiorPanel.setBorder(new EmptyBorder(15,20,15,20));
 
         superiorPanel.add(headerLeftSection());
@@ -130,7 +128,6 @@ public class MainPageView extends JPanel{
     	RoundedMenuBar mb = new RoundedMenuBar();
     	mb.setFont(AppFont.big());
 
-
         // SISTEMA
         JMenu sistema = new JMenu("Sistema");
         sistema.setBorder(new EmptyBorder(5,15,5,15));
@@ -150,8 +147,7 @@ public class MainPageView extends JPanel{
 
             if (option == JOptionPane.YES_OPTION) {
                 new LoginWindow();
-                java.awt.Window window = 
-                    javax.swing.SwingUtilities.getWindowAncestor(this);
+                java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
 
                 if (window != null) {
                     window.dispose();
@@ -214,8 +210,7 @@ public class MainPageView extends JPanel{
     public JPanel inferiorSection() {
         JPanel inferiorPanel = new JPanel();
         inferiorPanel.setBackground(new Color(30,144,255));
-
-        inferiorPanel.setBorder(new EmptyBorder(15,20,15,20));
+        inferiorPanel.setBorder(new EmptyBorder(15,30,15,30));
 
         JLabel relleno1 = new JLabel("texto de relleno");
         relleno1.setFont(AppFont.big());
@@ -224,4 +219,5 @@ public class MainPageView extends JPanel{
 
         return inferiorPanel;
     }
+
 }

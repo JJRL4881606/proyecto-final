@@ -3,6 +3,7 @@ package components;
 import javax.swing.*;
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class GradientPanel extends JPanel {
 
     private Color color1;

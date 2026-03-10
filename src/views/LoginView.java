@@ -2,6 +2,9 @@ package views;
 
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,6 +19,8 @@ import javax.swing.SwingConstants;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 
@@ -24,6 +29,9 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+
+import java.net.URI;
+
 import components.RoundButton;
 import components.RoundedPanel;
 import utils.AppFont;
@@ -150,7 +158,28 @@ public class LoginView extends JPanel
         lblForgotPassword.setFont(AppFont.small());
         lblForgotPassword.setAlignmentX(CENTER_ALIGNMENT);
         lblForgotPassword.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        lblForgotPassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        lblForgotPassword.addMouseListener(new MouseAdapter() {
 
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI("https://www.google.com"));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            public void mouseEntered(MouseEvent e) {
+                lblForgotPassword.setForeground(Color.RED);
+            }
+
+            public void mouseExited(MouseEvent e) {
+                lblForgotPassword.setForeground(Color.BLACK);
+            }
+
+        });
+        
         mainPanel.add(lblForgotPassword);
         
         // ERROR LABEL
@@ -189,7 +218,7 @@ public class LoginView extends JPanel
 		btnLogin.setToolTipText("Haz click aquí");
 		btnLogin.setFont(AppFont.big());
 
-		JButton btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
+		JButton btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/registration-icon.png"));
 		btnRegistration.setBackground(new Color(255, 249, 179));
 		btnRegistration.setForeground(Color.BLACK);
 		btnRegistration.setToolTipText("Haz click aquí");
