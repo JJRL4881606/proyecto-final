@@ -16,11 +16,8 @@ public class RegistrationWindow extends JFrame
 {
     public RegistrationWindow() 
     {
-    	int ventanaW = 1000;
-	   	int ventanaH = 800;
-        this.setSize(ventanaW, ventanaH);
-		this.setLocation(100,100); 
-        this.setLocationRelativeTo(null);
+        // Pantalla completa (maximizada)
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Registro | HOTEL MJ");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

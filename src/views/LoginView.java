@@ -6,6 +6,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -14,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 
@@ -32,11 +34,11 @@ public class LoginView extends JPanel
 	int ventanaCentroW = 400;
 	
 	LoginWindow window;
-	JTextField txtCorreo;
-	JPasswordField txtContrasena;
-	JLabel lblCorreoObligatorio;
-	JLabel lblContraObligatoria;
-	JLabel lblError;
+	JTextField txtEmail;
+	JPasswordField txtPassword;
+	JLabel lblEmailError;
+	JLabel lblPasswordError;
+	JLabel lblWrongError;
 	
     Border redBorder = BorderFactory.createCompoundBorder(
         BorderFactory.createLineBorder(Color.RED, 2),
@@ -49,11 +51,11 @@ public class LoginView extends JPanel
 		this.window = window;
 		this.setBackground(new Color(100,149,237)); 
 	    setLayout(new GridBagLayout());
-		inicializarComponentes();
+	    initializeComponents();
         setVisible(true);
-	}
+   	}
 
-	private void inicializarComponentes() 
+	private void initializeComponents() 
 	{
 	    JPanel card = new RoundedPanel(50);
 	    card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -61,22 +63,12 @@ public class LoginView extends JPanel
 	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
 	    card.setMaximumSize(new Dimension(500, Integer.MAX_VALUE));
 	    card.setAlignmentX(CENTER_ALIGNMENT);
+	    card.putClientProperty("FlatLaf.style", "arc:20");
 	    
 	    card.add(createTitle());
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
-	    card.add(crearFilaCorreo());
-        card.add(crearFilaCorreoObligatorio());   
-	    card.add(Box.createRigidArea(new Dimension(0, 10)));
-        card.add(crearFilaContrasena());
-        card.add(crearFilaMostrarContrasena()); 
-        card.add(crearFilaContrasenaObligatoria()); 
-	    card.add(Box.createRigidArea(new Dimension(0, 10)));
-        card.add(crearFilaError());
-	    card.add(Box.createRigidArea(new Dimension(0, 10)));
-        card.add(crearFilaRecordarme());
-	    card.add(Box.createRigidArea(new Dimension(0, 10)));
-        card.add(crearFilaOlvido());
-        card.add(Box.createRigidArea(new Dimension(0, 10)));
+	    card.add(createForm());
+        card.add(Box.createRigidArea(new Dimension(0, 20)));
         card.add(createButtons());
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -93,186 +85,137 @@ public class LoginView extends JPanel
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	    panel.setOpaque(false);
 	    
-		JLabel lblTitulo = new JLabel("HOTEL MJ - LOGIN");
-		lblTitulo.setBorder(new EmptyBorder(30, 20, 20, 20)); 
-		lblTitulo.setFont(AppFont.title());
-	    lblTitulo.setAlignmentX(CENTER_ALIGNMENT);
+		JLabel lblTitle = new JLabel("HOTEL MJ - LOGIN");
+		lblTitle.setBorder(new EmptyBorder(30, 20, 20, 20)); 
+		lblTitle.setFont(AppFont.title());
+		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
 		
-		JLabel lblInstrucciones = new JLabel("Ingrese sus datos para iniciar sesión");
-		lblInstrucciones.setBorder(new EmptyBorder(10, 20, 30, 20)); 
-		lblInstrucciones.setFont(AppFont.subtitle());
-		lblInstrucciones.setAlignmentX(CENTER_ALIGNMENT); 
+		JLabel lblSubtitle = new JLabel("Ingrese sus datos para iniciar sesión");
+		lblSubtitle.setBorder(new EmptyBorder(10, 20, 30, 20)); 
+		lblSubtitle.setFont(AppFont.subtitle());
+		lblSubtitle.setAlignmentX(CENTER_ALIGNMENT); 
 
-	    panel.add(lblTitulo);
+	    panel.add(lblTitle);
 	    panel.add(Box.createVerticalStrut(8));
-	    panel.add(lblInstrucciones);
+	    panel.add(lblSubtitle);
 
 	    return panel;
 	}
-	private JPanel crearFilaCorreo() {
-	    JPanel fila = new JPanel();
-	    fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-	    fila.setOpaque(false);
-	    fila.setBorder(new EmptyBorder(10, 20, 10, 20));
+		
+	private JPanel createForm() {
 
-	    txtCorreo = createField(fila, "Correo electrónico", "Ingrese su correo electrónico", false);
+	    JPanel mainPanel = new JPanel();
+	    mainPanel.setBackground(new Color(151, 210, 251));
+	    mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+	    mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    mainPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
-	    return fila;
+	    // EMAIL
+
+	    txtEmail = new JTextField();
+	    txtEmail.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+	    txtEmail.setFont(AppFont.normal());
+	    txtEmail.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+
+	    lblEmailError = createErrorLabel();
+
+	    mainPanel.add(createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico"));
+
+	    // PASSWORD
+
+	    txtPassword = new JPasswordField();
+	    txtPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+	    txtPassword.setFont(AppFont.normal());
+	    txtPassword.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+
+	    lblPasswordError = createErrorLabel();
+
+	    mainPanel.add(createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña"));
+
+	    // MOSTRAR CONTRASEÑA
+
+	    JCheckBox chkShowPassword = new JCheckBox("Mostrar contraseña");
+	    chkShowPassword.setOpaque(false);
+	    chkShowPassword.setFont(AppFont.small());
+	    chkShowPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+	    mainPanel.add(chkShowPassword);
+        
+        // OLVIDASTE CONTRASEÑA
+        
+        JLabel lblForgotPassword = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
+        lblForgotPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
+        lblForgotPassword.setForeground(new Color(0,0,0));
+        lblForgotPassword.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblForgotPassword.setFont(AppFont.small());
+        lblForgotPassword.setAlignmentX(CENTER_ALIGNMENT);
+        lblForgotPassword.setHorizontalAlignment(SwingConstants.CENTER);
+
+        mainPanel.add(lblForgotPassword);
+        
+        // ERROR LABEL
+        
+        lblWrongError = new JLabel("Usuario o contraseña incorrectos");
+        lblWrongError.setVisible(false);
+        lblWrongError.setForeground(Color.RED);
+        lblWrongError.setFont(AppFont.small());
+        lblWrongError.setAlignmentX(CENTER_ALIGNMENT);
+
+        mainPanel.add(lblWrongError);
+
+	    return mainPanel;
 	}
     
-	private JPanel crearFilaContrasena() {
-	    JPanel fila = new JPanel();
-	    fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-	    fila.setOpaque(false);
-	    fila.setBorder(new EmptyBorder(10, 20, 10, 20));
-
-	    txtContrasena = (JPasswordField) createField(fila, "Contraseña", "Ingrese su contraseña", true);
-
-	    return fila;
+    // CREAR LABELS DE ERROR
+    
+	private JLabel createErrorLabel() {
+	    JLabel label = new JLabel();
+	    label.setForeground(new Color(220, 38, 38));
+	    label.setFont(AppFont.small());
+	    label.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    return label;
 	}
-    
-    private JPanel crearFilaCorreoObligatorio() {
-        JPanel fila = new JPanel();
-        fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-        fila.setOpaque(false);
-        fila.setBorder(new EmptyBorder(0, 20, 10, 20));
-
-        lblCorreoObligatorio = new JLabel("El correo electrónico es obligatorio");
-		lblCorreoObligatorio.setVisible(false);
-		lblCorreoObligatorio.setFont(AppFont.small());
-		lblCorreoObligatorio.setForeground(Color.RED);
-        lblCorreoObligatorio.setAlignmentX(CENTER_ALIGNMENT);
-
-        fila.add(lblCorreoObligatorio);
-
-        return fila;
-    }
-    
-    private JPanel crearFilaContrasenaObligatoria() {
-        JPanel fila = new JPanel();
-        fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-        fila.setOpaque(false);
-        fila.setBorder(new EmptyBorder(0, 20, 10, 20));
-
-        lblContraObligatoria = new JLabel("La contraseña es obligatoria");
-        lblContraObligatoria.setVisible(false);
-        lblContraObligatoria.setFont(AppFont.small());
-        lblContraObligatoria.setForeground(Color.RED);
-        lblContraObligatoria.setAlignmentX(CENTER_ALIGNMENT);
-
-        fila.add(lblContraObligatoria);
-        
-		return fila; 
-    }
-    
-    private JPanel crearFilaMostrarContrasena() {
-        JPanel fila = new JPanel();
-        fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-        fila.setOpaque(false);
-        fila.setBorder(new EmptyBorder(0, 20, 10, 20));
-
-        JCheckBox chkMostrar = new JCheckBox("Mostrar contraseña");
-        chkMostrar.setOpaque(false);
-        chkMostrar.setFont(AppFont.small());
-        chkMostrar.setAlignmentX(CENTER_ALIGNMENT);
-        
-        fila.add(chkMostrar);
-    
-        return fila;
-    }
-    
-    private JPanel crearFilaRecordarme() {
-        JPanel fila = new JPanel();
-        fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-        fila.setOpaque(false);
-        fila.setBorder(new EmptyBorder(0, 20, 10, 20));
-
-        JCheckBox chkRecordar = new JCheckBox("Recordar usuario");
-        chkRecordar.setOpaque(false);
-        chkRecordar.setFont(AppFont.normal());
-        chkRecordar.setAlignmentX(CENTER_ALIGNMENT);
-
-        fila.add(chkRecordar);
-        
-		return fila;
-    }
-    
-    private JPanel crearFilaOlvido() {
-        JPanel fila = new JPanel();
-        fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-        fila.setOpaque(false);
-        fila.setBorder(new EmptyBorder(0, 20, 10, 20));
-
-        JLabel lblOlvido = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
-        lblOlvido.setForeground(new Color(0,0,0));
-        lblOlvido.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblOlvido.setFont(AppFont.small());
-        lblOlvido.setAlignmentX(CENTER_ALIGNMENT);
-        lblOlvido.setHorizontalAlignment(SwingConstants.CENTER);
-
-        fila.add(lblOlvido);
-
-        return fila;
-    }
-    
-    private JPanel crearFilaError() {
-        JPanel fila = new JPanel();
-        fila.setLayout(new BoxLayout(fila, BoxLayout.Y_AXIS));
-        fila.setOpaque(false);
-        fila.setBorder(new EmptyBorder(0, 20, 10, 20));
-
-        lblError = new JLabel("Usuario o contraseña incorrectos");
-        lblError.setVisible(false);
-        
-        lblError.setForeground(Color.RED);
-        lblError.setFont(AppFont.small());
-        lblError.setAlignmentX(CENTER_ALIGNMENT);
-
-        fila.add(lblError);
-
-        return fila;
-    }
-    
-    //CREAR LOS BOTONES
+	    
+    // CREAR LOS BOTONES
     
 	public JPanel createButtons() {
         JPanel fila = new JPanel();
         fila.setBorder(new EmptyBorder(5, 20, 10, 20));
         fila.setOpaque(false);
 
-		JButton botonIniciarSesion = new RoundButton("INICIAR SESIÓN", new ImageIcon("src/img/login-icon.png"));
-		botonIniciarSesion.setBackground(new Color(255, 249, 179));
-		botonIniciarSesion.setForeground(Color.BLACK);
-		botonIniciarSesion.setToolTipText("Haz click aquí");
-		botonIniciarSesion.setFont(AppFont.big());
+		JButton btnLogin = new RoundButton("INICIAR SESIÓN", new ImageIcon("src/img/login-icon.png"));
+		btnLogin.setBackground(new Color(255, 249, 179));
+		btnLogin.setForeground(Color.BLACK);
+		btnLogin.setToolTipText("Haz click aquí");
+		btnLogin.setFont(AppFont.big());
 
-		JButton botonCrearCuenta = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
-		botonCrearCuenta.setBackground(new Color(255, 249, 179));
-		botonCrearCuenta.setForeground(Color.BLACK);
-		botonCrearCuenta.setToolTipText("Haz click aquí");
-		botonCrearCuenta.setFont(AppFont.big());
+		JButton btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
+		btnRegistration.setBackground(new Color(255, 249, 179));
+		btnRegistration.setForeground(Color.BLACK);
+		btnRegistration.setToolTipText("Haz click aquí");
+		btnRegistration.setFont(AppFont.big());
 		
 		try
 		{
 			Image icono = ImageIO.read(getClass().getResource("/img/login-icon.png"));
 			icono = icono.getScaledInstance(30,30, Image.SCALE_SMOOTH);
-			botonIniciarSesion.setIcon(new ImageIcon(icono));
+			btnLogin.setIcon(new ImageIcon(icono));
 		}
 		catch(Exception ex) 
 		{
 			System.out.println("No está la imagen del ícono");
 		}
 		
-		fila.add(botonIniciarSesion);	
-		fila.add(botonCrearCuenta);
+		fila.add(btnLogin);	
+		fila.add(btnRegistration);
 		
-		botonIniciarSesion.addActionListener(e -> handleLogin());
-		botonCrearCuenta.addActionListener(e-> handleRegistration());
+		btnLogin.addActionListener(e -> handleLogin());
+		btnRegistration.addActionListener(e-> handleRegistration());
 
 		return fila;
 	}
 	
-	//MOSTRAR MENSAJE DE INICIO SESIÓN
+	// MOSTRAR MENSAJE DE INICIO SESIÓN
 	
 	private void handleLogin() {
 		
@@ -296,24 +239,25 @@ public class LoginView extends JPanel
 
 	//MOSTRAR LABELS DE ERROR
 	
-	private void mostrarErrorCorreo(String mensaje) {
-		lblCorreoObligatorio.setText(mensaje);
-		lblCorreoObligatorio.setVisible(true);
-		txtCorreo.setBorder(redBorder);
+	private void showEmailError(String mensaje) {
+		lblEmailError.setText(mensaje);
+		lblEmailError.setVisible(true);
+		txtEmail.setBorder(redBorder);
 	}	
 	
-	private void mostrarErrorContrasena(String mensaje) {
-		lblContraObligatoria.setText(mensaje);
-		lblContraObligatoria.setVisible(true);
-		txtContrasena.setBorder(redBorder);
+	private void showPasswordError(String mensaje) {
+		lblPasswordError.setText(mensaje);
+		lblPasswordError.setVisible(true);
+		txtPassword.setBorder(redBorder);
 	}
 	
-	private void resetearMensajeError() {
-	    lblCorreoObligatorio.setVisible(false);
-		txtCorreo.setBorder(normalBorder);
-
-	    lblContraObligatoria.setVisible(false);
-	    txtContrasena.setBorder(normalBorder);
+	// QUITAR LABELS DE ERROR
+	
+	private void resetErrorLabels() {
+		lblEmailError.setVisible(false);
+	    txtEmail.setBorder(normalBorder);
+	    lblPasswordError.setVisible(false);
+	    txtPassword.setBorder(normalBorder);
 
 	}
 	
@@ -321,56 +265,60 @@ public class LoginView extends JPanel
 	
 	private boolean validateLogin() {
 
-	    resetearMensajeError();
-	    boolean valido = true;
+		resetErrorLabels();
+	    boolean valid = true;
 
-	    String correo = txtCorreo.getText().trim();
-	    String contrasena = String.valueOf(txtContrasena.getPassword()).trim();
+	    String email = txtEmail.getText().trim();
+	    String password = String.valueOf(txtPassword.getPassword()).trim();
 
 	    // VALIDAR CORREO VACÍO
-	    if (correo.isEmpty()) {
-	        mostrarErrorCorreo("El correo es obligatorio");
-	        valido = false;
+	    if (email.isEmpty()) {
+	        showEmailError("El correo es obligatorio");
+	        valid = false;
 	    }
 	    // VALIDAR FORMATO CORREO
-	    else if (!correo.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-	        mostrarErrorCorreo("Formato de correo inválido");
-	        valido = false;
+	    else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+	    	showEmailError("Formato de correo inválido");
+	        valid = false;
 	    }
 
 	    // VALIDAR CONTRASEÑA VACÍA
-	    if (contrasena.isEmpty()) {
-	        mostrarErrorContrasena("La contraseña es obligatoria");
-	        valido = false;
+	    if (password.isEmpty()) {
+	        showPasswordError("La contraseña es obligatoria");
+	        valid = false;
 	    }
 
-	    return valido;
+	    return valid;
 	}
 	
-	private JTextField createField(JPanel fila, String labelText, String placeholder, boolean isPassword) {
+	// CREAR CAMPOS
+	
+	private JPanel createField(String labelText, JComponent field, JLabel errorLabel, String placeholder) {
+
+	    JPanel panel = new JPanel();
+	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	    panel.setOpaque(false);
+	    panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 	    JLabel label = new JLabel(labelText);
 	    label.setFont(AppFont.normal());
-	    label.setAlignmentX(CENTER_ALIGNMENT);
+	    label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-	    JTextField field;
-
-	    if (isPassword) {
-	        field = new JPasswordField();
-	    } else {
-	        field = new JTextField();
+	    if (field instanceof JTextField) {
+	        ((JTextField) field).putClientProperty("JTextField.placeholderText", placeholder);
 	    }
 
-	    field.setFont(AppFont.normal());
-	    field.setBorder(normalBorder);
-	    field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-	    field.putClientProperty("JTextField.placeholderText", placeholder);
+	    errorLabel.setFont(AppFont.small());
+	    errorLabel.setForeground(Color.RED);
+	    errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-	    fila.add(label);
-	    fila.add(Box.createRigidArea(new Dimension(0, 6)));
-	    fila.add(field);
+	    panel.add(label);
+	    panel.add(field);
+	    panel.add(Box.createRigidArea(new Dimension(0, 5)));
+	    panel.add(errorLabel);
+	    panel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-	    return field;
+	    return panel;
 	}
 	
 }
