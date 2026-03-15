@@ -16,8 +16,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 
-import java.awt.Color;
-
 public class FormUtils {
 
     public static JPanel createField(String labelText, JComponent field, JLabel errorLabel, String placeholder) {
@@ -37,7 +35,7 @@ public class FormUtils {
             ((JTextField) field).putClientProperty("JTextField.placeholderText", placeholder);
         }
 
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setForeground(UIColors.ERROR);
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panel.add(field);
@@ -50,7 +48,7 @@ public class FormUtils {
     
     public static JLabel createErrorLabel() {
         JLabel label = new JLabel();
-        label.setForeground(new Color(220, 38, 38));
+        label.setForeground(UIColors.ERROR);
         label.setFont(AppFont.small());
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
@@ -74,7 +72,7 @@ public class FormUtils {
     
     
     public static Border redBorder = BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(Color.RED, 2),
+        BorderFactory.createLineBorder(UIColors.ERROR, 2),
         BorderFactory.createEmptyBorder(8, 10, 8, 10)
     );
         

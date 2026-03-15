@@ -3,28 +3,33 @@ package views;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Window;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
-
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Image;
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -33,6 +38,8 @@ import components.RoundButton;
 import components.RoundedPanel;
 import utils.AppFont;
 import utils.FormUtils;
+import utils.UIColors;
+
 
 @SuppressWarnings("serial")
 public class RegistrationView extends JPanel
@@ -58,14 +65,15 @@ public class RegistrationView extends JPanel
 	JLabel lblBirthDateError;
 	JLabel lblGenderError;
 	JLabel lblTermsError;
+	
+	
 	    
     public RegistrationView() 
     {
-		this.setBackground(new Color(100,149,237)); 
+		this.setBackground(UIColors.BACKGROUND); 
 	    setLayout(new GridBagLayout());
 	    initializeComponents();
         setVisible(true);
-      
 		assignListeners();
     }
     
@@ -73,7 +81,7 @@ public class RegistrationView extends JPanel
     {
 	    JPanel card = new RoundedPanel(50);
 	    card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-	    card.setBackground(new Color(151, 210, 251));
+	    card.setBackground(UIColors.CARD);
 	    card.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
 	    card.setMaximumSize(new Dimension(700, Integer.MAX_VALUE));
 	    card.setAlignmentX(CENTER_ALIGNMENT);
@@ -91,7 +99,7 @@ public class RegistrationView extends JPanel
 	    gbc.gridx = 0;
 	    gbc.gridy = 0;
 	    gbc.anchor = GridBagConstraints.CENTER;
-	    gbc.insets = new java.awt.Insets(40, 40, 40, 40);
+	    gbc.insets = new Insets(40, 40, 40, 40);
 	    add(card, gbc);
     }
     
@@ -100,7 +108,7 @@ public class RegistrationView extends JPanel
     	//PANEL PRINCIPAL
     	
         JPanel mainPanel = new JPanel();
-        mainPanel.setBackground(new Color(151, 210, 251));
+        mainPanel.setBackground(UIColors.CARD);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         mainPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
@@ -214,24 +222,23 @@ public class RegistrationView extends JPanel
 		panel.setOpaque(false);
 	    panel.setBorder(new EmptyBorder(5, 20, 10, 20));
 
-        RoundButton botonCrearCuenta = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
-		botonCrearCuenta.setBackground(new Color(255, 249, 179));
-		botonCrearCuenta.setFont(AppFont.big());
-        botonCrearCuenta.setFocusPainted(false);
-        botonCrearCuenta.addActionListener(e -> validateRegistration());
+        RoundButton btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
+        btnRegistration.setBackground(UIColors.BUTTON);
+		btnRegistration.setFont(AppFont.big());
+		btnRegistration.setFocusPainted(false);
+        btnRegistration.addActionListener(e -> validateRegistration());
 		        
         RoundButton btnReturn = new RoundButton("REGRESAR", new ImageIcon("src/img/back-icon.png"));
-        btnReturn.setBackground(new Color(255, 249, 179));
+        btnReturn.setBackground(UIColors.BUTTON);
         btnReturn.setFont(AppFont.big());
-        //btnReturn.setFocusPainted(false);
         btnReturn.addActionListener(e -> {
 
             int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas regresar? Se perderán todos los datos");
 
             if (option == JOptionPane.YES_OPTION) {
                 new LoginWindow();
-                java.awt.Window window = 
-                    javax.swing.SwingUtilities.getWindowAncestor(this);
+                Window window = 
+                    SwingUtilities.getWindowAncestor(this);
 
                 if (window != null) {
                     window.dispose();
@@ -239,40 +246,39 @@ public class RegistrationView extends JPanel
             }
         });
 		
-		try
-		{
-			Image icono = ImageIO.read(getClass().getResource("/img/login-icon.png"));
-			icono = icono.getScaledInstance(30,30, Image.SCALE_SMOOTH);
-			botonCrearCuenta.setIcon(new ImageIcon(icono));
-		}
-		catch(Exception ex) 
-		{
-			System.out.println("No está la imagen del ícono");
-		}
+		btnRegistration.setIcon(FormUtils.loadIcon("/img/login-icon.png", 30));
 		
-        panel.add(botonCrearCuenta);
+        panel.add(btnRegistration);
 		panel.add(btnReturn);
 
         return panel;
 	}	
 	
+	private void resetField(JLabel label, JComponent field) {
+	    label.setText("");
+	    field.setBorder(FormUtils.normalBorder);
+	}
+	
 	private void resetErrorLabels() {		
-		lblNameError.setText("");
-		txtName.setBorder(FormUtils.normalBorder);
-		lblSurnameError.setText("");
-		txtSurname.setBorder(FormUtils.normalBorder);
-		lblPasswordError.setText("");
-		txtPassword.setBorder(FormUtils.normalBorder);
-		lblEmailError.setText("");
-		txtEmail.setBorder(FormUtils.normalBorder);
-		lblPhoneError.setText("");
-		txtPhone.setBorder(FormUtils.normalBorder);
-		lblCountryError.setText("");
-		comboCountry.setBorder(FormUtils.normalBorder);
-		lblBirthDateError.setText("");
-		spBirthDate.setBorder(FormUtils.normalBorder);
+		resetField(lblNameError, txtName);
+		resetField(lblSurnameError, txtSurname);
+		resetField(lblPasswordError, txtPassword);
+		resetField(lblEmailError, txtEmail);
+		resetField(lblPhoneError, txtPhone);
+		resetField(lblCountryError, comboCountry);
+		resetField(lblBirthDateError, spBirthDate);
 		lblGenderError.setText("");
 		lblTermsError.setText("");
+	}
+	
+	private void setError(JLabel label, JComponent field, String message) {
+	    label.setText(message);
+	    field.setBorder(FormUtils.redBorder);
+	}
+
+	private void clearError(JLabel label, JComponent field) {
+	    label.setText("");
+	    field.setBorder(FormUtils.normalBorder);
 	}
 	
 	//VALIDACIONES DE LOS CAMPOS
@@ -296,8 +302,8 @@ public class RegistrationView extends JPanel
 	    if (valid) {
 	        JOptionPane.showMessageDialog(this, "Registro exitoso");
 	        new MainPageWindow();
-	        java.awt.Window window = 
-	            javax.swing.SwingUtilities.getWindowAncestor(this);
+	        Window window = 
+	            SwingUtilities.getWindowAncestor(this);
 
 	        if (window != null) {
 	            window.dispose();
@@ -404,62 +410,118 @@ public class RegistrationView extends JPanel
 				validatePhone();
 			}
 		});	
+		
+		// KEYLISTENER NOMBRE
+
+		txtName.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyTyped(KeyEvent e) {
+		        char c = e.getKeyChar();
+
+		        if (!Character.isLetter(c) && c != ' ') {
+		            e.consume();
+		        }
+		    }
+		});
+
+		// KEYLISTENER APELLIDOS
+
+		txtSurname.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyTyped(KeyEvent e) {
+		        char c = e.getKeyChar();
+
+		        if (!Character.isLetter(c) && c != ' ') {
+		            e.consume();
+		        }
+		    }
+		});
+		
+		// KEYLISTENER TELÉFONO (solo números)
+
+		txtPhone.addKeyListener(new KeyAdapter() {
+		    @Override
+		    public void keyTyped(KeyEvent e) {
+		        char c = e.getKeyChar();
+
+		        if (!Character.isDigit(c)) {
+		            e.consume();
+		        }
+		    }
+		});
+		
+		// KEYLISTENERS (Name, surname, email, phone, password)
+
+		addFocusEffect(txtName);
+		addFocusEffect(txtSurname);
+		addFocusEffect(txtEmail);
+		addFocusEffect(txtPhone);
+		addFocusEffect(txtPassword);
 	}
+	
+	//AGREGAR FOCO EN EL CAMPO
+	
+	private void addFocusEffect(JComponent field) {
 
+	    field.addFocusListener(new FocusAdapter() {
 
+	        @Override
+	        public void focusGained(FocusEvent e) {
+	            field.setBorder(BorderFactory.createCompoundBorder(
+	                BorderFactory.createLineBorder(new Color(30,144,255), 2),
+	                BorderFactory.createEmptyBorder(8,10,8,10)
+	            ));
+	        }
+
+	        @Override
+	        public void focusLost(FocusEvent e) {
+	            field.setBorder(FormUtils.normalBorder);
+	        }
+	    });
+
+	}
+	
 	private boolean validateName() {
 	    String name = txtName.getText().trim();
 
 	    if (name.isEmpty()) {
-	        lblNameError.setText("El nombre es obligatorio");
-			txtName.setBorder(FormUtils.redBorder);
-	        return false;
-	    }
-
-	    if (!name.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-	        lblNameError.setText("Solo se permiten letras");
-			txtName.setBorder(FormUtils.redBorder);
+	        setError(lblNameError, txtName, "El nombre es obligatorio");
 	        return false;
 	    }
 	    
-	    lblNameError.setText("");
-		txtName.setBorder(FormUtils.normalBorder);
-
+	    if (!name.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+	        setError(lblNameError, txtName, "Solo se permiten letras");
+	        return false;
+	    }
+	    
+	    clearError(lblNameError, txtName);
 	    return true;
 	}
 	
 	private boolean validateSurname() {
 	    String surname = txtSurname.getText().trim();
 
-	    if (surname.isEmpty()) {
-	        lblSurnameError.setText("Los apellidos son obligatorios");
-			txtSurname.setBorder(FormUtils.redBorder);
+	    if (surname.isEmpty()) {			
+	        setError(lblSurnameError, txtSurname, "Los apellidos son obligatorios");
 	        return false;
 	    }
 
 	    if (!surname.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-			txtSurname.setBorder(FormUtils.redBorder);
-	        lblSurnameError.setText("Solo se permiten letras");
+	        setError(lblSurnameError, txtSurname, "Solo se permiten letras");
 	        return false;
 	    }
 	    
-	    lblSurnameError.setText("");
-		txtSurname.setBorder(FormUtils.normalBorder);
-
-
+	    clearError(lblSurnameError, txtSurname);
 	    return true;
 	}
 	
 	private boolean validatePassword() {
 	    if (new String(txtPassword.getPassword()).trim().isEmpty()) {
-	        lblPasswordError.setText("La contraseña es obligatoria");
-			txtPassword.setBorder(FormUtils.redBorder);
+	        setError(lblPasswordError, txtPassword, "La contraseña es obligatoria");
 	        return false;
 	    }
 	    
-	    lblPasswordError.setText("");
-		txtPassword.setBorder(FormUtils.normalBorder);
-
+	    clearError(lblPasswordError, txtPassword);
 	    return true;
 	}
 	
@@ -467,22 +529,18 @@ public class RegistrationView extends JPanel
 	    String email = txtEmail.getText().trim();
 
 	    if (email.isEmpty()) {
-	        lblEmailError.setText("El correo es obligatorio");
-			txtEmail.setBorder(FormUtils.redBorder);
+	        setError(lblEmailError, txtEmail, "El correo es obligatorio");
 	        return false;
 	    }
 
 	    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
-	    if (!email.matches(emailRegex)) {
-	        lblEmailError.setText("Formato de correo inválido");
-			txtEmail.setBorder(FormUtils.redBorder);
+	    if (!email.matches(emailRegex)) {			
+	        setError(lblEmailError, txtEmail, "Formato de correo inválido");
 	        return false;
 	    }
 	    
-	    lblEmailError.setText("");
-		txtEmail.setBorder(FormUtils.normalBorder);
-
+	    clearError(lblEmailError, txtEmail);
 	    return true;
 	}
 	
@@ -490,51 +548,41 @@ public class RegistrationView extends JPanel
 	    String phone = txtPhone.getText().trim();
 
 	    if (phone.isEmpty()) {
-	        lblPhoneError.setText("El teléfono es obligatorio");
-			txtPhone.setBorder(FormUtils.redBorder);
+	        setError(lblPhoneError, txtPhone, "El teléfono es obligatorio");
 	        return false;
 	    }
 
 	    if (!phone.matches("\\d+")) {
-	        lblPhoneError.setText("Solo se permiten números");
-			txtPhone.setBorder(FormUtils.redBorder);
+	        setError(lblPhoneError, txtPhone, "Solo se permiten números");
 	        return false;
 	    }
 
-	    if (!phone.matches("\\d{10,}")) {
-	        lblPhoneError.setText("Debe tener al menos 10 números");
-			txtPhone.setBorder(FormUtils.redBorder);
+	    if (!phone.matches("\\d{10,}")) {	    	
+	        setError(lblPhoneError, txtPhone, "Debe tener al menos 10 números");
 	        return false;
 	    }
 	    
-	    lblPhoneError.setText("");
-		txtPhone.setBorder(FormUtils.normalBorder);
-	    
+	    clearError(lblPhoneError, txtPhone);	    
 	    return true;
 	}
 	
 	private boolean validateBirthDate() {
 	    if (spBirthDate.getValue() == null) {
-	        lblBirthDateError.setText("La fecha de nacimiento es obligatoria");
+	        setError(lblBirthDateError, spBirthDate, "La fecha de nacimiento es obligatoria");
 	        return false;
 	    }
-	    
-	    lblBirthDateError.setText("");
-		spBirthDate.setBorder(FormUtils.normalBorder);
-		
+	    	
+	    clearError(lblBirthDateError, spBirthDate);	    
 	    return true;
 	}
 	
 	private boolean validateCountry() {
 		if (comboCountry.getSelectedIndex() == 0) {
-			lblCountryError.setText("Seleccione un país");
-	        comboCountry.setBorder(FormUtils.redBorder);
+			setError(lblCountryError, comboCountry, "Debe seleccionar un país");
 			return false;
 		}
 
-		lblCountryError.setText("");
-        comboCountry.setBorder(FormUtils.normalBorder);
-
+	    clearError(lblCountryError, comboCountry);	    
 		return true;
 	}
 		
@@ -543,6 +591,7 @@ public class RegistrationView extends JPanel
 	        lblGenderError.setText("Seleccione un género");
 	        return false;
 	    }
+	    
 	    lblGenderError.setText("");
 
 	    return true;
