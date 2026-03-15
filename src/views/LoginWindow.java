@@ -4,8 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -20,7 +23,7 @@ public class LoginWindow extends JFrame
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Login | HOTEL MJ");
         this.setResizable(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         
         // Fondo degradado
         GradientPanel fondo = new GradientPanel(
@@ -38,7 +41,7 @@ public class LoginWindow extends JFrame
                 
 		//Agregar el panel
         LoginView loginview = new LoginView(this);
-        add(crearVistaConScroll(loginview), BorderLayout.CENTER);        
+        add(crearVistaConScroll(loginview), BorderLayout.CENTER); 
         
         this.setVisible(true);
     }
