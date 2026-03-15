@@ -23,7 +23,7 @@ public class RegistrationWindow extends JFrame
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Registro | HOTEL MJ");
         this.setResizable(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         
         // Fondo degradado
         GradientPanel fondo = new GradientPanel(

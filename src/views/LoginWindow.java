@@ -23,7 +23,7 @@ public class LoginWindow extends JFrame
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Login | HOTEL MJ");
         this.setResizable(true);
-        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Fondo degradado
         GradientPanel fondo = new GradientPanel(
