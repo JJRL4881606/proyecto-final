@@ -9,7 +9,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,7 +25,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -34,14 +32,11 @@ import javax.swing.event.DocumentListener;
 import components.RoundButton;
 import components.RoundedPanel;
 import utils.AppFont;
+import utils.FormUtils;
 
 @SuppressWarnings("serial")
 public class RegistrationView extends JPanel
-{
-	int ventanaCentroW = 400;
-	
-	RegistrationView registerWindow;
-
+{	
 	JTextField txtName;
 	JTextField txtSurname;
 	JPasswordField txtPassword;
@@ -63,14 +58,7 @@ public class RegistrationView extends JPanel
 	JLabel lblBirthDateError;
 	JLabel lblGenderError;
 	JLabel lblTermsError;
-	
-    Border redBorder = BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(Color.RED, 2),
-        BorderFactory.createEmptyBorder(8, 10, 8, 10)
-    );
-    
-    Border normalBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10);
-    
+	    
     public RegistrationView() 
     {
 		this.setBackground(new Color(100,149,237)); 
@@ -119,39 +107,27 @@ public class RegistrationView extends JPanel
 
         //NOMBRE
         
-        txtName = new JTextField();
-        txtName.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        txtName.setFont(AppFont.normal());
-        txtName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        lblNameError = createErrorLabel();
-        mainPanel.add(createField("Nombre(s)", txtName, lblNameError, "Ingrese su(s) nombre(s)"));
+        txtName = FormUtils.createTextField();
+        lblNameError = FormUtils.createErrorLabel();
+        mainPanel.add(FormUtils.createField("Nombre(s)", txtName, lblNameError, "Ingrese su(s) nombre(s)"));
         
         //APELLIDOS
         
-        txtSurname = new JTextField();
-        txtSurname.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        txtSurname.setFont(AppFont.normal());
-        txtSurname.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        lblSurnameError = createErrorLabel();
-        mainPanel.add(createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)"));
+        txtSurname = FormUtils.createTextField();
+        lblSurnameError = FormUtils.createErrorLabel();
+        mainPanel.add(FormUtils.createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)"));
         
         //EMAIL
         
-        txtEmail = new JTextField();
-        txtEmail.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        txtEmail.setFont(AppFont.normal());
-        txtEmail.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        lblEmailError = createErrorLabel();
-        mainPanel.add(createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su email"));
+	    txtEmail = FormUtils.createTextField();
+        lblEmailError = FormUtils.createErrorLabel();
+        mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su email"));
         
         //TELÉFONO
         
-        txtPhone = new JTextField();
-        txtPhone.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        txtPhone.setFont(AppFont.normal());
-        txtPhone.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        lblPhoneError = createErrorLabel();
-        mainPanel.add(createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono"));
+	    txtPhone = FormUtils.createTextField();
+        lblPhoneError = FormUtils.createErrorLabel();
+        mainPanel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono"));
         
         //FECHA NACIMIENTO
         
@@ -160,8 +136,8 @@ public class RegistrationView extends JPanel
         spBirthDate.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         JSpinner.DateEditor editor = new JSpinner.DateEditor(spBirthDate, "dd/MM/yyyy");
         spBirthDate.setEditor(editor);
-        lblBirthDateError = createErrorLabel();
-        mainPanel.add(createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, ""));
+        lblBirthDateError = FormUtils.createErrorLabel();
+        mainPanel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, ""));
         
         //PAÍS
         
@@ -170,8 +146,8 @@ public class RegistrationView extends JPanel
     	comboCountry.setBorder(BorderFactory.createEmptyBorder(6,0,6,0));
     	comboCountry.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     	comboCountry.setFont(AppFont.normal());
-    	lblCountryError = createErrorLabel();
-    	mainPanel.add(createField("País", comboCountry, lblCountryError, ""));
+    	lblCountryError = FormUtils.createErrorLabel();
+    	mainPanel.add(FormUtils.createField("País", comboCountry, lblCountryError, ""));
         
     	//GÉNERO
 
@@ -187,24 +163,21 @@ public class RegistrationView extends JPanel
         genderGroup.add(rbtnFemale);
         genderPanel.add(rbtnMale);
         genderPanel.add(rbtnFemale);
-        lblGenderError = createErrorLabel();
-        mainPanel.add(createField("Género", genderPanel, lblGenderError, ""));
+        lblGenderError = FormUtils.createErrorLabel();
+        mainPanel.add(FormUtils.createField("Género", genderPanel, lblGenderError, ""));
         
         //CONTRASEÑA
         
-        txtPassword = new JPasswordField();
-        txtPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-        txtPassword.setFont(AppFont.normal());
-        txtPassword.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        lblPasswordError = createErrorLabel();
-        mainPanel.add(createField("Contraseña", txtPassword, lblPasswordError, "Cree una contraseña"));
+        txtPassword = FormUtils.createPasswordField();
+        lblPasswordError = FormUtils.createErrorLabel();
+        mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Cree una contraseña"));
 
         //ACEPTAR TÉRMINOS
         
         chkTerms = new JCheckBox("Acepto los términos y condiciones");
         chkTerms.setAlignmentX(Component.CENTER_ALIGNMENT);
-        lblTermsError = createErrorLabel();
-        mainPanel.add(createField(null, chkTerms, lblTermsError, ""));
+        lblTermsError = FormUtils.createErrorLabel();
+        mainPanel.add(FormUtils.createField(null, chkTerms, lblTermsError, ""));
         
         //REGRESAR EL PANEL
         return mainPanel;
@@ -221,7 +194,6 @@ public class RegistrationView extends JPanel
 		lblTitle.setBorder(new EmptyBorder(30, 20, 20, 20)); 
 		lblTitle.setFont(AppFont.title());
 		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
-		panel.add(lblTitle);
 		
 		JLabel lblSubtitle = new JLabel("Ingrese los datos para registrarse");
 		lblSubtitle.setBorder(new EmptyBorder(10, 20, 30, 20)); 
@@ -284,57 +256,21 @@ public class RegistrationView extends JPanel
         return panel;
 	}	
 	
-	private JLabel createErrorLabel() {
-	    JLabel label = new JLabel();
-	    label.setForeground(new Color(220, 38, 38));
-	    label.setFont(AppFont.small());
-	    label.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    return label;
-	}
-	
-	private JPanel createField(String labelText, JComponent field, JLabel errorLabel, String placeholder) {
-
-	    JPanel panel = new JPanel();
-	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-	    panel.setOpaque(false);
-	    panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-	    JLabel label = new JLabel(labelText);
-	    label.setFont(AppFont.normal());
-	    label.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-	    if (field instanceof JTextField) {
-	        ((JTextField) field).putClientProperty("JTextField.placeholderText", placeholder);
-	    }
-
-	    errorLabel.setFont(AppFont.small());
-	    errorLabel.setForeground(Color.RED);
-	    errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-	    panel.add(label);
-	    panel.add(field);
-	    panel.add(Box.createRigidArea(new Dimension(0, 5)));
-	    panel.add(errorLabel);
-	    panel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-	    return panel;
-	}
-	
 	private void resetErrorLabels() {		
 		lblNameError.setText("");
-		txtName.setBorder(normalBorder);
+		txtName.setBorder(FormUtils.normalBorder);
 		lblSurnameError.setText("");
-		txtSurname.setBorder(normalBorder);
+		txtSurname.setBorder(FormUtils.normalBorder);
 		lblPasswordError.setText("");
-		txtPassword.setBorder(normalBorder);
+		txtPassword.setBorder(FormUtils.normalBorder);
 		lblEmailError.setText("");
-		txtEmail.setBorder(normalBorder);
+		txtEmail.setBorder(FormUtils.normalBorder);
 		lblPhoneError.setText("");
-		txtPhone.setBorder(normalBorder);
+		txtPhone.setBorder(FormUtils.normalBorder);
 		lblCountryError.setText("");
-		comboCountry.setBorder(normalBorder);
+		comboCountry.setBorder(FormUtils.normalBorder);
 		lblBirthDateError.setText("");
-		spBirthDate.setBorder(normalBorder);
+		spBirthDate.setBorder(FormUtils.normalBorder);
 		lblGenderError.setText("");
 		lblTermsError.setText("");
 	}
@@ -476,18 +412,18 @@ public class RegistrationView extends JPanel
 
 	    if (name.isEmpty()) {
 	        lblNameError.setText("El nombre es obligatorio");
-			txtName.setBorder(redBorder);
+			txtName.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 
 	    if (!name.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
 	        lblNameError.setText("Solo se permiten letras");
-			txtName.setBorder(redBorder);
+			txtName.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 	    
 	    lblNameError.setText("");
-		txtName.setBorder(normalBorder);
+		txtName.setBorder(FormUtils.normalBorder);
 
 	    return true;
 	}
@@ -497,18 +433,18 @@ public class RegistrationView extends JPanel
 
 	    if (surname.isEmpty()) {
 	        lblSurnameError.setText("Los apellidos son obligatorios");
-			txtSurname.setBorder(redBorder);
+			txtSurname.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 
 	    if (!surname.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-			txtSurname.setBorder(redBorder);
+			txtSurname.setBorder(FormUtils.redBorder);
 	        lblSurnameError.setText("Solo se permiten letras");
 	        return false;
 	    }
 	    
 	    lblSurnameError.setText("");
-		txtSurname.setBorder(normalBorder);
+		txtSurname.setBorder(FormUtils.normalBorder);
 
 
 	    return true;
@@ -517,13 +453,12 @@ public class RegistrationView extends JPanel
 	private boolean validatePassword() {
 	    if (new String(txtPassword.getPassword()).trim().isEmpty()) {
 	        lblPasswordError.setText("La contraseña es obligatoria");
-			txtPassword.setBorder(redBorder);
+			txtPassword.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 	    
 	    lblPasswordError.setText("");
-		txtPassword.setBorder(normalBorder);
-
+		txtPassword.setBorder(FormUtils.normalBorder);
 
 	    return true;
 	}
@@ -533,7 +468,7 @@ public class RegistrationView extends JPanel
 
 	    if (email.isEmpty()) {
 	        lblEmailError.setText("El correo es obligatorio");
-			txtEmail.setBorder(redBorder);
+			txtEmail.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 
@@ -541,12 +476,12 @@ public class RegistrationView extends JPanel
 
 	    if (!email.matches(emailRegex)) {
 	        lblEmailError.setText("Formato de correo inválido");
-			txtEmail.setBorder(redBorder);
+			txtEmail.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 	    
 	    lblEmailError.setText("");
-		txtEmail.setBorder(normalBorder);
+		txtEmail.setBorder(FormUtils.normalBorder);
 
 	    return true;
 	}
@@ -556,24 +491,24 @@ public class RegistrationView extends JPanel
 
 	    if (phone.isEmpty()) {
 	        lblPhoneError.setText("El teléfono es obligatorio");
-			txtPhone.setBorder(redBorder);
+			txtPhone.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 
 	    if (!phone.matches("\\d+")) {
 	        lblPhoneError.setText("Solo se permiten números");
-			txtPhone.setBorder(redBorder);
+			txtPhone.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 
 	    if (!phone.matches("\\d{10,}")) {
 	        lblPhoneError.setText("Debe tener al menos 10 números");
-			txtPhone.setBorder(redBorder);
+			txtPhone.setBorder(FormUtils.redBorder);
 	        return false;
 	    }
 	    
 	    lblPhoneError.setText("");
-		txtPhone.setBorder(normalBorder);
+		txtPhone.setBorder(FormUtils.normalBorder);
 	    
 	    return true;
 	}
@@ -585,7 +520,7 @@ public class RegistrationView extends JPanel
 	    }
 	    
 	    lblBirthDateError.setText("");
-		spBirthDate.setBorder(normalBorder);
+		spBirthDate.setBorder(FormUtils.normalBorder);
 		
 	    return true;
 	}
@@ -593,12 +528,12 @@ public class RegistrationView extends JPanel
 	private boolean validateCountry() {
 		if (comboCountry.getSelectedIndex() == 0) {
 			lblCountryError.setText("Seleccione un país");
-	        comboCountry.setBorder(redBorder);
+	        comboCountry.setBorder(FormUtils.redBorder);
 			return false;
 		}
 
 		lblCountryError.setText("");
-        comboCountry.setBorder(normalBorder);
+        comboCountry.setBorder(FormUtils.normalBorder);
 
 		return true;
 	}

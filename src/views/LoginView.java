@@ -9,7 +9,6 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -27,7 +26,6 @@ import java.awt.GridBagConstraints;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import java.net.URI;
@@ -35,12 +33,11 @@ import java.net.URI;
 import components.RoundButton;
 import components.RoundedPanel;
 import utils.AppFont;
+import utils.FormUtils;
 
 @SuppressWarnings("serial")
 public class LoginView extends JPanel
-{
-	int ventanaCentroW = 400;
-	
+{	
 	LoginWindow window;
 	JTextField txtEmail;
 	JPasswordField txtPassword;
@@ -48,19 +45,13 @@ public class LoginView extends JPanel
 	JLabel lblPasswordError;
 	JLabel lblWrongError;
 	
-    Border redBorder = BorderFactory.createCompoundBorder(
-        BorderFactory.createLineBorder(Color.RED, 2),
-        BorderFactory.createEmptyBorder(8, 10, 8, 10)
-    );
-    
-    Border normalBorder = BorderFactory.createEmptyBorder(8, 10, 8, 10);
-	
 	public LoginView(LoginWindow window) {
 		this.window = window;
 		this.setBackground(new Color(100,149,237)); 
 	    setLayout(new GridBagLayout());
 	    initializeComponents();
         setVisible(true);
+        assignListeners();
    	}
 
 	private void initializeComponents() 
@@ -120,25 +111,17 @@ public class LoginView extends JPanel
 
 	    // EMAIL
 
-	    txtEmail = new JTextField();
-	    txtEmail.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-	    txtEmail.setFont(AppFont.normal());
-	    txtEmail.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-
-	    lblEmailError = createErrorLabel();
-
-	    mainPanel.add(createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico"));
-
+	    txtEmail = FormUtils.createTextField();
+	    lblEmailError = FormUtils.createErrorLabel();
+	    
+	    mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico"));
+	    
 	    // PASSWORD
 
-	    txtPassword = new JPasswordField();
-	    txtPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
-	    txtPassword.setFont(AppFont.normal());
-	    txtPassword.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-
-	    lblPasswordError = createErrorLabel();
-
-	    mainPanel.add(createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña"));
+	    txtPassword = FormUtils.createPasswordField();
+	    lblPasswordError = FormUtils.createErrorLabel();
+	    
+	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña"));
 
 	    // MOSTRAR CONTRASEÑA
 
@@ -158,7 +141,6 @@ public class LoginView extends JPanel
         lblForgotPassword.setFont(AppFont.small());
         lblForgotPassword.setAlignmentX(CENTER_ALIGNMENT);
         lblForgotPassword.setHorizontalAlignment(SwingConstants.CENTER);
-        
         lblForgotPassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblForgotPassword.addMouseListener(new MouseAdapter() {
 
@@ -194,23 +176,13 @@ public class LoginView extends JPanel
 
 	    return mainPanel;
 	}
-    
-    // CREAR LABELS DE ERROR
-    
-	private JLabel createErrorLabel() {
-	    JLabel label = new JLabel();
-	    label.setForeground(new Color(220, 38, 38));
-	    label.setFont(AppFont.small());
-	    label.setAlignmentX(Component.CENTER_ALIGNMENT);
-	    return label;
-	}
 	    
     // CREAR LOS BOTONES
     
 	public JPanel createButtons() {
-        JPanel fila = new JPanel();
-        fila.setBorder(new EmptyBorder(5, 20, 10, 20));
-        fila.setOpaque(false);
+        JPanel panelButtons = new JPanel();
+        panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
+        panelButtons.setOpaque(false);
 
 		JButton btnLogin = new RoundButton("INICIAR SESIÓN", new ImageIcon("src/img/login-icon.png"));
 		btnLogin.setBackground(new Color(255, 249, 179));
@@ -235,13 +207,13 @@ public class LoginView extends JPanel
 			System.out.println("No está la imagen del ícono");
 		}
 		
-		fila.add(btnLogin);	
-		fila.add(btnRegistration);
+		panelButtons.add(btnLogin);	
+		panelButtons.add(btnRegistration);
 		
 		btnLogin.addActionListener(e -> handleLogin());
 		btnRegistration.addActionListener(e-> handleRegistration());
 
-		return fila;
+		return panelButtons;
 	}
 	
 	// MOSTRAR MENSAJE DE INICIO SESIÓN
@@ -265,89 +237,98 @@ public class LoginView extends JPanel
 		new RegistrationWindow();
 		window.dispose();
 	}
-
-	//MOSTRAR LABELS DE ERROR
-	
-	private void showEmailError(String mensaje) {
-		lblEmailError.setText(mensaje);
-		lblEmailError.setVisible(true);
-		txtEmail.setBorder(redBorder);
-	}	
-	
-	private void showPasswordError(String mensaje) {
-		lblPasswordError.setText(mensaje);
-		lblPasswordError.setVisible(true);
-		txtPassword.setBorder(redBorder);
-	}
 	
 	// QUITAR LABELS DE ERROR
 	
 	private void resetErrorLabels() {
-		lblEmailError.setVisible(false);
-	    txtEmail.setBorder(normalBorder);
-	    lblPasswordError.setVisible(false);
-	    txtPassword.setBorder(normalBorder);
+	    lblEmailError.setText("");
+	    txtEmail.setBorder(FormUtils.normalBorder);
 
+	    lblPasswordError.setText("");
+	    txtPassword.setBorder(FormUtils.normalBorder);
+
+	    lblWrongError.setVisible(false);
 	}
 	
-	//VALIDAR QUE LOS CAMPOS NO ESTÉN VACÍOS
+	//VALIDAR CAMPOS
+	
+	private boolean validateEmail() {
+	    String email = txtEmail.getText().trim();
+
+	    if (email.isEmpty()) {
+	        lblEmailError.setText("El correo es obligatorio");
+	        txtEmail.setBorder(FormUtils.redBorder);
+	        return false;
+	    }
+
+	    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+
+	    if (!email.matches(emailRegex)) {
+	        lblEmailError.setText("Formato de correo inválido");
+	        txtEmail.setBorder(FormUtils.redBorder);
+	        return false;
+	    }
+
+	    lblEmailError.setText("");
+	    txtEmail.setBorder(FormUtils.normalBorder);
+	    return true;
+	}
+	
+	private boolean validatePassword() {
+
+	    if (new String(txtPassword.getPassword()).trim().isEmpty()) {
+	        lblPasswordError.setText("La contraseña es obligatoria");
+	        txtPassword.setBorder(FormUtils.redBorder);
+	        return false;
+	    }
+
+	    lblPasswordError.setText("");
+	    txtPassword.setBorder(FormUtils.normalBorder);
+	    return true;
+	}
 	
 	private boolean validateLogin() {
 
-		resetErrorLabels();
+	    resetErrorLabels();
+
 	    boolean valid = true;
 
-	    String email = txtEmail.getText().trim();
-	    String password = String.valueOf(txtPassword.getPassword()).trim();
-
-	    // VALIDAR CORREO VACÍO
-	    if (email.isEmpty()) {
-	        showEmailError("El correo es obligatorio");
-	        valid = false;
-	    }
-	    // VALIDAR FORMATO CORREO
-	    else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-	    	showEmailError("Formato de correo inválido");
-	        valid = false;
-	    }
-
-	    // VALIDAR CONTRASEÑA VACÍA
-	    if (password.isEmpty()) {
-	        showPasswordError("La contraseña es obligatoria");
-	        valid = false;
-	    }
+	    if (!validateEmail()) valid = false;
+	    if (!validatePassword()) valid = false;
 
 	    return valid;
 	}
 	
-	// CREAR CAMPOS
-	
-	private JPanel createField(String labelText, JComponent field, JLabel errorLabel, String placeholder) {
+	private void assignListeners() {
 
-	    JPanel panel = new JPanel();
-	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-	    panel.setOpaque(false);
-	    panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    txtEmail.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
 
-	    JLabel label = new JLabel(labelText);
-	    label.setFont(AppFont.normal());
-	    label.setAlignmentX(Component.CENTER_ALIGNMENT);
+	        public void insertUpdate(javax.swing.event.DocumentEvent e) {
+	            validateEmail();
+	        }
 
-	    if (field instanceof JTextField) {
-	        ((JTextField) field).putClientProperty("JTextField.placeholderText", placeholder);
-	    }
+	        public void removeUpdate(javax.swing.event.DocumentEvent e) {
+	            validateEmail();
+	        }
 
-	    errorLabel.setFont(AppFont.small());
-	    errorLabel.setForeground(Color.RED);
-	    errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	        public void changedUpdate(javax.swing.event.DocumentEvent e) {
+	            validateEmail();
+	        }
+	    });
 
-	    panel.add(label);
-	    panel.add(field);
-	    panel.add(Box.createRigidArea(new Dimension(0, 5)));
-	    panel.add(errorLabel);
-	    panel.add(Box.createRigidArea(new Dimension(0, 15)));
+	    txtPassword.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
 
-	    return panel;
+	        public void insertUpdate(javax.swing.event.DocumentEvent e) {
+	            validatePassword();
+	        }
+
+	        public void removeUpdate(javax.swing.event.DocumentEvent e) {
+	            validatePassword();
+	        }
+
+	        public void changedUpdate(javax.swing.event.DocumentEvent e) {
+	            validatePassword();
+	        }
+	    });
 	}
-	
 }

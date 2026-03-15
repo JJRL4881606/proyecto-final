@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -14,6 +16,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import components.RoundedMenuBar;
@@ -27,13 +30,20 @@ public class MainPageView extends JPanel{
 	
 	JMenuItem cerrarSesion;
 
-	public MainPageView(){
-		this.setBackground(new Color(100,149,237)); 
+	public MainPageView() {
+	    Color hover = new Color(210,210,210);
+	    UIManager.put("Menu.selectionBackground", hover);
+	    UIManager.put("MenuItem.selectionBackground", hover);
+	    UIManager.put("MenuBar.highlight", hover);
+	    UIManager.put("Menu.borderPainted", false);
+	    UIManager.put("MenuItem.borderPainted", false);
+
+	    this.setBackground(new Color(100,149,237)); 
 	    setLayout(new BorderLayout());
 	    initializeComponents();
-        setVisible(true);
+	    setVisible(true);
 	}
-	
+
     public void initializeComponents() 
     {	    
         add(headerSection(), BorderLayout.NORTH);
@@ -47,7 +57,7 @@ public class MainPageView extends JPanel{
         JPanel superiorPanel = new JPanel();
         superiorPanel.setLayout(new GridLayout(1,3));
         superiorPanel.setBackground(new Color(30,144,255));
-        superiorPanel.setBorder(new EmptyBorder(15,20,15,20));
+        superiorPanel.setBorder(new EmptyBorder(30,30,35,30));
 
         superiorPanel.add(headerLeftSection());
         superiorPanel.add(headerCenterSection());
@@ -115,7 +125,7 @@ public class MainPageView extends JPanel{
         panel.setOpaque(false);
         
         JLabel lblInstrucciones = new JLabel("Bienvenido a la página principal del Hotel MJ");
-        lblInstrucciones.setBorder(new EmptyBorder(0, 20, 0, 20)); 
+        lblInstrucciones.setBorder(new EmptyBorder(20, 20, 0, 20)); 
         lblInstrucciones.setFont(AppFont.subtitle());
         lblInstrucciones.setAlignmentX(CENTER_ALIGNMENT);
         
@@ -127,9 +137,58 @@ public class MainPageView extends JPanel{
 
     	RoundedMenuBar mb = new RoundedMenuBar();
     	mb.setFont(AppFont.big());
+    	mb.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
+    	mb.setOpaque(false);
+    	mb.setBackground(new Color(0,0,0,0));
 
+        // HABITACIONES
+    	JMenu habitaciones = new JMenu("Habitaciones");
+    	applyHover(habitaciones);
+        habitaciones.setOpaque(true);
+        habitaciones.setBorder(new EmptyBorder(5,15,5,15));
+        habitaciones.setMnemonic(KeyEvent.VK_H);
+        mb.add(habitaciones);
+
+        JMenuItem verHabitaciones = new JMenuItem("Ver habitaciones");
+        verHabitaciones.setMnemonic(KeyEvent.VK_V);
+        habitaciones.add(verHabitaciones);
+
+        JMenuItem disponibilidad = new JMenuItem("Disponibilidad");
+        disponibilidad.setMnemonic(KeyEvent.VK_D);
+        habitaciones.add(disponibilidad);
+
+        // RESERVAS
+        JMenu reservas = new JMenu("Reservas");
+        applyHover(reservas);
+        reservas.setOpaque(true);
+        reservas.setBorder(new EmptyBorder(5,15,5,15));
+        reservas.setMnemonic(KeyEvent.VK_R);
+        mb.add(reservas);
+
+        JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
+        nuevaReserva.setMnemonic(KeyEvent.VK_N);
+        reservas.add(nuevaReserva);
+
+        JMenuItem misReservas = new JMenuItem("Mis reservas");
+        misReservas.setMnemonic(KeyEvent.VK_M);
+        reservas.add(misReservas);
+
+        // INFORMACIÓN
+        JMenu informacion = new JMenu("Información");
+        applyHover(informacion);
+        informacion.setOpaque(true);
+        informacion.setBorder(new EmptyBorder(5,15,5,15));
+        informacion.setMnemonic(KeyEvent.VK_I);
+        mb.add(informacion);
+
+        JMenuItem verInformacion = new JMenuItem("Ver información");
+        verInformacion.setMnemonic(KeyEvent.VK_V);
+        informacion.add(verInformacion);
+        
         // SISTEMA
         JMenu sistema = new JMenu("Sistema");
+        applyHover(sistema);
+        sistema.setOpaque(true);
         sistema.setBorder(new EmptyBorder(5,15,5,15));
         sistema.setMnemonic(KeyEvent.VK_S);
         mb.add(sistema);
@@ -157,44 +216,6 @@ public class MainPageView extends JPanel{
         
         sistema.add(cerrarSesion);
 
-        // HABITACIONES
-        JMenu habitaciones = new JMenu("Habitaciones");
-        habitaciones.setBorder(new EmptyBorder(5,15,5,15));
-        habitaciones.setMnemonic(KeyEvent.VK_H);
-        mb.add(habitaciones);
-
-        JMenuItem verHabitaciones = new JMenuItem("Ver habitaciones");
-        verHabitaciones.setMnemonic(KeyEvent.VK_V);
-        habitaciones.add(verHabitaciones);
-
-        JMenuItem disponibilidad = new JMenuItem("Disponibilidad");
-        disponibilidad.setMnemonic(KeyEvent.VK_D);
-        habitaciones.add(disponibilidad);
-
-        // RESERVAS
-        JMenu reservas = new JMenu("Reservas");
-        reservas.setBorder(new EmptyBorder(5,15,5,15));
-        reservas.setMnemonic(KeyEvent.VK_R);
-        mb.add(reservas);
-
-        JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
-        nuevaReserva.setMnemonic(KeyEvent.VK_N);
-        reservas.add(nuevaReserva);
-
-        JMenuItem misReservas = new JMenuItem("Mis reservas");
-        misReservas.setMnemonic(KeyEvent.VK_M);
-        reservas.add(misReservas);
-
-        // CLIENTES
-        JMenu clientes = new JMenu("Clientes");
-        clientes.setBorder(new EmptyBorder(5,15,5,15));
-        clientes.setMnemonic(KeyEvent.VK_C);
-        mb.add(clientes);
-
-        JMenuItem registrarCliente = new JMenuItem("Registrar cliente");
-        registrarCliente.setMnemonic(KeyEvent.VK_R);
-        clientes.add(registrarCliente);
-
         return mb;
     }
     
@@ -210,7 +231,7 @@ public class MainPageView extends JPanel{
     public JPanel inferiorSection() {
         JPanel inferiorPanel = new JPanel();
         inferiorPanel.setBackground(new Color(30,144,255));
-        inferiorPanel.setBorder(new EmptyBorder(15,30,15,30));
+        inferiorPanel.setBorder(new EmptyBorder(30,30,30,30));
 
         JLabel relleno1 = new JLabel("texto de relleno");
         relleno1.setFont(AppFont.big());
@@ -219,5 +240,29 @@ public class MainPageView extends JPanel{
 
         return inferiorPanel;
     }
+    
+    private void applyHover(JMenu menu) {
+
+        Color normal = new Color(255,255,253);
+        Color hover = new Color(210,210,210);
+
+        menu.setOpaque(true);
+        menu.setBackground(normal);
+
+        menu.addMouseListener(new java.awt.event.MouseAdapter() {
+
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                menu.setBackground(hover);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                menu.setBackground(normal);
+            }
+
+        });
+    }
+
 
 }
