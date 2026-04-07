@@ -36,6 +36,8 @@ import java.net.URI;
 
 import components.RoundButton;
 import components.RoundedPanel;
+import exceptions.InvalidPasswordException;
+import exceptions.InvalidUserException;
 import utils.AppFont;
 import utils.FormUtils;
 import utils.UIColors;
@@ -257,7 +259,7 @@ public class LoginView extends JPanel
 	
 	//VALIDAR CAMPOS
 	
-	private boolean validateEmail() {
+	private boolean validateEmail() throws InvalidUserException{
 	    String email = txtEmail.getText().trim();
 
 	    if (email.isEmpty()) {
@@ -271,16 +273,31 @@ public class LoginView extends JPanel
 	        setError(lblEmailError, txtEmail, "Formato de correo inválido");
 	        return false;
 	    }
+	    
+	    String correoAceptado = "correo@gmail.com";
+	    
+	    if(!email.trim().equals(correoAceptado) && txtEmail.getText().length() >= correoAceptado.length()){
+	    	throw new InvalidUserException("El correo no coincide");
+	    }
 
 	    clearError(lblEmailError, txtEmail);
 	    return true;
 	}
 	
-	private boolean validatePassword() {
+	private boolean validatePassword() throws InvalidPasswordException {
+	    //char[] password = txtPassword.getPassword();
+	    String pass = String.valueOf(txtPassword.getPassword());
+
 
 	    if (new String(txtPassword.getPassword()).trim().isEmpty()) {
 	        setError(lblPasswordError, txtPassword, "La contraseña es obligatoria");
 	        return false;
+	    }
+	    
+	    String passAceptada = "1234";
+	    
+	    if(!pass.trim().equals(passAceptada) && pass.length() >= passAceptada.length()){
+	    	throw new InvalidPasswordException("La contraseña no coincide");
 	    }
 
 	    clearError(lblPasswordError, txtPassword);
@@ -293,8 +310,22 @@ public class LoginView extends JPanel
 
 	    boolean valid = true;
 
-	    if (!validateEmail()) valid = false;
-	    if (!validatePassword()) valid = false;
+	    try {
+			if (!validateEmail()) {
+				valid = false;
+			}
+		} catch (InvalidUserException e) {
+	    	lblEmailError.setText("El correo no coincide");
+	    	valid = false;
+			e.printStackTrace();
+		}
+	    try {
+			if (!validatePassword()) valid = false;
+		} catch (InvalidPasswordException e) {
+	    	lblPasswordError.setText("La contraseña no coincide");
+	    	valid = false;
+			e.printStackTrace();
+		}
 
 	    return valid;
 	}
@@ -304,16 +335,29 @@ public class LoginView extends JPanel
 	    txtEmail.getDocument().addDocumentListener(new DocumentListener() {
 
 	        public void insertUpdate(DocumentEvent e) {
-	            validateEmail();
+				try {
+					validateEmail();
+				} catch (InvalidUserException e1) {
+			    	lblEmailError.setText("El correo no coincide");
+					e1.printStackTrace();
+				}
 	        }
 
 	        public void removeUpdate(DocumentEvent e) {
-	            validateEmail();
-	        }
+				try {
+					validateEmail();
+				} catch (InvalidUserException e1) {
+			    	lblEmailError.setText("El correo no coincide");
+					e1.printStackTrace();
+				}	        }
 
 	        public void changedUpdate(DocumentEvent e) {
-	            validateEmail();
-	        }
+				try {
+					validateEmail();
+				} catch (InvalidUserException e1) {
+			    	lblEmailError.setText("El correo no coincide");
+					e1.printStackTrace();
+				}	        }
 	    });
 	    
 	    // KEYLISTENER EMAIL (no permitir espacios)
@@ -332,15 +376,31 @@ public class LoginView extends JPanel
 	    txtPassword.getDocument().addDocumentListener(new DocumentListener() {
 
 	        public void insertUpdate(DocumentEvent e) {
-	            validatePassword();
+	            try {
+					validatePassword();
+				} catch (InvalidPasswordException e1) {
+			    	lblPasswordError.setText("La contraseña no coincide");
+					e1.printStackTrace();
+				}
+	            //validatePassword();
 	        }
 
 	        public void removeUpdate(DocumentEvent e) {
-	            validatePassword();
+	            try {
+					validatePassword();
+				} catch (InvalidPasswordException e1) {
+			    	lblPasswordError.setText("La contraseña no coincide");
+					e1.printStackTrace();
+				}
 	        }
 
 	        public void changedUpdate(DocumentEvent e) {
-	            validatePassword();
+	            try {
+					validatePassword();
+				} catch (InvalidPasswordException e1) {
+			    	lblPasswordError.setText("La contraseña no coincide");
+					e1.printStackTrace();
+				}
 	        }
 	    });
 	    
@@ -369,4 +429,5 @@ public class LoginView extends JPanel
 	        }
 	    });
 	}
+	
 }

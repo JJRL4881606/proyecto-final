@@ -40,7 +40,6 @@ import utils.AppFont;
 import utils.FormUtils;
 import utils.UIColors;
 
-
 @SuppressWarnings("serial")
 public class RegistrationView extends JPanel
 {	
@@ -64,9 +63,7 @@ public class RegistrationView extends JPanel
 	JLabel lblCountryError;
 	JLabel lblBirthDateError;
 	JLabel lblGenderError;
-	JLabel lblTermsError;
-	
-	
+	JLabel lblTermsError;	
 	    
     public RegistrationView() 
     {
