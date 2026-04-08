@@ -4,11 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -41,16 +37,21 @@ public class LoginWindow extends JFrame
                 
 		//Agregar el panel
         LoginView loginview = new LoginView(this);
-        add(crearVistaConScroll(loginview), BorderLayout.CENTER); 
-        
+        fondo.add(crearVistaConScroll(loginview), BorderLayout.CENTER);
+                
         this.setVisible(true);
     }
     
     private JScrollPane crearVistaConScroll(JPanel panel) {
         JScrollPane scroll = new JScrollPane(panel);
+        
         scroll.setBorder(null);
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
+
         scroll.getVerticalScrollBar().setUnitIncrement(12);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
         return scroll;
     }
 }

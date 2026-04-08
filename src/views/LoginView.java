@@ -259,48 +259,41 @@ public class LoginView extends JPanel
 	
 	//VALIDAR CAMPOS
 	
-	private boolean validateEmail() throws InvalidUserException{
+	private boolean validateEmail() throws InvalidUserException {
 	    String email = txtEmail.getText().trim();
 
 	    if (email.isEmpty()) {
-	        setError(lblEmailError, txtEmail, "El correo es obligatorio");
-	        return false;
+	        throw new InvalidUserException("El correo es obligatorio");
 	    }
 
 	    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
 
 	    if (!email.matches(emailRegex)) {
-	        setError(lblEmailError, txtEmail, "Formato de correo inválido");
-	        return false;
-	    }
-	    
-	    String correoAceptado = "correo@gmail.com";
-	    
-	    if(!email.trim().equals(correoAceptado) && txtEmail.getText().length() >= correoAceptado.length()){
-	    	throw new InvalidUserException("El correo no coincide");
+	        throw new InvalidUserException("Formato de correo inválido");
 	    }
 
-	    clearError(lblEmailError, txtEmail);
+	    String correoAceptado = "correo@gmail.com";
+
+	    if (!email.equals(correoAceptado)) {
+	        throw new InvalidUserException("El correo no coincide");
+	    }
+
 	    return true;
 	}
 	
 	private boolean validatePassword() throws InvalidPasswordException {
-	    //char[] password = txtPassword.getPassword();
 	    String pass = String.valueOf(txtPassword.getPassword());
 
-
-	    if (new String(txtPassword.getPassword()).trim().isEmpty()) {
-	        setError(lblPasswordError, txtPassword, "La contraseña es obligatoria");
-	        return false;
+	    if (pass.trim().isEmpty()) {
+	        throw new InvalidPasswordException("La contraseña es obligatoria");
 	    }
-	    
+
 	    String passAceptada = "1234";
-	    
-	    if(!pass.trim().equals(passAceptada) && pass.length() >= passAceptada.length()){
-	    	throw new InvalidPasswordException("La contraseña no coincide");
+
+	    if (!pass.equals(passAceptada)) {
+	        throw new InvalidPasswordException("La contraseña no coincide");
 	    }
 
-	    clearError(lblPasswordError, txtPassword);
 	    return true;
 	}
 	
@@ -315,15 +308,15 @@ public class LoginView extends JPanel
 				valid = false;
 			}
 		} catch (InvalidUserException e) {
-	    	lblEmailError.setText("El correo no coincide");
-	    	valid = false;
+			setError(lblEmailError, txtEmail, e.getMessage());
+			valid = false;
 			e.printStackTrace();
 		}
 	    try {
 			if (!validatePassword()) valid = false;
 		} catch (InvalidPasswordException e) {
-	    	lblPasswordError.setText("La contraseña no coincide");
-	    	valid = false;
+			setError(lblPasswordError, txtPassword, e.getMessage());
+			valid = false;
 			e.printStackTrace();
 		}
 
