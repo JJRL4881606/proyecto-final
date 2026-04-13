@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import components.GradientPanel;
+import controllers.LoginController;
 
 @SuppressWarnings("serial")
 public class LoginWindow extends JFrame 
@@ -36,7 +37,8 @@ public class LoginWindow extends JFrame
         setIconImage(icono);
                 
 		//Agregar el panel
-        LoginView loginview = new LoginView(this);
+        LoginView loginview = new LoginView();
+        new LoginController(loginview);
         fondo.add(crearVistaConScroll(loginview), BorderLayout.CENTER);
                 
         this.setVisible(true);

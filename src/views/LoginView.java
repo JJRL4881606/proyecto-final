@@ -17,11 +17,9 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -29,16 +27,10 @@ import javax.swing.SwingConstants;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
 import java.net.URI;
 
 import components.RoundButton;
 import components.RoundedPanel;
-import controllers.RegistrationController;
-import exceptions.InvalidPasswordException;
-import exceptions.InvalidUserException;
 import utils.AppFont;
 import utils.FormUtils;
 import utils.UIColors;
@@ -46,15 +38,16 @@ import utils.UIColors;
 @SuppressWarnings("serial")
 public class LoginView extends JPanel
 {	
-	LoginWindow window;
 	JTextField txtEmail;
 	JPasswordField txtPassword;
 	JLabel lblEmailError;
 	JLabel lblPasswordError;
 	JLabel lblWrongError;
 	
-	public LoginView(LoginWindow window) {
-		this.window = window;
+	RoundButton btnLogin;
+	RoundButton btnRegistration;
+	
+	public LoginView() {
 		this.setBackground(UIColors.BACKGROUND);
 		setLayout(new GridBagLayout());
 	    initializeComponents();
@@ -134,6 +127,13 @@ public class LoginView extends JPanel
 	    // MOSTRAR CONTRASEÑA
 
 	    JCheckBox chkShowPassword = new JCheckBox("Mostrar contraseña");
+	    chkShowPassword.addActionListener(e -> {
+	        if (chkShowPassword.isSelected()) {
+	            txtPassword.setEchoChar((char) 0);
+	        } else {
+	            txtPassword.setEchoChar('•');
+	        }
+	    });
 	    chkShowPassword.setOpaque(false);
 	    chkShowPassword.setFont(AppFont.small());
 	    chkShowPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -190,13 +190,13 @@ public class LoginView extends JPanel
         panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
         panelButtons.setOpaque(false);
 
-		JButton btnLogin = new RoundButton("INICIAR SESIÓN", new ImageIcon("src/img/login-icon.png"));
+        btnLogin = new RoundButton("INICIAR SESIÓN", new ImageIcon("src/img/login-icon.png"));
 		btnLogin.setBackground(new Color(255, 249, 179));
 		btnLogin.setForeground(Color.BLACK);
 		btnLogin.setToolTipText("Haz click aquí");
 		btnLogin.setFont(AppFont.big());
 
-		JButton btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/registration-icon.png"));
+		btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/registration-icon.png"));
 		btnRegistration.setBackground(new Color(255, 249, 179));
 		btnRegistration.setForeground(Color.BLACK);
 		btnRegistration.setToolTipText("Haz click aquí");
@@ -208,153 +208,13 @@ public class LoginView extends JPanel
 		panelButtons.add(btnLogin);	
 		panelButtons.add(btnRegistration);
 		
-		btnLogin.addActionListener(e -> handleLogin());
-		btnRegistration.addActionListener(e-> handleRegistration());
-
 		return panelButtons;
 	}
 	
-	// MOSTRAR MENSAJE DE INICIO SESIÓN
 	
-	private void handleLogin() {
-		
-		if(validateLogin()) {
-			JOptionPane.showMessageDialog(
-				this,
- 				"Se inició la sesión", 
- 				"Sesión iniciada", 
- 				JOptionPane.INFORMATION_MESSAGE
- 			);
-			
-			new MainPageWindow();
-			window.dispose();
-		}
-	}
-	
-	private void handleRegistration() {
-		RegistrationWindow RegistrationW = new RegistrationWindow();
-		new RegistrationController(RegistrationW.getRegistrationView());
-		window.dispose();
-	}
-	
-	// QUITAR LABELS DE ERROR
-	
-	private void resetErrorLabels() {
-	    lblEmailError.setText("");
-	    txtEmail.setBorder(FormUtils.normalBorder);
-
-	    lblPasswordError.setText("");
-	    txtPassword.setBorder(FormUtils.normalBorder);
-
-	    lblWrongError.setVisible(false);
-	}
-	
-	private void setError(JLabel label, JComponent field, String message) {
-	    label.setText(message);
-	    field.setBorder(FormUtils.redBorder);
-	}
-
-	private void clearError(JLabel label, JComponent field) {
-	    label.setText("");
-	    field.setBorder(FormUtils.normalBorder);
-	}
-	
-	//VALIDAR CAMPOS
-	
-	private boolean validateEmail() throws InvalidUserException {
-	    String email = txtEmail.getText().trim();
-
-	    if (email.isEmpty()) {
-	        throw new InvalidUserException("El correo es obligatorio");
-	    }
-
-	    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-
-	    if (!email.matches(emailRegex)) {
-	        throw new InvalidUserException("Formato de correo inválido");
-	    }
-
-	    String correoAceptado = "correo@gmail.com";
-
-	    if (!email.equals(correoAceptado)) {
-	        throw new InvalidUserException("El correo no coincide");
-	    }
-
-	    return true;
-	}
-	
-	private boolean validatePassword() throws InvalidPasswordException {
-	    String pass = String.valueOf(txtPassword.getPassword());
-
-	    if (pass.trim().isEmpty()) {
-	        throw new InvalidPasswordException("La contraseña es obligatoria");
-	    }
-
-	    String passAceptada = "1234";
-
-	    if (!pass.equals(passAceptada)) {
-	        throw new InvalidPasswordException("La contraseña no coincide");
-	    }
-
-	    return true;
-	}
-	
-	private boolean validateLogin() {
-
-	    resetErrorLabels();
-
-	    boolean valid = true;
-
-	    try {
-			if (!validateEmail()) {
-				valid = false;
-			}
-		} catch (InvalidUserException e) {
-			setError(lblEmailError, txtEmail, e.getMessage());
-			valid = false;
-			e.printStackTrace();
-		}
-	    try {
-			if (!validatePassword()) valid = false;
-		} catch (InvalidPasswordException e) {
-			setError(lblPasswordError, txtPassword, e.getMessage());
-			valid = false;
-			e.printStackTrace();
-		}
-
-	    return valid;
-	}
 	
 	private void assignListeners() {
 
-	    txtEmail.getDocument().addDocumentListener(new DocumentListener() {
-
-	        public void insertUpdate(DocumentEvent e) {
-				try {
-					validateEmail();
-				} catch (InvalidUserException e1) {
-			    	lblEmailError.setText("El correo no coincide");
-					e1.printStackTrace();
-				}
-	        }
-
-	        public void removeUpdate(DocumentEvent e) {
-				try {
-					validateEmail();
-				} catch (InvalidUserException e1) {
-			    	lblEmailError.setText("El correo no coincide");
-					e1.printStackTrace();
-				}	        }
-
-	        public void changedUpdate(DocumentEvent e) {
-				try {
-					validateEmail();
-				} catch (InvalidUserException e1) {
-			    	lblEmailError.setText("El correo no coincide");
-					e1.printStackTrace();
-				}	        }
-	    });
-	    
 	    // KEYLISTENER EMAIL (no permitir espacios)
 
 	    txtEmail.addKeyListener(new KeyAdapter() {
@@ -368,36 +228,7 @@ public class LoginView extends JPanel
 	        }
 	    });
 
-	    txtPassword.getDocument().addDocumentListener(new DocumentListener() {
 
-	        public void insertUpdate(DocumentEvent e) {
-	            try {
-					validatePassword();
-				} catch (InvalidPasswordException e1) {
-			    	lblPasswordError.setText("La contraseña no coincide");
-					e1.printStackTrace();
-				}
-	            //validatePassword();
-	        }
-
-	        public void removeUpdate(DocumentEvent e) {
-	            try {
-					validatePassword();
-				} catch (InvalidPasswordException e1) {
-			    	lblPasswordError.setText("La contraseña no coincide");
-					e1.printStackTrace();
-				}
-	        }
-
-	        public void changedUpdate(DocumentEvent e) {
-	            try {
-					validatePassword();
-				} catch (InvalidPasswordException e1) {
-			    	lblPasswordError.setText("La contraseña no coincide");
-					e1.printStackTrace();
-				}
-	        }
-	    });
 	    
 	    //FOCUSLISTENER EMAIL Y PASSWORD
 	    addFocusEffect(txtEmail);
@@ -425,4 +256,50 @@ public class LoginView extends JPanel
 	    });
 	}
 	
+	public RoundButton getBtnLogin() {
+	    return btnLogin;
+	}
+
+	public RoundButton getBtnRegistration() {
+	    return btnRegistration;
+	}
+	
+	public String getEmail() {
+	    return txtEmail.getText().trim();
+	}
+
+	public String getPassword() {
+	    return new String(txtPassword.getPassword()).trim();
+	}
+
+	public JTextField getTxtEmail() {
+	    return txtEmail;
+	}
+
+	public JPasswordField getTxtPassword() {
+	    return txtPassword;
+	}
+	
+	public void setEmailError(String msg) {
+	    lblEmailError.setText(msg);
+	    txtEmail.setBorder(FormUtils.redBorder);
+	}
+
+	public void setPasswordError(String msg) {
+	    lblPasswordError.setText(msg);
+	    txtPassword.setBorder(FormUtils.redBorder);
+	}
+
+	public void showWrongError() {
+	    lblWrongError.setVisible(true);
+	}
+
+	public void clearErrors() {
+	    lblEmailError.setText("");
+	    lblPasswordError.setText("");
+	    lblWrongError.setVisible(false);
+
+	    txtEmail.setBorder(FormUtils.normalBorder);
+	    txtPassword.setBorder(FormUtils.normalBorder);
+	}
 }
