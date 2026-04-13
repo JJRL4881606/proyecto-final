@@ -31,8 +31,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import components.RoundButton;
 import components.RoundedPanel;
@@ -43,17 +41,6 @@ import utils.UIColors;
 @SuppressWarnings("serial")
 public class RegistrationView extends JPanel
 {	
-	JTextField txtName;
-	JTextField txtSurname;
-	JPasswordField txtPassword;
-	JTextField txtEmail;
-	JTextField txtPhone;
-	JSpinner spBirthDate;
-	JComboBox<String> comboCountry;
-	JRadioButton rbtnMale;
-	JRadioButton rbtnFemale;
-	ButtonGroup genderGroup;
-	JCheckBox chkTerms;
 	
 	JLabel lblNameError;
 	JLabel lblSurnameError;
@@ -64,8 +51,21 @@ public class RegistrationView extends JPanel
 	JLabel lblBirthDateError;
 	JLabel lblGenderError;
 	JLabel lblTermsError;	
+	
+	private JTextField txtName;
+	private JTextField txtSurname;
+	private JTextField txtEmail;
+	private JTextField txtPhone;
+	private JSpinner spBirthDate;
+	private ButtonGroup genderGroup;
+	private JPasswordField txtPassword;
+	private JComboBox<String> comboCountry;
+	private JCheckBox chkTerms;
+	private JRadioButton rbtnMale;
+	private JRadioButton rbtnFemale;
+	private RoundButton btnRegistration;
 	    
-    public RegistrationView() 
+    public RegistrationView(RegistrationWindow window) 
     {
 		this.setBackground(UIColors.BACKGROUND); 
 	    setLayout(new GridBagLayout());
@@ -219,11 +219,11 @@ public class RegistrationView extends JPanel
 		panel.setOpaque(false);
 	    panel.setBorder(new EmptyBorder(5, 20, 10, 20));
 
-        RoundButton btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
+        btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
         btnRegistration.setBackground(UIColors.BUTTON);
 		btnRegistration.setFont(AppFont.big());
 		btnRegistration.setFocusPainted(false);
-        btnRegistration.addActionListener(e -> validateRegistration());
+        
 		        
         RoundButton btnReturn = new RoundButton("REGRESAR", new ImageIcon("src/img/back-icon.png"));
         btnReturn.setBackground(UIColors.BUTTON);
@@ -256,206 +256,6 @@ public class RegistrationView extends JPanel
 	    field.setBorder(FormUtils.normalBorder);
 	}
 	
-	private void resetErrorLabels() {		
-		resetField(lblNameError, txtName);
-		resetField(lblSurnameError, txtSurname);
-		resetField(lblPasswordError, txtPassword);
-		resetField(lblEmailError, txtEmail);
-		resetField(lblPhoneError, txtPhone);
-		resetField(lblCountryError, comboCountry);
-		resetField(lblBirthDateError, spBirthDate);
-		lblGenderError.setText("");
-		lblTermsError.setText("");
-	}
-	
-	private void setError(JLabel label, JComponent field, String message) {
-	    label.setText(message);
-	    field.setBorder(FormUtils.redBorder);
-	}
-
-	private void clearError(JLabel label, JComponent field) {
-	    label.setText("");
-	    field.setBorder(FormUtils.normalBorder);
-	}
-	
-	//VALIDACIONES DE LOS CAMPOS
-	
-	private void validateRegistration() {
-
-	    resetErrorLabels();
-
-	    boolean valid = true;
-
-	    if (!validateName()) valid = false;
-	    if (!validateSurname()) valid = false;
-	    if (!validatePassword()) valid = false;
-	    if (!validateEmail()) valid = false;
-	    if (!validatePhone()) valid = false;
-	    if (!validateBirthDate()) valid = false;
-	    if (!validateCountry()) valid = false;
-	    if (!validateGender()) valid = false;
-	    if (!validateTerms()) valid = false;
-
-	    if (valid) {
-	        JOptionPane.showMessageDialog(this, "Registro exitoso");
-	        new MainPageWindow();
-	        Window window = 
-	            SwingUtilities.getWindowAncestor(this);
-
-	        if (window != null) {
-	            window.dispose();
-	        }
-	    }
-	}
-	
-	private void assignListeners() {
-		comboCountry.addActionListener(e -> {
-			validateCountry();
-		});
-		
-		chkTerms.addActionListener(e -> validateTerms());
-		
-		rbtnMale.addActionListener(e -> validateGender());
-		rbtnFemale.addActionListener(e -> validateGender());
-				
-		txtName.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validateName();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validateName();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validateName();
-			}
-		});		
-		
-		txtSurname.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validateSurname();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validateSurname();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validateSurname();
-			}
-		});		
-		
-		txtPassword.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validatePassword();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validatePassword();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validatePassword();
-			}
-		});	
-		
-		txtEmail.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validateEmail();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validateEmail();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validateEmail();
-			}
-		});		
-		
-		txtPhone.getDocument().addDocumentListener(new DocumentListener() {
-			
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				validatePhone();
-			}
-			
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				validatePhone();
-			}
-			
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				validatePhone();
-			}
-		});	
-		
-		// KEYLISTENER NOMBRE
-
-		txtName.addKeyListener(new KeyAdapter() {
-		    @Override
-		    public void keyTyped(KeyEvent e) {
-		        char c = e.getKeyChar();
-
-		        if (!Character.isLetter(c) && c != ' ') {
-		            e.consume();
-		        }
-		    }
-		});
-
-		// KEYLISTENER APELLIDOS
-
-		txtSurname.addKeyListener(new KeyAdapter() {
-		    @Override
-		    public void keyTyped(KeyEvent e) {
-		        char c = e.getKeyChar();
-
-		        if (!Character.isLetter(c) && c != ' ') {
-		            e.consume();
-		        }
-		    }
-		});
-		
-		// KEYLISTENER TELÉFONO (solo números)
-
-		txtPhone.addKeyListener(new KeyAdapter() {
-		    @Override
-		    public void keyTyped(KeyEvent e) {
-		        char c = e.getKeyChar();
-
-		        if (!Character.isDigit(c)) {
-		            e.consume();
-		        }
-		    }
-		});
-		
-		// KEYLISTENERS (Name, surname, email, phone, password)
-
-		addFocusEffect(txtName);
-		addFocusEffect(txtSurname);
-		addFocusEffect(txtEmail);
-		addFocusEffect(txtPhone);
-		addFocusEffect(txtPassword);
-	}
-	
 	//AGREGAR FOCO EN EL CAMPO
 	
 	private void addFocusEffect(JComponent field) {
@@ -477,132 +277,190 @@ public class RegistrationView extends JPanel
 	    });
 
 	}
-	
-	private boolean validateName() {
-	    String name = txtName.getText().trim();
 
-	    if (name.isEmpty()) {
-	        setError(lblNameError, txtName, "El nombre es obligatorio");
-	        return false;
-	    }
-	    
-	    if (!name.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-	        setError(lblNameError, txtName, "Solo se permiten letras");
-	        return false;
-	    }
-	    
-	    clearError(lblNameError, txtName);
-	    return true;
-	}
-	
-	private boolean validateSurname() {
-	    String surname = txtSurname.getText().trim();
+	public void clearErrors() {
+	    resetField(lblNameError, txtName);
+	    resetField(lblSurnameError, txtSurname);
+	    resetField(lblEmailError, txtEmail);
+	    resetField(lblPasswordError, txtPassword);
+	    resetField(lblPhoneError, txtPhone);
+	    resetField(lblCountryError, comboCountry);
+	    resetField(lblBirthDateError, spBirthDate);
 
-	    if (surname.isEmpty()) {			
-	        setError(lblSurnameError, txtSurname, "Los apellidos son obligatorios");
-	        return false;
-	    }
-
-	    if (!surname.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-	        setError(lblSurnameError, txtSurname, "Solo se permiten letras");
-	        return false;
-	    }
-	    
-	    clearError(lblSurnameError, txtSurname);
-	    return true;
-	}
-	
-	private boolean validatePassword() {
-	    if (new String(txtPassword.getPassword()).trim().isEmpty()) {
-	        setError(lblPasswordError, txtPassword, "La contraseña es obligatoria");
-	        return false;
-	    }
-	    
-	    clearError(lblPasswordError, txtPassword);
-	    return true;
-	}
-	
-	private boolean validateEmail() {
-	    String email = txtEmail.getText().trim();
-
-	    if (email.isEmpty()) {
-	        setError(lblEmailError, txtEmail, "El correo es obligatorio");
-	        return false;
-	    }
-
-	    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-
-	    if (!email.matches(emailRegex)) {			
-	        setError(lblEmailError, txtEmail, "Formato de correo inválido");
-	        return false;
-	    }
-	    
-	    clearError(lblEmailError, txtEmail);
-	    return true;
-	}
-	
-	private boolean validatePhone() {
-	    String phone = txtPhone.getText().trim();
-
-	    if (phone.isEmpty()) {
-	        setError(lblPhoneError, txtPhone, "El teléfono es obligatorio");
-	        return false;
-	    }
-
-	    if (!phone.matches("\\d+")) {
-	        setError(lblPhoneError, txtPhone, "Solo se permiten números");
-	        return false;
-	    }
-
-	    if (!phone.matches("\\d{10,}")) {	    	
-	        setError(lblPhoneError, txtPhone, "Debe tener al menos 10 números");
-	        return false;
-	    }
-	    
-	    clearError(lblPhoneError, txtPhone);	    
-	    return true;
-	}
-	
-	private boolean validateBirthDate() {
-	    if (spBirthDate.getValue() == null) {
-	        setError(lblBirthDateError, spBirthDate, "La fecha de nacimiento es obligatoria");
-	        return false;
-	    }
-	    	
-	    clearError(lblBirthDateError, spBirthDate);	    
-	    return true;
-	}
-	
-	private boolean validateCountry() {
-		if (comboCountry.getSelectedIndex() == 0) {
-			setError(lblCountryError, comboCountry, "Debe seleccionar un país");
-			return false;
-		}
-
-	    clearError(lblCountryError, comboCountry);	    
-		return true;
-	}
-		
-	private boolean validateGender() {
-	    if (!rbtnMale.isSelected() && !rbtnFemale.isSelected()) {
-	        lblGenderError.setText("Seleccione un género");
-	        return false;
-	    }
-	    
 	    lblGenderError.setText("");
-
-	    return true;
+	    lblTermsError.setText("");
 	}
 	
-	private boolean validateTerms() {
-	    if (!chkTerms.isSelected()) {
-	        lblTermsError.setText("Debe aceptar los términos y condiciones");
-	        return false;
-	    }
-	    
-		lblTermsError.setText("");
+	public String getName() {
+	    return txtName.getText().trim();
+	}
 
-	    return true;
+	public String getSurname() {
+	    return txtSurname.getText().trim();
+	}
+
+	public String getEmail() {
+	    return txtEmail.getText().trim();
+	}
+
+	public String getPhone() {
+	    return txtPhone.getText().trim();
+	}
+
+	public String getPassword() {
+	    return new String(txtPassword.getPassword()).trim();
+	}
+
+	public Object getBirthDate() {
+	    return spBirthDate.getValue();
+	}
+
+	public int getCountryIndex() {
+	    return comboCountry.getSelectedIndex();
+	}
+
+	public boolean isMaleSelected() {
+	    return rbtnMale.isSelected();
+	}
+
+	public boolean isFemaleSelected() {
+	    return rbtnFemale.isSelected();
+	}
+
+	public boolean isTermsAccepted() {
+	    return chkTerms.isSelected();
 	}
 	
+	public void setNameError(String msg) {
+	    lblNameError.setText(msg);
+	    txtName.setBorder(FormUtils.redBorder);
+	}
+
+	public void setSurnameError(String msg) {
+	    lblSurnameError.setText(msg);
+	    txtSurname.setBorder(FormUtils.redBorder);
+	}
+
+	public void setEmailError(String msg) {
+	    lblEmailError.setText(msg);
+	    txtEmail.setBorder(FormUtils.redBorder);
+	}
+
+	public void setPasswordError(String msg) {
+	    lblPasswordError.setText(msg);
+	    txtPassword.setBorder(FormUtils.redBorder);
+	}
+
+	public void setPhoneError(String msg) {
+	    lblPhoneError.setText(msg);
+	    txtPhone.setBorder(FormUtils.redBorder);
+	}
+
+	public void setCountryError(String msg) {
+	    lblCountryError.setText(msg);
+	    comboCountry.setBorder(FormUtils.redBorder);
+	}
+
+	public void setBirthDateError(String msg) {
+	    lblBirthDateError.setText(msg);
+	    spBirthDate.setBorder(FormUtils.redBorder);
+	}
+
+	public void setGenderError(String msg) {
+	    lblGenderError.setText(msg);
+	}
+
+	public void setTermsError(String msg) {
+	    lblTermsError.setText(msg);
+	    chkTerms.setBorder(FormUtils.redBorder);
+	}
+	
+	private void assignListeners() {
+
+	    // KEYLISTENER NOMBRE
+	    txtName.addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+	            if (!Character.isLetter(c) && c != ' ') {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    // KEYLISTENER APELLIDOS
+	    txtSurname.addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+	            if (!Character.isLetter(c) && c != ' ') {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    // KEYLISTENER TELÉFONO
+	    txtPhone.addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+	            if (!Character.isDigit(c)) {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    // EFECTOS VISUALES
+	    addFocusEffect(txtName);
+	    addFocusEffect(txtSurname);
+	    addFocusEffect(txtEmail);
+	    addFocusEffect(txtPhone);
+	    addFocusEffect(txtPassword);
+	}
+	
+	// TEXTFIELDS
+	public JTextField getTxtName() {
+	    return txtName;
+	}
+
+	public JTextField getTxtSurname() {
+	    return txtSurname;
+	}
+
+	public JTextField getTxtEmail() {
+	    return txtEmail;
+	}
+
+	public JTextField getTxtPhone() {
+	    return txtPhone;
+	}
+
+	// PASSWORD
+	public JPasswordField getTxtPassword() {
+	    return txtPassword;
+	}
+
+	// COMBOBOX
+	public JComboBox<String> getComboCountry() {
+	    return comboCountry;
+	}
+
+	// CHECKBOX
+	public JCheckBox getChkTerms() {
+	    return chkTerms;
+	}
+
+	// RADIO BUTTONS
+	public JRadioButton getRbtnMale() {
+	    return rbtnMale;
+	}
+
+	public JRadioButton getRbtnFemale() {
+	    return rbtnFemale;
+	}
+
+	// BOTÓN
+	public RoundButton getBtnRegistration() {
+	    return btnRegistration;
+	}
 }

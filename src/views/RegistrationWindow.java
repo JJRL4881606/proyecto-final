@@ -17,6 +17,8 @@ import components.GradientPanel;
 @SuppressWarnings("serial")
 public class RegistrationWindow extends JFrame 
 {
+	private RegistrationView RegistrationView;
+	
     public RegistrationWindow() 
     {
         // Pantalla completa (maximizada)
@@ -40,7 +42,7 @@ public class RegistrationWindow extends JFrame
         setIconImage(icono);
                 
         //Agregar el panel
-        add(crearVistaConScroll(new RegistrationView()), BorderLayout.CENTER);        
+        add(crearVistaConScroll(RegistrationView = new RegistrationView(this)), BorderLayout.CENTER);        
         
         this.setVisible(true);
         
@@ -75,4 +77,8 @@ public class RegistrationWindow extends JFrame
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         return scroll;
     }
+    
+    public RegistrationView getRegistrationView() {
+		return RegistrationView;
+	}
 }

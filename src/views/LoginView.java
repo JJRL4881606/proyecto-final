@@ -36,6 +36,7 @@ import java.net.URI;
 
 import components.RoundButton;
 import components.RoundedPanel;
+import controllers.RegistrationController;
 import exceptions.InvalidPasswordException;
 import exceptions.InvalidUserException;
 import utils.AppFont;
@@ -231,7 +232,8 @@ public class LoginView extends JPanel
 	}
 	
 	private void handleRegistration() {
-		new RegistrationWindow();
+		RegistrationWindow RegistrationW = new RegistrationWindow();
+		new RegistrationController(RegistrationW.getRegistrationView());
 		window.dispose();
 	}
 	
