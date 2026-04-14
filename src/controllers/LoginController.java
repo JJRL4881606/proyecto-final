@@ -27,44 +27,52 @@ public class LoginController {
 
         // LISTENERS (como registration)
         view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { validate(); }
-            public void removeUpdate(DocumentEvent e) { validate(); }
-            public void changedUpdate(DocumentEvent e) { validate(); }
+            public void insertUpdate(DocumentEvent e) { validateEmail(); }
+            public void removeUpdate(DocumentEvent e) { validateEmail(); }
+            public void changedUpdate(DocumentEvent e) { validateEmail(); }
         });
 
         view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { validate(); }
-            public void removeUpdate(DocumentEvent e) { validate(); }
-            public void changedUpdate(DocumentEvent e) { validate(); }
+            public void insertUpdate(DocumentEvent e) { validatePassword(); }
+            public void removeUpdate(DocumentEvent e) { validatePassword(); }
+            public void changedUpdate(DocumentEvent e) { validatePassword(); }
         });
         
         
     }
 
-    private void validate() {
-        view.clearErrors();
-        valid = true;
-
-        String email = view.getEmail();
-        String password = view.getPassword();
-
-        if (email.isEmpty()) {
-            view.setEmailError("El correo es obligatorio");
-            valid = false;
-        } else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            view.setEmailError("Formato inválido");
-            valid = false;
-        }
-
+    public void validatePassword() {
+	 	// PASSWORD
+    		String password = view.getPassword();
+    		view.clearLblPasswordError();
+    		
         if (password.isEmpty()) {
             view.setPasswordError("La contraseña es obligatoria");
             valid = false;
         }
-    }
-
+	 }
+	 
+	 public void validateEmail() {
+		// EMAIL
+		String email = view.getEmail();
+		view.clearLblEmailError();
+		 
+		if (email.isEmpty()) {
+		    view.setEmailError("El correo es obligatorio");
+		    valid = false;
+		} else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+		    view.setEmailError("Formato inválido");
+		    valid = false;
+		}
+	 }
+    
     private void login() {
-        validate();
-
+    		view.clearErrors();
+    		valid = true;
+    		
+	    	validatePassword();
+	    	validateEmail();
+	    	
         if (valid) {
             // Simulación login
         	String email = view.getEmail();

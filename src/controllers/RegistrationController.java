@@ -18,61 +18,86 @@ public class RegistrationController {
 	        this.view = view;
 	        
 	        //BOTON
-	        view.getBtnRegistration().addActionListener(e -> registrarCuenta(valid));
+	        view.getBtnRegistration().addActionListener(e -> registrarCuenta());
 	        
 	        // COMBO
-	        view.getComboCountry().addActionListener(e -> register());
+	        view.getComboCountry().addActionListener(e -> validateCountry());
 
 	        // CHECKBOX
-	        view.getChkTerms().addActionListener(e -> register());
+	        view.getChkTerms().addActionListener(e -> validateTerms());
 
 	        // RADIO BUTTONS
-	        view.getRbtnMale().addActionListener(e -> register());
-	        view.getRbtnFemale().addActionListener(e -> register());
+	        view.getRbtnMale().addActionListener(e -> validateGender());
+	        view.getRbtnFemale().addActionListener(e -> validateGender());
 
 	        // DOCUMENT LISTENER NOMBRE
 	        view.getTxtName().getDocument().addDocumentListener(new DocumentListener() {
-	            public void insertUpdate(DocumentEvent e) { register(); }
-	            public void removeUpdate(DocumentEvent e) { register(); }
-	            public void changedUpdate(DocumentEvent e) { register(); }
+	            public void insertUpdate(DocumentEvent e) { validateName(); }
+	            public void removeUpdate(DocumentEvent e) { validateName(); }
+	            public void changedUpdate(DocumentEvent e) { validateName(); }
 	        });
 
 	        // APELLIDO
 	        view.getTxtSurname().getDocument().addDocumentListener(new DocumentListener() {
-	            public void insertUpdate(DocumentEvent e) { register(); }
-	            public void removeUpdate(DocumentEvent e) { register(); }
-	            public void changedUpdate(DocumentEvent e) { register(); }
+	            public void insertUpdate(DocumentEvent e) { validateSurname(); }
+	            public void removeUpdate(DocumentEvent e) { validateSurname(); }
+	            public void changedUpdate(DocumentEvent e) { validateSurname(); }
 	        });
 
 	        // EMAIL
 	        view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
-	            public void insertUpdate(DocumentEvent e) { register(); }
-	            public void removeUpdate(DocumentEvent e) { register(); }
-	            public void changedUpdate(DocumentEvent e) { register(); }
+	            public void insertUpdate(DocumentEvent e) { validateEmail(); }
+	            public void removeUpdate(DocumentEvent e) { validateEmail(); }
+	            public void changedUpdate(DocumentEvent e) { validateEmail(); }
 	        });
 
 	        // TELÉFONO
 	        view.getTxtPhone().getDocument().addDocumentListener(new DocumentListener() {
-	            public void insertUpdate(DocumentEvent e) { register(); }
-	            public void removeUpdate(DocumentEvent e) { register(); }
-	            public void changedUpdate(DocumentEvent e) { register(); }
+	            public void insertUpdate(DocumentEvent e) { validatePhone(); }
+	            public void removeUpdate(DocumentEvent e) { validatePhone(); }
+	            public void changedUpdate(DocumentEvent e) { validatePhone(); }
 	        });
 
 	        // PASSWORD
 	        view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
-	            public void insertUpdate(DocumentEvent e) { register(); }
-	            public void removeUpdate(DocumentEvent e) { register(); }
-	            public void changedUpdate(DocumentEvent e) { register(); }
+	            public void insertUpdate(DocumentEvent e) { validatePassword(); }
+	            public void removeUpdate(DocumentEvent e) { validatePassword(); }
+	            public void changedUpdate(DocumentEvent e) { validatePassword(); }
 	        });
 	 }
-	 	
-	 private void register() 
-	 {
-		 	view.clearErrors();
-		 	valid = true;
-		    // NOMBRE
-		    String name = view.getName();
+	 
+	 private void registrarCuenta() {
 
+		 view.clearErrors();
+		 valid = true;
+
+		 validateName();
+		 validateSurname();
+		 validatePassword();
+		 validateEmail();
+		 validatePhone();
+		 validateBirthDate();
+		 validateCountry();
+		 validateGender();
+		 validateTerms();
+
+		 if (valid) 
+		 {
+	        JOptionPane.showMessageDialog(view, "Registro exitoso");
+	        new MainPageWindow();
+	        Window window = SwingUtilities.getWindowAncestor(view);
+
+	        if (window != null) {
+	            window.dispose();
+	        }
+	    }
+	 }
+	
+	 public void validateName() {
+		 	// NOMBRE
+		    String name = view.getName();
+		    view.clearLblNameError();
+		    
 		    if (name.isEmpty()) {
 		        view.setNameError("El nombre es obligatorio");
 		        this.valid = false;
@@ -80,9 +105,12 @@ public class RegistrationController {
 		        view.setNameError("Solo se permiten letras");
 		        valid = false;
 		    }
-
-		    // APELLIDOS
+	 }
+	 
+	 public void validateSurname() {
+		 	// APELLIDOS
 		    String surname = view.getSurname();
+		    view.clearLblSurnameError();
 
 		    if (surname.isEmpty()) {
 		        view.setSurnameError("Los apellidos son obligatorios");
@@ -91,17 +119,23 @@ public class RegistrationController {
 		        view.setSurnameError("Solo se permiten letras");
 		        valid = false;
 		    }
-
-		    // PASSWORD
+	 }
+	 
+	 public void validatePassword() {
+		 	// PASSWORD
 		    String password = view.getPassword();
+		    view.clearLblPasswordError();
 
 		    if (password.isEmpty()) {
 		        view.setPasswordError("La contraseña es obligatoria");
 		        valid = false;
 		    }
-
-		    // EMAIL
+	 }
+	 
+	 public void validateEmail() {
+		 	// EMAIL
 		    String email = view.getEmail();
+		    view.clearLblEmailError();
 
 		    if (email.isEmpty()) {
 		        view.setEmailError("El correo es obligatorio");
@@ -110,9 +144,12 @@ public class RegistrationController {
 		        view.setEmailError("Formato de correo inválido");
 		        valid = false;
 		    }
-
-		    // TELÉFONO
+	 }
+	 
+	 public void validatePhone() {
+		 	// TELÉFONO
 		    String phone = view.getPhone();
+		    view.clearLblPhoneError();
 
 		    if (phone.isEmpty()) {
 		        view.setPhoneError("El teléfono es obligatorio");
@@ -124,74 +161,46 @@ public class RegistrationController {
 		        view.setPhoneError("Debe tener al menos 10 números");
 		        valid = false;
 		    }
-
+	 }
+	 
+	 public void validateBirthDate() {
 		    // FECHA
+		 	view.clearLblBirthDateError();
+		 	
 		    if (view.getBirthDate() == null) {
 		        view.setBirthDateError("La fecha de nacimiento es obligatoria");
 		        valid = false;
 		    }
-
-		    // PAÍS
+	 }
+	 
+	 public void validateCountry() {
+		 	// PAÍS
+			view.clearLblCountryError();
+			
 		    if (view.getCountryIndex() == 0) {
 		        view.setCountryError("Debe seleccionar un país");
 		        valid = false;
 		    }
-
-		    // GÉNERO
+	 }
+	 
+	 public void validateGender() {
+		 	// GÉNERO
+		 	view.clearLblGenderError();
+		 	
 		    if (!view.isMaleSelected() && !view.isFemaleSelected()) {
 		        view.setGenderError("Seleccione un género");
 		        valid = false;
 		    }
-
-		    // TÉRMINOS
+	 }
+	 
+	 public void validateTerms() {
+		 	// TÉRMINOS
+		 	view.clearLblTermsError();
+		 
 		    if (!view.isTermsAccepted()) {
 		        view.setTermsError("Debe aceptar los términos y condiciones");
 		        valid = false;
 		    }
-		    
-	 }
-	 
-	 public void registrarCuenta(boolean valid) {
-		 if (valid) 
-		 {
-	        JOptionPane.showMessageDialog(view, "Registro exitoso");
-	        new MainPageWindow();
-	        Window window = SwingUtilities.getWindowAncestor(view);
-
-	        if (window != null) {
-	            window.dispose();
-	        }
-	    }else {
-	    	register();
-	    }
 	 }
 	
-	//VALIDACIONES DE LOS CAMPOS (por mejorar o implementar)
-	/*private void validateRegistration() {
-
-	    resetErrorLabels();
-
-	    boolean valid = true;
-
-	    if (!validateName()) valid = false;
-	    if (!validateSurname()) valid = false;
-	    if (!validatePassword()) valid = false;
-	    if (!validateEmail()) valid = false;
-	    if (!validatePhone()) valid = false;
-	    if (!validateBirthDate()) valid = false;
-	    if (!validateCountry()) valid = false;
-	    if (!validateGender()) valid = false;
-	    if (!validateTerms()) valid = false;
-
-	    if (valid) {
-	        JOptionPane.showMessageDialog(this, "Registro exitoso");
-	        new MainPageWindow();
-	        Window window = 
-	            SwingUtilities.getWindowAncestor(this);
-
-	        if (window != null) {
-	            window.dispose();
-	        }
-	    }
-	}*/
 }

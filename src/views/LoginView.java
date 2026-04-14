@@ -302,4 +302,17 @@ public class LoginView extends JPanel
 	    txtEmail.setBorder(FormUtils.normalBorder);
 	    txtPassword.setBorder(FormUtils.normalBorder);
 	}
+	
+	private void resetField(JLabel label, JComponent field) {
+	    label.setText("");
+	    field.setBorder(FormUtils.normalBorder);
+	}
+	
+	public void clearLblEmailError() {
+	    resetField(lblEmailError, txtEmail);
+	}
+	
+	public void clearLblPasswordError() {
+	    resetField(lblPasswordError, txtPassword);
+	}
 }

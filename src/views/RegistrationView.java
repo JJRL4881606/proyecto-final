@@ -277,17 +277,52 @@ public class RegistrationView extends JPanel
 	    });
 
 	}
-
+	
 	public void clearErrors() {
-	    resetField(lblNameError, txtName);
-	    resetField(lblSurnameError, txtSurname);
-	    resetField(lblEmailError, txtEmail);
-	    resetField(lblPasswordError, txtPassword);
-	    resetField(lblPhoneError, txtPhone);
-	    resetField(lblCountryError, comboCountry);
-	    resetField(lblBirthDateError, spBirthDate);
+		clearLblNameError();
+		clearLblSurnameError();
+		clearLblEmailError();
+		clearLblPasswordError();
+		clearLblPhoneError();
+		clearLblCountryError();
+		clearLblBirthDateError();
+		clearLblGenderError();
+		clearLblTermsError();
+	}
 
+	public void clearLblNameError() {
+	    resetField(lblNameError, txtName);
+	}
+	
+	public void clearLblSurnameError() {
+	    resetField(lblSurnameError, txtSurname);
+	}
+	
+	public void clearLblEmailError() {
+	    resetField(lblEmailError, txtEmail);
+	}
+	
+	public void clearLblPasswordError() {
+	    resetField(lblPasswordError, txtPassword);
+	}
+	
+	public void clearLblPhoneError() {
+	    resetField(lblPhoneError, txtPhone);
+	}
+	
+	public void clearLblCountryError() {
+	    resetField(lblCountryError, comboCountry);
+	}
+	
+	public void clearLblBirthDateError() {
+	    resetField(lblBirthDateError, spBirthDate);
+	}
+	
+	public void clearLblGenderError() {
 	    lblGenderError.setText("");
+	}
+	
+	public void clearLblTermsError() {
 	    lblTermsError.setText("");
 	}
 	
