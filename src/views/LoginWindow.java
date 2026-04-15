@@ -14,9 +14,11 @@ import controllers.LoginController;
 @SuppressWarnings("serial")
 public class LoginWindow extends JFrame 
 {
+	
+	private LoginView loginView;
+
     public LoginWindow() 
     {
-        // Pantalla completa (maximizada)
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Login | HOTEL MJ");
         this.setResizable(true);
@@ -24,19 +26,20 @@ public class LoginWindow extends JFrame
         
         // Fondo degradado
         GradientPanel fondo = new GradientPanel(
-            new Color(100,149,237), 
+            new Color(100,149,237), 	
             new Color(25,25,112)
         );
 
         fondo.setLayout(new BorderLayout());
         setContentPane(fondo);    
 
-        //Agregar ícono aplicación
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icono = tk.getImage("src/img/iconoRegistroUsuario.png");
+        //Agregar icono
+        Image icono = Toolkit.getDefaultToolkit().getImage(
+    	    getClass().getResource("/img/registration-icon.png")
+    	);
         setIconImage(icono);
                 
-		//Agregar el panel
+		//Agregar panel
         LoginView loginview = new LoginView();
         new LoginController(loginview);
         fondo.add(crearVistaConScroll(loginview), BorderLayout.CENTER);
@@ -56,4 +59,9 @@ public class LoginWindow extends JFrame
 
         return scroll;
     }
+    
+	public LoginView getLoginView() {
+		return loginView;
+	}
+
 }

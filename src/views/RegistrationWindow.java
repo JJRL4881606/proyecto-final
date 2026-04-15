@@ -21,7 +21,6 @@ public class RegistrationWindow extends JFrame
 	
     public RegistrationWindow() 
     {
-        // Pantalla completa (maximizada)
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Registro | HOTEL MJ");
         this.setResizable(true);
@@ -36,9 +35,10 @@ public class RegistrationWindow extends JFrame
         fondo.setLayout(new BorderLayout());
         setContentPane(fondo);    
 
-        //Agregar ícono aplicación
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icono = tk.getImage("src/img/iconoRegistroUsuario.png");
+        //Agregar icono
+        Image icono = Toolkit.getDefaultToolkit().getImage(
+    	    getClass().getResource("/img/registration-icon.png")
+    	);
         setIconImage(icono);
                 
         //Agregar el panel
@@ -66,7 +66,6 @@ public class RegistrationWindow extends JFrame
 		
 		if(option == JOptionPane.YES_OPTION) {
 			System.exit(0);
-			//dispose();*/
 		}
 	}
     

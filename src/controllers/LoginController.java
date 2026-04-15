@@ -5,7 +5,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import views.LoginView;
-import views.MainPageWindow;
+import views.HomeWindow;
 import views.RegistrationWindow;
 
 import java.awt.Window;
@@ -25,7 +25,7 @@ public class LoginController {
         // BOTÓN REGISTRO
         view.getBtnRegistration().addActionListener(e -> goToRegister());
 
-        // LISTENERS (como registration)
+        // LISTENERS
         view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateEmail(); }
             public void removeUpdate(DocumentEvent e) { validateEmail(); }
@@ -43,8 +43,8 @@ public class LoginController {
 
     public void validatePassword() {
 	 	// PASSWORD
-    		String password = view.getPassword();
-    		view.clearLblPasswordError();
+		String password = view.getPassword();
+		view.clearLblPasswordError();
     		
         if (password.isEmpty()) {
             view.setPasswordError("La contraseña es obligatoria");
@@ -67,14 +67,13 @@ public class LoginController {
 	 }
     
     private void login() {
-    		view.clearErrors();
-    		valid = true;
-    		
-	    	validatePassword();
-	    	validateEmail();
+		view.clearErrors();
+		valid = true;
+		
+    	validatePassword();
+    	validateEmail();
 	    	
         if (valid) {
-            // Simulación login
         	String email = view.getEmail();
         	String password = view.getPassword();
 
@@ -82,7 +81,7 @@ public class LoginController {
         	    password.equals("1234")) {
         		
                 JOptionPane.showMessageDialog(view, "Sesión iniciada");
-                new MainPageWindow();
+                new HomeWindow();
 
                 Window window = SwingUtilities.getWindowAncestor(view);
                 if (window != null) window.dispose();

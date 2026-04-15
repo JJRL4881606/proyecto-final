@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -14,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -26,11 +27,11 @@ import javax.swing.ImageIcon;
 import utils.AppFont;
 
 @SuppressWarnings("serial")
-public class MainPageView extends JPanel{
+public class HomeView extends JPanel{
 	
 	JMenuItem cerrarSesion;
 
-	public MainPageView() {
+	public HomeView() {
 	    Color hover = new Color(210,210,210);
 	    UIManager.put("Menu.selectionBackground", hover);
 	    UIManager.put("MenuItem.selectionBackground", hover);
@@ -105,7 +106,7 @@ public class MainPageView extends JPanel{
         panel.setOpaque(false);
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        ImageIcon icon = new ImageIcon("C:/Users/Usuario/eclipse-workspace/ProyectoFinal/src/img/logoHotel.png");
+        ImageIcon icon = new ImageIcon(getClass().getResource("/img/hotel-icon.png"));
         Image img = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(img));
 
@@ -200,19 +201,6 @@ public class MainPageView extends JPanel{
 
         cerrarSesion = new JMenuItem("Cerrar sesión");
         cerrarSesion.setMnemonic(KeyEvent.VK_C);
-        cerrarSesion.addActionListener(e -> {
-
-            int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas regresar? Se perderán todos los datos");
-
-            if (option == JOptionPane.YES_OPTION) {
-                new LoginWindow();
-                java.awt.Window window = javax.swing.SwingUtilities.getWindowAncestor(this);
-
-                if (window != null) {
-                    window.dispose();
-                }
-            }
-        });
         
         sistema.add(cerrarSesion);
 
@@ -249,20 +237,22 @@ public class MainPageView extends JPanel{
         menu.setOpaque(true);
         menu.setBackground(normal);
 
-        menu.addMouseListener(new java.awt.event.MouseAdapter() {
+        menu.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
+            public void mouseEntered(MouseEvent e) {
                 menu.setBackground(hover);
             }
 
             @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
+            public void mouseExited(MouseEvent e) {
                 menu.setBackground(normal);
             }
 
         });
     }
-
-
+    
+    public JMenuItem getCerrarSesion() {
+        return cerrarSesion;
+    }
 }

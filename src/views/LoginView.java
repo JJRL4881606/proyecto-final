@@ -38,12 +38,12 @@ import utils.UIColors;
 @SuppressWarnings("serial")
 public class LoginView extends JPanel
 {	
+	LoginWindow window;
 	JTextField txtEmail;
 	JPasswordField txtPassword;
 	JLabel lblEmailError;
 	JLabel lblPasswordError;
 	JLabel lblWrongError;
-	
 	RoundButton btnLogin;
 	RoundButton btnRegistration;
 	
@@ -153,7 +153,8 @@ public class LoginView extends JPanel
 
             public void mouseClicked(MouseEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI("https://www.google.com")); //Abre google mientras hacemos laparte de recuperar contrasena 
+                    Desktop.getDesktop().browse(new URI("https://www.google.com"));
+                    //Abre google mientras hacemos laparte de recuperar contrasena 
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -190,20 +191,22 @@ public class LoginView extends JPanel
         panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
         panelButtons.setOpaque(false);
 
-        btnLogin = new RoundButton("INICIAR SESIÓN", new ImageIcon("src/img/login-icon.png"));
+        btnLogin = new RoundButton("INICIAR SESIÓN",
+    	    new ImageIcon(getClass().getResource("/img/button-login-icon.png")));
 		btnLogin.setBackground(new Color(255, 249, 179));
 		btnLogin.setForeground(Color.BLACK);
 		btnLogin.setToolTipText("Haz click aquí");
 		btnLogin.setFont(AppFont.big());
 
-		btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/registration-icon.png"));
+		btnRegistration = new RoundButton("CREAR CUENTA",
+			new ImageIcon(getClass().getResource("/img/button-registration-icon.png")));
 		btnRegistration.setBackground(new Color(255, 249, 179));
 		btnRegistration.setForeground(Color.BLACK);
 		btnRegistration.setToolTipText("Haz click aquí");
 		btnRegistration.setFont(AppFont.big());
 		
-		btnLogin.setIcon(FormUtils.loadIcon("/img/login-icon.png", 30));
-		btnRegistration.setIcon(FormUtils.loadIcon("/img/registration-icon.png", 30));
+		btnLogin.setIcon(FormUtils.loadIcon("/img/button-login-icon.png", 30));
+		btnRegistration.setIcon(FormUtils.loadIcon("/img/button-registration-icon.png", 30));
 		
 		panelButtons.add(btnLogin);	
 		panelButtons.add(btnRegistration);
@@ -216,7 +219,6 @@ public class LoginView extends JPanel
 	private void assignListeners() {
 
 	    // KEYLISTENER EMAIL (no permitir espacios)
-
 	    txtEmail.addKeyListener(new KeyAdapter() {
 	        @Override
 	        public void keyTyped(KeyEvent e) {
@@ -227,8 +229,6 @@ public class LoginView extends JPanel
 	            }
 	        }
 	    });
-
-
 	    
 	    //FOCUSLISTENER EMAIL Y PASSWORD
 	    addFocusEffect(txtEmail);
@@ -236,7 +236,6 @@ public class LoginView extends JPanel
 	}
 	
 	//AGREGAR FOCO EN EL CAMPO
-	
 	private void addFocusEffect(JComponent field) {
 
 	    field.addFocusListener(new FocusAdapter() {
@@ -258,7 +257,7 @@ public class LoginView extends JPanel
 	
 	public RoundButton getBtnLogin() {
 	    return btnLogin;
-	}
+	}	
 
 	public RoundButton getBtnRegistration() {
 	    return btnRegistration;

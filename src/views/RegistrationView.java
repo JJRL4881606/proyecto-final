@@ -4,7 +4,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Window;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -12,6 +11,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -29,7 +29,6 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import components.RoundButton;
@@ -64,6 +63,7 @@ public class RegistrationView extends JPanel
 	private JRadioButton rbtnMale;
 	private JRadioButton rbtnFemale;
 	private RoundButton btnRegistration;
+	private RoundButton btnReturn;
 	    
     public RegistrationView(RegistrationWindow window) 
     {
@@ -219,32 +219,16 @@ public class RegistrationView extends JPanel
 		panel.setOpaque(false);
 	    panel.setBorder(new EmptyBorder(5, 20, 10, 20));
 
-        btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/login-icon.png"));
+        btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/button-login-icon.png"));
         btnRegistration.setBackground(UIColors.BUTTON);
 		btnRegistration.setFont(AppFont.big());
 		btnRegistration.setFocusPainted(false);
-        
-		        
-        RoundButton btnReturn = new RoundButton("REGRESAR", new ImageIcon("src/img/back-icon.png"));
+        		        
+        btnReturn = new RoundButton("REGRESAR", new ImageIcon("src/img/button-back-icon.png"));
         btnReturn.setBackground(UIColors.BUTTON);
         btnReturn.setFont(AppFont.big());
-        btnReturn.addActionListener(e -> {
-
-            int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas regresar? Se perderán todos los datos");
-
-            if (option == JOptionPane.YES_OPTION) {
-                new LoginWindow();
-                Window window = 
-                    SwingUtilities.getWindowAncestor(this);
-
-                if (window != null) {
-                    window.dispose();
-                }
-            }
-        });
-		
-		btnRegistration.setIcon(FormUtils.loadIcon("/img/login-icon.png", 30));
-		
+        btnReturn.setFocusPainted(false);
+				
         panel.add(btnRegistration);
 		panel.add(btnReturn);
 
@@ -277,6 +261,8 @@ public class RegistrationView extends JPanel
 	    });
 
 	}
+	
+	//LABELS ERROR
 	
 	public void clearErrors() {
 		clearLblNameError();
@@ -326,6 +312,8 @@ public class RegistrationView extends JPanel
 	    lblTermsError.setText("");
 	}
 	
+	//GETTERS
+	
 	public String getName() {
 	    return txtName.getText().trim();
 	}
@@ -346,8 +334,18 @@ public class RegistrationView extends JPanel
 	    return new String(txtPassword.getPassword()).trim();
 	}
 
-	public Object getBirthDate() {
-	    return spBirthDate.getValue();
+	public Date getBirthDate() {
+	    return (Date) spBirthDate.getValue();
+	}
+	
+	public char getGender() {
+	    if (rbtnMale.isSelected()) return 'M';
+	    if (rbtnFemale.isSelected()) return 'F';
+	    return ' ';
+	}
+	
+	public String getCountry() {
+		return String.valueOf(comboCountry.getSelectedItem());
 	}
 
 	public int getCountryIndex() {
@@ -365,6 +363,8 @@ public class RegistrationView extends JPanel
 	public boolean isTermsAccepted() {
 	    return chkTerms.isSelected();
 	}
+	
+	//SETTERS ERROR
 	
 	public void setNameError(String msg) {
 	    lblNameError.setText(msg);
@@ -409,6 +409,8 @@ public class RegistrationView extends JPanel
 	    lblTermsError.setText(msg);
 	    chkTerms.setBorder(FormUtils.redBorder);
 	}
+	
+	//ASSIGN LISTENERS
 	
 	private void assignListeners() {
 
@@ -479,6 +481,11 @@ public class RegistrationView extends JPanel
 	public JComboBox<String> getComboCountry() {
 	    return comboCountry;
 	}
+	
+	//JSPINNER
+	public JSpinner getSpBirthDate() {
+		return spBirthDate;
+	}
 
 	// CHECKBOX
 	public JCheckBox getChkTerms() {
@@ -494,8 +501,21 @@ public class RegistrationView extends JPanel
 	    return rbtnFemale;
 	}
 
-	// BOTÓN
+	// BOTONES
 	public RoundButton getBtnRegistration() {
 	    return btnRegistration;
+	}
+	
+	public RoundButton getBtnReturn() {
+	    return btnReturn;
+	}
+	
+	public int confirmReturn() {
+	    return JOptionPane.showConfirmDialog(
+	        this,
+	        "¿Seguro que deseas regresar? Se perderán todos los datos",
+	        "¿Seguro?",
+	        JOptionPane.YES_NO_OPTION
+	    );
 	}
 }

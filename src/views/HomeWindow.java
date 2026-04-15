@@ -10,13 +10,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import components.GradientPanel;
+import controllers.HomeController;
 
 @SuppressWarnings("serial")
-public class MainPageWindow extends JFrame 
+public class HomeWindow extends JFrame 
 {
-    public MainPageWindow() 
+	private HomeView HomeView;
+
+    public HomeWindow() 
     {
-        // Pantalla completa (maximizada)
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Home | HOTEL MJ");
         this.setResizable(true);
@@ -31,13 +33,17 @@ public class MainPageWindow extends JFrame
         fondo.setLayout(new BorderLayout());
         setContentPane(fondo);    
 
-        // Agregar ícono aplicación
-        Toolkit tk = Toolkit.getDefaultToolkit();
-        Image icono = tk.getImage("src/img/logoHotel.png");
+        // Agregar icono
+        Image icono = Toolkit.getDefaultToolkit().getImage(
+    	    getClass().getResource("/img/hotel-icon.png")
+    	);
         setIconImage(icono);
-                
+         
         // Agregar el panel con scroll
-        add(crearVistaConScroll(new MainPageView()), BorderLayout.CENTER);
+        HomeView = new HomeView();
+        new HomeController(HomeView);
+        add(crearVistaConScroll(HomeView), BorderLayout.CENTER);
+        
         this.setVisible(true);
     }
     
@@ -47,5 +53,9 @@ public class MainPageWindow extends JFrame
         scroll.getVerticalScrollBar().setUnitIncrement(12);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         return scroll;
+    }
+    
+    public HomeView getHomeView() {
+        return HomeView;
     }
 }
