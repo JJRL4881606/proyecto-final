@@ -23,7 +23,6 @@ public class UserRepository {
 			writer.write(user.toCsv());
 			writer.newLine();
 		}
-		
 	}
 	
 	public List<User> getUsers() throws IOException {
@@ -38,20 +37,6 @@ public class UserRepository {
 				users.add(user);
 			}
 		}
-		
-		return users;
-		
-	}
-	
-			
+		return users;	
+	}			
 }
-
-
-
-
-
-
-
-
-
-

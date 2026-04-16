@@ -1,8 +1,10 @@
 package views;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -10,6 +12,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -23,13 +26,24 @@ import javax.swing.border.EmptyBorder;
 import components.RoundedMenuBar;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 
 import utils.AppFont;
 
 @SuppressWarnings("serial")
 public class HomeView extends JPanel{
 	
-	JMenuItem cerrarSesion;
+	public JMenuItem cerrarSesion;
+	
+	public static final String HOME = "HOME";
+	public static final String USERS = "USERS";
+	
+	public JMenuItem btnUsers;
+	public JMenuItem btnHome;
+	public UsersView usersPanel;
+	
+	private CardLayout cardLayout;
+	private JPanel container;
 
 	public HomeView() {
 	    Color hover = new Color(210,210,210);
@@ -53,7 +67,6 @@ public class HomeView extends JPanel{
     }
     
     //HEADER
-    
     public JPanel headerSection() {
         JPanel superiorPanel = new JPanel();
         superiorPanel.setLayout(new GridLayout(1,3));
@@ -141,6 +154,29 @@ public class HomeView extends JPanel{
     	mb.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
     	mb.setOpaque(false);
     	mb.setBackground(new Color(0,0,0,0));
+    	
+        // SISTEMA
+        JMenu sistema = new JMenu("Sistema");
+        applyHover(sistema);
+        sistema.setOpaque(true);
+        sistema.setBorder(new EmptyBorder(5,15,5,15));
+        sistema.setMnemonic(KeyEvent.VK_S);
+        mb.add(sistema);
+
+        btnHome = new JMenuItem("Inicio");
+        btnHome.setMnemonic(KeyEvent.VK_I);
+        sistema.add(btnHome);
+        
+        btnUsers = new JMenuItem("Ver Usuarios");
+        btnUsers.setMnemonic(KeyEvent.VK_U);
+        sistema.add(btnUsers);
+        
+        sistema.addSeparator();
+
+        cerrarSesion = new JMenuItem("Cerrar sesión");
+        cerrarSesion.setMnemonic(KeyEvent.VK_C);
+        
+        sistema.add(cerrarSesion); 
 
         // HABITACIONES
     	JMenu habitaciones = new JMenu("Habitaciones");
@@ -186,23 +222,7 @@ public class HomeView extends JPanel{
         verInformacion.setMnemonic(KeyEvent.VK_V);
         informacion.add(verInformacion);
         
-        // SISTEMA
-        JMenu sistema = new JMenu("Sistema");
-        applyHover(sistema);
-        sistema.setOpaque(true);
-        sistema.setBorder(new EmptyBorder(5,15,5,15));
-        sistema.setMnemonic(KeyEvent.VK_S);
-        mb.add(sistema);
 
-        JMenuItem inicio = new JMenuItem("Inicio");
-        inicio.setMnemonic(KeyEvent.VK_I);
-        sistema.add(inicio);
-        sistema.addSeparator();
-
-        cerrarSesion = new JMenuItem("Cerrar sesión");
-        cerrarSesion.setMnemonic(KeyEvent.VK_C);
-        
-        sistema.add(cerrarSesion);
 
         return mb;
     }
@@ -211,11 +231,13 @@ public class HomeView extends JPanel{
     public JPanel content(){
     	JPanel contentPanel = new JPanel();
     	contentPanel.setBackground(new Color(0,0,0));
+    	
+		createViews();
+		
     	return contentPanel;
     }
     
     //INFERIOR
-    
     public JPanel inferiorSection() {
         JPanel inferiorPanel = new JPanel();
         inferiorPanel.setBackground(new Color(30,144,255));
@@ -255,4 +277,32 @@ public class HomeView extends JPanel{
     public JMenuItem getCerrarSesion() {
         return cerrarSesion;
     }
+
+    private void createViews() {
+        cardLayout = new CardLayout();
+        container = new JPanel(cardLayout);
+        
+        JPanel homePanel = new JPanel();
+        homePanel.add(new JLabel("Bienvenido al Sistema"));
+        
+        usersPanel = new UsersView();
+        
+        container.add(homePanel, HOME);
+        container.add(usersPanel, USERS);
+    }
+    
+    
+	public void showView(String view) {
+		cardLayout.show(container, view);
+	}
+
+	public JMenuItem getBtnUsers() {
+		return btnUsers;
+	}
+	
+	public JMenuItem getBtnHome() {
+		return btnHome;
+	}
+
+
 }

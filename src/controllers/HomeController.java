@@ -3,10 +3,17 @@ package controllers;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import models.User;
+import repository.UserRepository;
+import tablemodels.UserTableModel;
 import views.HomeView;
 import views.LoginWindow;
 
 import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.util.List;
 
 public class HomeController {
 
@@ -15,10 +22,48 @@ public class HomeController {
     public HomeController(HomeView view) {
         this.view = view;
 
-        view.getCerrarSesion().addActionListener(e -> cerrarSesion());
+		registerListeners();
     }
+    
+	public void registerListeners( ) {
+		
+		view.getCerrarSesion().addActionListener(e -> handleClose());
+		
+		Window window = SwingUtilities.getWindowAncestor(view);
 
-    private void cerrarSesion() {
+		if (window != null) {
+		    window.addWindowListener(new WindowAdapter() {
+		        @Override
+		        public void windowClosing(WindowEvent e) {
+		            handleClose();
+		        }
+		    });
+		}
+		
+		view.getBtnUsers().addActionListener(e -> showUsers());
+		
+		view.getBtnHome().addActionListener(e -> view.showView(HomeView.HOME));		
+	}
+	
+	private void showUsers() {
+		UserRepository repository = new UserRepository();
+		
+		try {
+			List<User> users = repository.getUsers();
+			
+			UserTableModel model = new UserTableModel(users);
+			
+			view.usersPanel.setTableModel(model);
+			
+			view.showView(HomeView.USERS);
+			
+		}catch (IOException ex) {
+			JOptionPane.showMessageDialog(view, ex.getMessage());
+		}
+		
+	}
+	
+    private void handleClose() {
 
         int option = JOptionPane.showConfirmDialog(
             view,
