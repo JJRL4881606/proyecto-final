@@ -25,29 +25,29 @@ public class HomeWindow extends JFrame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Fondo degradado
-        GradientPanel fondo = new GradientPanel(
+        GradientPanel background = new GradientPanel(
             new Color(100,149,237), 
             new Color(25,25,112)
         );
 
-        fondo.setLayout(new BorderLayout());
-        setContentPane(fondo);    
+        background.setLayout(new BorderLayout());
+        setContentPane(background);    
 
         // Agregar icono
-        Image icono = Toolkit.getDefaultToolkit().getImage(
+        Image icon = Toolkit.getDefaultToolkit().getImage(
     	    getClass().getResource("/img/hotel-icon.png")
     	);
-        setIconImage(icono);
+        setIconImage(icon);
          
         // Agregar el panel con scroll
         HomeView = new HomeView();
         new HomeController(HomeView);
-        add(crearVistaConScroll(HomeView), BorderLayout.CENTER);
+        add(createViewScroll(HomeView), BorderLayout.CENTER);
         
         this.setVisible(true);
     }
     
-    private JScrollPane crearVistaConScroll(JPanel panel) {
+    private JScrollPane createViewScroll(JPanel panel) {
         JScrollPane scroll = new JScrollPane(panel);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(12);
@@ -58,6 +58,4 @@ public class HomeWindow extends JFrame
     public HomeView getHomeView() {
         return HomeView;
     }
-    
-    
 }

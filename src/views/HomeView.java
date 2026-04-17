@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -12,7 +11,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -26,14 +24,12 @@ import javax.swing.border.EmptyBorder;
 import components.RoundedMenuBar;
 
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
-
 import utils.AppFont;
 
 @SuppressWarnings("serial")
 public class HomeView extends JPanel{
 	
-	public JMenuItem cerrarSesion;
+	public JMenuItem logOut;
 	
 	public static final String HOME = "HOME";
 	public static final String USERS = "USERS";
@@ -101,7 +97,6 @@ public class HomeView extends JPanel{
         panel.setOpaque(false);
 
         JMenuBar menu = createMenu();
-        
         panel.add(menu);
 
         return panel;
@@ -173,10 +168,10 @@ public class HomeView extends JPanel{
         
         sistema.addSeparator();
 
-        cerrarSesion = new JMenuItem("Cerrar sesión");
-        cerrarSesion.setMnemonic(KeyEvent.VK_C);
+        logOut = new JMenuItem("Cerrar sesión");
+        logOut.setMnemonic(KeyEvent.VK_C);
         
-        sistema.add(cerrarSesion); 
+        sistema.add(logOut); 
 
         // HABITACIONES
     	JMenu habitaciones = new JMenu("Habitaciones");
@@ -221,8 +216,6 @@ public class HomeView extends JPanel{
         JMenuItem verInformacion = new JMenuItem("Ver información");
         verInformacion.setMnemonic(KeyEvent.VK_V);
         informacion.add(verInformacion);
-        
-
 
         return mb;
     }
@@ -233,6 +226,7 @@ public class HomeView extends JPanel{
     	contentPanel.setBackground(new Color(0,0,0));
     	
 		createViews();
+	    contentPanel.add(container, BorderLayout.CENTER);
 		
     	return contentPanel;
     }
@@ -251,14 +245,13 @@ public class HomeView extends JPanel{
         return inferiorPanel;
     }
     
+    //hover
     private void applyHover(JMenu menu) {
-
         Color normal = new Color(255,255,253);
         Color hover = new Color(210,210,210);
 
         menu.setOpaque(true);
         menu.setBackground(normal);
-
         menu.addMouseListener(new MouseAdapter() {
 
             @Override
@@ -274,10 +267,6 @@ public class HomeView extends JPanel{
         });
     }
     
-    public JMenuItem getCerrarSesion() {
-        return cerrarSesion;
-    }
-
     private void createViews() {
         cardLayout = new CardLayout();
         container = new JPanel(cardLayout);
@@ -291,10 +280,15 @@ public class HomeView extends JPanel{
         container.add(usersPanel, USERS);
     }
     
-    
 	public void showView(String view) {
 		cardLayout.show(container, view);
 	}
+	
+	//getters
+    public JMenuItem getLogOut() {
+        return logOut;
+    }
+
 
 	public JMenuItem getBtnUsers() {
 		return btnUsers;
@@ -303,6 +297,4 @@ public class HomeView extends JPanel{
 	public JMenuItem getBtnHome() {
 		return btnHome;
 	}
-
-
 }

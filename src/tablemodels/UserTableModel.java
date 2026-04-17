@@ -1,14 +1,17 @@
 package tablemodels;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
 import models.User;
 
+@SuppressWarnings("serial")
 public class UserTableModel extends AbstractTableModel{
 
 	private List<User> users;
+	private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private final String[] columns = {
 		"Nombre",
@@ -56,7 +59,7 @@ public class UserTableModel extends AbstractTableModel{
 			case 4:
 				return user.getCountry();
 			case 5:
-				return user.getBirthDate();
+			    return formatter.format(user.getBirthDate());			
 			case 6:
 				return user.getGender();
 		}	

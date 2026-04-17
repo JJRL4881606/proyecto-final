@@ -27,22 +27,22 @@ public class RegistrationWindow extends JFrame
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         
         // Fondo degradado
-        GradientPanel fondo = new GradientPanel(
+        GradientPanel background = new GradientPanel(
             new Color(100,149,237), 
             new Color(25,25,112)
         );
 
-        fondo.setLayout(new BorderLayout());
-        setContentPane(fondo);    
+        background.setLayout(new BorderLayout());
+        setContentPane(background);    
 
         //Agregar icono
-        Image icono = Toolkit.getDefaultToolkit().getImage(
+        Image icon = Toolkit.getDefaultToolkit().getImage(
     	    getClass().getResource("/img/registration-icon.png")
     	);
-        setIconImage(icono);
+        setIconImage(icon);
                 
         //Agregar el panel
-        add(crearVistaConScroll(RegistrationView = new RegistrationView(this)), BorderLayout.CENTER);        
+        add(createViewScroll(RegistrationView = new RegistrationView(this)), BorderLayout.CENTER);        
         
         this.setVisible(true);
         
@@ -69,7 +69,7 @@ public class RegistrationWindow extends JFrame
 		}
 	}
     
-    private JScrollPane crearVistaConScroll(JPanel panel) {
+    private JScrollPane createViewScroll(JPanel panel) {
         JScrollPane scroll = new JScrollPane(panel);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(12);

@@ -214,8 +214,6 @@ public class LoginView extends JPanel
 		return panelButtons;
 	}
 	
-	
-	
 	private void assignListeners() {
 
 	    // KEYLISTENER EMAIL (no permitir espacios)

@@ -40,7 +40,6 @@ import utils.UIColors;
 @SuppressWarnings("serial")
 public class RegistrationView extends JPanel
 {	
-	
 	JLabel lblNameError;
 	JLabel lblSurnameError;
 	JLabel lblPasswordError;
@@ -103,7 +102,6 @@ public class RegistrationView extends JPanel
     public JPanel createForm() {
     	
     	//PANEL PRINCIPAL
-    	
         JPanel mainPanel = new JPanel();
         mainPanel.setBackground(UIColors.CARD);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -111,31 +109,26 @@ public class RegistrationView extends JPanel
         mainPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
         //NOMBRE
-        
         txtName = FormUtils.createTextField();
         lblNameError = FormUtils.createErrorLabel();
         mainPanel.add(FormUtils.createField("Nombre(s)", txtName, lblNameError, "Ingrese su(s) nombre(s)"));
         
         //APELLIDOS
-        
         txtSurname = FormUtils.createTextField();
         lblSurnameError = FormUtils.createErrorLabel();
         mainPanel.add(FormUtils.createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)"));
         
         //EMAIL
-        
 	    txtEmail = FormUtils.createTextField();
         lblEmailError = FormUtils.createErrorLabel();
         mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su email"));
         
         //TELÉFONO
-        
 	    txtPhone = FormUtils.createTextField();
         lblPhoneError = FormUtils.createErrorLabel();
         mainPanel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono"));
         
         //FECHA NACIMIENTO
-        
         spBirthDate = new JSpinner(new SpinnerDateModel());
         spBirthDate.setBorder(BorderFactory.createEmptyBorder(6,0,6,0));
         spBirthDate.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
@@ -145,7 +138,6 @@ public class RegistrationView extends JPanel
         mainPanel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, ""));
         
         //PAÍS
-        
         String[] countryList = {"Seleccione el país", "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Esuatini", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guinea", "Guinea-Bisáu", "Guinea Ecuatorial", "Guyana", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Palestina", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumania", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Taiwán", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Vaticano", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"};
     	comboCountry = new JComboBox<>(countryList);
     	comboCountry.setBorder(BorderFactory.createEmptyBorder(6,0,6,0));
@@ -155,7 +147,6 @@ public class RegistrationView extends JPanel
     	mainPanel.add(FormUtils.createField("País", comboCountry, lblCountryError, ""));
         
     	//GÉNERO
-
         JPanel genderPanel = new JPanel();
         genderPanel.setLayout(new GridLayout(0, 1));
         genderPanel.setOpaque(false);
@@ -172,13 +163,11 @@ public class RegistrationView extends JPanel
         mainPanel.add(FormUtils.createField("Género", genderPanel, lblGenderError, ""));
         
         //CONTRASEÑA
-        
         txtPassword = FormUtils.createPasswordField();
         lblPasswordError = FormUtils.createErrorLabel();
         mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Cree una contraseña"));
 
         //ACEPTAR TÉRMINOS
-        
         chkTerms = new JCheckBox("Acepto los términos y condiciones");
         chkTerms.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblTermsError = FormUtils.createErrorLabel();
@@ -189,7 +178,6 @@ public class RegistrationView extends JPanel
     }
     
     //CREAR EL TÍTULO
-    
 	private JPanel createTitle() {
 	    JPanel panel = new JPanel();
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -213,7 +201,6 @@ public class RegistrationView extends JPanel
 	}
 	
 	//CREAR EL BOTÓN
-	
 	private JPanel createButton() {
 		JPanel panel = new JPanel(new GridLayout(2, 1, 0, 10));
 		panel.setOpaque(false);
@@ -241,11 +228,8 @@ public class RegistrationView extends JPanel
 	}
 	
 	//AGREGAR FOCO EN EL CAMPO
-	
 	private void addFocusEffect(JComponent field) {
-
 	    field.addFocusListener(new FocusAdapter() {
-
 	        @Override
 	        public void focusGained(FocusEvent e) {
 	            field.setBorder(BorderFactory.createCompoundBorder(
@@ -253,17 +237,14 @@ public class RegistrationView extends JPanel
 	                BorderFactory.createEmptyBorder(8,10,8,10)
 	            ));
 	        }
-
 	        @Override
 	        public void focusLost(FocusEvent e) {
 	            field.setBorder(FormUtils.normalBorder);
 	        }
 	    });
-
 	}
 	
 	//LABELS ERROR
-	
 	public void clearErrors() {
 		clearLblNameError();
 		clearLblSurnameError();
@@ -313,7 +294,6 @@ public class RegistrationView extends JPanel
 	}
 	
 	//GETTERS
-	
 	public String getName() {
 	    return txtName.getText().trim();
 	}

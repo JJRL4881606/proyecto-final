@@ -25,29 +25,29 @@ public class LoginWindow extends JFrame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // Fondo degradado
-        GradientPanel fondo = new GradientPanel(
+        GradientPanel background = new GradientPanel(
             new Color(100,149,237), 	
             new Color(25,25,112)
         );
 
-        fondo.setLayout(new BorderLayout());
-        setContentPane(fondo);    
+        background.setLayout(new BorderLayout());
+        setContentPane(background);    
 
         //Agregar icono
-        Image icono = Toolkit.getDefaultToolkit().getImage(
+        Image icon = Toolkit.getDefaultToolkit().getImage(
     	    getClass().getResource("/img/registration-icon.png")
     	);
-        setIconImage(icono);
+        setIconImage(icon);
                 
 		//Agregar panel
         LoginView loginview = new LoginView();
         new LoginController(loginview);
-        fondo.add(crearVistaConScroll(loginview), BorderLayout.CENTER);
+        background.add(createViewScroll(loginview), BorderLayout.CENTER);
                 
         this.setVisible(true);
     }
     
-    private JScrollPane crearVistaConScroll(JPanel panel) {
+    private JScrollPane createViewScroll(JPanel panel) {
         JScrollPane scroll = new JScrollPane(panel);
         
         scroll.setBorder(null);

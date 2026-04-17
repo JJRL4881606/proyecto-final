@@ -27,7 +27,7 @@ public class HomeController {
     
 	public void registerListeners( ) {
 		
-		view.getCerrarSesion().addActionListener(e -> handleClose());
+		view.getLogOut().addActionListener(e -> handleClose());
 		
 		Window window = SwingUtilities.getWindowAncestor(view);
 
