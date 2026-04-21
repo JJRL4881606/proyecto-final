@@ -113,13 +113,11 @@ public class User {
 	
 	public static User fromCsv(String userData) {
 		String data[] = userData.split(",");
-		
 		String name = data[0];
 		String surname = data[1];
 		String email = data[2];
 		String phone = data[3];
 	    String country = data[4];
-
 	    Date birthDate = null; 
 	    
 	    try {
@@ -131,6 +129,5 @@ public class User {
 	    char gender = data[6].charAt(0);
 	    	    
 	    return new User(name, surname, email, phone, country, birthDate, gender);
-		
 	}
 }

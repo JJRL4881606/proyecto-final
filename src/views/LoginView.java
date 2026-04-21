@@ -1,6 +1,7 @@
 package views;
 
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -114,14 +115,12 @@ public class LoginView extends JPanel
 
 	    txtEmail = FormUtils.createTextField();
 	    lblEmailError = FormUtils.createErrorLabel();
-	    
 	    mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico"));
 	    
 	    // PASSWORD
 
 	    txtPassword = FormUtils.createPasswordField();
 	    lblPasswordError = FormUtils.createErrorLabel();
-	    
 	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña"));
 
 	    // MOSTRAR CONTRASEÑA
@@ -187,23 +186,23 @@ public class LoginView extends JPanel
     // CREAR LOS BOTONES
     
 	public JPanel createButtons() {
-        JPanel panelButtons = new JPanel();
-        panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
-        panelButtons.setOpaque(false);
+		JPanel panelButtons = new JPanel(new GridLayout(2, 1, 0, 10));
+		panelButtons.setOpaque(false);
+		panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
 
         btnLogin = new RoundButton("INICIAR SESIÓN",
     	    new ImageIcon(getClass().getResource("/img/button-login-icon.png")));
-		btnLogin.setBackground(new Color(255, 249, 179));
-		btnLogin.setForeground(Color.BLACK);
-		btnLogin.setToolTipText("Haz click aquí");
+        btnLogin.setBackground(UIColors.BUTTON);
+		btnLogin.setToolTipText("Haz click para iniciar sesión");
 		btnLogin.setFont(AppFont.big());
+		btnLogin.setFocusPainted(false);
 
 		btnRegistration = new RoundButton("CREAR CUENTA",
 			new ImageIcon(getClass().getResource("/img/button-registration-icon.png")));
-		btnRegistration.setBackground(new Color(255, 249, 179));
-		btnRegistration.setForeground(Color.BLACK);
-		btnRegistration.setToolTipText("Haz click aquí");
+        btnRegistration.setBackground(UIColors.BUTTON);
+		btnRegistration.setToolTipText("Haz click para registrarte");
 		btnRegistration.setFont(AppFont.big());
+		btnRegistration.setFocusPainted(false);
 		
 		btnLogin.setIcon(FormUtils.loadIcon("/img/button-login-icon.png", 30));
 		btnRegistration.setIcon(FormUtils.loadIcon("/img/button-registration-icon.png", 30));

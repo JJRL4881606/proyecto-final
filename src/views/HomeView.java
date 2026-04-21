@@ -29,13 +29,12 @@ import utils.AppFont;
 @SuppressWarnings("serial")
 public class HomeView extends JPanel{
 	
-	public JMenuItem logOut;
-	
 	public static final String HOME = "HOME";
 	public static final String USERS = "USERS";
 	
 	public JMenuItem btnUsers;
 	public JMenuItem btnHome;
+	public JMenuItem logOut;
 	public UsersView usersPanel;
 	
 	private CardLayout cardLayout;

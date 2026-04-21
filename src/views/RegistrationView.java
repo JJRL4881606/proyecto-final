@@ -4,11 +4,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.Date;
@@ -28,7 +25,6 @@ import javax.swing.JSpinner;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
 import javax.swing.border.EmptyBorder;
 
 import components.RoundButton;
@@ -39,17 +35,7 @@ import utils.UIColors;
 
 @SuppressWarnings("serial")
 public class RegistrationView extends JPanel
-{	
-	JLabel lblNameError;
-	JLabel lblSurnameError;
-	JLabel lblPasswordError;
-	JLabel lblEmailError;
-	JLabel lblPhoneError;
-	JLabel lblCountryError;
-	JLabel lblBirthDateError;
-	JLabel lblGenderError;
-	JLabel lblTermsError;	
-	
+{		
 	private JTextField txtName;
 	private JTextField txtSurname;
 	private JTextField txtEmail;
@@ -63,6 +49,16 @@ public class RegistrationView extends JPanel
 	private JRadioButton rbtnFemale;
 	private RoundButton btnRegistration;
 	private RoundButton btnReturn;
+	
+	JLabel lblNameError;
+	JLabel lblSurnameError;
+	JLabel lblPasswordError;
+	JLabel lblEmailError;
+	JLabel lblPhoneError;
+	JLabel lblCountryError;
+	JLabel lblBirthDateError;
+	JLabel lblGenderError;
+	JLabel lblTermsError;	
 	    
     public RegistrationView(RegistrationWindow window) 
     {
@@ -129,38 +125,24 @@ public class RegistrationView extends JPanel
         mainPanel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono"));
         
         //FECHA NACIMIENTO
-        spBirthDate = new JSpinner(new SpinnerDateModel());
-        spBirthDate.setBorder(BorderFactory.createEmptyBorder(6,0,6,0));
-        spBirthDate.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(spBirthDate, "dd/MM/yyyy");
-        spBirthDate.setEditor(editor);
+        spBirthDate = FormUtils.createSpinner();
         lblBirthDateError = FormUtils.createErrorLabel();
         mainPanel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, ""));
         
         //PAÍS
-        String[] countryList = {"Seleccione el país", "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Esuatini", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guinea", "Guinea-Bisáu", "Guinea Ecuatorial", "Guyana", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Palestina", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumania", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Taiwán", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Vaticano", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"};
-    	comboCountry = new JComboBox<>(countryList);
-    	comboCountry.setBorder(BorderFactory.createEmptyBorder(6,0,6,0));
-    	comboCountry.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
-    	comboCountry.setFont(AppFont.normal());
+        comboCountry = FormUtils.createComboCountry();
     	lblCountryError = FormUtils.createErrorLabel();
     	mainPanel.add(FormUtils.createField("País", comboCountry, lblCountryError, ""));
         
     	//GÉNERO
-        JPanel genderPanel = new JPanel();
-        genderPanel.setLayout(new GridLayout(0, 1));
-        genderPanel.setOpaque(false);
-        genderPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        genderPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
-        rbtnMale = new JRadioButton("Hombre");
-        rbtnFemale = new JRadioButton("Mujer");
-        genderGroup = new ButtonGroup();
-        genderGroup.add(rbtnMale);
-        genderGroup.add(rbtnFemale);
-        genderPanel.add(rbtnMale);
-        genderPanel.add(rbtnFemale);
-        lblGenderError = FormUtils.createErrorLabel();
-        mainPanel.add(FormUtils.createField("Género", genderPanel, lblGenderError, ""));
+    	rbtnMale = FormUtils.createRadioButton("Hombre");
+    	rbtnFemale = FormUtils.createRadioButton("Mujer");
+    	
+    	genderGroup = FormUtils.createRadioGroup(rbtnMale, rbtnFemale);
+    	JPanel genderPanel = FormUtils.createRadioPanel(rbtnMale, rbtnFemale);
+    	
+    	lblGenderError = FormUtils.createErrorLabel();
+    	mainPanel.add(FormUtils.createField("Género", genderPanel, lblGenderError, ""));
         
         //CONTRASEÑA
         txtPassword = FormUtils.createPasswordField();
@@ -205,14 +187,18 @@ public class RegistrationView extends JPanel
 		JPanel panel = new JPanel(new GridLayout(2, 1, 0, 10));
 		panel.setOpaque(false);
 	    panel.setBorder(new EmptyBorder(5, 20, 10, 20));
-
-        btnRegistration = new RoundButton("CREAR CUENTA", new ImageIcon("src/img/button-login-icon.png"));
+        
+		btnRegistration = new RoundButton("CREAR CUENTA",
+			new ImageIcon(getClass().getResource("/img/button-save-icon.png")));
         btnRegistration.setBackground(UIColors.BUTTON);
+		btnRegistration.setToolTipText("Haz click para registrarte");
 		btnRegistration.setFont(AppFont.big());
 		btnRegistration.setFocusPainted(false);
         		        
-        btnReturn = new RoundButton("REGRESAR", new ImageIcon("src/img/button-back-icon.png"));
+        btnReturn = new RoundButton("REGRESAR",
+				new ImageIcon(getClass().getResource("/img/button-back-icon.png")));
         btnReturn.setBackground(UIColors.BUTTON);
+		btnRegistration.setToolTipText("Haz click para regresar al login");
         btnReturn.setFont(AppFont.big());
         btnReturn.setFocusPainted(false);
 				
@@ -225,23 +211,6 @@ public class RegistrationView extends JPanel
 	private void resetField(JLabel label, JComponent field) {
 	    label.setText("");
 	    field.setBorder(FormUtils.normalBorder);
-	}
-	
-	//AGREGAR FOCO EN EL CAMPO
-	private void addFocusEffect(JComponent field) {
-	    field.addFocusListener(new FocusAdapter() {
-	        @Override
-	        public void focusGained(FocusEvent e) {
-	            field.setBorder(BorderFactory.createCompoundBorder(
-	                BorderFactory.createLineBorder(new Color(30,144,255), 2),
-	                BorderFactory.createEmptyBorder(8,10,8,10)
-	            ));
-	        }
-	        @Override
-	        public void focusLost(FocusEvent e) {
-	            field.setBorder(FormUtils.normalBorder);
-	        }
-	    });
 	}
 	
 	//LABELS ERROR
@@ -428,11 +397,11 @@ public class RegistrationView extends JPanel
 	    });
 
 	    // EFECTOS VISUALES
-	    addFocusEffect(txtName);
-	    addFocusEffect(txtSurname);
-	    addFocusEffect(txtEmail);
-	    addFocusEffect(txtPhone);
-	    addFocusEffect(txtPassword);
+	    FormUtils.addFocusEffect(txtName);
+	    FormUtils.addFocusEffect(txtSurname);
+	    FormUtils.addFocusEffect(txtEmail);
+	    FormUtils.addFocusEffect(txtPhone);
+	    FormUtils.addFocusEffect(txtPassword);
 	}
 	
 	// TEXTFIELDS

@@ -20,8 +20,8 @@ public class HomeController {
     private HomeView view;
 
     public HomeController(HomeView view) {
-        this.view = view;
-
+        
+    	this.view = view;
 		registerListeners();
     }
     
@@ -46,6 +46,9 @@ public class HomeController {
 	}
 	
 	private void showUsers() {
+		
+		UserController controller = new UserController(view.usersPanel);
+		
 		UserRepository repository = new UserRepository();
 		
 		try {
