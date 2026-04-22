@@ -2,6 +2,8 @@ package views;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.Date;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -53,6 +55,7 @@ public class UserFormDialog extends JDialog{
     	super(parent, true);
     	
     	this.user = user;
+    	setTitle(user == null ? "Agregar usuario" : "Editar usuario");
     	
     	setSize(400, 500);
         setLocationRelativeTo(parent);
@@ -60,12 +63,15 @@ public class UserFormDialog extends JDialog{
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         
         add(createTitlePanel(), BorderLayout.NORTH);
-        add(createButtonPanel());
-        add(createFormPanel(), BorderLayout.SOUTH);
+        add(createFormPanel());
+        add(createButtonPanel(), BorderLayout.SOUTH);
+
+        loadData();
     }
     
     private JPanel createTitlePanel() {
         JPanel panel = new JPanel();
+        panel.setBackground(UIColors.CARD);
         panel.add(new JLabel("Formulario de Usuario"));
         return panel;
     }
@@ -73,7 +79,8 @@ public class UserFormDialog extends JDialog{
     private JPanel createButtonPanel() {
 
         JPanel panel = new JPanel();
-        
+        panel.setBackground(UIColors.CARD);
+
         btnSave = new RoundButton("GUARDAR",
     	    new ImageIcon(getClass().getResource("/img/button-save-icon.png")));
     	btnSave.setBackground(UIColors.BUTTON);
@@ -91,7 +98,7 @@ public class UserFormDialog extends JDialog{
         panel.add(btnSave);
         panel.add(btnCancel);
         
-        //btnSave.addActionListener(e -> save());
+        btnSave.addActionListener(e -> save());
         btnCancel.addActionListener(e -> dispose());
         
         return panel;
@@ -144,7 +151,7 @@ public class UserFormDialog extends JDialog{
     	rbtnMale = FormUtils.createRadioButton("Hombre");
     	rbtnFemale = FormUtils.createRadioButton("Mujer");
     	
-    	genderGroup = FormUtils.createRadioGroup(rbtnMale, rbtnFemale);
+    	setGenderGroup(FormUtils.createRadioGroup(rbtnMale, rbtnFemale));
     	JPanel genderPanel = FormUtils.createRadioPanel(rbtnMale, rbtnFemale);
     	
     	lblGenderError = FormUtils.createErrorLabel();
@@ -152,4 +159,63 @@ public class UserFormDialog extends JDialog{
 
 		return scroll;
     }
+    
+    private void loadData() {
+    	if(user != null) {
+    		txtName.setText(user.getName());
+            txtSurname.setText(user.getSurname());
+            txtEmail.setText(user.getEmail());
+            txtPhone.setText(user.getPhone());
+            spBirthDate.setValue(user.getBirthDate());
+            comboCountry.setSelectedItem(user.getCountry());
+
+            if (user.getGender() == 'M') {
+                rbtnMale.setSelected(true);
+            } else {
+                rbtnFemale.setSelected(true);
+            }
+        }
+    }
+    
+    private void save() {
+    	String name = txtName.getText();
+    	String surname = txtSurname.getText();
+    	String email = txtEmail.getText();
+    	String phone = txtPhone.getText();
+    	Date birthDate = (Date) spBirthDate.getValue();
+        String country = (String) comboCountry.getSelectedItem();
+
+        char gender = rbtnMale.isSelected() ? 'M' : 'F';
+        
+        if(user == null) {
+        	user = new User(name, surname, email, phone, country, birthDate, gender);
+        }else {
+        	user.setName(name);
+        	user.setSurname(surname);
+        	user.setEmail(email);
+        	user.setPhone(phone);
+        	user.setCountry(country);
+        	user.setBirthDate(birthDate);
+            user.setGender(gender);
+        }
+        
+        saved = true;
+        dispose();
+    }
+    
+    public boolean isSaved() {
+    	return saved;
+    }
+    
+    public User getUser() {
+    	return user;
+    }
+
+	public ButtonGroup getGenderGroup() {
+		return genderGroup;
+	}
+
+	public void setGenderGroup(ButtonGroup genderGroup) {
+		this.genderGroup = genderGroup;
+	}
 }

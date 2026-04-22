@@ -35,7 +35,6 @@ public class UsersView extends JPanel{
         panelButtons.add(btnDelete);
         
         add(panelButtons, BorderLayout.NORTH);
-
 	}
 	
 	public void setTableModel(UserTableModel model) {

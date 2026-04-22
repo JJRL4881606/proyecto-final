@@ -138,7 +138,7 @@ public class RegistrationView extends JPanel
     	rbtnMale = FormUtils.createRadioButton("Hombre");
     	rbtnFemale = FormUtils.createRadioButton("Mujer");
     	
-    	genderGroup = FormUtils.createRadioGroup(rbtnMale, rbtnFemale);
+    	setGenderGroup(FormUtils.createRadioGroup(rbtnMale, rbtnFemale));
     	JPanel genderPanel = FormUtils.createRadioPanel(rbtnMale, rbtnFemale);
     	
     	lblGenderError = FormUtils.createErrorLabel();
@@ -466,5 +466,13 @@ public class RegistrationView extends JPanel
 	        "¿Seguro?",
 	        JOptionPane.YES_NO_OPTION
 	    );
+	}
+
+	public ButtonGroup getGenderGroup() {
+		return genderGroup;
+	}
+
+	public void setGenderGroup(ButtonGroup genderGroup) {
+		this.genderGroup = genderGroup;
 	}
 }
