@@ -1,77 +1,68 @@
 package controllers;
 
-import java.awt.Window;
-import java.io.IOException;
-
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import models.User;
-import repository.UserRepository;
-import views.LoginWindow;
-import views.RegistrationView;
-import views.HomeWindow;
+import views.UserFormDialog;
 
-public class RegistrationController {
-
-	 private RegistrationView view;
-	 private UserRepository repository;
-	 
-	 public RegistrationController(RegistrationView view) {
-        this.view = view;
-        this.repository = new UserRepository();
-        registerListeners();
+public class UserFormController {
+	
+	 private UserFormDialog view;
+	 public UserFormController(UserFormDialog view) {
+		 this.view = view;
+		 registerListeners();
 	 }
 	 
 	 private void registerListeners(){
 		//BOTONES
-        view.getBtnRegistration().addActionListener(e -> {
+		 view.getBtnSave().addActionListener(e -> {
 
-            if(validateForm()){
+		    if (!validateForm()) {
+		        return;
+		    }
 
-                User user = new User(
-                        view.getName(),
-                        view.getSurname(),
-                        view.getEmail(),
-                        view.getPhone(),
-                        view.getCountry(),
-                        view.getBirthDate(),
-                        view.getGender()
-                );
-                
-                registerUser(user);
-                
-                HomeWindow window = new HomeWindow();
-                new HomeController(window.getHomeView());
-                
-                Window w = SwingUtilities.getWindowAncestor(view);
-                if (w != null) {
-                    w.dispose();
-                }
-            }
-        });
+		    User user = view.getUser();
+
+		    if (user == null) {
+		        user = new User(
+		            view.getName(),
+		            view.getSurname(),
+		            view.getEmail(),
+		            view.getPhone(),
+		            view.getCountry(),
+		            view.getBirthDate(),
+		            view.getGender()
+		        );
+		    } else {
+		        user.setName(view.getName());
+		        user.setSurname(view.getSurname());
+		        user.setEmail(view.getEmail());
+		        user.setPhone(view.getPhone());
+		        user.setCountry(view.getCountry());
+		        user.setBirthDate(view.getBirthDate());
+		        user.setGender(view.getGender());
+		    }
+
+		    view.setSaved(true);
+		    view.setUser(user);
+		    view.dispose();
+		});
         
-        view.getBtnReturn().addActionListener(e -> {
+        view.getBtnCancel().addActionListener(e -> {
 
-            int option = view.confirmReturn();
+            int option = view.confirmCancel();
 
             if (option == JOptionPane.YES_OPTION) {
-                new LoginWindow();
-    	        Window window = SwingUtilities.getWindowAncestor(view);
-
-                if (window != null) {
-                    window.dispose();
+                if (view != null) {
+                    view.dispose();
                 }
             }
         });
         
         // COMBO
         view.getComboCountry().addActionListener(e -> validateCountry());
-
-        // CHECKBOX
-        view.getChkTerms().addActionListener(e -> validateTerms());
 
         // JSPINNER
         view.getSpBirthDate().addChangeListener(e -> validateBirthDate());
@@ -101,31 +92,12 @@ public class RegistrationController {
             public void changedUpdate(DocumentEvent e) { validateEmail(); }
         });
         
-        // PASSWORD
-        view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { validatePassword(); }
-            public void removeUpdate(DocumentEvent e) { validatePassword(); }
-            public void changedUpdate(DocumentEvent e) { validatePassword(); }
-        });
-
-
         // TELÉFONO
         view.getTxtPhone().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validatePhone(); }
             public void removeUpdate(DocumentEvent e) { validatePhone(); }
             public void changedUpdate(DocumentEvent e) { validatePhone(); }
         });
-	 }
-	 
-	 private void registerUser(User user) {
-    	try {
-    		repository.save(user);
-    		
-    		JOptionPane.showMessageDialog(view, "Usuario registrado");
-    		
-    	}catch(IOException e) {
-    		JOptionPane.showMessageDialog(view, e.getMessage());
-    	}
 	 }
 	 
 	 private boolean validateForm(){
@@ -139,13 +111,11 @@ public class RegistrationController {
         if(!validateCountry()) valid=false;
         if(!validateGender()) valid=false;
         if(!validateBirthDate()) valid=false;
-        if(!validateTerms()) valid=false;
 
 		return valid;
 	 }
 	
 	 public boolean validateName() {
-	 	// NOMBRE
 	    String name = view.getName();
 	    
 	    if (name.isEmpty()) {
@@ -160,8 +130,8 @@ public class RegistrationController {
 		return true;
 	 }
 	 
+	 
 	 public boolean validateSurname() {
-	 	// APELLIDOS
 	    String surname = view.getSurname();
 
 	    if (surname.isEmpty()) {
@@ -176,21 +146,7 @@ public class RegistrationController {
 		return true;
 	 }
 	 
-	 public boolean validatePassword() {
-	 	// PASSWORD
-	    String password = view.getPassword();
-
-	    if (password.isEmpty()) {
-	        view.setPasswordError("La contraseña es obligatoria");
-	        return false;
-	    }
-	    
-	    view.clearLblPasswordError();
-		return true;
-	 }
-	 
 	 public boolean validateEmail() {
-	 	// EMAIL
 	    String email = view.getEmail();
 
 	    if (email.isEmpty()) {
@@ -205,7 +161,6 @@ public class RegistrationController {
 	 }
 	 
 	 public boolean validatePhone() {
-	 	// TELÉFONO
 	    String phone = view.getPhone();
 
 	    if (phone.isEmpty()) {
@@ -215,7 +170,7 @@ public class RegistrationController {
 	        view.setPhoneError("Solo se permiten números");
 	        return false;
 	    } else if (!phone.matches("\\d{10}")) {
-	        view.setPhoneError("Debe tener al menos 10 números");
+	        view.setPhoneError("Debe tener 10 números");
 	        return false;
 	    }
 	    view.clearLblPhoneError();
@@ -223,7 +178,6 @@ public class RegistrationController {
 	 }
 	 
 	 public boolean validateBirthDate() {
-	    // FECHA
 	    if (view.getBirthDate() == null) {
 	        view.setBirthDateError("La fecha de nacimiento es obligatoria");
 	        return false;
@@ -233,7 +187,6 @@ public class RegistrationController {
 	 }
 	 
 	 public boolean validateCountry() {
-	 	// PAÍS
 	    if (view.getCountryIndex() == 0) {
 	        view.setCountryError("Debe seleccionar un país");
 	        return false;
@@ -243,22 +196,11 @@ public class RegistrationController {
 	 }
 	 
 	 public boolean validateGender() {
-	 	// GÉNERO
 	    if (!view.isMaleSelected() && !view.isFemaleSelected()) {
 	        view.setGenderError("Seleccione un género");
 	        return false;
 	    }
 	 	view.clearLblGenderError();
-		return true;
-	 }
-	 
-	 public boolean validateTerms() {
-	 	// TÉRMINOS
-	    if (!view.isTermsAccepted()) {
-	        view.setTermsError("Debe aceptar los términos y condiciones");
-	        return false;
-	    }
-	 	view.clearLblTermsError();
 		return true;
 	 }
 }

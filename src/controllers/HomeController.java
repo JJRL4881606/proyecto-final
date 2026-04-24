@@ -3,6 +3,8 @@ package controllers;
 import javax.swing.SwingUtilities;
 
 import views.HomeView;
+import views.LoginWindow;
+
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -63,10 +65,13 @@ public class HomeController {
 
         if (option == JOptionPane.YES_OPTION) {
             new LoginWindow();
-        */
+        
             Window window = SwingUtilities.getWindowAncestor(view);
             if (window != null) window.dispose();
-       //}
+       	}*/
+		new LoginWindow();
+        Window window = SwingUtilities.getWindowAncestor(view);
+        if (window != null) window.dispose();
     }
     
 	private void updateMenuState(String viewName) {

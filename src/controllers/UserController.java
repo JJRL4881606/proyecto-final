@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.swing.JOptionPane;
-
 import models.User;
 import repository.UserRepository;
 import tablemodels.UserTableModel;
@@ -34,6 +33,10 @@ public class UserController {
 			
 			openForm(model.getUserAt(row));
 		});
+		
+		this.view.getBtnDelete().addActionListener(e -> {
+		    deleteUser();
+		});
 	}
 	
 	public void loadUsers() {	
@@ -55,6 +58,9 @@ public class UserController {
 	private void openForm(User user) {
 		
 		UserFormDialog dialog = new UserFormDialog(null, user);
+		
+		new UserFormController(dialog); 
+		 
 		dialog.setVisible(true);
 		
 		if(dialog.isSaved()) {
@@ -74,5 +80,36 @@ public class UserController {
 				JOptionPane.showMessageDialog(view, e.getMessage());
 			}
 		}
+	}
+	
+	private void deleteUser() {
+	    int row = view.getSelectedRow();
+
+	    if (row == -1) {
+	        JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+	        return;
+	    }
+
+	    int option = JOptionPane.showConfirmDialog(
+	        view,
+	        "¿Seguro que deseas eliminar este usuario?",
+	        "Confirmar eliminación",
+	        JOptionPane.YES_NO_OPTION
+	    );
+
+	    if (option == JOptionPane.YES_OPTION) {
+	        try {
+	            repo.delete(row);
+	            loadUsers();
+
+	            JOptionPane.showMessageDialog(
+	                view,
+	                "Usuario eliminado correctamente"
+	            );
+
+	        } catch (IOException e) {
+	            JOptionPane.showMessageDialog(view, e.getMessage());
+	        }
+	    }
 	}
 }

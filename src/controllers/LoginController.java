@@ -60,7 +60,7 @@ public class LoginController {
 		if (email.isEmpty()) {
 		    view.setEmailError("El correo es obligatorio");
 		    valid = false;
-		} else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+	    } else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
 		    view.setEmailError("Formato inválido");
 		    valid = false;
 		}

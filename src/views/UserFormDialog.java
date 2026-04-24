@@ -9,9 +9,11 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -36,6 +38,12 @@ public class UserFormDialog extends JDialog{
 	private JRadioButton rbtnFemale;
 	private ButtonGroup genderGroup;
 	
+    private RoundButton btnSave;
+    private RoundButton btnCancel;
+
+    private User user;
+    private boolean saved = false;
+	
 	JLabel lblNameError;
 	JLabel lblSurnameError;
 	JLabel lblEmailError;
@@ -43,13 +51,6 @@ public class UserFormDialog extends JDialog{
 	JLabel lblCountryError;
 	JLabel lblBirthDateError;
 	JLabel lblGenderError;
-	JLabel lblTermsError;	
-
-    private RoundButton btnSave;
-    private RoundButton btnCancel;
-
-    private User user;
-    private boolean saved = false;
     		
     public UserFormDialog(JFrame parent, User user) {
     	super(parent, true);
@@ -97,10 +98,7 @@ public class UserFormDialog extends JDialog{
 
         panel.add(btnSave);
         panel.add(btnCancel);
-        
-        btnSave.addActionListener(e -> save());
-        btnCancel.addActionListener(e -> dispose());
-        
+                
         return panel;
     }
 
@@ -177,31 +175,129 @@ public class UserFormDialog extends JDialog{
         }
     }
     
-    private void save() {
-    	String name = txtName.getText();
-    	String surname = txtSurname.getText();
-    	String email = txtEmail.getText();
-    	String phone = txtPhone.getText();
-    	Date birthDate = (Date) spBirthDate.getValue();
-        String country = (String) comboCountry.getSelectedItem();
+	private void resetField(JLabel label, JComponent field) {
+	    label.setText("");
+	    field.setBorder(FormUtils.normalBorder);
+	}
+	
+	//LABELS ERROR
+	public void clearErrors() {
+		clearLblNameError();
+		clearLblSurnameError();
+		clearLblEmailError();
+		clearLblPhoneError();
+		clearLblCountryError();
+		clearLblBirthDateError();
+		clearLblGenderError();
+	}
 
-        char gender = rbtnMale.isSelected() ? 'M' : 'F';
-        
-        if(user == null) {
-        	user = new User(name, surname, email, phone, country, birthDate, gender);
-        }else {
-        	user.setName(name);
-        	user.setSurname(surname);
-        	user.setEmail(email);
-        	user.setPhone(phone);
-        	user.setCountry(country);
-        	user.setBirthDate(birthDate);
-            user.setGender(gender);
-        }
-        
-        saved = true;
-        dispose();
-    }
+	public void clearLblNameError() {
+	    resetField(lblNameError, txtName);
+	}
+	
+	public void clearLblSurnameError() {
+	    resetField(lblSurnameError, txtSurname);
+	}
+	
+	public void clearLblEmailError() {
+	    resetField(lblEmailError, txtEmail);
+	}
+	
+	public void clearLblPhoneError() {
+	    resetField(lblPhoneError, txtPhone);
+	}
+	
+	public void clearLblCountryError() {
+	    resetField(lblCountryError, comboCountry);
+	}
+	
+	public void clearLblBirthDateError() {
+	    resetField(lblBirthDateError, spBirthDate);
+	}
+	
+	public void clearLblGenderError() {
+	    lblGenderError.setText("");
+	}
+	
+	//GETTERS
+	public String getName() {
+	    return txtName.getText().trim();
+	}
+
+	public String getSurname() {
+	    return txtSurname.getText().trim();
+	}
+
+	public String getEmail() {
+	    return txtEmail.getText().trim();
+	}
+
+	public String getPhone() {
+	    return txtPhone.getText().trim();
+	}
+
+	public Date getBirthDate() {
+	    return (Date) spBirthDate.getValue();
+	}
+	
+	public char getGender() {
+	    if (rbtnMale.isSelected()) return 'M';
+	    if (rbtnFemale.isSelected()) return 'F';
+	    return ' ';
+	}
+	
+	public String getCountry() {
+		return String.valueOf(comboCountry.getSelectedItem());
+	}
+
+	public int getCountryIndex() {
+	    return comboCountry.getSelectedIndex();
+	}
+
+	public boolean isMaleSelected() {
+	    return rbtnMale.isSelected();
+	}
+
+	public boolean isFemaleSelected() {
+	    return rbtnFemale.isSelected();
+	}
+
+	// TEXTFIELDS
+	public JTextField getTxtName() {
+	    return txtName;
+	}
+
+	public JTextField getTxtSurname() {
+	    return txtSurname;
+	}
+
+	public JTextField getTxtEmail() {
+	    return txtEmail;
+	}
+
+	public JTextField getTxtPhone() {
+	    return txtPhone;
+	}
+
+	// COMBOBOX
+	public JComboBox<String> getComboCountry() {
+	    return comboCountry;
+	}
+	
+	//JSPINNER
+	public JSpinner getSpBirthDate() {
+		return spBirthDate;
+	}
+
+	// RADIO BUTTONS
+	public JRadioButton getRbtnMale() {
+	    return rbtnMale;
+	}
+
+	public JRadioButton getRbtnFemale() {
+	    return rbtnFemale;
+	}
+
     
     public boolean isSaved() {
     	return saved;
@@ -211,11 +307,74 @@ public class UserFormDialog extends JDialog{
     	return user;
     }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
+    }
+    
 	public ButtonGroup getGenderGroup() {
 		return genderGroup;
 	}
 
 	public void setGenderGroup(ButtonGroup genderGroup) {
 		this.genderGroup = genderGroup;
+	}
+	
+	//getters botones
+	
+	public RoundButton getBtnSave() {
+	    return btnSave;
+	}	
+	
+	public RoundButton getBtnCancel() {
+	    return btnCancel;
+	}
+	
+	//SETTERS ERROR
+	
+	public void setNameError(String msg) {
+	    lblNameError.setText(msg);
+	    txtName.setBorder(FormUtils.redBorder);
+	}
+
+	public void setSurnameError(String msg) {
+	    lblSurnameError.setText(msg);
+	    txtSurname.setBorder(FormUtils.redBorder);
+	}
+
+	public void setEmailError(String msg) {
+	    lblEmailError.setText(msg);
+	    txtEmail.setBorder(FormUtils.redBorder);
+	}
+
+	public void setPhoneError(String msg) {
+	    lblPhoneError.setText(msg);
+	    txtPhone.setBorder(FormUtils.redBorder);
+	}
+
+	public void setCountryError(String msg) {
+	    lblCountryError.setText(msg);
+	    comboCountry.setBorder(FormUtils.redBorder);
+	}
+
+	public void setBirthDateError(String msg) {
+	    lblBirthDateError.setText(msg);
+	    spBirthDate.setBorder(FormUtils.redBorder);
+	}
+
+	public void setGenderError(String msg) {
+	    lblGenderError.setText(msg);
+	}
+
+	public int confirmCancel() {
+	    return JOptionPane.showConfirmDialog(
+	        this,
+	        "¿Seguro que deseas cancelar? Se perderán todos los datos",
+	        "¿Seguro?",
+	        JOptionPane.YES_NO_OPTION
+	    );
 	}
 }
