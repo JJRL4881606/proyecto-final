@@ -11,15 +11,8 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -33,6 +26,7 @@ import java.net.URI;
 import components.RoundButton;
 import components.RoundedPanel;
 import utils.AppFont;
+import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
 
@@ -53,7 +47,6 @@ public class LoginView extends JPanel
 		setLayout(new GridBagLayout());
 	    initializeComponents();
         setVisible(true);
-        assignListeners();
    	}
 
 	private void initializeComponents() 
@@ -112,19 +105,16 @@ public class LoginView extends JPanel
 	    mainPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
 
 	    // EMAIL
-
 	    txtEmail = FormUtils.createTextField();
 	    lblEmailError = FormUtils.createErrorLabel();
 	    mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico"));
 	    
 	    // PASSWORD
-
 	    txtPassword = FormUtils.createPasswordField();
 	    lblPasswordError = FormUtils.createErrorLabel();
 	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña"));
 
 	    // MOSTRAR CONTRASEÑA
-
 	    JCheckBox chkShowPassword = new JCheckBox("Mostrar contraseña");
 	    chkShowPassword.addActionListener(e -> {
 	        if (chkShowPassword.isSelected()) {
@@ -140,7 +130,6 @@ public class LoginView extends JPanel
 	    mainPanel.add(chkShowPassword);
         
         // OLVIDASTE CONTRASEÑA
-        
         JLabel lblForgotPassword = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
         lblForgotPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
         lblForgotPassword.setForeground(new Color(0,0,0));
@@ -171,7 +160,6 @@ public class LoginView extends JPanel
         mainPanel.add(lblForgotPassword);
         
         // ERROR LABEL
-        
         lblWrongError = new JLabel("Usuario o contraseña incorrectos");
         lblWrongError.setVisible(false);
         lblWrongError.setForeground(Color.RED);
@@ -190,19 +178,17 @@ public class LoginView extends JPanel
 		panelButtons.setOpaque(false);
 		panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
 
-        btnLogin = new RoundButton("INICIAR SESIÓN",
-    	    new ImageIcon(getClass().getResource("/img/button-login-icon.png")));
-        btnLogin.setBackground(UIColors.BUTTON);
-		btnLogin.setToolTipText("Haz click para iniciar sesión");
-		btnLogin.setFont(AppFont.big());
-		btnLogin.setFocusPainted(false);
+	    btnLogin = ButtonFactory.createButton(
+	            "INICIAR SESIÓN",
+	            "/img/button-login-icon.png",
+	            "Haz click para iniciar sesión"
+	    );
 
-		btnRegistration = new RoundButton("CREAR CUENTA",
-			new ImageIcon(getClass().getResource("/img/button-registration-icon.png")));
-        btnRegistration.setBackground(UIColors.BUTTON);
-		btnRegistration.setToolTipText("Haz click para registrarte");
-		btnRegistration.setFont(AppFont.big());
-		btnRegistration.setFocusPainted(false);
+	    btnRegistration = ButtonFactory.createButton(
+	            "CREAR CUENTA",
+	            "/img/button-registration-icon.png",
+	            "Haz click para registrarte"
+	    );
 		
 		btnLogin.setIcon(FormUtils.loadIcon("/img/button-login-icon.png", 30));
 		btnRegistration.setIcon(FormUtils.loadIcon("/img/button-registration-icon.png", 30));
@@ -212,46 +198,7 @@ public class LoginView extends JPanel
 		
 		return panelButtons;
 	}
-	
-	private void assignListeners() {
-
-	    // KEYLISTENER EMAIL (no permitir espacios)
-	    txtEmail.addKeyListener(new KeyAdapter() {
-	        @Override
-	        public void keyTyped(KeyEvent e) {
-	            char c = e.getKeyChar();
-
-	            if (Character.isWhitespace(c)) {
-	                e.consume();
-	            }
-	        }
-	    });
-	    
-	    //FOCUSLISTENER EMAIL Y PASSWORD
-	    addFocusEffect(txtEmail);
-	    addFocusEffect(txtPassword);
-	}
-	
-	//AGREGAR FOCO EN EL CAMPO
-	private void addFocusEffect(JComponent field) {
-
-	    field.addFocusListener(new FocusAdapter() {
-
-	        @Override
-	        public void focusGained(FocusEvent e) {
-	            field.setBorder(BorderFactory.createCompoundBorder(
-	                BorderFactory.createLineBorder(new Color(30,144,255), 2),
-	                BorderFactory.createEmptyBorder(8,10,8,10)
-	            ));
-	        }
-
-	        @Override
-	        public void focusLost(FocusEvent e) {
-	            field.setBorder(FormUtils.normalBorder);
-	        }
-	    });
-	}
-	
+			
 	public RoundButton getBtnLogin() {
 	    return btnLogin;
 	}	
@@ -291,24 +238,24 @@ public class LoginView extends JPanel
 	}
 
 	public void clearErrors() {
-	    lblEmailError.setText("");
-	    lblPasswordError.setText("");
+	    FormUtils.clearError(lblEmailError, txtEmail);
+	    FormUtils.clearError(lblPasswordError, txtPassword);
 	    lblWrongError.setVisible(false);
+	}
+	
+	public void clearEmailError(){
+	    FormUtils.clearError(lblEmailError, txtEmail);
+	}
 
-	    txtEmail.setBorder(FormUtils.normalBorder);
-	    txtPassword.setBorder(FormUtils.normalBorder);
+	public void clearPasswordError(){
+		FormUtils.clearError(lblPasswordError, txtPassword);
 	}
 	
-	private void resetField(JLabel label, JComponent field) {
-	    label.setText("");
-	    field.setBorder(FormUtils.normalBorder);
-	}
+	public JLabel getLblEmailError() {
+	    return lblEmailError;
+	}	
 	
-	public void clearLblEmailError() {
-	    resetField(lblEmailError, txtEmail);
-	}
-	
-	public void clearLblPasswordError() {
-	    resetField(lblPasswordError, txtPassword);
+	public JLabel getLblPasswordError() {
+	    return lblPasswordError;
 	}
 }

@@ -67,11 +67,12 @@ public class UserController {
 			User savedUser = dialog.getUser();
 			
 			try {
+				int row = view.getSelectedRow();
+
 				if(user == null) {
-					repo.save(savedUser);
-				}else {
-					int row = view.getSelectedRow();
-					repo.update(row, savedUser);
+				    repo.save(savedUser);
+				} else {
+				    repo.update(row, savedUser);
 				}
 				
 				loadUsers();

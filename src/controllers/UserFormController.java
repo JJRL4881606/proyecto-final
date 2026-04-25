@@ -1,10 +1,15 @@
 package controllers;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import models.User;
+import utils.FormUtils;
+import utils.Validator;
 import views.UserFormDialog;
 
 public class UserFormController {
@@ -13,6 +18,7 @@ public class UserFormController {
 	 public UserFormController(UserFormDialog view) {
 		 this.view = view;
 		 registerListeners();
+		 registerInputRestrictions();
 	 }
 	 
 	 private void registerListeners(){
@@ -55,9 +61,7 @@ public class UserFormController {
             int option = view.confirmCancel();
 
             if (option == JOptionPane.YES_OPTION) {
-                if (view != null) {
-                    view.dispose();
-                }
+            	view.dispose();
             }
         });
         
@@ -100,6 +104,47 @@ public class UserFormController {
         });
 	 }
 	 
+	 private void registerInputRestrictions() {
+
+	    view.getTxtName().addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+
+	            if (!Character.isLetter(c) && c != ' ') {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    view.getTxtSurname().addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+
+	            if (!Character.isLetter(c) && c != ' ') {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    view.getTxtPhone().addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+
+	            if (!Character.isDigit(c)) {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    FormUtils.addFocusEffect(view.getTxtName(), view.getLblNameError());
+	    FormUtils.addFocusEffect(view.getTxtSurname(), view.getLblSurnameError());
+	    FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
+	    FormUtils.addFocusEffect(view.getTxtPhone(), view.getLblPhoneError());
+	 }
+ 
 	 private boolean validateForm(){
         view.clearErrors();
         boolean valid=true;
@@ -121,12 +166,12 @@ public class UserFormController {
 	    if (name.isEmpty()) {
 	        view.setNameError("El nombre es obligatorio");
 	        return false;
-	    } else if (!name.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+	    } else if (!Validator.isValidName(name)) {
 	        view.setNameError("Solo se permiten letras");
 	        return false;
 	    }
 	    
-	    view.clearLblNameError();
+	    view.clearNameError();
 		return true;
 	 }
 	 
@@ -137,12 +182,12 @@ public class UserFormController {
 	    if (surname.isEmpty()) {
 	        view.setSurnameError("Los apellidos son obligatorios");
 	        return false;
-	    } else if (!surname.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+	    } else if (!Validator.isValidName(surname)) {
 	        view.setSurnameError("Solo se permiten letras");
 	        return false;
 	    }
 	    
-	    view.clearLblSurnameError();
+	    view.clearSurnameError();
 		return true;
 	 }
 	 
@@ -152,11 +197,11 @@ public class UserFormController {
 	    if (email.isEmpty()) {
 	        view.setEmailError("El correo es obligatorio");
 	        return false;
-	    } else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+	    } else if (!Validator.isValidEmail(email)) {
 	        view.setEmailError("Formato de correo inválido");
 	        return false;
 	    }
-	    view.clearLblEmailError();
+	    view.clearEmailError();
 		return true;
 	 }
 	 
@@ -166,14 +211,11 @@ public class UserFormController {
 	    if (phone.isEmpty()) {
 	        view.setPhoneError("El teléfono es obligatorio");
 	        return false;
-	    } else if (!phone.matches("\\d+")) {
-	        view.setPhoneError("Solo se permiten números");
-	        return false;
-	    } else if (!phone.matches("\\d{10}")) {
-	        view.setPhoneError("Debe tener 10 números");
+	    } else if (!Validator.isValidPhone(phone)) {
+	        view.setPhoneError("Debe contener exactamente 10 números");
 	        return false;
 	    }
-	    view.clearLblPhoneError();
+	    view.clearPhoneError();
 		return true;
 	 }
 	 
@@ -182,7 +224,7 @@ public class UserFormController {
 	        view.setBirthDateError("La fecha de nacimiento es obligatoria");
 	        return false;
 	    }
-	 	view.clearLblBirthDateError();
+	 	view.clearBirthDateError();
 		return true;
 	 }
 	 
@@ -191,7 +233,7 @@ public class UserFormController {
 	        view.setCountryError("Debe seleccionar un país");
 	        return false;
 	    }
-		view.clearLblCountryError();
+		view.clearCountryError();
 		return true;
 	 }
 	 
@@ -200,7 +242,7 @@ public class UserFormController {
 	        view.setGenderError("Seleccione un género");
 	        return false;
 	    }
-	 	view.clearLblGenderError();
+	 	view.clearGenderError();
 		return true;
 	 }
 }

@@ -4,11 +4,16 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import utils.FormUtils;
+import utils.Validator;
 import views.LoginView;
 import views.HomeWindow;
 import views.RegistrationWindow;
 
 import java.awt.Window;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
 import javax.swing.SwingUtilities;
 
 public class LoginController {
@@ -18,33 +23,13 @@ public class LoginController {
 
     public LoginController(LoginView view) {
         this.view = view;
-
-        // BOTÓN LOGIN
-        view.getBtnLogin().addActionListener(e -> login());
-
-        // BOTÓN REGISTRO
-        view.getBtnRegistration().addActionListener(e -> goToRegister());
-
-        // LISTENERS
-        view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { validateEmail(); }
-            public void removeUpdate(DocumentEvent e) { validateEmail(); }
-            public void changedUpdate(DocumentEvent e) { validateEmail(); }
-        });
-
-        view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { validatePassword(); }
-            public void removeUpdate(DocumentEvent e) { validatePassword(); }
-            public void changedUpdate(DocumentEvent e) { validatePassword(); }
-        });
-        
-        
+        addListeners();
     }
 
     public void validatePassword() {
 	 	// PASSWORD
 		String password = view.getPassword();
-		view.clearLblPasswordError();
+		view.clearPasswordError();
     		
         if (password.isEmpty()) {
             view.setPasswordError("La contraseña es obligatoria");
@@ -55,12 +40,12 @@ public class LoginController {
 	 public void validateEmail() {
 		// EMAIL
 		String email = view.getEmail();
-		view.clearLblEmailError();
+		view.clearEmailError();
 		 
 		if (email.isEmpty()) {
 		    view.setEmailError("El correo es obligatorio");
 		    valid = false;
-	    } else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+	    } else if (!Validator.isValidEmail(email)) {
 		    view.setEmailError("Formato inválido");
 		    valid = false;
 		}
@@ -100,5 +85,33 @@ public class LoginController {
         if (window != null) window.dispose();
     }
     
-    
+    private void addListeners() {
+        view.getBtnLogin().addActionListener(e -> login());
+
+        view.getBtnRegistration().addActionListener(e -> goToRegister());
+
+        view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { validateEmail(); }
+            public void removeUpdate(DocumentEvent e) { validateEmail(); }
+            public void changedUpdate(DocumentEvent e) { validateEmail(); }
+        });
+
+        view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { validatePassword(); }
+            public void removeUpdate(DocumentEvent e) { validatePassword(); }
+            public void changedUpdate(DocumentEvent e) { validatePassword(); }
+        });
+        
+        view.getTxtEmail().addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if (Character.isWhitespace(e.getKeyChar())) {
+                    e.consume();
+                }
+            }
+        });
+
+        FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
+        FormUtils.addFocusEffect(view.getTxtPassword(), view.getLblPasswordError());
+    }
 }

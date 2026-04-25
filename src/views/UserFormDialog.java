@@ -7,9 +7,7 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -21,7 +19,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import components.RoundButton;
 import models.User;
-import utils.AppFont;
+import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
 
@@ -81,20 +79,18 @@ public class UserFormDialog extends JDialog{
 
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
+        
+        btnSave = ButtonFactory.createButton(
+    	    "GUARDAR",
+    	    "/img/button-save-icon.png",
+    	    "Haz click para iniciar sesión"
+    	);
 
-        btnSave = new RoundButton("GUARDAR",
-    	    new ImageIcon(getClass().getResource("/img/button-save-icon.png")));
-    	btnSave.setBackground(UIColors.BUTTON);
-        btnSave.setToolTipText("Haz click para iniciar sesión");
-		btnSave.setFont(AppFont.big());
-		btnSave.setFocusPainted(false);
-
-		btnCancel = new RoundButton("CANCELAR",
-    	    new ImageIcon(getClass().getResource("/img/button-cancel-icon.png")));
-		btnCancel.setBackground(UIColors.BUTTON);
-    	btnCancel.setToolTipText("Haz click para cancelar");
-        btnCancel.setFont(AppFont.big());
-        btnCancel.setFocusPainted(false);
+        btnCancel = ButtonFactory.createButton(
+    	    "CANCELAR",
+    	    "/img/button-cancel-icon.png",
+    	    "Haz click para cancelar"
+    	);
 
         panel.add(btnSave);
         panel.add(btnCancel);
@@ -166,57 +162,48 @@ public class UserFormDialog extends JDialog{
             txtPhone.setText(user.getPhone());
             spBirthDate.setValue(user.getBirthDate());
             comboCountry.setSelectedItem(user.getCountry());
-
-            if (user.getGender() == 'M') {
-                rbtnMale.setSelected(true);
-            } else {
-                rbtnFemale.setSelected(true);
-            }
+            rbtnMale.setSelected(user.getGender() == 'M');
+            rbtnFemale.setSelected(user.getGender() == 'F');
         }
     }
-    
-	private void resetField(JLabel label, JComponent field) {
-	    label.setText("");
-	    field.setBorder(FormUtils.normalBorder);
-	}
 	
 	//LABELS ERROR
 	public void clearErrors() {
-		clearLblNameError();
-		clearLblSurnameError();
-		clearLblEmailError();
-		clearLblPhoneError();
-		clearLblCountryError();
-		clearLblBirthDateError();
-		clearLblGenderError();
+		clearNameError();
+		clearSurnameError();
+		clearEmailError();
+		clearPhoneError();
+		clearCountryError();
+		clearBirthDateError();
+		clearGenderError();
 	}
 
-	public void clearLblNameError() {
-	    resetField(lblNameError, txtName);
+	public void clearNameError(){
+	    FormUtils.clearError(lblNameError, txtName);
 	}
-	
-	public void clearLblSurnameError() {
-	    resetField(lblSurnameError, txtSurname);
+
+	public void clearSurnameError(){
+		FormUtils.clearError(lblSurnameError, txtSurname);
 	}
-	
-	public void clearLblEmailError() {
-	    resetField(lblEmailError, txtEmail);
+
+	public void clearEmailError(){
+		FormUtils.clearError(lblEmailError, txtEmail);
 	}
-	
-	public void clearLblPhoneError() {
-	    resetField(lblPhoneError, txtPhone);
+
+	public void clearPhoneError(){
+		FormUtils.clearError(lblPhoneError, txtPhone);
 	}
-	
-	public void clearLblCountryError() {
-	    resetField(lblCountryError, comboCountry);
+
+	public void clearCountryError(){
+		FormUtils.clearError(lblCountryError, comboCountry);
 	}
-	
-	public void clearLblBirthDateError() {
-	    resetField(lblBirthDateError, spBirthDate);
+
+	public void clearBirthDateError(){
+		FormUtils.clearError(lblBirthDateError, spBirthDate);
 	}
-	
-	public void clearLblGenderError() {
-	    lblGenderError.setText("");
+
+	public void clearGenderError(){
+		FormUtils.clearLabel(lblGenderError);
 	}
 	
 	//GETTERS
@@ -297,7 +284,6 @@ public class UserFormDialog extends JDialog{
 	public JRadioButton getRbtnFemale() {
 	    return rbtnFemale;
 	}
-
     
     public boolean isSaved() {
     	return saved;
@@ -368,7 +354,7 @@ public class UserFormDialog extends JDialog{
 	public void setGenderError(String msg) {
 	    lblGenderError.setText(msg);
 	}
-
+	
 	public int confirmCancel() {
 	    return JOptionPane.showConfirmDialog(
 	        this,
@@ -376,5 +362,21 @@ public class UserFormDialog extends JDialog{
 	        "¿Seguro?",
 	        JOptionPane.YES_NO_OPTION
 	    );
+	}
+	
+	public JLabel getLblNameError() {
+		return lblNameError;
+	}
+
+	public JLabel getLblSurnameError() {
+		return lblSurnameError;
+	}
+
+	public JLabel getLblEmailError() {
+		return lblEmailError;
+	}
+
+	public JLabel getLblPhoneError() {
+		return lblPhoneError;
 	}
 }

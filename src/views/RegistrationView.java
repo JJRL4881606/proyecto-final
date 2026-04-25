@@ -6,16 +6,12 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,6 +26,7 @@ import javax.swing.border.EmptyBorder;
 import components.RoundButton;
 import components.RoundedPanel;
 import utils.AppFont;
+import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
 
@@ -66,7 +63,6 @@ public class RegistrationView extends JPanel
 	    setLayout(new GridBagLayout());
 	    initializeComponents();
         setVisible(true);
-		assignListeners();
     }
     
     public void initializeComponents() 
@@ -188,19 +184,17 @@ public class RegistrationView extends JPanel
 		panel.setOpaque(false);
 	    panel.setBorder(new EmptyBorder(5, 20, 10, 20));
         
-		btnRegistration = new RoundButton("CREAR CUENTA",
-			new ImageIcon(getClass().getResource("/img/button-save-icon.png")));
-        btnRegistration.setBackground(UIColors.BUTTON);
-		btnRegistration.setToolTipText("Haz click para registrarte");
-		btnRegistration.setFont(AppFont.big());
-		btnRegistration.setFocusPainted(false);
-        		        
-        btnReturn = new RoundButton("REGRESAR",
-				new ImageIcon(getClass().getResource("/img/button-back-icon.png")));
-        btnReturn.setBackground(UIColors.BUTTON);
-		btnRegistration.setToolTipText("Haz click para regresar al login");
-        btnReturn.setFont(AppFont.big());
-        btnReturn.setFocusPainted(false);
+        btnRegistration = ButtonFactory.createButton(
+    	    "CREAR CUENTA",
+    	    "/img/button-save-icon.png",
+    	    "Haz click para registrarte"
+    	);
+
+        btnReturn = ButtonFactory.createButton(
+    	    "REGRESAR",
+    	    "/img/button-back-icon.png",
+    	    "Haz click para regresar al login"
+    	);
 				
         panel.add(btnRegistration);
 		panel.add(btnReturn);
@@ -208,58 +202,53 @@ public class RegistrationView extends JPanel
         return panel;
 	}	
 	
-	private void resetField(JLabel label, JComponent field) {
-	    label.setText("");
-	    field.setBorder(FormUtils.normalBorder);
-	}
-	
 	//LABELS ERROR
 	public void clearErrors() {
-		clearLblNameError();
-		clearLblSurnameError();
-		clearLblEmailError();
-		clearLblPasswordError();
-		clearLblPhoneError();
-		clearLblCountryError();
-		clearLblBirthDateError();
-		clearLblGenderError();
-		clearLblTermsError();
+		clearNameError();
+		clearSurnameError();
+		clearEmailError();
+		clearPasswordError();
+		clearPhoneError();
+		clearCountryError();
+		clearBirthDateError();
+		clearGenderError();
+		clearTermsError();
 	}
 
-	public void clearLblNameError() {
-	    resetField(lblNameError, txtName);
+	public void clearNameError(){
+	    FormUtils.clearError(lblNameError, txtName);
 	}
-	
-	public void clearLblSurnameError() {
-	    resetField(lblSurnameError, txtSurname);
+
+	public void clearSurnameError(){
+		FormUtils.clearError(lblSurnameError, txtSurname);
 	}
-	
-	public void clearLblEmailError() {
-	    resetField(lblEmailError, txtEmail);
+
+	public void clearEmailError(){
+		FormUtils.clearError(lblEmailError, txtEmail);
 	}
-	
-	public void clearLblPasswordError() {
-	    resetField(lblPasswordError, txtPassword);
+
+	public void clearPasswordError(){
+		FormUtils.clearError(lblPasswordError, txtPassword);
 	}
-	
-	public void clearLblPhoneError() {
-	    resetField(lblPhoneError, txtPhone);
+
+	public void clearPhoneError(){
+		FormUtils.clearError(lblPhoneError, txtPhone);
 	}
-	
-	public void clearLblCountryError() {
-	    resetField(lblCountryError, comboCountry);
+
+	public void clearCountryError(){
+		FormUtils.clearError(lblCountryError, comboCountry);
 	}
-	
-	public void clearLblBirthDateError() {
-	    resetField(lblBirthDateError, spBirthDate);
+
+	public void clearBirthDateError(){
+		FormUtils.clearError(lblBirthDateError, spBirthDate);
 	}
-	
-	public void clearLblGenderError() {
-	    lblGenderError.setText("");
+
+	public void clearGenderError(){
+		FormUtils.clearLabel(lblGenderError);
 	}
-	
-	public void clearLblTermsError() {
-	    lblTermsError.setText("");
+
+	public void clearTermsError(){
+		FormUtils.clearLabel(lblTermsError);
 	}
 	
 	//GETTERS
@@ -359,51 +348,6 @@ public class RegistrationView extends JPanel
 	    chkTerms.setBorder(FormUtils.redBorder);
 	}
 	
-	//ASSIGN LISTENERS
-	
-	private void assignListeners() {
-
-	    // KEYLISTENER NOMBRE
-	    txtName.addKeyListener(new KeyAdapter() {
-	        @Override
-	        public void keyTyped(KeyEvent e) {
-	            char c = e.getKeyChar();
-	            if (!Character.isLetter(c) && c != ' ') {
-	                e.consume();
-	            }
-	        }
-	    });
-
-	    // KEYLISTENER APELLIDOS
-	    txtSurname.addKeyListener(new KeyAdapter() {
-	        @Override
-	        public void keyTyped(KeyEvent e) {
-	            char c = e.getKeyChar();
-	            if (!Character.isLetter(c) && c != ' ') {
-	                e.consume();
-	            }
-	        }
-	    });
-
-	    // KEYLISTENER TELÉFONO
-	    txtPhone.addKeyListener(new KeyAdapter() {
-	        @Override
-	        public void keyTyped(KeyEvent e) {
-	            char c = e.getKeyChar();
-	            if (!Character.isDigit(c)) {
-	                e.consume();
-	            }
-	        }
-	    });
-
-	    // EFECTOS VISUALES
-	    FormUtils.addFocusEffect(txtName);
-	    FormUtils.addFocusEffect(txtSurname);
-	    FormUtils.addFocusEffect(txtEmail);
-	    FormUtils.addFocusEffect(txtPhone);
-	    FormUtils.addFocusEffect(txtPassword);
-	}
-	
 	// TEXTFIELDS
 	public JTextField getTxtName() {
 	    return txtName;
@@ -474,5 +418,25 @@ public class RegistrationView extends JPanel
 
 	public void setGenderGroup(ButtonGroup genderGroup) {
 		this.genderGroup = genderGroup;
+	}
+
+	public JLabel getLblNameError() {
+		return lblNameError;
+	}
+
+	public JLabel getLblSurnameError() {
+		return lblSurnameError;
+	}
+
+	public JLabel getLblEmailError() {
+		return lblEmailError;
+	}
+
+	public JLabel getLblPhoneError() {
+		return lblPhoneError;
+	}
+
+	public JLabel getLblPasswordError() {
+		return lblPasswordError;
 	}
 }

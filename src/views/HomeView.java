@@ -25,6 +25,7 @@ import components.RoundedMenuBar;
 
 import javax.swing.ImageIcon;
 import utils.AppFont;
+import utils.UIColors;
 
 @SuppressWarnings("serial")
 public class HomeView extends JPanel{
@@ -41,10 +42,9 @@ public class HomeView extends JPanel{
 	private JPanel container;
 
 	public HomeView() {
-	    Color hover = new Color(210,210,210);
-	    UIManager.put("Menu.selectionBackground", hover);
-	    UIManager.put("MenuItem.selectionBackground", hover);
-	    UIManager.put("MenuBar.highlight", hover);
+	    UIManager.put("Menu.selectionBackground", UIColors.HOVER);
+	    UIManager.put("MenuItem.selectionBackground", UIColors.HOVER);
+	    UIManager.put("MenuBar.highlight", UIColors.HOVER);
 	    UIManager.put("Menu.borderPainted", false);
 	    UIManager.put("MenuItem.borderPainted", false);
 
@@ -65,7 +65,7 @@ public class HomeView extends JPanel{
     public JPanel headerSection() {
         JPanel superiorPanel = new JPanel();
         superiorPanel.setLayout(new GridLayout(1,3));
-        superiorPanel.setBackground(new Color(30,144,255));
+        superiorPanel.setBackground(UIColors.HEADER);
         superiorPanel.setBorder(new EmptyBorder(30,30,35,30));
 
         superiorPanel.add(headerLeftSection());
@@ -76,9 +76,9 @@ public class HomeView extends JPanel{
     }
     
     public JPanel headerCenterSection(){
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setOpaque(false);
-
+    	JPanel panel = createTransparentPanel();
+    	panel.setLayout(new GridBagLayout());
+    	
         JPanel titleBlock = new JPanel();
         titleBlock.setLayout(new BoxLayout(titleBlock, BoxLayout.Y_AXIS));
         titleBlock.setOpaque(false);
@@ -92,9 +92,9 @@ public class HomeView extends JPanel{
     }
     
     public JPanel headerRightSection(){
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setOpaque(false);
-
+    	JPanel panel = createTransparentPanel();
+    	panel.setLayout(new GridBagLayout());
+    	
         JMenuBar menu = createMenu();
         panel.add(menu);
 
@@ -102,15 +102,12 @@ public class HomeView extends JPanel{
     }
     
     public JPanel headerLeftSection(){
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        return panel;
-    }
+        return createTransparentPanel();
+    }    
     
     public JPanel createTitle(){
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.setOpaque(false);
+    	JPanel panel = createTransparentPanel();
+    	panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         ImageIcon icon = new ImageIcon(getClass().getResource("/img/hotel-icon.png"));
@@ -128,10 +125,9 @@ public class HomeView extends JPanel{
     }
     
     public JPanel createSubtitle() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.setOpaque(false);
-        
+    	JPanel panel = createTransparentPanel();
+    	panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+    	
         JLabel lblInstrucciones = new JLabel("Bienvenido a la página principal del Hotel MJ");
         lblInstrucciones.setBorder(new EmptyBorder(20, 20, 0, 20)); 
         lblInstrucciones.setFont(AppFont.subtitle());
@@ -233,7 +229,7 @@ public class HomeView extends JPanel{
     //INFERIOR
     public JPanel inferiorSection() {
         JPanel inferiorPanel = new JPanel();
-        inferiorPanel.setBackground(new Color(30,144,255));
+        inferiorPanel.setBackground(UIColors.HEADER);
         inferiorPanel.setBorder(new EmptyBorder(30,30,30,30));
 
         JLabel relleno1 = new JLabel("texto de relleno");
@@ -246,8 +242,7 @@ public class HomeView extends JPanel{
     
     //hover
     private void applyHover(JMenu menu) {
-        Color normal = new Color(255,255,253);
-        Color hover = new Color(210,210,210);
+        Color normal = new Color(255,255,255);
 
         menu.setOpaque(true);
         menu.setBackground(normal);
@@ -255,7 +250,7 @@ public class HomeView extends JPanel{
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                menu.setBackground(hover);
+                menu.setBackground(UIColors.HOVER);
             }
 
             @Override
@@ -277,6 +272,12 @@ public class HomeView extends JPanel{
         
         container.add(homePanel, HOME);
         container.add(usersPanel, USERS);
+    }
+    
+    private JPanel createTransparentPanel() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        return panel;
     }
     
 	public void showView(String view) {

@@ -130,7 +130,6 @@ public class FormUtils {
     }
     
     //bordes
-    
     public static Border redBorder = BorderFactory.createCompoundBorder(
         BorderFactory.createLineBorder(UIColors.ERROR, 2),
         BorderFactory.createEmptyBorder(8, 10, 8, 10)
@@ -150,19 +149,43 @@ public class FormUtils {
         }
     }
     
-	public static void addFocusEffect(JComponent field) {
-	    field.addFocusListener(new FocusAdapter() {
-	        @Override
-	        public void focusGained(FocusEvent e) {
-	            field.setBorder(BorderFactory.createCompoundBorder(
-	                BorderFactory.createLineBorder(new Color(30,144,255), 2),
-	                BorderFactory.createEmptyBorder(8,10,8,10)
-	            ));
-	        }
-	        @Override
-	        public void focusLost(FocusEvent e) {
-	            field.setBorder(FormUtils.normalBorder);
-	        }
-	    });
-	}
+    public static void addFocusEffect(JComponent field, JLabel errorLabel) {
+        field.addFocusListener(new FocusAdapter() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+                field.setBorder(
+                    BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(30, 144, 255), 2),
+                        BorderFactory.createEmptyBorder(8, 10, 8, 10)
+                    )
+                );
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+
+                if (errorLabel != null && !errorLabel.getText().isEmpty()) {
+                    field.setBorder(FormUtils.redBorder);
+                } else {
+                    field.setBorder(FormUtils.normalBorder);
+                }
+            }
+        });
+    }	
+	//manejar errores
+    public static void showError(JLabel label, JComponent field, String message) {
+        label.setText(message);
+        field.setBorder(FormUtils.redBorder);
+    }
+
+    public static void clearError(JLabel label, JComponent field) {
+        label.setText("");
+        field.setBorder(FormUtils.normalBorder);
+    }
+
+    public static void clearLabel(JLabel label) {
+        label.setText("");
+    }
+
 }

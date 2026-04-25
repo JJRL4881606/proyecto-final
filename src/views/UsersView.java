@@ -3,6 +3,7 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -26,9 +27,9 @@ public class UsersView extends JPanel{
 		
 		JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        btnAdd = new RoundButton("Agregar", null);
-        btnEdit = new RoundButton("Editar", null);
-        btnDelete = new RoundButton("Eliminar", null);
+        btnAdd = new RoundButton("Agregar", new ImageIcon(getClass().getResource("/img/button-add-icon.png")));
+        btnEdit = new RoundButton("Editar", new ImageIcon(getClass().getResource("/img/button-edit-icon.png")));
+        btnDelete = new RoundButton("Eliminar", new ImageIcon(getClass().getResource("/img/button-delete-icon.png")));
 
         panelButtons.add(btnAdd);
         panelButtons.add(btnEdit);

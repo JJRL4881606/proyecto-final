@@ -19,8 +19,8 @@ public class Main
 	public static void main(String[] args) {
         FlatLightLaf.setup();
         UIManager.put("defaultFont", new FontUIResource(AppFont.normal()));
-        LoginWindow ventanita = new LoginWindow();
-        //HomeWindow ventanita = new HomeWindow();
+        //LoginWindow ventanita = new LoginWindow();
+        HomeWindow ventanita = new HomeWindow();
         //showOnScreen(0, ventanita);
     }
 

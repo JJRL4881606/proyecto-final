@@ -1,6 +1,8 @@
 package controllers;
 
 import java.awt.Window;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import javax.swing.JOptionPane;
@@ -10,6 +12,8 @@ import javax.swing.event.DocumentListener;
 
 import models.User;
 import repository.UserRepository;
+import utils.FormUtils;
+import utils.Validator;
 import views.LoginWindow;
 import views.RegistrationView;
 import views.HomeWindow;
@@ -23,6 +27,7 @@ public class RegistrationController {
         this.view = view;
         this.repository = new UserRepository();
         registerListeners();
+        registerInputRestrictions();
 	 }
 	 
 	 private void registerListeners(){
@@ -128,6 +133,48 @@ public class RegistrationController {
     	}
 	 }
 	 
+	 private void registerInputRestrictions() {
+
+	    view.getTxtName().addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+
+	            if (!Character.isLetter(c) && c != ' ') {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    view.getTxtSurname().addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+
+	            if (!Character.isLetter(c) && c != ' ') {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    view.getTxtPhone().addKeyListener(new KeyAdapter() {
+	        @Override
+	        public void keyTyped(KeyEvent e) {
+	            char c = e.getKeyChar();
+
+	            if (!Character.isDigit(c)) {
+	                e.consume();
+	            }
+	        }
+	    });
+
+	    FormUtils.addFocusEffect(view.getTxtName(), view.getLblNameError());
+	    FormUtils.addFocusEffect(view.getTxtSurname(), view.getLblSurnameError());
+	    FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
+	    FormUtils.addFocusEffect(view.getTxtPhone(), view.getLblPhoneError());
+	    FormUtils.addFocusEffect(view.getTxtPassword(), view.getLblPasswordError());
+	 }
+	 
 	 private boolean validateForm(){
         view.clearErrors();
         boolean valid=true;
@@ -135,6 +182,7 @@ public class RegistrationController {
         if(!validateName()) valid=false;
         if(!validateSurname()) valid=false;
         if(!validateEmail()) valid=false;
+        if(!validatePassword()) valid = false;
         if(!validatePhone()) valid=false;
         if(!validateCountry()) valid=false;
         if(!validateGender()) valid=false;
@@ -151,12 +199,12 @@ public class RegistrationController {
 	    if (name.isEmpty()) {
 	        view.setNameError("El nombre es obligatorio");
 	        return false;
-	    } else if (!name.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+	    } else if (!Validator.isValidName(name)) {
 	        view.setNameError("Solo se permiten letras");
 	        return false;
 	    }
 	    
-	    view.clearLblNameError();
+	    view.clearEmailError();
 		return true;
 	 }
 	 
@@ -167,27 +215,30 @@ public class RegistrationController {
 	    if (surname.isEmpty()) {
 	        view.setSurnameError("Los apellidos son obligatorios");
 	        return false;
-	    } else if (!surname.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+	    } else if (!Validator.isValidName(surname)) {
 	        view.setSurnameError("Solo se permiten letras");
 	        return false;
 	    }
 	    
-	    view.clearLblSurnameError();
+	    view.clearSurnameError();
 		return true;
 	 }
 	 
 	 public boolean validatePassword() {
-	 	// PASSWORD
 	    String password = view.getPassword();
 
 	    if (password.isEmpty()) {
 	        view.setPasswordError("La contraseña es obligatoria");
 	        return false;
+	    } 
+	    else if (password.length() < 8) {
+	        view.setPasswordError("Debe tener mínimo 8 caracteres");
+	        return false;
 	    }
-	    
-	    view.clearLblPasswordError();
-		return true;
-	 }
+
+	    view.clearPasswordError();
+	    return true;
+	}
 	 
 	 public boolean validateEmail() {
 	 	// EMAIL
@@ -196,11 +247,11 @@ public class RegistrationController {
 	    if (email.isEmpty()) {
 	        view.setEmailError("El correo es obligatorio");
 	        return false;
-	    } else if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+	    } else if (!Validator.isValidEmail(email)) {
 	        view.setEmailError("Formato de correo inválido");
 	        return false;
 	    }
-	    view.clearLblEmailError();
+	    view.clearEmailError();
 		return true;
 	 }
 	 
@@ -211,14 +262,11 @@ public class RegistrationController {
 	    if (phone.isEmpty()) {
 	        view.setPhoneError("El teléfono es obligatorio");
 	        return false;
-	    } else if (!phone.matches("\\d+")) {
-	        view.setPhoneError("Solo se permiten números");
-	        return false;
-	    } else if (!phone.matches("\\d{10}")) {
-	        view.setPhoneError("Debe tener al menos 10 números");
+	    } else if (!Validator.isValidPhone(phone)) {
+	        view.setPhoneError("Debe contener exactamente 10 números");
 	        return false;
 	    }
-	    view.clearLblPhoneError();
+	    view.clearPhoneError();
 		return true;
 	 }
 	 
@@ -228,7 +276,7 @@ public class RegistrationController {
 	        view.setBirthDateError("La fecha de nacimiento es obligatoria");
 	        return false;
 	    }
-	 	view.clearLblBirthDateError();
+	 	view.clearBirthDateError();
 		return true;
 	 }
 	 
@@ -238,7 +286,7 @@ public class RegistrationController {
 	        view.setCountryError("Debe seleccionar un país");
 	        return false;
 	    }
-		view.clearLblCountryError();
+		view.clearCountryError();
 		return true;
 	 }
 	 
@@ -248,7 +296,7 @@ public class RegistrationController {
 	        view.setGenderError("Seleccione un género");
 	        return false;
 	    }
-	 	view.clearLblGenderError();
+	 	view.clearGenderError();
 		return true;
 	 }
 	 
@@ -258,7 +306,7 @@ public class RegistrationController {
 	        view.setTermsError("Debe aceptar los términos y condiciones");
 	        return false;
 	    }
-	 	view.clearLblTermsError();
+	 	view.clearTermsError();
 		return true;
 	 }
 }
