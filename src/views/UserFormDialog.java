@@ -80,13 +80,13 @@ public class UserFormDialog extends JDialog{
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
         
-        btnSave = ButtonFactory.createButton(
+        btnSave = ButtonFactory.createBigButton(
     	    "GUARDAR",
     	    "/img/button-save-icon.png",
     	    "Haz click para iniciar sesión"
     	);
 
-        btnCancel = ButtonFactory.createButton(
+        btnCancel = ButtonFactory.createBigButton(
     	    "CANCELAR",
     	    "/img/button-cancel-icon.png",
     	    "Haz click para cancelar"
@@ -132,7 +132,7 @@ public class UserFormDialog extends JDialog{
         panel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono"));
 
         //FECHA NACIMIENTO
-        spBirthDate = FormUtils.createSpinner();
+        spBirthDate = FormUtils.createDateField();
         lblBirthDateError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, ""));
         

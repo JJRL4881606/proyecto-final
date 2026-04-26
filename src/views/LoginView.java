@@ -81,11 +81,13 @@ public class LoginView extends JPanel
 	    
 		JLabel lblTitle = new JLabel("HOTEL MJ - LOGIN");
 		lblTitle.setBorder(new EmptyBorder(30, 20, 20, 20)); 
+		lblTitle.setForeground(UIColors.TITLE);
 		lblTitle.setFont(AppFont.title());
 		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
 		
 		JLabel lblSubtitle = new JLabel("Ingrese sus datos para iniciar sesión");
 		lblSubtitle.setBorder(new EmptyBorder(10, 20, 30, 20)); 
+		lblSubtitle.setForeground(UIColors.TITLE);
 		lblSubtitle.setFont(AppFont.subtitle());
 		lblSubtitle.setAlignmentX(CENTER_ALIGNMENT); 
 
@@ -99,7 +101,7 @@ public class LoginView extends JPanel
 	private JPanel createForm() {
 
 	    JPanel mainPanel = new JPanel();
-	    mainPanel.setBackground(new Color(151, 210, 251));
+	    mainPanel.setBackground(UIColors.CARD);
 	    mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 	    mainPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    mainPanel.setBorder(new EmptyBorder(10, 20, 10, 20));
@@ -178,13 +180,13 @@ public class LoginView extends JPanel
 		panelButtons.setOpaque(false);
 		panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
 
-	    btnLogin = ButtonFactory.createButton(
+	    btnLogin = ButtonFactory.createBigButton(
 	            "INICIAR SESIÓN",
 	            "/img/button-login-icon.png",
 	            "Haz click para iniciar sesión"
 	    );
 
-	    btnRegistration = ButtonFactory.createButton(
+	    btnRegistration = ButtonFactory.createBigButton(
 	            "CREAR CUENTA",
 	            "/img/button-registration-icon.png",
 	            "Haz click para registrarte"

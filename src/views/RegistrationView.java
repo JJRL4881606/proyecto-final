@@ -121,7 +121,7 @@ public class RegistrationView extends JPanel
         mainPanel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono"));
         
         //FECHA NACIMIENTO
-        spBirthDate = FormUtils.createSpinner();
+        spBirthDate = FormUtils.createDateField();
         lblBirthDateError = FormUtils.createErrorLabel();
         mainPanel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, ""));
         
@@ -164,11 +164,13 @@ public class RegistrationView extends JPanel
 		JLabel lblTitle = new JLabel("HOTEL MJ - REGISTRO");
 		lblTitle.setBorder(new EmptyBorder(30, 20, 20, 20)); 
 		lblTitle.setFont(AppFont.title());
+		lblTitle.setForeground(UIColors.TITLE);
 		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
 		
 		JLabel lblSubtitle = new JLabel("Ingrese los datos para registrarse");
 		lblSubtitle.setBorder(new EmptyBorder(10, 20, 30, 20)); 
 		lblSubtitle.setFont(AppFont.subtitle());
+		lblSubtitle.setForeground(UIColors.TITLE);
 		lblSubtitle.setAlignmentX(CENTER_ALIGNMENT); 
 
 	    panel.add(lblTitle);
@@ -184,13 +186,13 @@ public class RegistrationView extends JPanel
 		panel.setOpaque(false);
 	    panel.setBorder(new EmptyBorder(5, 20, 10, 20));
         
-        btnRegistration = ButtonFactory.createButton(
+        btnRegistration = ButtonFactory.createBigButton(
     	    "CREAR CUENTA",
     	    "/img/button-save-icon.png",
     	    "Haz click para registrarte"
     	);
 
-        btnReturn = ButtonFactory.createButton(
+        btnReturn = ButtonFactory.createBigButton(
     	    "REGRESAR",
     	    "/img/button-back-icon.png",
     	    "Haz click para regresar al login"

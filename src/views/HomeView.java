@@ -22,7 +22,6 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import components.RoundedMenuBar;
-
 import javax.swing.ImageIcon;
 import utils.AppFont;
 import utils.UIColors;
@@ -37,10 +36,11 @@ public class HomeView extends JPanel{
 	public JMenuItem btnHome;
 	public JMenuItem logOut;
 	public UsersView usersPanel;
+	public HomeContentView homePanel;
 	
 	private CardLayout cardLayout;
 	private JPanel container;
-
+	
 	public HomeView() {
 	    UIManager.put("Menu.selectionBackground", UIColors.HOVER);
 	    UIManager.put("MenuItem.selectionBackground", UIColors.HOVER);
@@ -92,6 +92,10 @@ public class HomeView extends JPanel{
     }
     
     public JPanel headerRightSection(){
+        return createTransparentPanel();
+    }
+    
+    public JPanel headerLeftSection(){
     	JPanel panel = createTransparentPanel();
     	panel.setLayout(new GridBagLayout());
     	
@@ -99,10 +103,6 @@ public class HomeView extends JPanel{
         panel.add(menu);
 
         return panel;
-    }
-    
-    public JPanel headerLeftSection(){
-        return createTransparentPanel();
     }    
     
     public JPanel createTitle(){
@@ -114,12 +114,13 @@ public class HomeView extends JPanel{
         Image img = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(img));
 
-        JLabel lblTitulo = new JLabel("HOME - HOTEL MJ");
-        lblTitulo.setBorder(new EmptyBorder(0,15,0,0));
-        lblTitulo.setFont(AppFont.title());
+        JLabel lblTitle = new JLabel("HOTEL MJ");
+        lblTitle.setBorder(new EmptyBorder(0,15,0,0));
+        lblTitle.setFont(AppFont.title());
+		lblTitle.setForeground(UIColors.HOME_TITLE);
 
         panel.add(logo);
-        panel.add(lblTitulo);
+        panel.add(lblTitle);
 
         return panel;
     }
@@ -128,17 +129,17 @@ public class HomeView extends JPanel{
     	JPanel panel = createTransparentPanel();
     	panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
     	
-        JLabel lblInstrucciones = new JLabel("Bienvenido a la página principal del Hotel MJ");
-        lblInstrucciones.setBorder(new EmptyBorder(20, 20, 0, 20)); 
-        lblInstrucciones.setFont(AppFont.subtitle());
-        lblInstrucciones.setAlignmentX(CENTER_ALIGNMENT);
-        
-        panel.add(lblInstrucciones);
+        JLabel lblSubtitle = new JLabel("Bienvenido a la página del Hotel MJ");
+        lblSubtitle.setBorder(new EmptyBorder(20, 20, 0, 20)); 
+        lblSubtitle.setFont(AppFont.subtitle());
+        lblSubtitle.setAlignmentX(CENTER_ALIGNMENT);
+        lblSubtitle.setForeground(UIColors.HOME_TITLE);
+
+        panel.add(lblSubtitle);
 		return panel;
     }
     
     public JMenuBar createMenu() {
-
     	RoundedMenuBar mb = new RoundedMenuBar();
     	mb.setFont(AppFont.big());
     	mb.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
@@ -225,7 +226,7 @@ public class HomeView extends JPanel{
 		
     	return contentPanel;
     }
-    
+        
     //INFERIOR
     public JPanel inferiorSection() {
         JPanel inferiorPanel = new JPanel();
@@ -234,6 +235,7 @@ public class HomeView extends JPanel{
 
         JLabel relleno1 = new JLabel("texto de relleno");
         relleno1.setFont(AppFont.big());
+        relleno1.setForeground(UIColors.HOME_TITLE);
 
         inferiorPanel.add(relleno1);
 
@@ -257,23 +259,20 @@ public class HomeView extends JPanel{
             public void mouseExited(MouseEvent e) {
                 menu.setBackground(normal);
             }
-
         });
     }
     
     private void createViews() {
         cardLayout = new CardLayout();
         container = new JPanel(cardLayout);
-        
-        JPanel homePanel = new JPanel();
-        homePanel.add(new JLabel("Bienvenido al Sistema"));
-        
+                
+        homePanel = new HomeContentView();
         usersPanel = new UsersView();
         
         container.add(homePanel, HOME);
         container.add(usersPanel, USERS);
     }
-    
+        
     private JPanel createTransparentPanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -289,12 +288,11 @@ public class HomeView extends JPanel{
         return logOut;
     }
 
-
 	public JMenuItem getBtnUsers() {
 		return btnUsers;
 	}
 	
 	public JMenuItem getBtnHome() {
 		return btnHome;
-	}
+	}	
 }

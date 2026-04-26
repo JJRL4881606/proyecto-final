@@ -11,7 +11,6 @@ public class RoundButton extends JButton {
     private boolean drawBorder;
     private float borderThickness;
     private int cornerRadius = 15;
-    private Color hoverColor;
     private boolean hovering = false;
 
     public RoundButton(String label, Icon icon) {
@@ -20,8 +19,6 @@ public class RoundButton extends JButton {
         setFocusPainted(false);
         setBorderPainted(false);
         setOpaque(false);
-
-        hoverColor = getBackground().brighter();
 
         addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -48,8 +45,12 @@ public class RoundButton extends JButton {
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        Color colorBase = hovering ? hoverColor : getBackground();
+        Color baseColor = getBackground();
 
+        Color colorBase = hovering
+                ? baseColor.darker()
+                : baseColor;
+        
         if (getModel().isArmed()) {
             colorBase = colorBase.darker();
         }
