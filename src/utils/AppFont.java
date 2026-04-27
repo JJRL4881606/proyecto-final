@@ -5,7 +5,7 @@ import java.awt.Font;
 public class AppFont {
 
 	private static Font roboto;
-	private static Font playfair;
+	private static Font firasans;
 	
 	static {
 		try {
@@ -15,13 +15,13 @@ public class AppFont {
                     AppFont.class.getResourceAsStream("/fonts/Roboto.ttf"));
 
             // Fuente para títulos
-            playfair = Font.createFont(
+            firasans = Font.createFont(
                     Font.TRUETYPE_FONT,
                     AppFont.class.getResourceAsStream("/fonts/FiraSans-Black.ttf"));
 			
 		} catch(Exception e) {
             roboto = new Font("SansSerif", Font.PLAIN, 14);
-            playfair = new Font("Serif", Font.BOLD, 30);
+            firasans = new Font("Serif", Font.BOLD, 30);
 		}
 	}
 	
@@ -42,7 +42,7 @@ public class AppFont {
     }
 	
     public static Font title() {
-        return playfair.deriveFont(Font.BOLD, 30f);
+        return firasans.deriveFont(Font.BOLD, 30f);
     }
 	
 	public static Font subtitle() {

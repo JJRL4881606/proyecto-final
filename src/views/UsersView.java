@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 
-import components.RoundButton;
+import components.RoundedButton;
 import tablemodels.UserTableModel;
 import utils.AppFont;
 
@@ -19,9 +19,9 @@ import utils.AppFont;
 public class UsersView extends JPanel{
 
 	private JTable table;
-	private RoundButton btnEdit;
-	private RoundButton btnAdd;
-	private RoundButton btnDelete;
+	private RoundedButton btnEdit;
+	private RoundedButton btnAdd;
+	private RoundedButton btnDelete;
 	
 	public UsersView() {
 	    setLayout(new BorderLayout());
@@ -37,11 +37,11 @@ public class UsersView extends JPanel{
 
 	    JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	    
-	    btnAdd = new RoundButton("Agregar", 
+	    btnAdd = new RoundedButton("Agregar", 
 	        new ImageIcon(getClass().getResource("/img/button-add-icon.png")));
-	    btnEdit = new RoundButton("Editar", 
+	    btnEdit = new RoundedButton("Editar", 
 	        new ImageIcon(getClass().getResource("/img/button-edit-icon.png")));
-	    btnDelete = new RoundButton("Eliminar", 
+	    btnDelete = new RoundedButton("Eliminar", 
 	        new ImageIcon(getClass().getResource("/img/button-delete-icon.png")));
 
 	    panelButtons.add(btnAdd);
@@ -71,20 +71,19 @@ public class UsersView extends JPanel{
 		return table;
 	}
 	
-	public RoundButton getBtnAdd() {
+	public RoundedButton getBtnAdd() {
         return btnAdd;
     }
 
-    public RoundButton getBtnEdit() {
+    public RoundedButton getBtnEdit() {
         return btnEdit;
     }
 
-    public RoundButton getBtnDelete() {
+    public RoundedButton getBtnDelete() {
         return btnDelete;
     }
 	
     public int getSelectedRow() {
     	return table.getSelectedRow();
     }
-
 }

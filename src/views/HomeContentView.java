@@ -15,7 +15,7 @@ import java.awt.GridLayout;
 import java.io.IOException;
 import java.util.List;
 
-import components.RoundButton;
+import components.RoundedButton;
 import components.RoundedImagePanel;
 import components.RoundedPanel;
 import models.Room;
@@ -37,8 +37,8 @@ public class HomeContentView extends JPanel{
 	JLabel lblCheckOutDateError;
 	JLabel lblNightsError;
 	JLabel lblGuestsError;
-	RoundButton btnSearch;
-	RoundButton btnSeeRooms;
+	RoundedButton btnSearch;
+	RoundedButton btnSeeRooms;
 
 	public HomeContentView() {
 	    
@@ -49,15 +49,11 @@ public class HomeContentView extends JPanel{
 	    setVisible(true);
 	}
 	
-    public void initializeComponents() 
-    {	        	
-        add(createSearchBar());
-	    add(Box.createRigidArea(new Dimension(5, 5)));
-        add(createRooms());
-	    add(Box.createRigidArea(new Dimension(5, 5)));
-
-    }
-    
+	public void initializeComponents() {
+	    add(wrapSection(createSearchBar()));
+	    add(wrapSection(createRooms()));
+	}
+	
     public JPanel createSearchBar() {
     	
 	    JPanel searchBar = new RoundedPanel(30);
@@ -95,7 +91,6 @@ public class HomeContentView extends JPanel{
 	            "Haz click para buscar"
 	    );
 	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
-
 	    searchBar.add(btnSearch);	
 	    searchBar.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -106,13 +101,32 @@ public class HomeContentView extends JPanel{
         JPanel roomsPanel = new JPanel();
         roomsPanel.setLayout(new BoxLayout(roomsPanel, BoxLayout.Y_AXIS));
         roomsPanel.setOpaque(false);
+        
+        // HEADER SECTION
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setOpaque(false);
 
-        // contenedor horizontal de rooms
+        JLabel titleLabel = new JLabel("Habitaciones destacadas");
+        titleLabel.setFont(AppFont.subtitle());
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel subtitleLabel = new JLabel(
+                "Descubre nuestras mejores habitaciones"
+        );
+        subtitleLabel.setFont(AppFont.big());
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        headerPanel.add(titleLabel);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        headerPanel.add(subtitleLabel);
+
+        // contenedor horizontal de habitaciones
         JPanel roomsContainer = new JPanel(
                 new FlowLayout(FlowLayout.CENTER, 20, 20)
         );
         roomsContainer.setOpaque(false);
-        roomsContainer.setPreferredSize(new Dimension(1100, 600));
+        roomsContainer.setPreferredSize(new Dimension(1100, 550));
 
         RoomRepository roomRepository = new RoomRepository();
 
@@ -140,6 +154,8 @@ public class HomeContentView extends JPanel{
         seeRooms.add(btnSeeRooms);
 
         // agregar todo
+        roomsPanel.add(headerPanel);
+        roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         roomsPanel.add(roomsContainer);
         roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         roomsPanel.add(seeRooms);
@@ -236,7 +252,7 @@ public class HomeContentView extends JPanel{
         priceLabel.setFont(AppFont.big());
         priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        RoundButton btnReserve = ButtonFactory.createNormalButton(
+        RoundedButton btnReserve = ButtonFactory.createNormalButton(
                 "Reservar",
                 "/img/button-search-icon.png",
                 "Reservar habitación"
@@ -261,8 +277,20 @@ public class HomeContentView extends JPanel{
         return roomCard;
     }
     
+    //para envolver las secciones con un margen respecto al contentPanel
+    private JPanel wrapSection(JPanel section) {
+        JPanel wrapper = new JPanel(
+                new FlowLayout(FlowLayout.CENTER, 20, 20)
+        );
+
+        wrapper.setOpaque(false);
+        wrapper.add(section);
+
+        return wrapper;
+    }
+    
 	//SECCIONES DEL CONTENT HOME
-	/* busqueda
+	/* busqueda 
 	 * habitaciones destacadas
 	 * servicios
 	 * promociones

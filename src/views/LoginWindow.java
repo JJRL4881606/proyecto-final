@@ -1,14 +1,12 @@
 package views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import components.GradientPanel;
 import controllers.LoginController;
 
 @SuppressWarnings("serial")
@@ -24,12 +22,7 @@ public class LoginWindow extends JFrame
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        // Fondo degradado
-        GradientPanel background = new GradientPanel(
-            new Color(100,149,237), 	
-            new Color(25,25,112)
-        );
-
+        JPanel background = new JPanel();
         background.setLayout(new BorderLayout());
         setContentPane(background);    
 

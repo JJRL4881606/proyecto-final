@@ -6,14 +6,14 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
 @SuppressWarnings("serial")
-public class RoundButton extends JButton {
+public class RoundedButton extends JButton {
 
     private boolean drawBorder;
     private float borderThickness;
     private int cornerRadius = 15;
     private boolean hovering = false;
 
-    public RoundButton(String label, Icon icon) {
+    public RoundedButton(String label, Icon icon) {
         super(label, icon);
         setContentAreaFilled(false);
         setFocusPainted(false);

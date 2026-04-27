@@ -17,7 +17,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import components.RoundButton;
+import components.RoundedButton;
 import models.User;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -36,8 +36,8 @@ public class UserFormDialog extends JDialog{
 	private JRadioButton rbtnFemale;
 	private ButtonGroup genderGroup;
 	
-    private RoundButton btnSave;
-    private RoundButton btnCancel;
+    private RoundedButton btnSave;
+    private RoundedButton btnCancel;
 
     private User user;
     private boolean saved = false;
@@ -311,11 +311,11 @@ public class UserFormDialog extends JDialog{
 	
 	//getters botones
 	
-	public RoundButton getBtnSave() {
+	public RoundedButton getBtnSave() {
 	    return btnSave;
 	}	
 	
-	public RoundButton getBtnCancel() {
+	public RoundedButton getBtnCancel() {
 	    return btnCancel;
 	}
 	

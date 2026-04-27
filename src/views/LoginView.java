@@ -23,7 +23,7 @@ import javax.swing.Box;
 import javax.swing.border.EmptyBorder;
 import java.net.URI;
 
-import components.RoundButton;
+import components.RoundedButton;
 import components.RoundedPanel;
 import utils.AppFont;
 import utils.ButtonFactory;
@@ -39,8 +39,8 @@ public class LoginView extends JPanel
 	JLabel lblEmailError;
 	JLabel lblPasswordError;
 	JLabel lblWrongError;
-	RoundButton btnLogin;
-	RoundButton btnRegistration;
+	RoundedButton btnLogin;
+	RoundedButton btnRegistration;
 	
 	public LoginView() {
 		this.setBackground(UIColors.BACKGROUND);
@@ -201,11 +201,11 @@ public class LoginView extends JPanel
 		return panelButtons;
 	}
 			
-	public RoundButton getBtnLogin() {
+	public RoundedButton getBtnLogin() {
 	    return btnLogin;
 	}	
 
-	public RoundButton getBtnRegistration() {
+	public RoundedButton getBtnRegistration() {
 	    return btnRegistration;
 	}
 	

@@ -23,7 +23,7 @@ import javax.swing.Box;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import components.RoundButton;
+import components.RoundedButton;
 import components.RoundedPanel;
 import utils.AppFont;
 import utils.ButtonFactory;
@@ -44,8 +44,8 @@ public class RegistrationView extends JPanel
 	private JCheckBox chkTerms;
 	private JRadioButton rbtnMale;
 	private JRadioButton rbtnFemale;
-	private RoundButton btnRegistration;
-	private RoundButton btnReturn;
+	private RoundedButton btnRegistration;
+	private RoundedButton btnReturn;
 	
 	JLabel lblNameError;
 	JLabel lblSurnameError;
@@ -397,11 +397,11 @@ public class RegistrationView extends JPanel
 	}
 
 	// BOTONES
-	public RoundButton getBtnRegistration() {
+	public RoundedButton getBtnRegistration() {
 	    return btnRegistration;
 	}
 	
-	public RoundButton getBtnReturn() {
+	public RoundedButton getBtnReturn() {
 	    return btnReturn;
 	}
 	

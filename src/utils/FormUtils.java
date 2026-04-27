@@ -25,6 +25,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 
 import components.RoundedBorder;
+import components.RoundedPasswordField;
+import components.RoundedSpinner;
+import components.RoundedTextField;
 
 public class FormUtils {
 
@@ -65,8 +68,8 @@ public class FormUtils {
     }
     
     public static JTextField createTextField() {
-        JTextField field = new JTextField();
-        field.setFont(AppFont.normal());
+    	JTextField field = new RoundedTextField();
+    	field.setFont(AppFont.normal());
         field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         field.setBackground(UIColors.FIELD);
         field.setBorder(normalBorder);
@@ -74,7 +77,7 @@ public class FormUtils {
     }
     
     public static JPasswordField createPasswordField() {
-    	JPasswordField field = new JPasswordField();
+    	JPasswordField field = new RoundedPasswordField();
         field.setFont(AppFont.normal());
         field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         field.setBackground(UIColors.FIELD);
@@ -83,7 +86,7 @@ public class FormUtils {
     }
     
     public static JSpinner createDateField() {
-    	JSpinner date = new JSpinner(new SpinnerDateModel());
+    	JSpinner date = new RoundedSpinner(new SpinnerDateModel());
     	JSpinner.DateEditor editor = new JSpinner.DateEditor(date, "dd/MM/yyyy");
     	date.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     	date.setBackground(UIColors.FIELD);
@@ -93,7 +96,7 @@ public class FormUtils {
     }
     
     public static JSpinner createNumberField() {
-    	JSpinner number = new JSpinner(new SpinnerNumberModel(1, 1, 20, 1));
+    	JSpinner number = new RoundedSpinner(new SpinnerNumberModel(1, 1, 20, 1));
     	number.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     	number.setBackground(UIColors.FIELD);
     	number.setBorder(normalBorder);
@@ -200,6 +203,8 @@ public class FormUtils {
             }
         });
     }	
+    
+    
 	//manejar errores
     public static void showError(JLabel label, JComponent field, String message) {
         label.setText(message);

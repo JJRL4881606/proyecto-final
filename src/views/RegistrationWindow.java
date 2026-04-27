@@ -1,7 +1,6 @@
 package views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
@@ -11,8 +10,6 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
-import components.GradientPanel;
 
 @SuppressWarnings("serial")
 public class RegistrationWindow extends JFrame 
@@ -26,12 +23,7 @@ public class RegistrationWindow extends JFrame
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         
-        // Fondo degradado
-        GradientPanel background = new GradientPanel(
-            new Color(100,149,237), 
-            new Color(25,25,112)
-        );
-
+        JPanel background = new JPanel();
         background.setLayout(new BorderLayout());
         setContentPane(background);    
 

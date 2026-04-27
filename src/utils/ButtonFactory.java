@@ -1,16 +1,16 @@
 package utils;
 
 import javax.swing.ImageIcon;
-import components.RoundButton;
+import components.RoundedButton;
 
 public class ButtonFactory {
 
-    public static RoundButton createBigButton(
+    public static RoundedButton createBigButton(
             String text,
             String iconPath,
             String tooltip
     ) {
-        RoundButton btn = new RoundButton(
+        RoundedButton btn = new RoundedButton(
                 text,
                 new ImageIcon(ButtonFactory.class.getResource(iconPath))
         );
@@ -24,12 +24,12 @@ public class ButtonFactory {
         return btn;
     }
     
-    public static RoundButton createNormalButton(
+    public static RoundedButton createNormalButton(
             String text,
             String iconPath,
             String tooltip
     ) {
-        RoundButton btn = new RoundButton(
+        RoundedButton btn = new RoundedButton(
                 text,
                 new ImageIcon(ButtonFactory.class.getResource(iconPath))
         );
