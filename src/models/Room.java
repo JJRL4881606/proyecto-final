@@ -12,15 +12,12 @@ public class Room {
     private String imagePath;
     private boolean available;
     private List<String> features;
-    
     private boolean featured;
 
-    public Room(String name, String bedType, int capacity,
-	            double price, String imagePath,
-	            boolean available,
-	            List<String> features,
-	            boolean featured) {
-	
+    public Room() {}
+
+    public Room(String name, String bedType, int capacity, double price, String imagePath,
+	            boolean available, List<String> features, boolean featured) {
 	    this.name = name;
 	    this.bedType = bedType;
 	    this.capacity = capacity;
@@ -47,8 +44,7 @@ public class Room {
     public static Room fromCsv(String line) {
         String[] data = line.split(",");
 
-        List<String> features =
-                Arrays.asList(data[6].split("\\|"));
+        List<String> features = Arrays.asList(data[6].split("\\|"));
 
         return new Room(
                 data[0],

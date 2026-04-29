@@ -1,59 +1,48 @@
 package repository;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import models.User;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import models.Room;
 
 public class RoomRepository {
 
-    private final String FILE = "src/assets/files/rooms.csv";
+    private final String FILE = "src/assets/files/rooms.json";
+    
+	private final ObjectMapper mapper = 
+			new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
-    public void save(Room room) throws IOException {
-
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(
-                        new FileOutputStream(FILE, true),
-                        StandardCharsets.UTF_8))) {
-
-            writer.write(room.toCsv());
-            writer.newLine();
-        }
-    }
+	public void save(Room room) throws IOException {
+		List<Room> rooms = getRooms();
+		rooms.add(room);
+		updateAll(rooms);
+	}
 
     public List<Room> getRooms() throws IOException {
 
-        List<Room> rooms = new ArrayList<>();
-
-        try (BufferedReader reader =
-                     new BufferedReader(new FileReader(FILE))) {
-
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                Room room = Room.fromCsv(line);
-                rooms.add(room);
-            }
-        }
-
-        return rooms;
+		File file = new File(FILE);	
+		
+		if(!file.exists() || file.length() == 0) {
+			return new ArrayList<>();
+		}
+		
+		return mapper.readValue(
+			file, 
+			new TypeReference<List<Room>>() {}
+		);
     }
 
-    public void updateAll(List<Room> rooms) throws IOException {
-
-        try (BufferedWriter writer = new BufferedWriter(
-                new OutputStreamWriter(
-                        new FileOutputStream(FILE),
-                        StandardCharsets.UTF_8))) {
-
-            for (Room room : rooms) {
-                writer.write(room.toCsv());
-                writer.newLine();
-            }
-        }
-    }
+	public void updateAll(List<Room> rooms) throws IOException {
+	    mapper.writeValue(new File(FILE), rooms);
+	}
 
     public void delete(int index) throws IOException {
         List<Room> rooms = getRooms();

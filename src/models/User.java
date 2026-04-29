@@ -14,6 +14,9 @@ public class User {
 	private Date birthDate;
 	private char gender;
 	
+	
+	public User() {}
+
 	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
