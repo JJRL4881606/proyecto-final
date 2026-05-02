@@ -4,7 +4,7 @@
     "bedType": "King Bed",
     "capacity": 4,
     "price": 25000,
-    "imagePath": "/img/room1.png",
+    "imagePath": "/img/rooms/room1.png",
     "available": true,
     "features": [
       "Wifi",
@@ -19,11 +19,12 @@
     "bedType": "Queen Bed",
     "capacity": 2,
     "price": 18000,
-    "imagePath": "/img/room2.png",
+    "imagePath": "/img/rooms/room2.png",
     "available": true,
     "features": [
       "Wifi",
-      "TV",
+	  "Desayuno",
+	  "TV",
       "AC"
     ],
     "featured": true
@@ -33,13 +34,13 @@
     "bedType": "King Bed",
     "capacity": 3,
     "price": 21000,
-    "imagePath": "/img/room3.png",
+    "imagePath": "/img/rooms/room3.png",
     "available": true,
     "features": [
       "Wifi",
-      "TV",
       "Desayuno",
-      "AC"
+	  "Jacuzzi",
+	  "Vista al mar"
     ],
     "featured": true
   }

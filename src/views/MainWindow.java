@@ -8,17 +8,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import controllers.HomeController;
+import controllers.MainController;
 
 @SuppressWarnings("serial")
-public class HomeWindow extends JFrame 
+public class MainWindow extends JFrame 
 {
-	private HomeView HomeView;
+	private MainView HomeView;
 
-    public HomeWindow() 
+    public MainWindow() 
     {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setTitle("Home | HOTEL MJ");
+        this.setTitle("ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -28,13 +28,13 @@ public class HomeWindow extends JFrame
 
         // Agregar icono
         Image icon = Toolkit.getDefaultToolkit().getImage(
-    	    getClass().getResource("/img/hotel-icon.png")
+    	    getClass().getResource("/img/logos/hotel-icon.png")
     	);
         setIconImage(icon);
          
         // Agregar el panel con scroll
-        HomeView = new HomeView();
-        new HomeController(HomeView);
+        HomeView = new MainView();
+        new MainController(HomeView);
         add(createViewScroll(HomeView), BorderLayout.CENTER);
         
         this.setVisible(true);
@@ -48,7 +48,7 @@ public class HomeWindow extends JFrame
         return scroll;
     }
     
-    public HomeView getHomeView() {
+    public MainView getHomeView() {
         return HomeView;
     }
 }

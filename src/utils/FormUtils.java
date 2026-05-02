@@ -31,12 +31,15 @@ import components.RoundedTextField;
 
 public class FormUtils {
 
-    public static JPanel createField(String labelText, JComponent field, JLabel errorLabel, String placeholder) {
+    public static JPanel createField(String labelText, JComponent field, JLabel errorLabel, String placeholder, int width) {
 
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
-        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panel.setPreferredSize(new Dimension(width, 80));
+        panel.setMaximumSize(new Dimension(width, 80));
+        panel.setMinimumSize(new Dimension(width, 80));
 
         if (labelText != null) {
             JLabel label = new JLabel(labelText);
@@ -44,8 +47,16 @@ public class FormUtils {
             panel.add(label);
         }
 
+        field.setAlignmentX(Component.CENTER_ALIGNMENT);
+        field.setPreferredSize(new Dimension(width, 45));
+        field.setMaximumSize(new Dimension(width, 45));
+        field.setMinimumSize(new Dimension(width, 45));
+
         if (field instanceof JTextField) {
-            ((JTextField) field).putClientProperty("JTextField.placeholderText", placeholder);
+            ((JTextField) field).putClientProperty(
+                "JTextField.placeholderText",
+                placeholder
+            );
         }
 
         errorLabel.setForeground(UIColors.ERROR);
@@ -54,7 +65,6 @@ public class FormUtils {
         panel.add(field);
         panel.add(Box.createRigidArea(new Dimension(0, 5)));
         panel.add(errorLabel);
-        panel.add(Box.createRigidArea(new Dimension(0, 15)));
 
         return panel;
     }
@@ -70,7 +80,6 @@ public class FormUtils {
     public static JTextField createTextField() {
     	JTextField field = new RoundedTextField();
     	field.setFont(AppFont.normal());
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         field.setBackground(UIColors.FIELD);
         field.setBorder(normalBorder);
         return field;
@@ -79,7 +88,6 @@ public class FormUtils {
     public static JPasswordField createPasswordField() {
     	JPasswordField field = new RoundedPasswordField();
         field.setFont(AppFont.normal());
-        field.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         field.setBackground(UIColors.FIELD);
         field.setBorder(normalBorder);
         return field;
@@ -88,7 +96,6 @@ public class FormUtils {
     public static JSpinner createDateField() {
     	JSpinner date = new RoundedSpinner(new SpinnerDateModel());
     	JSpinner.DateEditor editor = new JSpinner.DateEditor(date, "dd/MM/yyyy");
-    	date.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     	date.setBackground(UIColors.FIELD);
     	date.setBorder(normalBorder);
         date.setEditor(editor);
@@ -97,7 +104,6 @@ public class FormUtils {
     
     public static JSpinner createNumberField() {
     	JSpinner number = new RoundedSpinner(new SpinnerNumberModel(1, 1, 20, 1));
-    	number.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     	number.setBackground(UIColors.FIELD);
     	number.setBorder(normalBorder);
 		return number;
@@ -107,7 +113,6 @@ public class FormUtils {
         String[] countryList = {"Seleccione el país", "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Esuatini", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guinea", "Guinea-Bisáu", "Guinea Ecuatorial", "Guyana", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Palestina", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumania", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Taiwán", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Vaticano", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"};
     	JComboBox<String> combo = new JComboBox<>(countryList);
     	combo.setFont(AppFont.normal());
-    	combo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
     	combo.setBackground(UIColors.FIELD);
     	combo.setBorder(normalBorder);
     	return combo;

@@ -42,6 +42,8 @@ public class LoginView extends JPanel
 	RoundedButton btnLogin;
 	RoundedButton btnRegistration;
 	
+	int fieldWidth = 300;
+	
 	public LoginView() {
 		this.setBackground(UIColors.BACKGROUND);
 		setLayout(new GridBagLayout());
@@ -79,7 +81,7 @@ public class LoginView extends JPanel
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	    panel.setOpaque(false);
 	    
-		JLabel lblTitle = new JLabel("HOTEL MJ - LOGIN");
+		JLabel lblTitle = new JLabel("ATLANTIS THE PALM - LOGIN");
 		lblTitle.setBorder(new EmptyBorder(30, 20, 20, 20)); 
 		lblTitle.setForeground(UIColors.TITLE);
 		lblTitle.setFont(AppFont.title());
@@ -109,12 +111,12 @@ public class LoginView extends JPanel
 	    // EMAIL
 	    txtEmail = FormUtils.createTextField();
 	    lblEmailError = FormUtils.createErrorLabel();
-	    mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico"));
+	    mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico", fieldWidth));
 	    
 	    // PASSWORD
 	    txtPassword = FormUtils.createPasswordField();
 	    lblPasswordError = FormUtils.createErrorLabel();
-	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña"));
+	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña", fieldWidth));
 
 	    // MOSTRAR CONTRASEÑA
 	    JCheckBox chkShowPassword = new JCheckBox("Mostrar contraseña");
@@ -182,18 +184,18 @@ public class LoginView extends JPanel
 
 	    btnLogin = ButtonFactory.createBigButton(
 	            "INICIAR SESIÓN",
-	            "/img/button-login-icon.png",
+	            "/img/btn-icons/button-login-icon.png",
 	            "Haz click para iniciar sesión"
 	    );
 
 	    btnRegistration = ButtonFactory.createBigButton(
 	            "CREAR CUENTA",
-	            "/img/button-registration-icon.png",
+	            "/img/btn-icons/button-registration-icon.png",
 	            "Haz click para registrarte"
 	    );
 		
-		btnLogin.setIcon(FormUtils.loadIcon("/img/button-login-icon.png", 30));
-		btnRegistration.setIcon(FormUtils.loadIcon("/img/button-registration-icon.png", 30));
+		btnLogin.setIcon(FormUtils.loadIcon("/img/btn-icons/button-login-icon.png", 30));
+		btnRegistration.setIcon(FormUtils.loadIcon("/img/btn-icons/button-registration-icon.png", 30));
 		
 		panelButtons.add(btnLogin);	
 		panelButtons.add(btnRegistration);

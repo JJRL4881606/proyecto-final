@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -16,10 +17,13 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import components.RoundedButton;
 import tablemodels.UserTableModel;
 import utils.AppFont;
+import utils.UIColors;
 
 @SuppressWarnings("serial")
 public class UsersView extends JPanel{
@@ -28,6 +32,7 @@ public class UsersView extends JPanel{
 	private RoundedButton btnEdit;
 	private RoundedButton btnAdd;
 	private RoundedButton btnDelete;
+	private RoundedButton btnPdf;
 	
 	public UsersView() {
 	    setLayout(new BorderLayout());
@@ -45,15 +50,18 @@ public class UsersView extends JPanel{
 	    JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	    
 	    btnAdd = new RoundedButton("Agregar", 
-	        new ImageIcon(getClass().getResource("/img/button-add-icon.png")));
+	        new ImageIcon(getClass().getResource("/img/btn-icons/button-add-icon.png")));
 	    btnEdit = new RoundedButton("Editar", 
-	        new ImageIcon(getClass().getResource("/img/button-edit-icon.png")));
+	        new ImageIcon(getClass().getResource("/img/btn-icons/button-edit-icon.png")));
 	    btnDelete = new RoundedButton("Eliminar", 
-	        new ImageIcon(getClass().getResource("/img/button-delete-icon.png")));
-
+		    new ImageIcon(getClass().getResource("/img/btn-icons/button-delete-icon.png")));	    
+	    btnPdf = new RoundedButton("Exportar a PDF", 
+	    	new ImageIcon(getClass().getResource("/img/btn-icons/button-pdf-icon.png")));
+	    
 	    panelButtons.add(btnAdd);
 	    panelButtons.add(btnEdit);
 	    panelButtons.add(btnDelete);
+	    panelButtons.add(btnPdf);
 
 	    topPanel.add(panelButtons, BorderLayout.CENTER);
 
@@ -84,7 +92,7 @@ public class UsersView extends JPanel{
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		JTableHeader header = table.getTableHeader();
-		header.setBackground(new Color(44, 62, 80));
+		header.setBackground(UIColors.BACKGROUND);
 		header.setForeground(Color.WHITE);
 		header.setFont(AppFont.big());
 		header.setPreferredSize(new Dimension(0, 40));
@@ -131,35 +139,64 @@ public class UsersView extends JPanel{
 		});
 	}
 	
+	public File selectPdfFile() {
+		
+		String path = System.getProperty("user.home");
+		JFileChooser chooser = new JFileChooser(path);
+		
+		chooser.setSelectedFile(new File("reporte-usuarios.pdf"));
+		
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setAcceptAllFileFilterUsed(false);
+		
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Documentos PDF",  "pdf");
+		chooser.addChoosableFileFilter(filter);
+		chooser.setFileFilter(filter);
+		
+		int option = chooser.showDialog(this, "Exportar PDF de usuarios");
+		
+		if(option != JFileChooser.APPROVE_OPTION) {
+			return null;
+		}
+		
+		File file = chooser.getSelectedFile();
+		
+		if(!file.getName().toLowerCase().endsWith(".pdf")) {
+			file = new File(file.getAbsolutePath() + ".pdf");
+		}
+		
+		return file;
+	}
+	
 	public void setTableModel(UserTableModel model) {
 		table.setModel(model);
 		
 		if(table.getColumnCount() >= 1) {
-			table.getColumnModel().getColumn(0).setPreferredWidth(80);
+			table.getColumnModel().getColumn(0).setPreferredWidth(40);
 		}
 		
 		if(table.getColumnCount() >= 2) {
-			table.getColumnModel().getColumn(1).setPreferredWidth(80);
+			table.getColumnModel().getColumn(1).setPreferredWidth(40);
 		}
 		
 		if(table.getColumnCount() >= 3) {
-			table.getColumnModel().getColumn(2).setPreferredWidth(200);
+			table.getColumnModel().getColumn(2).setPreferredWidth(150);
 		}
 		
 		if(table.getColumnCount() >= 4) {
-			table.getColumnModel().getColumn(3).setPreferredWidth(90);
+			table.getColumnModel().getColumn(3).setPreferredWidth(40);
 		}
 
 		if(table.getColumnCount() >= 5) {
-			table.getColumnModel().getColumn(4).setPreferredWidth(90);
+			table.getColumnModel().getColumn(4).setPreferredWidth(40);
 		}
 
 		if(table.getColumnCount() >= 6) {
-			table.getColumnModel().getColumn(5).setPreferredWidth(100);
+			table.getColumnModel().getColumn(5).setPreferredWidth(70);
 		}
 		
 		if(table.getColumnCount() >= 7) {
-			table.getColumnModel().getColumn(6).setPreferredWidth(40);
+			table.getColumnModel().getColumn(6).setPreferredWidth(30);
 		}
 		
 		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
@@ -183,6 +220,10 @@ public class UsersView extends JPanel{
 
     public RoundedButton getBtnDelete() {
         return btnDelete;
+    }
+    
+    public RoundedButton getBtnPdf() {
+    	return btnPdf;
     }
 	
     public int getSelectedRow() {

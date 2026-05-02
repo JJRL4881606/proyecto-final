@@ -19,7 +19,7 @@ public class RegistrationWindow extends JFrame
     public RegistrationWindow() 
     {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setTitle("Registro | HOTEL MJ");
+        this.setTitle("Registro | ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         
@@ -29,7 +29,7 @@ public class RegistrationWindow extends JFrame
 
         //Agregar icono
         Image icon = Toolkit.getDefaultToolkit().getImage(
-    	    getClass().getResource("/img/registration-icon.png")
+    	    getClass().getResource("/img/icons/registration-icon.png")
     	);
         setIconImage(icon);
                 

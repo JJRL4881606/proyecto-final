@@ -49,6 +49,8 @@ public class UserFormDialog extends JDialog{
 	JLabel lblCountryError;
 	JLabel lblBirthDateError;
 	JLabel lblGenderError;
+	
+	int fieldWidth = 300;
     		
     public UserFormDialog(JFrame parent, User user) {
     	super(parent, true);
@@ -82,13 +84,13 @@ public class UserFormDialog extends JDialog{
         
         btnSave = ButtonFactory.createBigButton(
     	    "GUARDAR",
-    	    "/img/button-save-icon.png",
+    	    "/img/btn-icons/button-save-icon.png",
     	    "Haz click para iniciar sesión"
     	);
 
         btnCancel = ButtonFactory.createBigButton(
     	    "CANCELAR",
-    	    "/img/button-cancel-icon.png",
+    	    "/img/btn-icons/button-cancel-icon.png",
     	    "Haz click para cancelar"
     	);
 
@@ -114,32 +116,32 @@ public class UserFormDialog extends JDialog{
         //NOMBRE
         txtName = FormUtils.createTextField();
         lblNameError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Nombre(s)", txtName, lblNameError, "Ingrese su(s) nombre(s)"));
+        panel.add(FormUtils.createField("Nombre(s)", txtName, lblNameError, "Ingrese su(s) nombre(s)", fieldWidth));
 
         //APELLIDOS
         txtSurname = FormUtils.createTextField();
         lblSurnameError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)"));
+        panel.add(FormUtils.createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)", fieldWidth));
         
         //EMAIL
 	    txtEmail = FormUtils.createTextField();
         lblEmailError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su email"));
+        panel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su email", fieldWidth));
         
         //TELÉFONO
 	    txtPhone = FormUtils.createTextField();
         lblPhoneError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono"));
+        panel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono", fieldWidth));
 
         //FECHA NACIMIENTO
         spBirthDate = FormUtils.createDateField();
         lblBirthDateError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, ""));
+        panel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, "", fieldWidth));
         
         //PAÍS
         comboCountry = FormUtils.createComboCountry();
     	lblCountryError = FormUtils.createErrorLabel();
-    	panel.add(FormUtils.createField("País", comboCountry, lblCountryError, ""));
+    	panel.add(FormUtils.createField("País", comboCountry, lblCountryError, "", fieldWidth));
         
     	//GÉNERO
     	rbtnMale = FormUtils.createRadioButton("Hombre");
@@ -149,7 +151,7 @@ public class UserFormDialog extends JDialog{
     	JPanel genderPanel = FormUtils.createRadioPanel(rbtnMale, rbtnFemale);
     	
     	lblGenderError = FormUtils.createErrorLabel();
-    	panel.add(FormUtils.createField("Género", genderPanel, lblGenderError, ""));
+    	panel.add(FormUtils.createField("Género", genderPanel, lblGenderError, "", fieldWidth));
 
 		return scroll;
     }

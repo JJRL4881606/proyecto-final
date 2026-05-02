@@ -1,298 +1,710 @@
 package views;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridBagLayout;
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.SpinnerDateModel;
+import javax.swing.Timer;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
+import java.awt.FlowLayout;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
-
-import components.RoundedMenuBar;
-import javax.swing.ImageIcon;
+import components.RoundedButton;
+import components.RoundedImageOverlayPanel;
+import components.RoundedImagePanel;
+import components.RoundedPanel;
+import models.Room;
 import utils.AppFont;
+import utils.ButtonFactory;
+import utils.FormUtils;
+import utils.VisualUtils;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
 public class HomeView extends JPanel{
 	
-	public static final String HOME = "HOME";
-	public static final String USERS = "USERS";
+	JSpinner spCheckInDate;
+	JSpinner spCheckOutDate;
+	JTextField txtNights;
+	JSpinner spGuests;
 	
-	public JMenuItem btnUsers;
-	public JMenuItem btnHome;
-	public JMenuItem logOut;
-	public UsersView usersPanel;
-	public HomeContentView homePanel;
+	JLabel lblCheckInDateError;
+	JLabel lblCheckOutDateError;
+	JLabel lblNightsError;
+	JLabel lblGuestsError;
+	RoundedButton btnSearch;
+	RoundedButton btnSeeRooms;
 	
-	private CardLayout cardLayout;
-	private JPanel container;
-	
-	public HomeView() {
-	    UIManager.put("Menu.selectionBackground", UIColors.HOVER);
-	    UIManager.put("MenuItem.selectionBackground", UIColors.HOVER);
-	    UIManager.put("MenuBar.highlight", UIColors.HOVER);
-	    UIManager.put("Menu.borderPainted", false);
-	    UIManager.put("MenuItem.borderPainted", false);
+	private JPanel roomsContainer;
 
-	    this.setBackground(new Color(100,149,237)); 
-	    setLayout(new BorderLayout());
+	public HomeView() {
+	    
+	    this.setBackground(Color.WHITE);
+	    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	    
 	    initializeComponents();
 	    setVisible(true);
 	}
-
-    public void initializeComponents() 
-    {	    
-        add(headerSection(), BorderLayout.NORTH);
-        add(content(), BorderLayout.CENTER);
-        add(inferiorSection(), BorderLayout.SOUTH);
-    }
-    
-    //HEADER
-    public JPanel headerSection() {
-        JPanel superiorPanel = new JPanel();
-        superiorPanel.setLayout(new GridLayout(1,3));
-        superiorPanel.setBackground(UIColors.HEADER);
-        superiorPanel.setBorder(new EmptyBorder(30,30,35,30));
-
-        superiorPanel.add(headerLeftSection());
-        superiorPanel.add(headerCenterSection());
-        superiorPanel.add(headerRightSection());
-
-        return superiorPanel;
-    }
-    
-    public JPanel headerCenterSection(){
-    	JPanel panel = createTransparentPanel();
-    	panel.setLayout(new GridBagLayout());
-    	
-        JPanel titleBlock = new JPanel();
-        titleBlock.setLayout(new BoxLayout(titleBlock, BoxLayout.Y_AXIS));
-        titleBlock.setOpaque(false);
-
-        titleBlock.add(createTitle());
-        titleBlock.add(createSubtitle());
-
-        panel.add(titleBlock);
-
-        return panel;
-    }
-    
-    public JPanel headerRightSection(){
-        return createTransparentPanel();
-    }
-    
-    public JPanel headerLeftSection(){
-    	JPanel panel = createTransparentPanel();
-    	panel.setLayout(new GridBagLayout());
-    	
-        JMenuBar menu = createMenu();
-        panel.add(menu);
-
-        return panel;
-    }    
-    
-    public JPanel createTitle(){
-    	JPanel panel = createTransparentPanel();
-    	panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        ImageIcon icon = new ImageIcon(getClass().getResource("/img/hotel-icon.png"));
-        Image img = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
-        JLabel logo = new JLabel(new ImageIcon(img));
-
-        JLabel lblTitle = new JLabel("HOTEL MJ");
-        lblTitle.setBorder(new EmptyBorder(0,15,0,0));
-        lblTitle.setFont(AppFont.title());
-		lblTitle.setForeground(UIColors.HOME_TITLE);
-
-        panel.add(logo);
-        panel.add(lblTitle);
-
-        return panel;
-    }
-    
-    public JPanel createSubtitle() {
-    	JPanel panel = createTransparentPanel();
-    	panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-    	
-        JLabel lblSubtitle = new JLabel("Bienvenido a la página del Hotel MJ");
-        lblSubtitle.setBorder(new EmptyBorder(20, 20, 0, 20)); 
-        lblSubtitle.setFont(AppFont.subtitle());
-        lblSubtitle.setAlignmentX(CENTER_ALIGNMENT);
-        lblSubtitle.setForeground(UIColors.HOME_TITLE);
-
-        panel.add(lblSubtitle);
-		return panel;
-    }
-    
-    public JMenuBar createMenu() {
-    	RoundedMenuBar mb = new RoundedMenuBar();
-    	mb.setFont(AppFont.big());
-    	mb.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-    	mb.setOpaque(false);
-    	mb.setBackground(new Color(0,0,0,0));
-    	
-        // SISTEMA
-        JMenu sistema = new JMenu("Sistema");
-        applyHover(sistema);
-        sistema.setOpaque(true);
-        sistema.setBorder(new EmptyBorder(5,15,5,15));
-        sistema.setMnemonic(KeyEvent.VK_S);
-        mb.add(sistema);
-
-        btnHome = new JMenuItem("Inicio");
-        btnHome.setMnemonic(KeyEvent.VK_I);
-        sistema.add(btnHome);
+	
+	public void initializeComponents() {
+	    add(wrapSection(createSearchBar()));
+	  
+	    add(Box.createRigidArea(new Dimension(0, 30)));
+	    add(VisualUtils.createDivider()); 
+	    add(Box.createRigidArea(new Dimension(0, 40)));
+	    
+        add(createPromosSection());
+	    
+	    add(Box.createRigidArea(new Dimension(0, 40)));
+	    add(VisualUtils.createDivider()); 
+	    add(Box.createRigidArea(new Dimension(0, 20)));
+	    
+	    add(wrapSection(createRooms()));
+	    
+	    add(Box.createRigidArea(new Dimension(0, 5)));
+	    add(VisualUtils.createDivider()); 
+	    add(Box.createRigidArea(new Dimension(0, 30)));
+	    
+        add(createServicesSection());
         
-        btnUsers = new JMenuItem("Ver Usuarios");
-        btnUsers.setMnemonic(KeyEvent.VK_U);
-        sistema.add(btnUsers);
+	    add(Box.createRigidArea(new Dimension(0, 5)));
+	    add(VisualUtils.createDivider()); 
+	    add(Box.createRigidArea(new Dimension(0, 60)));
         
-        sistema.addSeparator();
-
-        logOut = new JMenuItem("Cerrar sesión");
-        logOut.setMnemonic(KeyEvent.VK_C);
-        
-        sistema.add(logOut); 
-
-        // HABITACIONES
-    	JMenu habitaciones = new JMenu("Habitaciones");
-    	applyHover(habitaciones);
-        habitaciones.setOpaque(true);
-        habitaciones.setBorder(new EmptyBorder(5,15,5,15));
-        habitaciones.setMnemonic(KeyEvent.VK_H);
-        mb.add(habitaciones);
-
-        JMenuItem verHabitaciones = new JMenuItem("Ver habitaciones");
-        verHabitaciones.setMnemonic(KeyEvent.VK_V);
-        habitaciones.add(verHabitaciones);
-
-        JMenuItem disponibilidad = new JMenuItem("Disponibilidad");
-        disponibilidad.setMnemonic(KeyEvent.VK_D);
-        habitaciones.add(disponibilidad);
-
-        // RESERVAS
-        JMenu reservas = new JMenu("Reservas");
-        applyHover(reservas);
-        reservas.setOpaque(true);
-        reservas.setBorder(new EmptyBorder(5,15,5,15));
-        reservas.setMnemonic(KeyEvent.VK_R);
-        mb.add(reservas);
-
-        JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
-        nuevaReserva.setMnemonic(KeyEvent.VK_N);
-        reservas.add(nuevaReserva);
-
-        JMenuItem misReservas = new JMenuItem("Mis reservas");
-        misReservas.setMnemonic(KeyEvent.VK_M);
-        reservas.add(misReservas);
-
-        // INFORMACIÓN
-        JMenu informacion = new JMenu("Información");
-        applyHover(informacion);
-        informacion.setOpaque(true);
-        informacion.setBorder(new EmptyBorder(5,15,5,15));
-        informacion.setMnemonic(KeyEvent.VK_I);
-        mb.add(informacion);
-
-        JMenuItem verInformacion = new JMenuItem("Ver información");
-        verInformacion.setMnemonic(KeyEvent.VK_V);
-        informacion.add(verInformacion);
-
-        return mb;
-    }
-    
-    //CONTENT
-    public JPanel content(){
-    	JPanel contentPanel = new JPanel();
-    	contentPanel.setBackground(new Color(0,0,0));
+        add(createAboutSection());
+	    add(Box.createRigidArea(new Dimension(0, 60)));
+	}
+	
+    public JPanel createSearchBar() {
     	
-		createViews();
-	    contentPanel.add(container, BorderLayout.CENTER);
-		
-    	return contentPanel;
-    }
-        
-    //INFERIOR
-    public JPanel inferiorSection() {
-        JPanel inferiorPanel = new JPanel();
-        inferiorPanel.setBackground(UIColors.HEADER);
-        inferiorPanel.setBorder(new EmptyBorder(30,30,30,30));
+	    JPanel searchBar = new RoundedPanel(30);
+	    searchBar.setLayout(new BoxLayout(searchBar, BoxLayout.X_AXIS));
+	    searchBar.setBackground(UIColors.CARD);
+	    searchBar.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
+	    searchBar.setAlignmentX(CENTER_ALIGNMENT);
+	    searchBar.putClientProperty("FlatLaf.style", "arc:20");
+	    searchBar.setPreferredSize(new Dimension(1100, 120));
+	    searchBar.setMaximumSize(new Dimension(1100, 120));
+	    
+	    spCheckInDate = FormUtils.createDateField();
+	    lblCheckInDateError = FormUtils.createErrorLabel();
+	    searchBar.add(FormUtils.createField("Entrada", spCheckInDate, lblCheckInDateError, "", 180));
+	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
+	    	    
+	    spCheckOutDate = FormUtils.createDateField();
+	    lblCheckOutDateError = FormUtils.createErrorLabel();
+	    searchBar.add(FormUtils.createField("Salida", spCheckOutDate, lblCheckOutDateError, "", 180));
+	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
+	    
+	    Date today = new Date();
+	    SpinnerDateModel modelCheckIn = new SpinnerDateModel(
+	        today,
+	        today,
+	        null,
+	        Calendar.DAY_OF_MONTH
+	    );
 
-        JLabel relleno1 = new JLabel("texto de relleno");
-        relleno1.setFont(AppFont.big());
-        relleno1.setForeground(UIColors.HOME_TITLE);
+	    spCheckInDate.setModel(modelCheckIn);
+	    spCheckOutDate.setModel(modelCheckIn);
+	    
+	    txtNights = FormUtils.createTextField();
+	    lblNightsError = FormUtils.createErrorLabel();
+	    txtNights.setEditable(false);
+	    txtNights.setBackground(new Color(245,245,245));
+	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
+	    searchBar.add(FormUtils.createField("Noches", txtNights, lblNightsError, "", 130));
+	    
+	    spGuests = FormUtils.createNumberField();
+	    lblGuestsError = FormUtils.createErrorLabel();
+	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
+	    searchBar.add(FormUtils.createField("Huéspedes", spGuests, lblGuestsError, "", 130));
 
-        inferiorPanel.add(relleno1);
+	    btnSearch = ButtonFactory.createBigButton(
+	            "Buscar",
+	            "/img/btn-icons/button-search-icon.png",
+	            "Haz click para buscar"
+	    );
+	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
+	    searchBar.add(btnSearch);	
+	    searchBar.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        return inferiorPanel;
+		return searchBar;
     }
     
-    //hover
-    private void applyHover(JMenu menu) {
-        Color normal = new Color(255,255,255);
+    public JPanel createRooms() {
+        JPanel roomsPanel = new JPanel();
+        roomsPanel.setLayout(new BoxLayout(roomsPanel, BoxLayout.Y_AXIS));
+        roomsPanel.setOpaque(false);
+        
+        // HEADER SECTION
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setOpaque(false);
 
-        menu.setOpaque(true);
-        menu.setBackground(normal);
-        menu.addMouseListener(new MouseAdapter() {
+        JLabel titleLabel = new JLabel("Habitaciones destacadas");
+        titleLabel.setFont(AppFont.title());
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                menu.setBackground(UIColors.HOVER);
-            }
+        JLabel subtitleLabel = new JLabel("Descubre nuestras mejores habitaciones");
+        subtitleLabel.setFont(AppFont.big());
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                menu.setBackground(normal);
+        headerPanel.add(titleLabel);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        headerPanel.add(subtitleLabel);
+
+        // contenedor horizontal de habitaciones
+        roomsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        roomsContainer.setOpaque(false);
+        roomsContainer.setPreferredSize(new Dimension(1100, 550));
+
+        // botón ver más
+        JPanel seeRooms = new JPanel();
+        seeRooms.setOpaque(false);
+
+        btnSeeRooms = ButtonFactory.createBigButton(
+                "Ver más",
+                "/img/btn-icons/button-add-icon.png",
+                "Haz click para ver más habitaciones"
+        );
+
+        seeRooms.add(btnSeeRooms);
+
+        roomsPanel.add(headerPanel);
+        roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        roomsPanel.add(roomsContainer);
+        roomsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        roomsPanel.add(seeRooms);
+        roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        return roomsPanel;
+    }
+    
+    public void setRooms(List<Room> rooms) {
+        roomsContainer.removeAll();
+
+        for (Room room : rooms) {
+            roomsContainer.add(createRoomCard(room));
+        }
+
+        roomsContainer.revalidate();
+        roomsContainer.repaint();
+    }
+    
+    public RoundedButton getBtnSearch() {
+        return btnSearch;
+    }
+
+    public RoundedButton getBtnSeeRooms() {
+        return btnSeeRooms;
+    }
+    
+    private JPanel createRoomCard(Room room) {
+
+        JPanel roomCard = new RoundedPanel(25);
+        roomCard.setLayout(new BoxLayout(roomCard, BoxLayout.Y_AXIS));
+        roomCard.setBackground(UIColors.CARD);
+        roomCard.setPreferredSize(new Dimension(320, 500));
+        roomCard.setMaximumSize(new Dimension(320, 500));
+        roomCard.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+
+        // imagen
+        RoundedImagePanel imagePanel = new RoundedImagePanel(room.getImagePath(), 280, 180, 20);
+        imagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    	
+        // info resumida
+        JPanel infoPanel = new JPanel();
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
+        infoPanel.setOpaque(false);
+
+        JLabel nameLabel = new JLabel(room.getName());
+        nameLabel.setFont(AppFont.subtitle());
+        nameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel bedLabel = new JLabel(room.getBedType());
+        bedLabel.setFont(AppFont.big());
+        bedLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        infoPanel.add(nameLabel);
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        infoPanel.add(bedLabel);
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        //guests
+        JPanel guestsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+        guestsPanel.setOpaque(false);
+        guestsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        JLabel guestIcon = new JLabel(FormUtils.loadIcon("/img/icons/guest-icon.png", 25));
+        JLabel guestLabel = new JLabel(room.getCapacity() + " huéspedes");
+
+        guestsPanel.add(guestIcon);
+        guestsPanel.add(guestLabel);
+
+        infoPanel.add(guestsPanel);
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        // solo mostrar primeras 4 features
+        JPanel featuresPanel = new JPanel(new GridLayout(0, 2, 10, 10));
+        featuresPanel.setOpaque(false);
+
+        List<String> features = room.getFeatures();
+
+        for (String feature : features) {
+            JPanel featureItem = new JPanel(
+                    new FlowLayout(FlowLayout.LEFT, 5, 0)
+            );
+            featureItem.setOpaque(false);
+
+            JLabel icon = new JLabel(FormUtils.loadIcon("/img/icons/check-icon.png", 14));
+            JLabel text = new JLabel(feature);
+
+            featureItem.add(icon);
+            featureItem.add(text);
+
+            featuresPanel.add(featureItem);
+        }
+
+        infoPanel.add(featuresPanel);
+
+        // acción
+        JLabel priceLabel = new JLabel("$" + room.getPrice() + " por noche");
+        priceLabel.setFont(AppFont.big());
+        priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        RoundedButton btnReserve = ButtonFactory.createBigButton(
+                "Reservar",
+                "/img/btn-icons/button-search-icon.png",
+                "Reservar habitación"
+        );
+        btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JPanel actionPanel = new JPanel();
+        actionPanel.setOpaque(false);
+        actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
+
+        actionPanel.add(priceLabel);
+        actionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        actionPanel.add(btnReserve);
+        
+        roomCard.add(imagePanel);
+        roomCard.add(Box.createVerticalGlue());
+
+        roomCard.add(infoPanel);
+        roomCard.add(Box.createVerticalGlue());
+        roomCard.add(actionPanel);
+
+        return roomCard;
+    }
+    
+    public JPanel createServicesSection() {
+
+        JPanel section = new JPanel();
+        section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
+        section.setOpaque(false);
+
+        // título
+        JLabel title = new JLabel("Servicios");
+        title.setFont(AppFont.title());
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        section.add(title);
+        section.add(Box.createRigidArea(new Dimension(0, 30)));
+
+        // grid 5x3
+        JPanel grid = new JPanel(new GridLayout(3, 5, 20, 20));
+        grid.setOpaque(false);
+        grid.setMaximumSize(new Dimension(1100, 400));
+
+        // servicios
+        grid.add(createServiceCard("WiFi", "/img/serv/wifi-icon.png"));
+        grid.add(createServiceCard("Piscina", "/img/serv/pool-icon.png"));
+        grid.add(createServiceCard("Gym", "/img/serv/gym-icon.png"));
+        grid.add(createServiceCard("Spa", "/img/serv/spa-icon.png"));
+        grid.add(createServiceCard("Parking", "/img/serv/parking-icon.png"));
+
+        grid.add(createServiceCard("Restaurante", "/img/serv/restaurant-icon.png"));
+        grid.add(createServiceCard("Bar", "/img/serv/bar-icon.png"));
+        grid.add(createServiceCard("Room Service", "/img/serv/service-icon.png"));
+        grid.add(createServiceCard("Acceso a la playa", "/img/serv/beach-icon.png"));
+        grid.add(createServiceCard("TV", "/img/serv/tv-icon.png"));
+
+        grid.add(createServiceCard("Lavandería", "/img/serv/laundry-icon.png"));
+        grid.add(createServiceCard("Seguridad", "/img/serv/security-icon.png"));
+        grid.add(createServiceCard("Recepción 24h", "/img/serv/reception-icon.png"));
+        grid.add(createServiceCard("Transporte", "/img/serv/transport-icon.png"));
+        grid.add(createServiceCard("Eventos", "/img/serv/event-icon.png"));
+
+        section.add(grid);
+
+        return section;
+    }
+    
+    private JPanel createServiceCard(String name, String iconPath) {
+
+        RoundedPanel card = new RoundedPanel(25);
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBackground(UIColors.CARD);
+        card.setPreferredSize(new Dimension(160, 160));
+        card.setMaximumSize(new Dimension(160, 160));
+        card.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
+
+        // icono
+        JLabel icon = new JLabel(FormUtils.loadIcon(iconPath, 60));
+        icon.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // texto
+        JLabel label = new JLabel(name);
+        label.setFont(AppFont.normal());
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        card.add(icon);
+        card.add(Box.createRigidArea(new Dimension(0, 10)));
+        card.add(label);
+
+        return card;
+    }
+    
+    public JPanel createPromosSection() {
+    	JPanel section = new JPanel();
+    	section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
+    	section.setOpaque(false);
+
+    	// título
+    	JLabel title = new JLabel("Promociones");
+    	title.setFont(AppFont.title());
+    	title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    	section.add(title);
+    	section.add(Box.createRigidArea(new Dimension(0, 20)));
+
+    	// promo grande
+    	section.add(createMainPromo());
+    	section.add(Box.createRigidArea(new Dimension(0, 30)));
+
+    	//carrusel
+    	section.add(createPromoCarousel());
+    	
+    	return section;
+    }
+    
+    private JPanel createMainPromo() {
+
+        // contenedor base
+        RoundedPanel promo = new RoundedPanel(30);
+        promo.setLayout(new BoxLayout(promo, BoxLayout.Y_AXIS));
+        promo.setPreferredSize(new Dimension(1100, 350));
+        promo.setMaximumSize(new Dimension(1100, 350));
+
+        promo.setLayout(null);
+        promo.setOpaque(false);
+
+        // IMAGEN DE FONDO + OVERLAY
+        RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
+    	    "/img/promos/promo1.png",
+    	    1100,
+    	    350,
+    	    30,
+    	    new Color(0, 0, 0, 100) // overlay
+    	);
+
+    	bg.setBounds(0, 0, 1100, 350);
+        	
+        // CONTENIDO (texto + botón)
+        JPanel content = new JPanel();
+        content.setOpaque(false);
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setBounds(40, 40, 400, 150);
+
+        JLabel title = new JLabel("10% OFF en verano");
+        title.setFont(AppFont.title());
+        title.setForeground(Color.WHITE);
+
+        JLabel subtitle = new JLabel("Reserva ahora para estas vacaciones!");
+        subtitle.setFont(AppFont.normal());
+        subtitle.setForeground(Color.WHITE);
+
+        RoundedButton reserveBtn = ButtonFactory.createBigButton(
+                "Reservar ahora",
+                "/img/btn-icons/button-search-icon.png",
+                "Ir a reservas"
+        );
+
+        content.add(title);
+        content.add(Box.createRigidArea(new Dimension(0, 10)));
+        content.add(subtitle);
+        content.add(Box.createRigidArea(new Dimension(0, 15)));
+        content.add(reserveBtn);
+
+        // ORDEN DE CAPAS
+        promo.add(bg);
+        promo.add(content);
+        
+        promo.setComponentZOrder(content, 0);
+        promo.setComponentZOrder(bg, 1);
+        return promo;
+    }
+    
+    private JPanel createPromoCarousel() {
+
+        JPanel container = new JPanel(new BorderLayout());
+        container.setOpaque(false);
+        container.setMaximumSize(new Dimension(1100, 220));
+
+        // panel interno
+        JPanel content = new JPanel();
+        content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
+        content.setOpaque(false);
+
+        // scroll
+        JScrollPane scroll = new JScrollPane(content);
+        scroll.addMouseWheelListener(e -> {
+            scroll.getParent().dispatchEvent(e);
+        });
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        scroll.setBorder(null);
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
+        scroll.setPreferredSize(new Dimension(1100, 200));
+        scroll.setMaximumSize(new Dimension(1100, 200));
+
+        // agregar las promos, doble para que sea infinito
+        addPromos(content);
+        addPromos(content);
+
+        container.add(scroll, BorderLayout.CENTER);
+
+        // animacion
+        Timer timer = new Timer(20, null);
+
+        timer.addActionListener(e -> {
+            JScrollBar bar = scroll.getHorizontalScrollBar();
+            bar.setValue(bar.getValue() + 1);
+
+            // cuando llega a la mitad, vuelve al inicio
+            if (bar.getValue() >= bar.getMaximum() / 2) {
+                bar.setValue(0);
             }
         });
+
+        timer.start();
+        
+        return container;
     }
     
-    private void createViews() {
-        cardLayout = new CardLayout();
-        container = new JPanel(cardLayout);
-                
-        homePanel = new HomeContentView();
-        usersPanel = new UsersView();
-        
-        container.add(homePanel, HOME);
-        container.add(usersPanel, USERS);
-    }
-        
-    private JPanel createTransparentPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        return panel;
+    private void addPromos(JPanel content) {
+        content.add(createSmallPromo("Tour privado por la ciudad", "/img/promos/promo5.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        content.add(createSmallPromo("5 noches, paga 4", "/img/promos/promo6.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        content.add(createSmallPromo("Aquaventure World", "/img/promos/promo3.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        content.add(createSmallPromo("Acuario Lost Chambers", "/img/promos/promo2.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        content.add(createSmallPromo("Spa & Wellness Retreat", "/img/promos/promo4.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        content.add(createSmallPromo("Experiencia playa VIP", "/img/promos/promo8.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        content.add(createSmallPromo("Vuelo en helicóptero sobre Dubai", "/img/promos/promo9.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        content.add(createSmallPromo("Yate privado de lujo", "/img/promos/promo10.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+
+        content.add(createSmallPromo("Sky Pool infinity privada", "/img/promos/promo7.png"));
+        content.add(Box.createRigidArea(new Dimension(15, 0)));
+    }    
+    
+    private JPanel createSmallPromo(String titleText, String imgPath) {
+
+        RoundedPanel card = new RoundedPanel(20) {
+
+            private Image image = new ImageIcon(
+                getClass().getResource(imgPath)
+            ).getImage();
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                // dibujar imagen como fondo
+                g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+
+                // overlay oscuro
+                g.setColor(new Color(0, 0, 0, 100));
+                g.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+            }
+        };
+
+        card.setLayout(new BorderLayout());
+        card.setPreferredSize(new Dimension(200, 180));
+        card.setMaximumSize(new Dimension(200, 180));
+        card.setOpaque(false);
+
+        // TEXTO ENCIMA
+        JLabel title = new JLabel(titleText);
+        title.setForeground(Color.WHITE);
+        title.setFont(AppFont.normal());
+        title.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+
+        JPanel textWrapper = new JPanel(new BorderLayout());
+        textWrapper.setOpaque(false);
+        textWrapper.add(title, BorderLayout.SOUTH);
+
+        card.add(textWrapper, BorderLayout.CENTER);
+
+        // hover
+        VisualUtils.addHoverEffect(card, 10, 5, UIColors.CARD, UIColors.HOVER);
+
+        return card;
     }
     
-	public void showView(String view) {
-		cardLayout.show(container, view);
-	}
-	
-	//getters
-    public JMenuItem getLogOut() {
-        return logOut;
+    public JPanel createAboutSection() {
+
+        JPanel section = new JPanel();
+        section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
+        section.setOpaque(false);
+
+        section.add(createAboutHero());
+        section.add(Box.createRigidArea(new Dimension(0, 30)));
+        section.add(createAboutValues());
+
+        return section;
+    }
+    
+    private JPanel createAboutHero() {
+
+        RoundedPanel hero = new RoundedPanel(30);
+        hero.setLayout(null);
+        hero.setPreferredSize(new Dimension(1100, 250));
+        hero.setMaximumSize(new Dimension(1100, 250));
+        hero.setOpaque(false);
+
+        // imagen fondo y overlay
+        RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
+    	    "/img/about/about1.png",
+    	    1100,
+    	    250,
+    	    30,
+    	    new Color(0, 0, 0, 140)
+    	);
+        bg.setBounds(0, 0, 1100, 250);
+        
+        // texto
+        JPanel content = new JPanel();
+        content.setOpaque(false);
+        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setBounds(0, 60, 1100, 150);
+
+        JLabel title = new JLabel("Sobre Atlantis Dubai");
+        title.setFont(AppFont.title());
+        title.setForeground(Color.WHITE);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JTextPane text = new JTextPane();
+        text.setText(
+            "Arropado por las calmadas aguas de color turquesa del golfo Pérsico y el skyline de Dubái,\n"
+            + "Atlantis Dubái es la joya de la corona de la Isla de la Palmera.\n"
+            + "Tanto si se queda en nuestro famoso resort, cena en nuestros galardonados restaurantes\n"
+            + "como si siente la adrenalina en el parque acuático Aquaventure, en Atlantis Dubái\n"
+            + "disfrutará de un mundo a años luz de la rutina diaria.\n"
+        );
+
+        text.setEditable(false);
+        text.setOpaque(false);
+        text.setBorder(null);
+        text.setFont(AppFont.big());
+        text.setForeground(Color.WHITE);
+        StyledDocument doc = text.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+        
+        content.add(title);
+        content.add(Box.createRigidArea(new Dimension(0, 10)));
+        content.add(text);
+
+        hero.add(bg);
+        hero.add(content);
+
+        hero.setComponentZOrder(content, 0);
+        hero.setComponentZOrder(bg, 1);
+
+        return hero;
+    }
+    
+    private JPanel createAboutValues() {
+
+        JPanel container = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
+        container.setOpaque(false);
+        container.setMaximumSize(new Dimension(1100, 200));
+
+        container.add(createValueCard("Lujo", "/img/about/luxury.png"));
+        container.add(createValueCard("Ubicación", "/img/about/location.png"));
+        container.add(createValueCard("Calidad", "/img/about/quality.png"));
+
+        return container;
+    }
+    
+    private JPanel createValueCard(String titleText, String iconPath) {
+
+        RoundedPanel card = new RoundedPanel(25);
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+        card.setBackground(UIColors.CARD);
+        card.setPreferredSize(new Dimension(200, 140));
+        card.setMaximumSize(new Dimension(200, 140));
+        card.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
+
+        JLabel icon = new JLabel(
+            FormUtils.loadIcon(iconPath, 80)
+        );
+        icon.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel title = new JLabel(titleText);
+        title.setFont(AppFont.subtitle());
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        card.add(icon);
+        card.add(Box.createRigidArea(new Dimension(0, 10)));
+        card.add(title);
+
+        return card;
     }
 
-	public JMenuItem getBtnUsers() {
-		return btnUsers;
-	}
-	
-	public JMenuItem getBtnHome() {
-		return btnHome;
-	}	
+	//para envolver las secciones con un margen respecto al contentPanel
+    private JPanel wrapSection(JPanel section) {
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 30));
+
+        wrapper.setOpaque(false);
+        wrapper.add(section);
+
+        return wrapper;
+    }
 }

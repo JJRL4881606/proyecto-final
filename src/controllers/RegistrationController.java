@@ -16,7 +16,7 @@ import utils.FormUtils;
 import utils.Validator;
 import views.LoginWindow;
 import views.RegistrationView;
-import views.HomeWindow;
+import views.MainWindow;
 
 public class RegistrationController {
 
@@ -48,8 +48,8 @@ public class RegistrationController {
                 
                 registerUser(user);
                 
-                HomeWindow window = new HomeWindow();
-                new HomeController(window.getHomeView());
+                MainWindow window = new MainWindow();
+                new MainController(window.getHomeView());
                 
                 Window w = SwingUtilities.getWindowAncestor(view);
                 if (w != null) {

@@ -1,74 +1,82 @@
-[
-  {
-    "name": "alguienxd",
-    "surname": "quien sabe",
-    "email": "randomemail@gmail.com",
-    "phone": "4545454545",
-    "country": "Islandia",
-    "birthDate": "2013-04-24",
-    "gender": "M"
-  },
-  {
-    "name": "Josue",
-    "surname": "Burgos",
-    "email": "correo@gmail.com",
-    "phone": "1234567890",
-    "country": "Australia",
-    "birthDate": "2007-12-28",
-    "gender": "M"
-  },
-  {
-    "name": "qwertyuiop",
-    "surname": "mnbvcxz",
-    "email": "qwerty@correo.com",
-    "phone": "5432109876",
-    "country": "Afganistán",
-    "birthDate": "2005-01-01",
-    "gender": "F"
-  },
-  {
-    "name": "no tengo idea",
-    "surname": "no tengo",
-    "email": "qw@correo.com",
-    "phone": "1222234212",
-    "country": "Corea del Sur",
-    "birthDate": "1999-03-23",
-    "gender": "F"
-  },
-  {
-    "name": "mi nombre",
-    "surname": "no me acuerdo",
-    "email": "nomeacuerdodelcorreo@gmail.com",
-    "phone": "6767676767",
-    "country": "Arabia Saudita",
-    "birthDate": "2001-09-11",
-    "gender": "F"
-  },
-  {
-    "name": "fulanito",
-    "surname": "menganito",
-    "email": "fulanito67@gmail.com",
-    "phone": "6767676767",
-    "country": "Palestina",
-    "birthDate": "2006-07-18",
-    "gender": "M"
-  },
-  {
-    "name": "wiwiwi",
-    "surname": "xddddd",
-    "email": "wiwiwi@gmail.com",
-    "phone": "1111111111",
-    "country": "Rusia",
-    "birthDate": "2025-08-09",
-    "gender": "M"
-  },
-  {
-    "name": "alguien random",
-    "surname": "no tiene",
-    "email": "email@gmail.com",
-    "phone": "6120000000",
-    "country": "Níger",
-    "birthDate": "2008-11-21",
-    "gender": "F"
-  }
-]
+[ {
+  "name" : "alguienxd",
+  "surname" : "quien sabe",
+  "password" : null,
+  "email" : "randomemail@gmail.com",
+  "phone" : "4545454545",
+  "country" : "Islandia",
+  "birthDate" : 1366761600000,
+  "gender" : "M"
+}, {
+  "name" : "Josue",
+  "surname" : "Burgos",
+  "password" : null,
+  "email" : "correo@gmail.com",
+  "phone" : "1234567890",
+  "country" : "Australia",
+  "birthDate" : 1198800000000,
+  "gender" : "M"
+}, {
+  "name" : "qwertyuiop",
+  "surname" : "mnbvcxz",
+  "password" : null,
+  "email" : "qwerty@correo.com",
+  "phone" : "5432109876",
+  "country" : "Afganistán",
+  "birthDate" : 1104537600000,
+  "gender" : "F"
+}, {
+  "name" : "no tengo idea",
+  "surname" : "no tengo",
+  "password" : null,
+  "email" : "qw@correo.com",
+  "phone" : "1222234212",
+  "country" : "Corea del Sur",
+  "birthDate" : 922147200000,
+  "gender" : "F"
+}, {
+  "name" : "mi nombre",
+  "surname" : "no me acuerdo",
+  "password" : null,
+  "email" : "nomeacuerdodelcorreo@gmail.com",
+  "phone" : "9090909090",
+  "country" : "Arabia Saudita",
+  "birthDate" : 1000166400000,
+  "gender" : "F"
+}, {
+  "name" : "fulanito",
+  "surname" : "menganito",
+  "password" : null,
+  "email" : "fulanito67@gmail.com",
+  "phone" : "6767676767",
+  "country" : "Palestina",
+  "birthDate" : 1153180800000,
+  "gender" : "M"
+}, {
+  "name" : "wiwiwi",
+  "surname" : "xddddd",
+  "password" : null,
+  "email" : "wiwiwi@gmail.com",
+  "phone" : "1111111111",
+  "country" : "Rusia",
+  "birthDate" : 1754697600000,
+  "gender" : "M"
+}, {
+  "name" : "alguien random",
+  "surname" : "no tiene",
+  "password" : null,
+  "email" : "email@gmail.com",
+  "phone" : "6120000000",
+  "country" : "Níger",
+  "birthDate" : 1227225600000,
+  "gender" : "F"
+}, {
+  "name" : "un usuario",
+  "surname" : "sin apellidos",
+  "password" : null,
+  "email" : "unusuario@outlook.com",
+  "phone" : "4567982313",
+  "country" : "Estados Unidos",
+  "birthDate" : -61961216400000,
+  "gender" : "F"
+} ]

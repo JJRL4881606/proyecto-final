@@ -18,7 +18,7 @@ public class LoginWindow extends JFrame
     public LoginWindow() 
     {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setTitle("Login | HOTEL MJ");
+        this.setTitle("Login | ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
@@ -28,7 +28,7 @@ public class LoginWindow extends JFrame
 
         //Agregar icono
         Image icon = Toolkit.getDefaultToolkit().getImage(
-    	    getClass().getResource("/img/registration-icon.png")
+    	    getClass().getResource("/img/icons/registration-icon.png")
     	);
         setIconImage(icon);
                 

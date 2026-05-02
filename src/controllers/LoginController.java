@@ -7,7 +7,7 @@ import javax.swing.event.DocumentListener;
 import utils.FormUtils;
 import utils.Validator;
 import views.LoginView;
-import views.HomeWindow;
+import views.MainWindow;
 import views.RegistrationWindow;
 
 import java.awt.Window;
@@ -66,7 +66,7 @@ public class LoginController {
         	    password.equals("1234")) {
         		
                 JOptionPane.showMessageDialog(view, "Sesión iniciada");
-                new HomeWindow();
+                new MainWindow();
 
                 Window window = SwingUtilities.getWindowAncestor(view);
                 if (window != null) window.dispose();
