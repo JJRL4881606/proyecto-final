@@ -109,6 +109,25 @@ public class MainView extends JPanel{
     	mb.setOpaque(true);
     	mb.setBackground(UIColors.HEADER);
     	
+        // USUARIO
+        JMenu usuario = new UnderlineMenu("Usuario");
+        usuario.setMnemonic(KeyEvent.VK_U);
+        mb.add(usuario);
+
+        JMenuItem miCuenta = new JMenuItem("Mi cuenta");
+        miCuenta.setMnemonic(KeyEvent.VK_C);
+        usuario.add(miCuenta);
+        
+        JMenuItem misReservas = new JMenuItem("Mis reservas");
+        misReservas.setMnemonic(KeyEvent.VK_R);
+        usuario.add(misReservas);
+        
+        usuario.addSeparator();
+
+        logOut = new JMenuItem("Cerrar sesión");
+        logOut.setMnemonic(KeyEvent.VK_C);
+        usuario.add(logOut); 
+        
         // SISTEMA
     	JMenu sistema = new UnderlineMenu("Sistema");
     	sistema.setMnemonic(KeyEvent.VK_S);
@@ -121,14 +140,7 @@ public class MainView extends JPanel{
         btnUsers = new JMenuItem("Ver Usuarios");
         btnUsers.setMnemonic(KeyEvent.VK_U);
         sistema.add(btnUsers);
-        
-        sistema.addSeparator();
-
-        logOut = new JMenuItem("Cerrar sesión");
-        logOut.setMnemonic(KeyEvent.VK_C);
-        
-        sistema.add(logOut); 
-
+                
         // HABITACIONES
         JMenu habitaciones = new UnderlineMenu("Habitaciones");
         habitaciones.setMnemonic(KeyEvent.VK_H);
@@ -138,10 +150,6 @@ public class MainView extends JPanel{
         verHabitaciones.setMnemonic(KeyEvent.VK_V);
         habitaciones.add(verHabitaciones);
 
-        JMenuItem disponibilidad = new JMenuItem("Disponibilidad");
-        disponibilidad.setMnemonic(KeyEvent.VK_D);
-        habitaciones.add(disponibilidad);
-
         // RESERVAS
         JMenu reservas = new UnderlineMenu("Reservas");
         reservas.setMnemonic(KeyEvent.VK_R);
@@ -150,19 +158,6 @@ public class MainView extends JPanel{
         JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
         nuevaReserva.setMnemonic(KeyEvent.VK_N);
         reservas.add(nuevaReserva);
-
-        JMenuItem misReservas = new JMenuItem("Mis reservas");
-        misReservas.setMnemonic(KeyEvent.VK_M);
-        reservas.add(misReservas);
-
-        // INFORMACIÓN
-        JMenu informacion = new UnderlineMenu("Información");
-        informacion.setMnemonic(KeyEvent.VK_I);
-        mb.add(informacion);
-
-        JMenuItem verInformacion = new JMenuItem("Ver información");
-        verInformacion.setMnemonic(KeyEvent.VK_V);
-        informacion.add(verInformacion);
 
         return mb;
     }
