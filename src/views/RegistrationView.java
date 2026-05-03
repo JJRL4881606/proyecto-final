@@ -3,6 +3,7 @@ package views;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -10,6 +11,7 @@ import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -100,19 +102,18 @@ public class RegistrationView extends JPanel
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	    panel.setOpaque(false);
 	    
-		JLabel lblTitle = new JLabel("ATLANTIS THE PALM - REGISTRO");
-		lblTitle.setBorder(new EmptyBorder(30, 20, 20, 20)); 
-		lblTitle.setFont(AppFont.title());
-		lblTitle.setForeground(UIColors.TITLE);
-		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/img/logos/hotel-logo-blue.png"));
+        Image img = icon.getImage().getScaledInstance(300, 96, Image.SCALE_SMOOTH);
+        JLabel logo = new JLabel(new ImageIcon(img));
+		logo.setAlignmentX(CENTER_ALIGNMENT);
 		
-		JLabel lblSubtitle = new JLabel("Ingrese los datos para registrarse");
-		lblSubtitle.setBorder(new EmptyBorder(10, 20, 30, 20)); 
+		JLabel lblSubtitle = new JLabel("Ingrese sus datos para registrarse");
+		lblSubtitle.setBorder(new EmptyBorder(10, 20, 10, 20)); 
 		lblSubtitle.setFont(AppFont.subtitle());
 		lblSubtitle.setForeground(UIColors.TITLE);
 		lblSubtitle.setAlignmentX(CENTER_ALIGNMENT); 
 
-	    panel.add(lblTitle);
+	    panel.add(logo);
 	    panel.add(Box.createVerticalStrut(8));
 	    panel.add(lblSubtitle);
 

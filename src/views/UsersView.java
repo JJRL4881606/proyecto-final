@@ -38,9 +38,17 @@ public class UsersView extends JPanel{
 	    setLayout(new BorderLayout());
 	    table = new JTable();
 		styleTable();
+		
+		//scroll
+		JScrollPane scroll = new JScrollPane(table);
 
-	    add(new JScrollPane(table), BorderLayout.CENTER);
+		scroll.addMouseWheelListener(e -> {
+		    scroll.getParent().dispatchEvent(e);
+		});
 
+		add(scroll, BorderLayout.CENTER);
+		
+		//top panel
 	    JPanel topPanel = new JPanel();
 	    topPanel.setLayout(new BorderLayout());
 

@@ -1,47 +1,12 @@
 [
   {
-    "name": "Suite Deluxe",
-    "bedType": "King Bed",
-    "capacity": 4,
-    "price": 25000,
-    "imagePath": "/img/rooms/room1.png",
-    "available": true,
-    "features": [
-      "Wifi",
-      "Desayuno",
-      "Jacuzzi",
-      "Vista al mar"
-    ],
-    "featured": true
+    "id": "101",
+    "typeId": "1",
+    "floor": 1
   },
   {
-    "name": "Standard Room",
-    "bedType": "Queen Bed",
-    "capacity": 2,
-    "price": 18000,
-    "imagePath": "/img/rooms/room2.png",
-    "available": true,
-    "features": [
-      "Wifi",
-	  "Desayuno",
-	  "TV",
-      "AC"
-    ],
-    "featured": true
-  },
-  {
-    "name": "Premium Room",
-    "bedType": "King Bed",
-    "capacity": 3,
-    "price": 21000,
-    "imagePath": "/img/rooms/room3.png",
-    "available": true,
-    "features": [
-      "Wifi",
-      "Desayuno",
-	  "Jacuzzi",
-	  "Vista al mar"
-    ],
-    "featured": true
+    "id": "202",
+    "typeId": "2",
+    "floor": 2
   }
 ]

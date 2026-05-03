@@ -37,9 +37,9 @@ public class FormUtils {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
 
-        panel.setPreferredSize(new Dimension(width, 80));
-        panel.setMaximumSize(new Dimension(width, 80));
-        panel.setMinimumSize(new Dimension(width, 80));
+        panel.setPreferredSize(new Dimension(width, 90));
+        panel.setMaximumSize(new Dimension(width, 90));
+        panel.setMinimumSize(new Dimension(width, 90));
 
         if (labelText != null) {
             JLabel label = new JLabel(labelText);

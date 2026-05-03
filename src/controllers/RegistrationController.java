@@ -4,6 +4,9 @@ import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -270,12 +273,31 @@ public class RegistrationController {
 		return true;
 	 }
 	 
-	 public boolean validateBirthDate() {
-	    // FECHA
-	    if (view.getBirthDate() == null) {
-	        view.setBirthDateError("La fecha de nacimiento es obligatoria");
+	 public boolean validateBirthDate() {		 
+	    Date date = view.getBirthDate();
+	    LocalDate birthDate = date.toInstant()
+	            .atZone(java.time.ZoneId.systemDefault())
+	            .toLocalDate();
+
+	    LocalDate today = LocalDate.now();
+
+	    int age = Period.between(birthDate, today).getYears();
+	    
+	    if (birthDate.isAfter(today)) {
+	        view.setBirthDateError("La fecha no puede ser futura");
 	        return false;
 	    }
+
+	    if (age < 18) {
+	        view.setBirthDateError("Debes ser mayor de edad (18+)");
+	        return false;
+	    }
+	    
+	    if (age > 120) {
+	        view.setBirthDateError("Fecha no válida");
+	        return false;
+	    }
+
 	 	view.clearBirthDateError();
 		return true;
 	 }

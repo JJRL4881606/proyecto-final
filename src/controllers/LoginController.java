@@ -10,9 +10,13 @@ import views.LoginView;
 import views.MainWindow;
 import views.RegistrationWindow;
 
+import java.awt.Desktop;
 import java.awt.Window;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URI;
 
 import javax.swing.SwingUtilities;
 
@@ -107,6 +111,25 @@ public class LoginController {
             public void keyTyped(KeyEvent e) {
                 if (Character.isWhitespace(e.getKeyChar())) {
                     e.consume();
+                }
+            }
+        });
+        
+        view.getChkShowPassword().addActionListener(e -> {
+            if (view.getChkShowPassword().isSelected()) {
+                view.getTxtPassword().setEchoChar((char) 0);
+            } else {
+                view.getTxtPassword().setEchoChar('•');
+            }
+        });
+        
+        view.getLblForgotPassword().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                try {
+                    Desktop.getDesktop().browse(new URI("https://www.google.com"));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
             }
         });

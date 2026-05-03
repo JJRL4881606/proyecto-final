@@ -2,6 +2,7 @@ package components;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 
@@ -20,7 +21,7 @@ public class RoundedButton extends JButton {
         setBorderPainted(false);
         setOpaque(false);
 
-        addMouseListener(new java.awt.event.MouseAdapter() {
+        addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 hovering = true;

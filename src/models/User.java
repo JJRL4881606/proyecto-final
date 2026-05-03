@@ -2,6 +2,7 @@ package models;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class User {
 	
@@ -11,6 +12,7 @@ public class User {
 	private String email;
 	private String phone;
 	private String country;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date birthDate;
 	private char gender;
 	
@@ -95,12 +97,14 @@ public class User {
 	}
 
 	public String toString() {
-		return "Nombre: " + name +
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	    return "Nombre: " + name +
 	           "\nApellido: " + surname +
 	           "\nEmail: " + email +
 	           "\nTeléfono: " + phone +
 	           "\nPaís: " + country +
-	           "\nFecha de nacimiento: " + birthDate +
+	           "\nFecha de nacimiento: " + sdf.format(birthDate) +
 	           "\nGénero: " + gender;
 	}
 	

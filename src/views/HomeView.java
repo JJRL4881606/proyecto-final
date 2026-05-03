@@ -15,7 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.SpinnerDateModel;
 import javax.swing.Timer;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -25,15 +24,13 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import components.RoundedButton;
 import components.RoundedImageOverlayPanel;
 import components.RoundedImagePanel;
 import components.RoundedPanel;
-import models.Room;
+import models.RoomType;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -67,15 +64,15 @@ public class HomeView extends JPanel{
 	}
 	
 	public void initializeComponents() {
-	    add(wrapSection(createSearchBar()));
-	  
-	    add(Box.createRigidArea(new Dimension(0, 30)));
+		add(createSearchHero());
+		
+	    add(Box.createRigidArea(new Dimension(0, 60)));
 	    add(VisualUtils.createDivider()); 
-	    add(Box.createRigidArea(new Dimension(0, 40)));
+	    add(Box.createRigidArea(new Dimension(0, 20)));
 	    
-        add(createPromosSection());
+	    add(wrapSection(createPromosSection()));
 	    
-	    add(Box.createRigidArea(new Dimension(0, 40)));
+	    add(Box.createRigidArea(new Dimension(0, 30)));
 	    add(VisualUtils.createDivider()); 
 	    add(Box.createRigidArea(new Dimension(0, 20)));
 	    
@@ -85,14 +82,57 @@ public class HomeView extends JPanel{
 	    add(VisualUtils.createDivider()); 
 	    add(Box.createRigidArea(new Dimension(0, 30)));
 	    
-        add(createServicesSection());
+	    add(wrapSection(createServicesSection()));
         
-	    add(Box.createRigidArea(new Dimension(0, 5)));
+	    add(Box.createRigidArea(new Dimension(0, 30)));
 	    add(VisualUtils.createDivider()); 
-	    add(Box.createRigidArea(new Dimension(0, 60)));
+	    add(Box.createRigidArea(new Dimension(0, 30)));
         
-        add(createAboutSection());
-	    add(Box.createRigidArea(new Dimension(0, 60)));
+	    add(wrapSection(createAboutSection()));
+	    
+	    add(Box.createRigidArea(new Dimension(0, 30)));
+	}
+	
+	public JPanel createSearchHero() {
+
+	    JPanel container = new JPanel();
+	    container.setLayout(null);
+	    container.setPreferredSize(new Dimension(1400, 300));
+	    container.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
+	    container.setOpaque(false);
+
+	    //BACKGROUND
+	    RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
+	            "/img/search/search-bg.png",
+	            1400,
+	            300,
+	            0,
+	            new Color(0, 0, 0, 120) // overlay oscuro
+	    );
+
+	    bg.setBounds(0, 0, 1400, 300);
+
+	    // SEARCHBAR
+	    JPanel searchBar = createSearchBar();
+	    
+	    int barWidth = 900;
+	    int barHeight = 120;
+
+	    searchBar.setBounds(
+	            (1400 - barWidth) / 2, // centrar horizontal
+	            (300 - barHeight) / 2, // centrar vertical
+	            barWidth,
+	            barHeight
+	    );
+
+	    // ORDEN DE CAPAS
+	    container.add(bg);
+	    container.add(searchBar);
+
+	    container.setComponentZOrder(searchBar, 0);
+	    container.setComponentZOrder(bg, 1);
+
+	    return container;
 	}
 	
     public JPanel createSearchBar() {
@@ -103,8 +143,10 @@ public class HomeView extends JPanel{
 	    searchBar.setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
 	    searchBar.setAlignmentX(CENTER_ALIGNMENT);
 	    searchBar.putClientProperty("FlatLaf.style", "arc:20");
-	    searchBar.setPreferredSize(new Dimension(1100, 120));
-	    searchBar.setMaximumSize(new Dimension(1100, 120));
+	    searchBar.setPreferredSize(new Dimension(900, 120));
+	    searchBar.setMaximumSize(new Dimension(900, 120));
+	    
+	    searchBar.add(Box.createHorizontalGlue());
 	    
 	    spCheckInDate = FormUtils.createDateField();
 	    lblCheckInDateError = FormUtils.createErrorLabel();
@@ -115,18 +157,7 @@ public class HomeView extends JPanel{
 	    lblCheckOutDateError = FormUtils.createErrorLabel();
 	    searchBar.add(FormUtils.createField("Salida", spCheckOutDate, lblCheckOutDateError, "", 180));
 	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
-	    
-	    Date today = new Date();
-	    SpinnerDateModel modelCheckIn = new SpinnerDateModel(
-	        today,
-	        today,
-	        null,
-	        Calendar.DAY_OF_MONTH
-	    );
-
-	    spCheckInDate.setModel(modelCheckIn);
-	    spCheckOutDate.setModel(modelCheckIn);
-	    
+	    		 
 	    txtNights = FormUtils.createTextField();
 	    lblNightsError = FormUtils.createErrorLabel();
 	    txtNights.setEditable(false);
@@ -147,6 +178,8 @@ public class HomeView extends JPanel{
 	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
 	    searchBar.add(btnSearch);	
 	    searchBar.add(Box.createRigidArea(new Dimension(0, 10)));
+	    
+	    searchBar.add(Box.createHorizontalGlue());
 
 		return searchBar;
     }
@@ -200,10 +233,10 @@ public class HomeView extends JPanel{
         return roomsPanel;
     }
     
-    public void setRooms(List<Room> rooms) {
+    public void setRooms(List<RoomType> rooms) {
         roomsContainer.removeAll();
 
-        for (Room room : rooms) {
+        for (RoomType room : rooms) {
             roomsContainer.add(createRoomCard(room));
         }
 
@@ -219,7 +252,7 @@ public class HomeView extends JPanel{
         return btnSeeRooms;
     }
     
-    private JPanel createRoomCard(Room room) {
+    private JPanel createRoomCard(RoomType room) {
 
         JPanel roomCard = new RoundedPanel(25);
         roomCard.setLayout(new BoxLayout(roomCard, BoxLayout.Y_AXIS));
@@ -334,7 +367,6 @@ public class HomeView extends JPanel{
         // grid 5x3
         JPanel grid = new JPanel(new GridLayout(3, 5, 20, 20));
         grid.setOpaque(false);
-        grid.setMaximumSize(new Dimension(1100, 400));
 
         // servicios
         grid.add(createServiceCard("WiFi", "/img/serv/wifi-icon.png"));
@@ -365,8 +397,8 @@ public class HomeView extends JPanel{
         RoundedPanel card = new RoundedPanel(25);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBackground(UIColors.CARD);
-        card.setPreferredSize(new Dimension(160, 160));
-        card.setMaximumSize(new Dimension(160, 160));
+        card.setPreferredSize(new Dimension(160, 120));
+        card.setMaximumSize(new Dimension(160, 120));
         card.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         // icono
@@ -706,5 +738,22 @@ public class HomeView extends JPanel{
         wrapper.add(section);
 
         return wrapper;
+    }
+    
+    //getters
+    public JSpinner getSpCheckInDate() {
+        return spCheckInDate;
+    }
+
+    public JSpinner getSpCheckOutDate() {
+        return spCheckOutDate;
+    }
+    
+    public JTextField getTxtNights() {
+        return txtNights;
+    }
+    
+    public void setNights(String nights) {
+        txtNights.setText(nights);
     }
 }

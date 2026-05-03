@@ -2,16 +2,17 @@ package views;
 
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,8 +22,6 @@ import javax.swing.SwingConstants;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.border.EmptyBorder;
-import java.net.URI;
-
 import components.RoundedButton;
 import components.RoundedPanel;
 import utils.AppFont;
@@ -41,6 +40,8 @@ public class LoginView extends JPanel
 	JLabel lblWrongError;
 	RoundedButton btnLogin;
 	RoundedButton btnRegistration;
+	JCheckBox chkShowPassword;
+	JLabel lblForgotPassword;
 	
 	int fieldWidth = 300;
 	
@@ -81,19 +82,18 @@ public class LoginView extends JPanel
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	    panel.setOpaque(false);
 	    
-		JLabel lblTitle = new JLabel("ATLANTIS THE PALM - LOGIN");
-		lblTitle.setBorder(new EmptyBorder(30, 20, 20, 20)); 
-		lblTitle.setForeground(UIColors.TITLE);
-		lblTitle.setFont(AppFont.title());
-		lblTitle.setAlignmentX(CENTER_ALIGNMENT);
+        ImageIcon icon = new ImageIcon(getClass().getResource("/img/logos/hotel-logo-blue.png"));
+        Image img = icon.getImage().getScaledInstance(300, 96, Image.SCALE_SMOOTH);
+        JLabel logo = new JLabel(new ImageIcon(img));
+		logo.setAlignmentX(CENTER_ALIGNMENT);
 		
 		JLabel lblSubtitle = new JLabel("Ingrese sus datos para iniciar sesión");
-		lblSubtitle.setBorder(new EmptyBorder(10, 20, 30, 20)); 
-		lblSubtitle.setForeground(UIColors.TITLE);
+		lblSubtitle.setBorder(new EmptyBorder(10, 20, 10, 20)); 
 		lblSubtitle.setFont(AppFont.subtitle());
+		lblSubtitle.setForeground(UIColors.TITLE);
 		lblSubtitle.setAlignmentX(CENTER_ALIGNMENT); 
 
-	    panel.add(lblTitle);
+	    panel.add(logo);
 	    panel.add(Box.createVerticalStrut(8));
 	    panel.add(lblSubtitle);
 
@@ -119,14 +119,7 @@ public class LoginView extends JPanel
 	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña", fieldWidth));
 
 	    // MOSTRAR CONTRASEÑA
-	    JCheckBox chkShowPassword = new JCheckBox("Mostrar contraseña");
-	    chkShowPassword.addActionListener(e -> {
-	        if (chkShowPassword.isSelected()) {
-	            txtPassword.setEchoChar((char) 0);
-	        } else {
-	            txtPassword.setEchoChar('•');
-	        }
-	    });
+	    chkShowPassword = new JCheckBox("Mostrar contraseña");
 	    chkShowPassword.setOpaque(false);
 	    chkShowPassword.setFont(AppFont.small());
 	    chkShowPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -134,7 +127,7 @@ public class LoginView extends JPanel
 	    mainPanel.add(chkShowPassword);
         
         // OLVIDASTE CONTRASEÑA
-        JLabel lblForgotPassword = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
+        lblForgotPassword = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
         lblForgotPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
         lblForgotPassword.setForeground(new Color(0,0,0));
         lblForgotPassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -142,16 +135,6 @@ public class LoginView extends JPanel
         lblForgotPassword.setAlignmentX(CENTER_ALIGNMENT);
         lblForgotPassword.setHorizontalAlignment(SwingConstants.CENTER);
         lblForgotPassword.addMouseListener(new MouseAdapter() {
-
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().browse(new URI("https://www.google.com"));
-                    //Abre google mientras hacemos laparte de recuperar contrasena 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-
             public void mouseEntered(MouseEvent e) {
                 lblForgotPassword.setForeground(Color.RED);
             }
@@ -261,5 +244,13 @@ public class LoginView extends JPanel
 	
 	public JLabel getLblPasswordError() {
 	    return lblPasswordError;
+	}
+	
+	public JCheckBox getChkShowPassword() {
+	    return chkShowPassword;
+	}
+	
+	public JLabel getLblForgotPassword() {
+	    return lblForgotPassword;
 	}
 }
