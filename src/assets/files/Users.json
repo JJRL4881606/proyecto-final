@@ -124,4 +124,13 @@
   "country" : "Colombia",
   "birthDate" : "2006-04-02",
   "gender" : "M"
+}, {
+  "name" : "jabotifk",
+  "surname" : "rorirez",
+  "password" : null,
+  "email" : "tscbtb@gmail.com",
+  "phone" : "6122333563",
+  "country" : "Andorra",
+  "birthDate" : "2000-05-05",
+  "gender" : "M"
 } ]

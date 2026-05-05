@@ -161,7 +161,7 @@ public class UsersView extends JPanel{
 		chooser.addChoosableFileFilter(filter);
 		chooser.setFileFilter(filter);
 		
-		int option = chooser.showDialog(this, "Exportar PDF de usuarios");
+		int option = chooser.showDialog(null, "Exportar PDF de usuarios");
 		
 		if(option != JFileChooser.APPROVE_OPTION) {
 			return null;

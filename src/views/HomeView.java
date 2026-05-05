@@ -16,12 +16,14 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.Timer;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.util.List;
@@ -95,42 +97,27 @@ public class HomeView extends JPanel{
 	
 	public JPanel createSearchHero() {
 
-	    JPanel container = new JPanel();
-	    container.setLayout(null);
-	    container.setPreferredSize(new Dimension(1400, 300));
+	    JPanel container = new JPanel(new BorderLayout());
+	    container.setPreferredSize(new Dimension(0, 300));
 	    container.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
-	    container.setOpaque(false);
 
-	    //BACKGROUND
 	    RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
 	            "/img/search/search-bg.png",
-	            1400,
-	            300,
 	            0,
-	            new Color(0, 0, 0, 120) // overlay oscuro
+	            new Color(0, 0, 0, 120)
 	    );
 
-	    bg.setBounds(0, 0, 1400, 300);
+	    bg.setLayout(new BorderLayout());
 
-	    // SEARCHBAR
 	    JPanel searchBar = createSearchBar();
-	    
-	    int barWidth = 900;
-	    int barHeight = 120;
+	    searchBar.setPreferredSize(new Dimension(900, 120));
 
-	    searchBar.setBounds(
-	            (1400 - barWidth) / 2, // centrar horizontal
-	            (300 - barHeight) / 2, // centrar vertical
-	            barWidth,
-	            barHeight
-	    );
+	    JPanel centerWrapper = new JPanel(new GridBagLayout());
+	    centerWrapper.setOpaque(false);
+	    centerWrapper.add(searchBar);
 
-	    // ORDEN DE CAPAS
-	    container.add(bg);
-	    container.add(searchBar);
-
-	    container.setComponentZOrder(searchBar, 0);
-	    container.setComponentZOrder(bg, 1);
+	    bg.add(centerWrapper, BorderLayout.CENTER);
+	    container.add(bg, BorderLayout.CENTER);
 
 	    return container;
 	}
@@ -442,31 +429,26 @@ public class HomeView extends JPanel{
     
     private JPanel createMainPromo() {
 
-        // contenedor base
         RoundedPanel promo = new RoundedPanel(30);
-        promo.setLayout(new BoxLayout(promo, BoxLayout.Y_AXIS));
+        promo.setLayout(new BorderLayout());
         promo.setPreferredSize(new Dimension(1100, 350));
         promo.setMaximumSize(new Dimension(1100, 350));
-
-        promo.setLayout(null);
         promo.setOpaque(false);
 
-        // IMAGEN DE FONDO + OVERLAY
+        // BACKGROUND
         RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
-    	    "/img/promos/promo1.png",
-    	    1100,
-    	    350,
-    	    30,
-    	    new Color(0, 0, 0, 100) // overlay
-    	);
+                "/img/promos/promo1.png",
+                30,
+                new Color(0, 0, 0, 100)
+        );
 
-    	bg.setBounds(0, 0, 1100, 350);
-        	
-        // CONTENIDO (texto + botón)
+        bg.setLayout(new BorderLayout());
+
+        // CONTENIDO
         JPanel content = new JPanel();
         content.setOpaque(false);
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.setBounds(40, 40, 400, 150);
+        content.setBorder(new EmptyBorder(40, 40, 40, 40));
 
         JLabel title = new JLabel("10% OFF en verano");
         title.setFont(AppFont.title());
@@ -488,12 +470,10 @@ public class HomeView extends JPanel{
         content.add(Box.createRigidArea(new Dimension(0, 15)));
         content.add(reserveBtn);
 
-        // ORDEN DE CAPAS
-        promo.add(bg);
-        promo.add(content);
-        
-        promo.setComponentZOrder(content, 0);
-        promo.setComponentZOrder(bg, 1);
+        bg.add(content, BorderLayout.WEST);
+
+        promo.add(bg, BorderLayout.CENTER);
+
         return promo;
     }
     
@@ -634,26 +614,24 @@ public class HomeView extends JPanel{
     private JPanel createAboutHero() {
 
         RoundedPanel hero = new RoundedPanel(30);
-        hero.setLayout(null);
+        hero.setLayout(new BorderLayout());
         hero.setPreferredSize(new Dimension(1100, 250));
         hero.setMaximumSize(new Dimension(1100, 250));
         hero.setOpaque(false);
 
-        // imagen fondo y overlay
+        // BACKGROUND + OVERLAY
         RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
-    	    "/img/about/about1.png",
-    	    1100,
-    	    250,
-    	    30,
-    	    new Color(0, 0, 0, 140)
-    	);
-        bg.setBounds(0, 0, 1100, 250);
-        
-        // texto
+                "/img/about/about1.png",
+                30,
+                new Color(0, 0, 0, 140)
+        );
+
+        bg.setLayout(new BorderLayout());
+
+        // CONTENIDO
         JPanel content = new JPanel();
         content.setOpaque(false);
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
-        content.setBounds(0, 60, 1100, 150);
 
         JLabel title = new JLabel("Sobre Atlantis Dubai");
         title.setFont(AppFont.title());
@@ -674,20 +652,22 @@ public class HomeView extends JPanel{
         text.setBorder(null);
         text.setFont(AppFont.big());
         text.setForeground(Color.WHITE);
+
         StyledDocument doc = text.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
-        
+
+        content.add(Box.createVerticalGlue());
         content.add(title);
         content.add(Box.createRigidArea(new Dimension(0, 10)));
         content.add(text);
+        content.add(Box.createVerticalGlue());
 
-        hero.add(bg);
-        hero.add(content);
+        content.setBorder(new EmptyBorder(20, 80, 20, 80));
 
-        hero.setComponentZOrder(content, 0);
-        hero.setComponentZOrder(bg, 1);
+        bg.add(content, BorderLayout.CENTER);
+        hero.add(bg, BorderLayout.CENTER);
 
         return hero;
     }
