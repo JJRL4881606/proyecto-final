@@ -46,7 +46,7 @@ public class MainView extends JPanel{
 	    UIManager.put("Menu.selectionForeground", Color.WHITE);
 	    UIManager.put("MenuItem.selectionBackground", UIColors.HEADER);
 	    UIManager.put("MenuItem.selectionForeground", Color.WHITE);
-
+	    
 	    this.setBackground(new Color(100,149,237)); 
 	    setLayout(new BorderLayout());
 	    initializeComponents();
@@ -127,19 +127,6 @@ public class MainView extends JPanel{
         logOut = new JMenuItem("Cerrar sesión");
         logOut.setMnemonic(KeyEvent.VK_C);
         usuario.add(logOut); 
-        
-        // SISTEMA
-    	JMenu sistema = new UnderlineMenu("Sistema");
-    	sistema.setMnemonic(KeyEvent.VK_S);
-        mb.add(sistema);
-
-        btnHome = new JMenuItem("Inicio");
-        btnHome.setMnemonic(KeyEvent.VK_I);
-        sistema.add(btnHome);
-        
-        btnUsers = new JMenuItem("Ver Usuarios");
-        btnUsers.setMnemonic(KeyEvent.VK_U);
-        sistema.add(btnUsers);
                 
         // HABITACIONES
         JMenu habitaciones = new UnderlineMenu("Habitaciones");
@@ -158,6 +145,19 @@ public class MainView extends JPanel{
         JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
         nuevaReserva.setMnemonic(KeyEvent.VK_N);
         reservas.add(nuevaReserva);
+        
+        // SISTEMA
+    	JMenu sistema = new UnderlineMenu("Sistema");
+    	sistema.setMnemonic(KeyEvent.VK_S);
+        mb.add(sistema);
+
+        btnHome = new JMenuItem("Inicio");
+        btnHome.setMnemonic(KeyEvent.VK_I);
+        sistema.add(btnHome);
+        
+        btnUsers = new JMenuItem("Ver Usuarios");
+        btnUsers.setMnemonic(KeyEvent.VK_U);
+        sistema.add(btnUsers);
 
         return mb;
     }
@@ -208,7 +208,6 @@ public class MainView extends JPanel{
     
 	public void showView(String view) {
 		cardLayout.show(container, view);
-		
 	    container.revalidate();
 	    container.repaint();
 	}

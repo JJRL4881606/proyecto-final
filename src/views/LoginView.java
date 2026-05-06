@@ -220,8 +220,10 @@ public class LoginView extends JPanel
 	    txtPassword.setBorder(FormUtils.redBorder);
 	}
 
-	public void showWrongError() {
+	public void setWrongError() {
 	    lblWrongError.setVisible(true);
+	    txtEmail.setBorder(FormUtils.redBorder);
+	    txtPassword.setBorder(FormUtils.redBorder);
 	}
 
 	public void clearErrors() {
@@ -236,6 +238,10 @@ public class LoginView extends JPanel
 
 	public void clearPasswordError(){
 		FormUtils.clearError(lblPasswordError, txtPassword);
+	}
+	
+	public void clearWrongError() {
+	    lblWrongError.setVisible(false);
 	}
 	
 	public JLabel getLblEmailError() {

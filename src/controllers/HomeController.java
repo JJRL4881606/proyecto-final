@@ -20,7 +20,6 @@ public class HomeController {
     public HomeController(HomeView view) {
         this.view = view;
         this.repository = new RoomTypeRepository();
-
         init();
     }
 
@@ -43,7 +42,12 @@ public class HomeController {
 
     private void initEvents() {
         view.getBtnSearch().addActionListener(e -> {
-            System.out.println("Buscar...");
+            //ESTO ES UN EJEMPLO
+        	int example_nights = view.getNights();
+            int example_guests = view.getGuests();
+            int example_cost = 1000;
+            int example_total = example_nights * example_guests * example_cost;
+            System.out.println("Costo total: $" + example_total + " USD");
         });
 
         view.getBtnSeeRooms().addActionListener(e -> {
@@ -76,7 +80,6 @@ public class HomeController {
         cal.add(Calendar.DAY_OF_MONTH, days);
         return cal.getTime();
     }
-    
     
     private void validateDates() {
         Date today = normalize(new Date());
@@ -156,9 +159,9 @@ public class HomeController {
 
         // evitar negativos
         if (nights <= 0) {
-            view.getTxtNights().setText("1 noche(s)");
+            view.getTxtNights().setText("1");
         } else {
-            view.getTxtNights().setText(String.valueOf(nights) + " noche(s)");
+            view.getTxtNights().setText(String.valueOf(nights));
         }
     }
 }

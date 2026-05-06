@@ -52,7 +52,6 @@ public class RegistrationController {
                 registerUser(user);
                 
                 MainWindow window = new MainWindow();
-                new MainController(window.getHomeView());
                 
                 Window w = SwingUtilities.getWindowAncestor(view);
                 if (w != null) {
@@ -207,7 +206,7 @@ public class RegistrationController {
 	        return false;
 	    }
 	    
-	    view.clearEmailError();
+	    view.clearNameError();
 		return true;
 	 }
 	 

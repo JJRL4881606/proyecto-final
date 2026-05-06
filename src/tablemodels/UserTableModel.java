@@ -25,6 +25,7 @@ public class UserTableModel extends AbstractTableModel{
 	
 	public UserTableModel(List<User> users) {
 		this.users = users;
+		System.out.println("Usuarios cargados: " + users.size());
 	}
 	
 	@Override

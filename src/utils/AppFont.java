@@ -12,12 +12,12 @@ public class AppFont {
             // Fuente base para texto
             roboto = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    AppFont.class.getResourceAsStream("/fonts/Roboto.ttf"));
+                    AppFont.class.getResourceAsStream("/assets/fonts/Roboto.ttf"));
 
             // Fuente para títulos
             firasans = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    AppFont.class.getResourceAsStream("/fonts/FiraSans-Black.ttf"));
+                    AppFont.class.getResourceAsStream("/assets/fonts/FiraSans-Black.ttf"));
 			
 		} catch(Exception e) {
             roboto = new Font("SansSerif", Font.PLAIN, 14);

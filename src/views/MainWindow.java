@@ -13,7 +13,7 @@ import controllers.MainController;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame 
 {
-	private MainView HomeView;
+	private MainView MainView;
 
     public MainWindow() 
     {
@@ -21,6 +21,7 @@ public class MainWindow extends JFrame
         this.setTitle("ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocationRelativeTo(null);
         
         JPanel background = new JPanel();
         background.setLayout(new BorderLayout());
@@ -33,9 +34,9 @@ public class MainWindow extends JFrame
         setIconImage(icon);
          
         // Agregar el panel con scroll
-        HomeView = new MainView();
-        new MainController(HomeView);
-        add(createViewScroll(HomeView), BorderLayout.CENTER);
+        MainView = new MainView();
+        new MainController(MainView, this);
+        add(createViewScroll(MainView), BorderLayout.CENTER);
         
         this.setVisible(true);
     }
@@ -48,7 +49,16 @@ public class MainWindow extends JFrame
         return scroll;
     }
     
-    public MainView getHomeView() {
-        return HomeView;
+    public MainView getMainView() {
+        return MainView;
     }
+    
+	public void setWindowSize(int width, int height) {
+		setSize(width, height);
+	}
+	
+	public void setWindowLocation(int x, int y) {
+		setLocation(x, y);
+	}
+
 }

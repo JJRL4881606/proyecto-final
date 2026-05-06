@@ -13,7 +13,11 @@ import models.RoomType;
 
 public class RoomTypeRepository {
 
-    private final String FILE = "src/assets/files/RoomTypes.json";
+	private final String FILE = "."
+			+ File.separator 
+			+ "data"
+			+ File.separator
+			+ "RoomTypes.json";
     
 	private final ObjectMapper mapper = 
 			new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
@@ -25,8 +29,8 @@ public class RoomTypeRepository {
 	}
 
     public List<RoomType> getRoomTypes() throws IOException {
-
 		File file = new File(FILE);	
+		file.getParentFile().mkdirs();
 		
 		if(!file.exists() || file.length() == 0) {
 			return new ArrayList<>();
@@ -39,7 +43,10 @@ public class RoomTypeRepository {
     }
 
     public void updateAll(List<RoomType> roomTypes) throws IOException {
-        mapper.writeValue(new File(FILE), roomTypes);
+		File file = new File(FILE);
+		file.getParentFile().mkdir();
+		
+	    mapper.writeValue(file, roomTypes);
     }
     
     public void delete(int index) throws IOException {

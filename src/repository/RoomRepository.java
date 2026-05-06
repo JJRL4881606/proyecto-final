@@ -12,8 +12,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import models.Room;
 
 public class RoomRepository {
-
-    private final String FILE = "src/assets/files/Rooms.json";
+    
+	private final String FILE = "."
+			+ File.separator 
+			+ "data"
+			+ File.separator
+			+ "Rooms.json";
     
     private final ObjectMapper mapper =
             new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
@@ -25,7 +29,8 @@ public class RoomRepository {
     }
 
     public List<Room> getRooms() throws IOException {
-        File file = new File(FILE);
+		File file = new File(FILE);	
+		file.getParentFile().mkdirs();
 
         if (!file.exists() || file.length() == 0) {
             return new ArrayList<>();
@@ -38,7 +43,10 @@ public class RoomRepository {
     }
 
     public void updateAll(List<Room> rooms) throws IOException {
-        mapper.writeValue(new File(FILE), rooms);
+		File file = new File(FILE);
+		file.getParentFile().mkdir();
+		
+	    mapper.writeValue(file, rooms);
     }
 
     // Buscar por ID

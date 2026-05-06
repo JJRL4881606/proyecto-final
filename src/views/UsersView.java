@@ -23,6 +23,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import components.RoundedButton;
 import tablemodels.UserTableModel;
 import utils.AppFont;
+import utils.Config;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
@@ -149,7 +150,7 @@ public class UsersView extends JPanel{
 	
 	public File selectPdfFile() {
 		
-		String path = System.getProperty("user.home");
+		String path = Config.get("users.export.pdf", System.getProperty("user.home"));
 		JFileChooser chooser = new JFileChooser(path);
 		
 		chooser.setSelectedFile(new File("reporte-usuarios.pdf"));
@@ -168,6 +169,7 @@ public class UsersView extends JPanel{
 		}
 		
 		File file = chooser.getSelectedFile();
+		Config.set("users.export.pdf", file.getParent());
 		
 		if(!file.getName().toLowerCase().endsWith(".pdf")) {
 			file = new File(file.getAbsolutePath() + ".pdf");
@@ -178,6 +180,7 @@ public class UsersView extends JPanel{
 	
 	public void setTableModel(UserTableModel model) {
 		table.setModel(model);
+		System.out.println("Filas: " + model.getRowCount());
 		
 		if(table.getColumnCount() >= 1) {
 			table.getColumnModel().getColumn(0).setPreferredWidth(40);

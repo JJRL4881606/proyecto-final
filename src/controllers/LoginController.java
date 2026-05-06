@@ -31,7 +31,7 @@ public class LoginController {
     }
 
     public void validatePassword() {
-	 	// PASSWORD
+        view.clearWrongError();
 		String password = view.getPassword();
 		view.clearPasswordError();
     		
@@ -42,7 +42,7 @@ public class LoginController {
 	 }
 	 
 	 public void validateEmail() {
-		// EMAIL
+		view.clearWrongError();
 		String email = view.getEmail();
 		view.clearEmailError();
 		 
@@ -76,7 +76,7 @@ public class LoginController {
                 if (window != null) window.dispose();
 
             } else {
-                view.showWrongError();
+                view.setWrongError();
             }
         }
     }

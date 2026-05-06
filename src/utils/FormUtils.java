@@ -103,7 +103,7 @@ public class FormUtils {
     }
     
     public static JSpinner createNumberField() {
-    	JSpinner number = new RoundedSpinner(new SpinnerNumberModel(1, 1, 20, 1));
+    	JSpinner number = new RoundedSpinner(new SpinnerNumberModel(1, 1, 10, 1));
     	number.setBackground(UIColors.FIELD);
     	number.setBorder(normalBorder);
 		return number;
@@ -208,7 +208,6 @@ public class FormUtils {
             }
         });
     }	
-    
     
 	//manejar errores
     public static void showError(JLabel label, JComponent field, String message) {

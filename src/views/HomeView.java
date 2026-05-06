@@ -23,9 +23,12 @@ import javax.swing.text.StyledDocument;
 
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
+import java.util.Date;
 import java.util.List;
 
 import components.RoundedButton;
@@ -55,6 +58,7 @@ public class HomeView extends JPanel{
 	RoundedButton btnSeeRooms;
 	
 	private JPanel roomsContainer;
+	int sectionWidth = 1100; 
 
 	public HomeView() {
 	    
@@ -165,8 +169,7 @@ public class HomeView extends JPanel{
 	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
 	    searchBar.add(btnSearch);	
 	    searchBar.add(Box.createRigidArea(new Dimension(0, 10)));
-	    
-	    searchBar.add(Box.createHorizontalGlue());
+	    searchBar.add(Box.createHorizontalGlue()); // elementos al centro
 
 		return searchBar;
     }
@@ -196,7 +199,7 @@ public class HomeView extends JPanel{
         // contenedor horizontal de habitaciones
         roomsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         roomsContainer.setOpaque(false);
-        roomsContainer.setPreferredSize(new Dimension(1100, 550));
+        roomsContainer.setPreferredSize(new Dimension(sectionWidth, 550));
 
         // botón ver más
         JPanel seeRooms = new JPanel();
@@ -431,8 +434,8 @@ public class HomeView extends JPanel{
 
         RoundedPanel promo = new RoundedPanel(30);
         promo.setLayout(new BorderLayout());
-        promo.setPreferredSize(new Dimension(1100, 350));
-        promo.setMaximumSize(new Dimension(1100, 350));
+        promo.setPreferredSize(new Dimension(sectionWidth, 350));
+        promo.setMaximumSize(new Dimension(sectionWidth, 350));
         promo.setOpaque(false);
 
         // BACKGROUND
@@ -481,7 +484,7 @@ public class HomeView extends JPanel{
 
         JPanel container = new JPanel(new BorderLayout());
         container.setOpaque(false);
-        container.setMaximumSize(new Dimension(1100, 220));
+        container.setMaximumSize(new Dimension(sectionWidth, 220));
 
         // panel interno
         JPanel content = new JPanel();
@@ -498,8 +501,8 @@ public class HomeView extends JPanel{
         scroll.setBorder(null);
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
-        scroll.setPreferredSize(new Dimension(1100, 200));
-        scroll.setMaximumSize(new Dimension(1100, 200));
+        scroll.setPreferredSize(new Dimension(sectionWidth, 200));
+        scroll.setMaximumSize(new Dimension(sectionWidth, 200));
 
         // agregar las promos, doble para que sea infinito
         addPromos(content);
@@ -599,15 +602,10 @@ public class HomeView extends JPanel{
     }
     
     public JPanel createAboutSection() {
-
         JPanel section = new JPanel();
         section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
         section.setOpaque(false);
-
         section.add(createAboutHero());
-        section.add(Box.createRigidArea(new Dimension(0, 30)));
-        section.add(createAboutValues());
-
         return section;
     }
     
@@ -615,8 +613,8 @@ public class HomeView extends JPanel{
 
         RoundedPanel hero = new RoundedPanel(30);
         hero.setLayout(new BorderLayout());
-        hero.setPreferredSize(new Dimension(1100, 250));
-        hero.setMaximumSize(new Dimension(1100, 250));
+        hero.setPreferredSize(new Dimension(sectionWidth, 250));
+        hero.setMaximumSize(new Dimension(sectionWidth, 250));
         hero.setOpaque(false);
 
         // BACKGROUND + OVERLAY
@@ -629,9 +627,14 @@ public class HomeView extends JPanel{
         bg.setLayout(new BorderLayout());
 
         // CONTENIDO
-        JPanel content = new JPanel();
+        JPanel content = new JPanel(new GridBagLayout());
         content.setOpaque(false);
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(5, 0, 5, 0);
 
         JLabel title = new JLabel("Sobre Atlantis Dubai");
         title.setFont(AppFont.title());
@@ -658,58 +661,19 @@ public class HomeView extends JPanel{
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
 
-        content.add(Box.createVerticalGlue());
-        content.add(title);
-        content.add(Box.createRigidArea(new Dimension(0, 10)));
-        content.add(text);
-        content.add(Box.createVerticalGlue());
+        content.add(title, gbc);
+
+        gbc.gridy++;
+        content.add(text, gbc);
 
         content.setBorder(new EmptyBorder(20, 80, 20, 80));
-
+        
         bg.add(content, BorderLayout.CENTER);
         hero.add(bg, BorderLayout.CENTER);
 
         return hero;
     }
     
-    private JPanel createAboutValues() {
-
-        JPanel container = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 0));
-        container.setOpaque(false);
-        container.setMaximumSize(new Dimension(1100, 200));
-
-        container.add(createValueCard("Lujo", "/img/about/luxury.png"));
-        container.add(createValueCard("Ubicación", "/img/about/location.png"));
-        container.add(createValueCard("Calidad", "/img/about/quality.png"));
-
-        return container;
-    }
-    
-    private JPanel createValueCard(String titleText, String iconPath) {
-
-        RoundedPanel card = new RoundedPanel(25);
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBackground(UIColors.CARD);
-        card.setPreferredSize(new Dimension(200, 140));
-        card.setMaximumSize(new Dimension(200, 140));
-        card.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
-
-        JLabel icon = new JLabel(
-            FormUtils.loadIcon(iconPath, 80)
-        );
-        icon.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel title = new JLabel(titleText);
-        title.setFont(AppFont.subtitle());
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        card.add(icon);
-        card.add(Box.createRigidArea(new Dimension(0, 10)));
-        card.add(title);
-
-        return card;
-    }
-
 	//para envolver las secciones con un margen respecto al contentPanel
     private JPanel wrapSection(JPanel section) {
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 30));
@@ -731,6 +695,26 @@ public class HomeView extends JPanel{
     
     public JTextField getTxtNights() {
         return txtNights;
+    }
+    
+    public JSpinner getSpGuests() {
+    	return spGuests;
+    }
+    
+    public Date getCheckInDate() {
+        return (Date) spCheckInDate.getValue();
+    }
+
+    public Date getCheckOutDate() {
+        return (Date) spCheckOutDate.getValue();
+    }
+    
+    public int getGuests() {
+        return (int) spGuests.getValue();
+    }
+    
+    public int getNights() {
+        return Integer.parseInt(txtNights.getText());
     }
     
     public void setNights(String nights) {

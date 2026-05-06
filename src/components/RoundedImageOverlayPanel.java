@@ -23,7 +23,7 @@ public class RoundedImageOverlayPanel extends JPanel {
         try {
             URL url = getClass().getResource(path);
             if (url != null) {
-                image = new ImageIcon(url).getImage(); // 🔥 sin escalar aquí
+                image = new ImageIcon(url).getImage(); // sin escalar aquí
             }
         } catch (Exception e) {
             e.printStackTrace();
