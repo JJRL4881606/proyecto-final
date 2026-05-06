@@ -82,7 +82,7 @@ public class LoginView extends JPanel
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	    panel.setOpaque(false);
 	    
-        ImageIcon icon = new ImageIcon(getClass().getResource("/img/logos/hotel-logo-blue.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/img/logos/hotel-logo-blue.png"));
         Image img = icon.getImage().getScaledInstance(300, 96, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(img));
 		logo.setAlignmentX(CENTER_ALIGNMENT);
@@ -167,19 +167,16 @@ public class LoginView extends JPanel
 
 	    btnLogin = ButtonFactory.createBigButton(
 	            "INICIAR SESIÓN",
-	            "/img/btn-icons/button-login-icon.png",
+	            "/assets/img/btn-icons/button-login-icon.png",
 	            "Haz click para iniciar sesión"
 	    );
 
 	    btnRegistration = ButtonFactory.createBigButton(
 	            "CREAR CUENTA",
-	            "/img/btn-icons/button-registration-icon.png",
+	            "/assets/img/btn-icons/button-registration-icon.png",
 	            "Haz click para registrarte"
 	    );
-		
-		btnLogin.setIcon(FormUtils.loadIcon("/img/btn-icons/button-login-icon.png", 30));
-		btnRegistration.setIcon(FormUtils.loadIcon("/img/btn-icons/button-registration-icon.png", 30));
-		
+				
 		panelButtons.add(btnLogin);	
 		panelButtons.add(btnRegistration);
 		

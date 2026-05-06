@@ -106,7 +106,7 @@ public class HomeView extends JPanel{
 	    container.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
 
 	    RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
-	            "/img/search/search-bg.png",
+	            "/assets/img/search/search-bg.png",
 	            0,
 	            new Color(0, 0, 0, 120)
 	    );
@@ -163,7 +163,7 @@ public class HomeView extends JPanel{
 
 	    btnSearch = ButtonFactory.createBigButton(
 	            "Buscar",
-	            "/img/btn-icons/button-search-icon.png",
+	            "/assets/img/btn-icons/button-search-icon.png",
 	            "Haz click para buscar"
 	    );
 	    searchBar.add(Box.createRigidArea(new Dimension(15, 0)));
@@ -207,7 +207,7 @@ public class HomeView extends JPanel{
 
         btnSeeRooms = ButtonFactory.createBigButton(
                 "Ver más",
-                "/img/btn-icons/button-add-icon.png",
+                "/assets/img/btn-icons/button-add-icon.png",
                 "Haz click para ver más habitaciones"
         );
 
@@ -278,7 +278,7 @@ public class HomeView extends JPanel{
         guestsPanel.setOpaque(false);
         guestsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        JLabel guestIcon = new JLabel(FormUtils.loadIcon("/img/icons/guest-icon.png", 25));
+        JLabel guestIcon = new JLabel(FormUtils.loadIcon("/assets/img/icons/guest-icon.png", 25));
         JLabel guestLabel = new JLabel(room.getCapacity() + " huéspedes");
 
         guestsPanel.add(guestIcon);
@@ -299,7 +299,7 @@ public class HomeView extends JPanel{
             );
             featureItem.setOpaque(false);
 
-            JLabel icon = new JLabel(FormUtils.loadIcon("/img/icons/check-icon.png", 14));
+            JLabel icon = new JLabel(FormUtils.loadIcon("/assets/img/icons/check-icon.png", 14));
             JLabel text = new JLabel(feature);
 
             featureItem.add(icon);
@@ -317,7 +317,7 @@ public class HomeView extends JPanel{
         
         RoundedButton btnReserve = ButtonFactory.createBigButton(
                 "Reservar",
-                "/img/btn-icons/button-search-icon.png",
+                "/assets/img/btn-icons/button-search-icon.png",
                 "Reservar habitación"
         );
         btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -359,23 +359,23 @@ public class HomeView extends JPanel{
         grid.setOpaque(false);
 
         // servicios
-        grid.add(createServiceCard("WiFi", "/img/serv/wifi-icon.png"));
-        grid.add(createServiceCard("Piscina", "/img/serv/pool-icon.png"));
-        grid.add(createServiceCard("Gym", "/img/serv/gym-icon.png"));
-        grid.add(createServiceCard("Spa", "/img/serv/spa-icon.png"));
-        grid.add(createServiceCard("Parking", "/img/serv/parking-icon.png"));
+        grid.add(createServiceCard("WiFi", "/assets/img/serv/wifi-icon.png"));
+        grid.add(createServiceCard("Piscina", "/assets/img/serv/pool-icon.png"));
+        grid.add(createServiceCard("Gym", "/assets/img/serv/gym-icon.png"));
+        grid.add(createServiceCard("Spa", "/assets/img/serv/spa-icon.png"));
+        grid.add(createServiceCard("Parking", "/assets/img/serv/parking-icon.png"));
 
-        grid.add(createServiceCard("Restaurante", "/img/serv/restaurant-icon.png"));
-        grid.add(createServiceCard("Bar", "/img/serv/bar-icon.png"));
-        grid.add(createServiceCard("Room Service", "/img/serv/service-icon.png"));
-        grid.add(createServiceCard("Acceso a la playa", "/img/serv/beach-icon.png"));
-        grid.add(createServiceCard("TV", "/img/serv/tv-icon.png"));
+        grid.add(createServiceCard("Restaurante", "/assets/img/serv/restaurant-icon.png"));
+        grid.add(createServiceCard("Bar", "/assets/img/serv/bar-icon.png"));
+        grid.add(createServiceCard("Room Service", "/assets/img/serv/service-icon.png"));
+        grid.add(createServiceCard("Acceso a la playa", "/assets/img/serv/beach-icon.png"));
+        grid.add(createServiceCard("TV", "/assets/img/serv/tv-icon.png"));
 
-        grid.add(createServiceCard("Lavandería", "/img/serv/laundry-icon.png"));
-        grid.add(createServiceCard("Seguridad", "/img/serv/security-icon.png"));
-        grid.add(createServiceCard("Recepción 24h", "/img/serv/reception-icon.png"));
-        grid.add(createServiceCard("Transporte", "/img/serv/transport-icon.png"));
-        grid.add(createServiceCard("Eventos", "/img/serv/event-icon.png"));
+        grid.add(createServiceCard("Lavandería", "/assets/img/serv/laundry-icon.png"));
+        grid.add(createServiceCard("Seguridad", "/assets/img/serv/security-icon.png"));
+        grid.add(createServiceCard("Recepción 24h", "/assets/img/serv/reception-icon.png"));
+        grid.add(createServiceCard("Transporte", "/assets/img/serv/transport-icon.png"));
+        grid.add(createServiceCard("Eventos", "/assets/img/serv/event-icon.png"));
 
         section.add(grid);
 
@@ -440,7 +440,7 @@ public class HomeView extends JPanel{
 
         // BACKGROUND
         RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
-                "/img/promos/promo1.png",
+                "/assets/img/promos/promo1.png",
                 30,
                 new Color(0, 0, 0, 100)
         );
@@ -463,7 +463,7 @@ public class HomeView extends JPanel{
 
         RoundedButton reserveBtn = ButtonFactory.createBigButton(
                 "Reservar ahora",
-                "/img/btn-icons/button-search-icon.png",
+                "/assets/img/btn-icons/button-search-icon.png",
                 "Ir a reservas"
         );
 
@@ -529,31 +529,31 @@ public class HomeView extends JPanel{
     }
     
     private void addPromos(JPanel content) {
-        content.add(createSmallPromo("Tour privado por la ciudad", "/img/promos/promo5.png"));
+        content.add(createSmallPromo("Tour privado por la ciudad", "/assets/img/promos/promo5.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        content.add(createSmallPromo("5 noches, paga 4", "/img/promos/promo6.png"));
+        content.add(createSmallPromo("5 noches, paga 4", "/assets/img/promos/promo6.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        content.add(createSmallPromo("Aquaventure World", "/img/promos/promo3.png"));
+        content.add(createSmallPromo("Aquaventure World", "/assets/img/promos/promo3.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        content.add(createSmallPromo("Acuario Lost Chambers", "/img/promos/promo2.png"));
+        content.add(createSmallPromo("Acuario Lost Chambers", "/assets/img/promos/promo2.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        content.add(createSmallPromo("Spa & Wellness Retreat", "/img/promos/promo4.png"));
+        content.add(createSmallPromo("Spa & Wellness Retreat", "/assets/img/promos/promo4.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        content.add(createSmallPromo("Experiencia playa VIP", "/img/promos/promo8.png"));
+        content.add(createSmallPromo("Experiencia playa VIP", "/assets/img/promos/promo8.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        content.add(createSmallPromo("Vuelo en helicóptero sobre Dubai", "/img/promos/promo9.png"));
+        content.add(createSmallPromo("Vuelo en helicóptero sobre Dubai", "/assets/img/promos/promo9.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        content.add(createSmallPromo("Yate privado de lujo", "/img/promos/promo10.png"));
+        content.add(createSmallPromo("Yate privado de lujo", "/assets/img/promos/promo10.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
 
-        content.add(createSmallPromo("Sky Pool infinity privada", "/img/promos/promo7.png"));
+        content.add(createSmallPromo("Sky Pool infinity privada", "/assets/img/promos/promo7.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
     }    
     
@@ -619,7 +619,7 @@ public class HomeView extends JPanel{
 
         // BACKGROUND + OVERLAY
         RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
-                "/img/about/about1.png",
+                "/assets/img/about/about1.png",
                 30,
                 new Color(0, 0, 0, 140)
         );

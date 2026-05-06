@@ -42,12 +42,14 @@ public class UsersView extends JPanel{
 		
 		//scroll
 		JScrollPane scroll = new JScrollPane(table);
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
+		scroll.setPreferredSize(new Dimension(1200, 400));
 
-		scroll.addMouseWheelListener(e -> {
-		    scroll.getParent().dispatchEvent(e);
-		});
+		JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		centerPanel.setOpaque(false);
+		centerPanel.add(scroll);
 
-		add(scroll, BorderLayout.CENTER);
+		add(centerPanel, BorderLayout.CENTER);
 		
 		//top panel
 	    JPanel topPanel = new JPanel();
@@ -59,13 +61,13 @@ public class UsersView extends JPanel{
 	    JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	    
 	    btnAdd = new RoundedButton("Agregar", 
-	        new ImageIcon(getClass().getResource("/img/btn-icons/button-add-icon.png")));
+	        new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-add-icon.png")));
 	    btnEdit = new RoundedButton("Editar", 
-	        new ImageIcon(getClass().getResource("/img/btn-icons/button-edit-icon.png")));
+	        new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-edit-icon.png")));
 	    btnDelete = new RoundedButton("Eliminar", 
-		    new ImageIcon(getClass().getResource("/img/btn-icons/button-delete-icon.png")));	    
+		    new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-delete-icon.png")));	    
 	    btnPdf = new RoundedButton("Exportar a PDF", 
-	    	new ImageIcon(getClass().getResource("/img/btn-icons/button-pdf-icon.png")));
+	    	new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-pdf-icon.png")));
 	    
 	    panelButtons.add(btnAdd);
 	    panelButtons.add(btnEdit);

@@ -130,7 +130,43 @@
   "password" : null,
   "email" : "tscbtb@gmail.com",
   "phone" : "6122333563",
-  "country" : "Andorra",
-  "birthDate" : "2000-05-05",
+  "country" : "España",
+  "birthDate" : "2002-05-04",
   "gender" : "M"
+}, {
+  "name" : "una persona",
+  "surname" : "qwerty",
+  "password" : null,
+  "email" : "correo@correo.com",
+  "phone" : "1111111111",
+  "country" : "Argentina",
+  "birthDate" : "2005-05-05",
+  "gender" : "F"
+}, {
+  "name" : "juan",
+  "surname" : "gonzalez",
+  "password" : null,
+  "email" : "correo@correo.com",
+  "phone" : "4444444444",
+  "country" : "Canadá",
+  "birthDate" : "2006-05-06",
+  "gender" : "F"
+}, {
+  "name" : "pedro",
+  "surname" : "martinez",
+  "password" : null,
+  "email" : "niideadelcorreo@correo.com",
+  "phone" : "6767676767",
+  "country" : "Filipinas",
+  "birthDate" : "2007-05-06",
+  "gender" : "M"
+}, {
+  "name" : "maria",
+  "surname" : "lopez",
+  "password" : null,
+  "email" : "micorreo@algo.com",
+  "phone" : "9098383333",
+  "country" : "Estados Unidos",
+  "birthDate" : "2006-10-06",
+  "gender" : "F"
 } ]

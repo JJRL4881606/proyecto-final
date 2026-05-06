@@ -84,13 +84,13 @@ public class UserFormDialog extends JDialog{
         
         btnSave = ButtonFactory.createBigButton(
     	    "GUARDAR",
-    	    "/img/btn-icons/button-save-icon.png",
+    	    "/assets/img/btn-icons/button-save-icon.png",
     	    "Haz click para iniciar sesión"
     	);
 
         btnCancel = ButtonFactory.createBigButton(
     	    "CANCELAR",
-    	    "/img/btn-icons/button-cancel-icon.png",
+    	    "/assets/img/btn-icons/button-cancel-icon.png",
     	    "Haz click para cancelar"
     	);
 
@@ -359,7 +359,7 @@ public class UserFormDialog extends JDialog{
 	
 	public int confirmCancel() {
 	    return JOptionPane.showConfirmDialog(
-	        this,
+	        null,
 	        "¿Seguro que deseas cancelar? Se perderán todos los datos",
 	        "¿Seguro?",
 	        JOptionPane.YES_NO_OPTION

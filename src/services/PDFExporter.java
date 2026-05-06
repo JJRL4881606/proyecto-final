@@ -1,7 +1,6 @@
 package services;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -65,42 +64,53 @@ public class PDFExporter {
 
 			table.addHeaderCell(cell);
 
-			for (int i = 0; i < 2; i++) {
 
-				Cell[] headerFooter = new Cell[] {
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("#")),
+			Cell[] header = new Cell[] {
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("#")),
 
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Nombre")),
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("Nombre")),
 
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Apellido")),
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("Apellido")),
 
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Email")),
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("Email")),
 
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Número")),
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("Número")),
 
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("País")),
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("País")),
 
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Fecha")),
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("Fecha")),
 
-						new Cell().setTextAlignment(TextAlignment.CENTER).setBorderTop(new SolidBorder(1f))
-								.setBackgroundColor(new DeviceGray(0.80f)).add(new Paragraph("Género")), };
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("Género")),
+				};
 
-				for (Cell celda : headerFooter) {
-					if (i == 0) {
-						table.addHeaderCell(celda);
-					} else {
-						table.addFooterCell(celda);
-					}
+				for (Cell celda : header) {
+				    table.addHeaderCell(celda);
 				}
-			}
-			
+		
 			int indice = 1;
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

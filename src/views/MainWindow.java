@@ -14,6 +14,7 @@ import controllers.MainController;
 public class MainWindow extends JFrame 
 {
 	private MainView MainView;
+	private JScrollPane scroll;
 
     public MainWindow() 
     {
@@ -29,7 +30,7 @@ public class MainWindow extends JFrame
 
         // Agregar icono
         Image icon = Toolkit.getDefaultToolkit().getImage(
-    	    getClass().getResource("/img/logos/hotel-icon.png")
+    	    getClass().getResource("/assets/img/logos/hotel-icon.png")
     	);
         setIconImage(icon);
          
@@ -42,7 +43,7 @@ public class MainWindow extends JFrame
     }
     
     private JScrollPane createViewScroll(JPanel panel) {
-        JScrollPane scroll = new JScrollPane(panel);
+        scroll = new JScrollPane(panel);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(12);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -59,6 +60,10 @@ public class MainWindow extends JFrame
 	
 	public void setWindowLocation(int x, int y) {
 		setLocation(x, y);
+	}
+	
+	public JScrollPane getScroll() {
+	    return scroll;
 	}
 
 }

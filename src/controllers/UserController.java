@@ -44,7 +44,6 @@ public class UserController {
 		});		
 		
 		this.view.getBtnPdf().addActionListener(e -> generatePdf());
-
 	}
 	
 	public void loadUsers() {	

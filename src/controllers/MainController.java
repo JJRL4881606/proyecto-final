@@ -1,10 +1,10 @@
 package controllers;
 
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import utils.Config;
 import views.MainView;
+import views.MainWindow;
 import views.LoginWindow;
 
 import java.awt.Dimension;
@@ -17,10 +17,9 @@ public class MainController {
 
     private MainView view;
 	private UserController userController;
+	private MainWindow frame;
 
-	private JFrame frame;
-
-	public MainController(MainView view, JFrame frame) {
+	public MainController(MainView view, MainWindow frame) {
 	    this.view = view;
 	    this.frame = frame;
 	    
@@ -37,6 +36,12 @@ public class MainController {
 		        saveWindowPreferences();
 		        handleClose();
 		    }
+		    
+		    public void windowOpened(WindowEvent e) {
+		        SwingUtilities.invokeLater(() -> {
+		            frame.getScroll().getViewport().setViewPosition(new Point(0, 0));
+		        });
+		    }
 		});
 		
 		view.btnUsers.addActionListener(e -> {
@@ -46,6 +51,11 @@ public class MainController {
 		view.btnHome.addActionListener(e -> {
 			view.showView(MainView.HOME);
 			updateMenuState(MainView.HOME);
+			
+		    frame.revalidate();
+		    frame.repaint();
+
+		    resetScroll();
 		});		
 	}
 	
@@ -59,6 +69,10 @@ public class MainController {
 		view.showView(MainView.USERS);
 		updateMenuState(MainView.USERS);
 		
+	    frame.revalidate();
+	    frame.repaint();
+
+	    resetScroll();
 	}
 	
     private void handleClose() {
@@ -110,5 +124,11 @@ public class MainController {
 	    }
 
 	    frame.setSize(width, height);
+	}
+	
+	private void resetScroll() {
+	    SwingUtilities.invokeLater(() -> {
+	        frame.getScroll().getViewport().setViewPosition(new Point(0, 0));
+	    });
 	}
 }

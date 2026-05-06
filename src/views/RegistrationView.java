@@ -102,7 +102,7 @@ public class RegistrationView extends JPanel
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	    panel.setOpaque(false);
 	    
-        ImageIcon icon = new ImageIcon(getClass().getResource("/img/logos/hotel-logo-blue.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/img/logos/hotel-logo-blue.png"));
         Image img = icon.getImage().getScaledInstance(300, 96, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(img));
 		logo.setAlignmentX(CENTER_ALIGNMENT);
@@ -192,13 +192,13 @@ public class RegistrationView extends JPanel
         
         btnRegistration = ButtonFactory.createBigButton(
     	    "CREAR CUENTA",
-    	    "/img/btn-icons/button-save-icon.png",
+    	    "/assets/img/btn-icons/button-save-icon.png",
     	    "Haz click para registrarte"
     	);
 
         btnReturn = ButtonFactory.createBigButton(
     	    "REGRESAR",
-    	    "/img/btn-icons/button-back-icon.png",
+    	    "/assets/img/btn-icons/button-back-icon.png",
     	    "Haz click para regresar al login"
     	);
 				
@@ -411,7 +411,7 @@ public class RegistrationView extends JPanel
 	
 	public int confirmReturn() {
 	    return JOptionPane.showConfirmDialog(
-	        this,
+	        null,
 	        "¿Seguro que deseas regresar? Se perderán todos los datos",
 	        "¿Seguro?",
 	        JOptionPane.YES_NO_OPTION

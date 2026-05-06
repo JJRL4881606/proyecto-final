@@ -5,7 +5,7 @@
     "bedType": "King Bed",
     "capacity": 4,
     "price": 28000,
-    "imagePath": "/img/rooms/room1.png",
+    "imagePath": "/assets/img/rooms/room1.png",
     "features": [
       "Wifi",
       "Desayuno",
@@ -20,7 +20,7 @@
     "bedType": "Queen Bed",
     "capacity": 3,
     "price": 20000,
-    "imagePath": "/img/rooms/room2.png",
+    "imagePath": "/assets/img/rooms/room2.png",
     "features": [
       "Wifi",
 	  "Desayuno",
@@ -35,7 +35,7 @@
     "bedType": "King Bed",
     "capacity": 3,
     "price": 24000,
-    "imagePath": "/img/rooms/room3.png",
+    "imagePath": "/assets/img/rooms/room3.png",
     "features": [
       "Wifi",
       "Desayuno",

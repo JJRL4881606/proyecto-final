@@ -29,7 +29,7 @@ public class RegistrationWindow extends JFrame
 
         //Agregar icono
         Image icon = Toolkit.getDefaultToolkit().getImage(
-    	    getClass().getResource("/img/icons/registration-icon.png")
+    	    getClass().getResource("/assets/img/icons/registration-icon.png")
     	);
         setIconImage(icon);
                 

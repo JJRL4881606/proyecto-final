@@ -3,6 +3,8 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -78,7 +80,7 @@ public class MainView extends JPanel{
         JPanel panel = createTransparentPanel();
         panel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        ImageIcon icon = new ImageIcon(getClass().getResource("/img/logos/hotel-logo.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/img/logos/hotel-logo.png"));
         Image img = icon.getImage().getScaledInstance(250, 80, Image.SCALE_SMOOTH);
         JLabel logo = new JLabel(new ImageIcon(img));
 
@@ -190,28 +192,44 @@ public class MainView extends JPanel{
     
     private void createViews() {
         cardLayout = new CardLayout();
-        container = new JPanel(cardLayout);
-                
+
+        container = new JPanel(cardLayout) {
+            @Override
+            public Dimension getPreferredSize() {
+                for (Component c : getComponents()) {
+                    if (c.isVisible()) {
+                        return c.getPreferredSize();
+                    }
+                }
+                return super.getPreferredSize();
+            }
+        };
+
         homePanel = new HomeView();
         new HomeController(homePanel);
+
         usersPanel = new UsersView();
-        
+
         container.add(homePanel, HOME);
         container.add(usersPanel, USERS);
-    }
-        
+    }        
+    
     private JPanel createTransparentPanel() {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         return panel;
     }
     
-	public void showView(String view) {
-		cardLayout.show(container, view);
-	    container.revalidate();
-	    container.repaint();
-	}
-	
+    public void showView(String view) {
+        cardLayout.show(container, view);
+
+        container.revalidate();
+        container.repaint();
+
+        revalidate();
+        repaint();
+    }
+    
 	//getters
     public JMenuItem getLogOut() {
         return logOut;
