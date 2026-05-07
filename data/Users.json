@@ -65,8 +65,8 @@
   "name" : "alguien random",
   "surname" : "no tiene",
   "password" : null,
-  "email" : "email@gmail.com",
-  "phone" : "6120000000",
+  "email" : "email@email.com",
+  "phone" : "1231232433",
   "country" : "Níger",
   "birthDate" : "2003-11-20",
   "gender" : "F"
@@ -119,7 +119,7 @@
   "name" : "Uriel",
   "surname" : "Castro",
   "password" : null,
-  "email" : "uncorreo@gmail.com",
+  "email" : "uncorreo@gmail.mx",
   "phone" : "1122343232",
   "country" : "Colombia",
   "birthDate" : "2006-04-02",
@@ -137,7 +137,7 @@
   "name" : "una persona",
   "surname" : "qwerty",
   "password" : null,
-  "email" : "correo@correo.com",
+  "email" : "correo@random.com",
   "phone" : "1111111111",
   "country" : "Argentina",
   "birthDate" : "2005-05-05",
@@ -146,10 +146,10 @@
   "name" : "juan",
   "surname" : "gonzalez",
   "password" : null,
-  "email" : "correo@correo.com",
+  "email" : "holaaaa@correo.com",
   "phone" : "4444444444",
   "country" : "Canadá",
-  "birthDate" : "2006-05-06",
+  "birthDate" : "2006-02-02",
   "gender" : "F"
 }, {
   "name" : "pedro",
@@ -169,4 +169,58 @@
   "country" : "Estados Unidos",
   "birthDate" : "2006-10-06",
   "gender" : "F"
+}, {
+  "name" : "dwefqefqefc",
+  "surname" : "dqfqefqeq",
+  "password" : null,
+  "email" : "correo@gmail.com.mx",
+  "phone" : "4234423444",
+  "country" : "China",
+  "birthDate" : "2007-11-06",
+  "gender" : "M"
+}, {
+  "name" : "ddd",
+  "surname" : "ddd",
+  "password" : null,
+  "email" : "correo@xd.com",
+  "phone" : "0999999999",
+  "country" : "Austria",
+  "birthDate" : "2006-05-11",
+  "gender" : "F"
+}, {
+  "name" : "jtuukuykmyu",
+  "surname" : "htyjkmuykyj",
+  "password" : null,
+  "email" : "correo@algo.com",
+  "phone" : "5664567777",
+  "country" : "Países Bajos",
+  "birthDate" : "2005-08-28",
+  "gender" : "F"
+}, {
+  "name" : "dqfee",
+  "surname" : "feqfqfqe",
+  "password" : null,
+  "email" : "dwehveqjhfuqejh@gmail.com",
+  "phone" : "4423342434",
+  "country" : "Tailandia",
+  "birthDate" : "2001-05-07",
+  "gender" : "M"
+}, {
+  "name" : "rfgverf",
+  "surname" : "gfgg",
+  "password" : null,
+  "email" : "gf3g3@gmail.com",
+  "phone" : "4555555555",
+  "country" : "Alemania",
+  "birthDate" : "2001-05-07",
+  "gender" : "M"
+}, {
+  "name" : "fsegwsghrhwrh",
+  "surname" : "wryhwhsrh",
+  "password" : null,
+  "email" : "fewgwe4tg@gmail.com",
+  "phone" : "5555454545",
+  "country" : "Arabia Saudita",
+  "birthDate" : "2001-05-07",
+  "gender" : "M"
 } ]

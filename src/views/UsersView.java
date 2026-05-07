@@ -222,6 +222,18 @@ public class UsersView extends JPanel{
 			table.getColumnModel().getColumn(0).setCellRenderer(center);
 		}
 	}	
+
+	public int getSelectedModelRow() {
+
+	    int row = table.getSelectedRow();
+
+	    if (row == -1) {
+	        return -1;
+	    }
+
+	    return table.convertRowIndexToModel(row);
+	}
+	
 	public JTable getTable() {
 		return table;
 	}

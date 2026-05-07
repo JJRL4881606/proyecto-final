@@ -42,18 +42,12 @@ public class HomeController {
 
     private void initEvents() {
         view.getBtnSearch().addActionListener(e -> {
-            //ESTO ES UN EJEMPLO
-        	int example_nights = view.getNights();
-            int example_guests = view.getGuests();
-            int example_cost = 1000;
-            int example_total = example_nights * example_guests * example_cost;
-            System.out.println("Costo total: $" + example_total + " USD");
+            System.out.println("Presionó botón buscar");
         });
 
         view.getBtnSeeRooms().addActionListener(e -> {
-            System.out.println("Ver más...");
+            System.out.println("Presionó botón ver más");
         });
-        
         
         view.getSpCheckInDate().addChangeListener(e -> {
             validateDates();

@@ -3,7 +3,7 @@ package models;
 public class Room {
 
     private String id;         
-    private String typeId;     // referencia a RoomType por ID
+    private String typeId;
     private int floor;
 
     public Room() {}

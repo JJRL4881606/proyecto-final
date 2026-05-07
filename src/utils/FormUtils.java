@@ -32,7 +32,6 @@ import components.RoundedTextField;
 public class FormUtils {
 
     public static JPanel createField(String labelText, JComponent field, JLabel errorLabel, String placeholder, int width) {
-
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
@@ -223,5 +222,4 @@ public class FormUtils {
     public static void clearLabel(JLabel label) {
         label.setText("");
     }
-
 }

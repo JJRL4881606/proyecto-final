@@ -12,8 +12,6 @@ import views.RegistrationWindow;
 
 import java.awt.Desktop;
 import java.awt.Window;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
@@ -23,53 +21,58 @@ import javax.swing.SwingUtilities;
 public class LoginController {
 
     private LoginView view;
-    private boolean valid = false;
 
     public LoginController(LoginView view) {
         this.view = view;
         addListeners();
     }
 
-    public void validatePassword() {
+    public boolean validatePassword() {
         view.clearWrongError();
-		String password = view.getPassword();
-		view.clearPasswordError();
-    		
+        String password = view.getPassword();
+
         if (password.isEmpty()) {
             view.setPasswordError("La contraseña es obligatoria");
-            valid = false;
+            return false;
         }
-	 }
-	 
-	 public void validateEmail() {
-		view.clearWrongError();
-		String email = view.getEmail();
-		view.clearEmailError();
-		 
-		if (email.isEmpty()) {
-		    view.setEmailError("El correo es obligatorio");
-		    valid = false;
-	    } else if (!Validator.isValidEmail(email)) {
-		    view.setEmailError("Formato inválido");
-		    valid = false;
-		}
-	 }
+
+        view.clearPasswordError();
+        return true;
+    }
+    
+    public boolean validateEmail() {
+        view.clearWrongError();
+        String email = view.getEmail();
+
+        if (email.isEmpty()) {
+            view.setEmailError("El correo es obligatorio");
+            return false;
+
+        } else if (!Validator.isValidEmail(email)) {
+            view.setEmailError("Formato inválido");
+            return false;
+        }
+
+        view.clearEmailError();
+        return true;
+    }
     
     private void login() {
-		view.clearErrors();
-		valid = true;
-		
-    	validatePassword();
-    	validateEmail();
-	    	
-        if (valid) {
+    	view.clearErrors();
+
+    	boolean valid = true;
+
+    	if (!validateEmail()) valid = false;
+    	if (!validatePassword()) valid = false;
+
+    	if (valid) {
         	String email = view.getEmail();
         	String password = view.getPassword();
 
         	if (email.equals("correo@gmail.com") &&
         	    password.equals("1234")) {
         		
-                JOptionPane.showMessageDialog(view, "Sesión iniciada");
+                JOptionPane.showMessageDialog(null, "Sesión iniciada");
                 new MainWindow();
 
                 Window window = SwingUtilities.getWindowAncestor(view);
@@ -106,14 +109,8 @@ public class LoginController {
             public void changedUpdate(DocumentEvent e) { validatePassword(); }
         });
         
-        view.getTxtEmail().addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if (Character.isWhitespace(e.getKeyChar())) {
-                    e.consume();
-                }
-            }
-        });
+		Validator.noSpaces(view.getTxtEmail());
+		Validator.noSpaces(view.getTxtPassword());
         
         view.getChkShowPassword().addActionListener(e -> {
             if (view.getChkShowPassword().isSelected()) {
@@ -127,6 +124,7 @@ public class LoginController {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
+                	//esto es mientras hacemos el modulo de cambiar contraseña
                     Desktop.getDesktop().browse(new URI("https://www.google.com"));
                 } catch (Exception ex) {
                     ex.printStackTrace();

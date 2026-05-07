@@ -30,9 +30,10 @@ public class UserController {
 		});
 		
 		this.view.getBtnEdit().addActionListener(e -> {
-			int row = view.getSelectedRow();
+			int row = view.getSelectedModelRow();
+			
 			if(row == -1) {
-				JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+				JOptionPane.showMessageDialog(null, "Selecciona un usuario");
 				return;
 			}
 			
@@ -58,7 +59,7 @@ public class UserController {
 			}
 			
 		}catch (IOException ex) {
-			JOptionPane.showMessageDialog(view, ex.getMessage());
+			JOptionPane.showMessageDialog(null, ex.getMessage());
 		}
 	}
 	
@@ -74,8 +75,8 @@ public class UserController {
 			User savedUser = dialog.getUser();
 			
 			try {
-				int row = view.getSelectedRow();
-
+				int row = view.getSelectedModelRow();
+				
 				if(user == null) {
 				    repo.save(savedUser);
 				} else {
@@ -85,16 +86,16 @@ public class UserController {
 				loadUsers();
 			}catch(Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(view, e.getMessage());
+				JOptionPane.showMessageDialog(null, e.getMessage());
 			}
 		}
 	}
 	
 	private void deleteUser() {
-	    int row = view.getSelectedRow();
-
+		int row = view.getSelectedModelRow();
+		
 	    if (row == -1) {
-	        JOptionPane.showMessageDialog(view, "Selecciona un usuario");
+	        JOptionPane.showMessageDialog(null, "Selecciona un usuario");
 	        return;
 	    }
 
@@ -110,13 +111,10 @@ public class UserController {
 	            repo.delete(row);
 	            loadUsers();
 
-	            JOptionPane.showMessageDialog(
-	                view,
-	                "Usuario eliminado correctamente"
-	            );
+	            JOptionPane.showMessageDialog(null, "Usuario eliminado correctamente");
 
 	        } catch (IOException e) {
-	            JOptionPane.showMessageDialog(view, e.getMessage());
+	            JOptionPane.showMessageDialog(null, e.getMessage());
 	        }
 	    }
 	}
@@ -135,7 +133,7 @@ public class UserController {
 			}
 		}catch(Exception ex) {
 			ex.printStackTrace();
-			JOptionPane.showMessageDialog(view, "Error al exportar");
+			JOptionPane.showMessageDialog(null, "Error al exportar");
 		}	
 	}
 }

@@ -5,14 +5,10 @@ import components.RoundedButton;
 
 public class ButtonFactory {
 
-    public static RoundedButton createBigButton(
-            String text,
-            String iconPath,
-            String tooltip
-    ) {
+    public static RoundedButton createBigButton(String text, String iconPath, String tooltip){
         RoundedButton btn = new RoundedButton(
-                text,
-                new ImageIcon(ButtonFactory.class.getResource(iconPath))
+            text,
+            new ImageIcon(ButtonFactory.class.getResource(iconPath))
         );
 
         btn.setBackground(UIColors.BUTTON_BIG);

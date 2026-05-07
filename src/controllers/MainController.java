@@ -90,30 +90,29 @@ public class MainController {
 		Dimension size = frame.getSize();
 		Point point = frame.getLocation();
 		
-		Config.set("registration.window.width", 
+		Config.set("main.window.width", 
 				String.valueOf(size.width));
-		
-		Config.set("registration.window.height", 
+
+		Config.set("main.window.height", 
 				String.valueOf(size.height));
-		
-		Config.set("registration.window.x", 
+
+		Config.set("main.window.x", 
 				String.valueOf(point.x));
-		
-		Config.set("registration.window.y", 
+
+		Config.set("main.window.y", 
 				String.valueOf(point.y));
-		
 	}
 	
 	private void loadWindowPreferences() {
-	    int width = Integer.parseInt(
-	            Config.get("registration.window.width", "500"));
+		int width = Integer.parseInt(
+		        Config.get("main.window.width", "500"));
 
-	    int height = Integer.parseInt(
-	            Config.get("registration.window.height", "500"));
+		int height = Integer.parseInt(
+		        Config.get("main.window.height", "500"));
 
-	    String xValue = Config.get("registration.window.x", "");
-	    String yValue = Config.get("registration.window.y", "");
-
+		String xValue = Config.get("main.window.x", "");
+		String yValue = Config.get("main.window.y", "");
+		
 	    if (!xValue.isBlank() && !yValue.isBlank()) {
 	        frame.setLocation(
 	            Integer.parseInt(xValue),

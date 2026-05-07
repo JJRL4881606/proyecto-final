@@ -18,6 +18,4 @@ public class UIColors {
     public static final Color HEADER = new Color(0, 0, 107); //AZUL OSCURO
     public static final Color HOME_TITLE = new Color(255,255,255); //BLANCO
     public static final Color HOVER = new Color(30, 58, 95); //GRIS CLARO
-    
-    //azul claro brillante 914900
 }

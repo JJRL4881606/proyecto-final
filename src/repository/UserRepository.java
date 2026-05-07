@@ -11,6 +11,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import exceptions.DuplicateEmailException;
+
 
 public class UserRepository {
 
@@ -46,7 +48,7 @@ public class UserRepository {
 	
 	public void updateAll(List<User> users) throws IOException {
 		File file = new File(FILE);
-		file.getParentFile().mkdir();
+		file.getParentFile().mkdirs();
 		
 	    mapper.writeValue(file, users);
 	}
@@ -61,5 +63,19 @@ public class UserRepository {
 		List<User> users = getUsers();
 		users.set(index, updatedUser);
 		updateAll(users);
+	}
+	
+	public void validateDuplicateEmail(String email) 
+	        throws IOException, DuplicateEmailException {
+
+	    List<User> users = getUsers();
+
+	    for(User u : users) {
+	        if(u.getEmail().equalsIgnoreCase(email)) {
+	            throw new DuplicateEmailException(
+	                "El correo ya está registrado"
+	            );
+	        }
+	    }
 	}
 }

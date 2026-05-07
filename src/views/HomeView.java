@@ -45,20 +45,20 @@ import utils.UIColors;
 @SuppressWarnings("serial")
 public class HomeView extends JPanel{
 	
-	JSpinner spCheckInDate;
-	JSpinner spCheckOutDate;
-	JTextField txtNights;
-	JSpinner spGuests;
+	private JSpinner spCheckInDate;
+	private JSpinner spCheckOutDate;
+	private JTextField txtNights;
+	private JSpinner spGuests;
 	
-	JLabel lblCheckInDateError;
-	JLabel lblCheckOutDateError;
-	JLabel lblNightsError;
-	JLabel lblGuestsError;
-	RoundedButton btnSearch;
-	RoundedButton btnSeeRooms;
+	private JLabel lblCheckInDateError;
+	private JLabel lblCheckOutDateError;
+	private JLabel lblNightsError;
+	private JLabel lblGuestsError;
+	private RoundedButton btnSearch;
+	private RoundedButton btnSeeRooms;
 	
 	private JPanel roomsContainer;
-	int sectionWidth = 1100; 
+	private int sectionWidth = 1100; 
 
 	public HomeView() {
 	    this.setBackground(Color.WHITE);
