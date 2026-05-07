@@ -61,7 +61,6 @@ public class HomeView extends JPanel{
 	int sectionWidth = 1100; 
 
 	public HomeView() {
-	    
 	    this.setBackground(Color.WHITE);
 	    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    
@@ -100,7 +99,6 @@ public class HomeView extends JPanel{
 	}
 	
 	public JPanel createSearchHero() {
-
 	    JPanel container = new JPanel(new BorderLayout());
 	    container.setPreferredSize(new Dimension(0, 300));
 	    container.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
@@ -127,7 +125,6 @@ public class HomeView extends JPanel{
 	}
 	
     public JPanel createSearchBar() {
-    	
 	    JPanel searchBar = new RoundedPanel(30);
 	    searchBar.setLayout(new BoxLayout(searchBar, BoxLayout.X_AXIS));
 	    searchBar.setBackground(UIColors.CARD);

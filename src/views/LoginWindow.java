@@ -10,13 +10,11 @@ import javax.swing.JScrollPane;
 import controllers.LoginController;
 
 @SuppressWarnings("serial")
-public class LoginWindow extends JFrame 
-{
+public class LoginWindow extends JFrame {
 	
 	private LoginView loginView;
 
-    public LoginWindow() 
-    {
+    public LoginWindow() {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Login | ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);

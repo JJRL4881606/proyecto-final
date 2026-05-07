@@ -11,13 +11,12 @@ import javax.swing.JScrollPane;
 import controllers.MainController;
 
 @SuppressWarnings("serial")
-public class MainWindow extends JFrame 
-{
+public class MainWindow extends JFrame {
+	
 	private MainView MainView;
 	private JScrollPane scroll;
 
-    public MainWindow() 
-    {
+    public MainWindow() {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
@@ -65,5 +64,4 @@ public class MainWindow extends JFrame
 	public JScrollPane getScroll() {
 	    return scroll;
 	}
-
 }

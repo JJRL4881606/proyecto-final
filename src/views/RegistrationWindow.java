@@ -3,8 +3,8 @@ package views;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -12,12 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
-public class RegistrationWindow extends JFrame 
-{
+public class RegistrationWindow extends JFrame {
+	
 	private RegistrationView RegistrationView;
 	
-    public RegistrationWindow() 
-    {
+    public RegistrationWindow() {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Registro | ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
@@ -38,19 +37,12 @@ public class RegistrationWindow extends JFrame
         
         this.setVisible(true);
         
-        addWindowListener(new WindowListener() 
-        {
-			public void windowOpened(WindowEvent e){}
-			public void windowIconified(WindowEvent e){}
-			public void windowDeiconified(WindowEvent e){}
-			public void windowDeactivated(WindowEvent e){}
-			public void windowClosing(WindowEvent e) 
-			{
-				handleClose();
-			}
-			public void windowClosed(WindowEvent e){}
-			public void windowActivated(WindowEvent e) {}
-		});
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                handleClose();
+            }
+        });
     }
     
     private void handleClose() {

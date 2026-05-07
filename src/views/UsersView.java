@@ -48,17 +48,20 @@ public class UsersView extends JPanel{
 		JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		centerPanel.setOpaque(false);
 		centerPanel.add(scroll);
+		centerPanel.setBorder(new EmptyBorder(10, 0, 30, 0));
 
 		add(centerPanel, BorderLayout.CENTER);
 		
 		//top panel
 	    JPanel topPanel = new JPanel();
 	    topPanel.setLayout(new BorderLayout());
+	    topPanel.setBorder(new EmptyBorder(20, 0, 10, 0));
 
 	    JLabel lblTitle = createTitle();
 	    topPanel.add(lblTitle, BorderLayout.NORTH);
 
 	    JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+	    panelButtons.setBorder(new EmptyBorder(10, 0, 0, 0));
 	    
 	    btnAdd = new RoundedButton("Agregar", 
 	        new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-add-icon.png")));

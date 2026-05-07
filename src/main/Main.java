@@ -10,7 +10,6 @@ import javax.swing.plaf.FontUIResource;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import utils.AppFont;
-import views.MainWindow;
 import views.LoginWindow;
 
 public class Main 
@@ -19,8 +18,7 @@ public class Main
 	public static void main(String[] args) {
         FlatLightLaf.setup();
         UIManager.put("defaultFont", new FontUIResource(AppFont.normal()));
-        //LoginWindow ventanita = new LoginWindow();
-        MainWindow ventanita = new MainWindow();
+        LoginWindow ventanita = new LoginWindow();
         //showOnScreen(0, ventanita);
     }
 
