@@ -11,10 +11,10 @@ public class ButtonFactory {
             new ImageIcon(ButtonFactory.class.getResource(iconPath))
         );
 
-        btn.setBackground(UIColors.BUTTON_BIG);
+        btn.setBackground(UIColors.BUTTON);
         btn.setToolTipText(tooltip);
         btn.setFont(AppFont.big());
-        btn.setForeground(UIColors.BUTTON_BIG_TEXT);
+        btn.setForeground(UIColors.BUTTON_TEXT);
         btn.setFocusPainted(false);
 
         return btn;

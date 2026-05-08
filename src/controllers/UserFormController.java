@@ -24,11 +24,11 @@ public class UserFormController {
 	public UserFormController(UserFormDialog view) {
 		 this.view = view;
 		 this.repository = new UserRepository();
-		 registerListeners();
-		 registerInputRestrictions();
+		 initListeners();
+		 initInputRestrictions();
 	}
 	 
-	private void registerListeners(){
+	private void initListeners(){
 		//BOTONES
 		 view.getBtnSave().addActionListener(e -> {
 
@@ -72,55 +72,48 @@ public class UserFormController {
             }
         });
         
-        // COMBO
         view.getComboCountry().addActionListener(e -> validateCountry());
-
-        // JSPINNER
         view.getSpBirthDate().addChangeListener(e -> validateBirthDate());
-        
-        // RADIO BUTTONS
         view.getRbtnMale().addActionListener(e -> validateGender());
         view.getRbtnFemale().addActionListener(e -> validateGender());
 
-        // DOCUMENT LISTENER NOMBRE
+        // DOCUMENT LISTENERs
         view.getTxtName().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateName(); }
             public void removeUpdate(DocumentEvent e) { validateName(); }
             public void changedUpdate(DocumentEvent e) { validateName(); }
         });
 
-        // APELLIDO
         view.getTxtSurname().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateSurname(); }
             public void removeUpdate(DocumentEvent e) { validateSurname(); }
             public void changedUpdate(DocumentEvent e) { validateSurname(); }
         });
 
-        // EMAIL
         view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateEmail(); }
             public void removeUpdate(DocumentEvent e) { validateEmail(); }
             public void changedUpdate(DocumentEvent e) { validateEmail(); }
         });
         
-        // TELÉFONO
         view.getTxtPhone().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validatePhone(); }
             public void removeUpdate(DocumentEvent e) { validatePhone(); }
             public void changedUpdate(DocumentEvent e) { validatePhone(); }
         });
-	}
-	 
-	private void registerInputRestrictions() {
-		Validator.onlyLetters(view.getTxtName());
-		Validator.onlyLetters(view.getTxtSurname());
-		Validator.onlyNumbers(view.getTxtPhone());
-		Validator.noSpaces(view.getTxtEmail());
-
+        
 	    FormUtils.addFocusEffect(view.getTxtName(), view.getLblNameError());
 	    FormUtils.addFocusEffect(view.getTxtSurname(), view.getLblSurnameError());
 	    FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
 	    FormUtils.addFocusEffect(view.getTxtPhone(), view.getLblPhoneError());
+	}
+	 
+	private void initInputRestrictions() {
+		Validator.onlyLetters(view.getTxtName());
+		Validator.onlyLetters(view.getTxtSurname());
+		Validator.onlyNumbers(view.getTxtPhone());
+		Validator.noSpaces(view.getTxtEmail());
+		FormUtils.onlyDateNumbers(view.getSpBirthDate());
 	}
  
 	private boolean validateForm(){
@@ -152,7 +145,6 @@ public class UserFormController {
 	    view.clearNameError();
 		return true;
 	}
-	 
 	 
 	public boolean validateSurname() {
 	    String surname = view.getSurname();
@@ -189,8 +181,13 @@ public class UserFormController {
 	        view.setEmailError(e.getMessage());
 	        return false;
 	    } catch (IOException e) {
-	        JOptionPane.showMessageDialog(null, e.getMessage());
-	        return false;
+	    	JOptionPane.showMessageDialog(
+    		    null,
+    		    e.getMessage(),
+    		    "Error",
+    		    JOptionPane.ERROR_MESSAGE
+    		);	        
+	    	return false;
 	    }
 
 	    view.clearEmailError();
@@ -213,6 +210,7 @@ public class UserFormController {
 	 
 	public boolean validateBirthDate() {		 
 	    Date date = view.getBirthDate();
+
 	    LocalDate birthDate = date.toInstant()
 	            .atZone(java.time.ZoneId.systemDefault())
 	            .toLocalDate();
@@ -235,6 +233,7 @@ public class UserFormController {
 	        view.setBirthDateError("Fecha no válida");
 	        return false;
 	    }
+	    
 
 	 	view.clearBirthDateError();
 		return true;

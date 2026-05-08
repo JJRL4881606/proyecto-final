@@ -10,6 +10,8 @@ import javax.swing.SpinnerDateModel;
 
 import models.RoomType;
 import repository.RoomTypeRepository;
+import utils.DateUtils;
+import utils.FormUtils;
 import views.HomeView;
 
 public class HomeController {
@@ -20,15 +22,20 @@ public class HomeController {
     public HomeController(HomeView view) {
         this.view = view;
         this.repository = new RoomTypeRepository();
-        init();
+        
+        loadRooms();
+        initListeners();
     }
 
-    private void init() {
-        loadRooms();
-        initEvents();
-        initDateConstraints();
+    private void initListeners() {
+        view.getBtnSearch().addActionListener(e -> { handleSearch(); });
+        view.getBtnSeeRooms().addActionListener(e -> { handleSeeRooms(); });
+        view.getSpCheckInDate().addChangeListener(e -> { validateDates(); });
+        view.getSpCheckOutDate().addChangeListener(e -> { validateDates(); });
+
         addManualValidation();
         calculateNights();
+		initInputRestrictions();
     }
     
     private void loadRooms() {
@@ -39,47 +46,49 @@ public class HomeController {
             e.printStackTrace();
         }
     }
-
-    private void initEvents() {
-        view.getBtnSearch().addActionListener(e -> {
-            System.out.println("Presionó botón buscar");
-        });
-
-        view.getBtnSeeRooms().addActionListener(e -> {
-            System.out.println("Presionó botón ver más");
-        });
-        
-        view.getSpCheckInDate().addChangeListener(e -> {
-            validateDates();
-        });
-
-        view.getSpCheckOutDate().addChangeListener(e -> {
-            validateDates();
-        });
+    
+    private void handleSearch() {
+        System.out.println("Presionó botón buscar");
     }
     
-    private Date normalize(Date date) { //normalizar fechas (quita las horas)
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-        return cal.getTime();
+    private void handleSeeRooms(){
+        System.out.println("Presionó botón ver más");
     }
-    
-    private Date addDays(Date date, int days) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.DAY_OF_MONTH, days);
-        return cal.getTime();
-    }
-    
+
+	private void initInputRestrictions() {
+		FormUtils.onlyDateNumbers(view.getSpCheckInDate());
+		FormUtils.onlyDateNumbers(view.getSpCheckOutDate());
+		
+        Date today = DateUtils.normalize(new Date());
+        Date tomorrow = DateUtils.addDays(today, 1);
+
+        SpinnerDateModel checkInModel = new SpinnerDateModel(
+            today,
+            today,
+            null,
+            Calendar.DAY_OF_MONTH
+        );
+
+        SpinnerDateModel checkOutModel = new SpinnerDateModel(
+            tomorrow,   
+            tomorrow,   
+            null,
+            Calendar.DAY_OF_MONTH
+        );
+
+        view.getSpCheckInDate().setModel(checkInModel);
+        view.getSpCheckOutDate().setModel(checkOutModel);
+        view.getSpCheckInDate().setValue(today);
+        view.getSpCheckOutDate().setValue(tomorrow);
+        ((JSpinner.DefaultEditor) view.getSpCheckOutDate().getEditor()).getTextField().setValue(tomorrow);
+	}
+	
+	//	FECHAS
     private void validateDates() {
-        Date today = normalize(new Date());
+        Date today = DateUtils.normalize(new Date());
 
-        Date checkIn = normalize((Date) view.getSpCheckInDate().getValue());
-        Date checkOut = normalize((Date) view.getSpCheckOutDate().getValue());
+        Date checkIn = DateUtils.normalize((Date) view.getSpCheckInDate().getValue());
+        Date checkOut = DateUtils.normalize((Date) view.getSpCheckOutDate().getValue());
 
         // evitar fechas pasadas (si permite hoy)
         if (checkIn.before(today)) {
@@ -88,7 +97,7 @@ public class HomeController {
         }
 
         // actualizar mínimo checkout = checkIn + 1 día
-        Date minCheckOut = addDays(checkIn, 1);
+        Date minCheckOut = DateUtils.addDays(checkIn, 1);
 
         SpinnerDateModel modelOut = (SpinnerDateModel) view.getSpCheckOutDate().getModel();
         modelOut.setStart(minCheckOut);
@@ -117,32 +126,7 @@ public class HomeController {
             validateDates();
         });
     }
-    
-    private void initDateConstraints() {
-        Date today = normalize(new Date());
-        Date tomorrow = addDays(today, 1);
-
-        SpinnerDateModel checkInModel = new SpinnerDateModel(
-            today,
-            today,
-            null,
-            Calendar.DAY_OF_MONTH
-        );
-
-        SpinnerDateModel checkOutModel = new SpinnerDateModel(
-            tomorrow,   
-            tomorrow,   
-            null,
-            Calendar.DAY_OF_MONTH
-        );
-
-        view.getSpCheckInDate().setModel(checkInModel);
-        view.getSpCheckOutDate().setModel(checkOutModel);
-        view.getSpCheckInDate().setValue(today);
-        view.getSpCheckOutDate().setValue(tomorrow);
-        ((JSpinner.DefaultEditor) view.getSpCheckOutDate().getEditor()).getTextField().setValue(tomorrow);
-    }
-    
+        
     private void calculateNights() {
         Date checkIn = (Date) view.getSpCheckInDate().getValue();
         Date checkOut = (Date) view.getSpCheckOutDate().getValue();

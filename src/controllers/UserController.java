@@ -22,29 +22,17 @@ public class UserController {
 	
 	public UserController(UsersView view) {
 		this.view = view;
-		repo = new UserRepository();
-		pdfExporter = new PDFExporter();
+		this.repo = new UserRepository();
+		this.pdfExporter = new PDFExporter();
 		
-		this.view.getBtnAdd().addActionListener(e -> {
-			openForm(null);
-		});
-		
-		this.view.getBtnEdit().addActionListener(e -> {
-			int row = view.getSelectedModelRow();
-			
-			if(row == -1) {
-				JOptionPane.showMessageDialog(null, "Selecciona un usuario");
-				return;
-			}
-			
-			openForm(model.getUserAt(row));
-		});
-		
-		this.view.getBtnDelete().addActionListener(e -> {
-		    deleteUser();
-		});		
-		
-		this.view.getBtnPdf().addActionListener(e -> generatePdf());
+		initListeners();
+	}
+	
+	public void initListeners() {
+		view.getBtnAdd().addActionListener(e -> { openForm(null); });
+		view.getBtnEdit().addActionListener(e -> { editUser(); });
+		view.getBtnDelete().addActionListener(e -> { deleteUser(); });		
+		view.getBtnPdf().addActionListener(e -> generatePdf());
 	}
 	
 	public void loadUsers() {	
@@ -64,11 +52,8 @@ public class UserController {
 	}
 	
 	private void openForm(User user) {
-		
 		UserFormDialog dialog = new UserFormDialog(null, user);
-		
 		new UserFormController(dialog); 
-		 
 		dialog.setVisible(true);
 		
 		if(dialog.isSaved()) {
@@ -111,12 +96,37 @@ public class UserController {
 	            repo.delete(row);
 	            loadUsers();
 
-	            JOptionPane.showMessageDialog(null, "Usuario eliminado correctamente");
-
+	            JOptionPane.showMessageDialog(
+            	    null,
+            	    "Usuario eliminado correctamente",
+            	    "Éxito",
+            	    JOptionPane.INFORMATION_MESSAGE
+            	);
+	            
 	        } catch (IOException e) {
-	            JOptionPane.showMessageDialog(null, e.getMessage());
+	        	JOptionPane.showMessageDialog(
+        		    null,
+        		    e.getMessage(),
+        		    "Error",
+        		    JOptionPane.ERROR_MESSAGE
+        		);
 	        }
 	    }
+	}
+	
+	private void editUser() {
+		int row = view.getSelectedModelRow();
+		
+		if(row == -1) {
+			JOptionPane.showMessageDialog(
+			    null,
+			    "Selecciona un usuario",
+			    "Advertencia",
+			    JOptionPane.WARNING_MESSAGE
+			);
+			return;
+		}
+		openForm(model.getUserAt(row));
 	}
 	
 	public void generatePdf() {

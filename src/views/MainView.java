@@ -183,7 +183,7 @@ public class MainView extends JPanel{
 
         JLabel lblCopy = new JLabel("Copyright © 2026 ATLANTIS THE PALM, DUBAI. All rights reserved");
         lblCopy.setFont(AppFont.normal());
-        lblCopy.setForeground(UIColors.HOME_TITLE);
+        lblCopy.setForeground(Color.white);
 
         inferiorPanel.add(lblCopy);
 

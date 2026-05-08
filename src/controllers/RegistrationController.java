@@ -1,4 +1,3 @@
-
 package controllers;
 
 import java.awt.Window;
@@ -29,11 +28,11 @@ public class RegistrationController {
 	public RegistrationController(RegistrationView view) {
         this.view = view;
         this.repository = new UserRepository();
-        registerListeners();
-        registerInputRestrictions();
+        initListeners();
+        initInputRestrictions();
 	}
 	 
-	private void registerListeners(){
+	private void initListeners(){
 		//BOTONES
         view.getBtnRegistration().addActionListener(e -> {
 
@@ -49,7 +48,7 @@ public class RegistrationController {
                         view.getGender()
                 );
                 
-                if(registerUser(user)) {
+                if(handleRegisterUser(user)) {
                     new MainWindow();
                     Window w = SwingUtilities.getWindowAncestor(view);
                     if (w != null) {
@@ -73,78 +72,77 @@ public class RegistrationController {
             }
         });
         
-        // COMBO
         view.getComboCountry().addActionListener(e -> validateCountry());
-
-        // CHECKBOX
         view.getChkTerms().addActionListener(e -> validateTerms());
-
-        // JSPINNER
         view.getSpBirthDate().addChangeListener(e -> validateBirthDate());
-        
-        // RADIO BUTTONS
         view.getRbtnMale().addActionListener(e -> validateGender());
         view.getRbtnFemale().addActionListener(e -> validateGender());
 
-        // DOCUMENT LISTENER NOMBRE
+        // DOCUMENT LISTENERS
         view.getTxtName().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateName(); }
             public void removeUpdate(DocumentEvent e) { validateName(); }
             public void changedUpdate(DocumentEvent e) { validateName(); }
         });
 
-        // APELLIDO
         view.getTxtSurname().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateSurname(); }
             public void removeUpdate(DocumentEvent e) { validateSurname(); }
             public void changedUpdate(DocumentEvent e) { validateSurname(); }
         });
 
-        // EMAIL
         view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateEmail(); }
             public void removeUpdate(DocumentEvent e) { validateEmail(); }
             public void changedUpdate(DocumentEvent e) { validateEmail(); }
         });
         
-        // PASSWORD
         view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validatePassword(); }
             public void removeUpdate(DocumentEvent e) { validatePassword(); }
             public void changedUpdate(DocumentEvent e) { validatePassword(); }
         });
 
-
-        // TELÉFONO
         view.getTxtPhone().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validatePhone(); }
             public void removeUpdate(DocumentEvent e) { validatePhone(); }
             public void changedUpdate(DocumentEvent e) { validatePhone(); }
         });
-	}
-	
-	private boolean registerUser(User user) {
-	    try {
-	        repository.save(user);
-	        JOptionPane.showMessageDialog(null, "Usuario registrado");
-	        return true;
-	    } catch (IOException e) {
-	        JOptionPane.showMessageDialog(null, e.getMessage());
-	        return false;
-	    }
-	}
-	 
-	private void registerInputRestrictions() {
-		Validator.onlyLetters(view.getTxtName());
-		Validator.onlyLetters(view.getTxtSurname());
-		Validator.onlyNumbers(view.getTxtPhone());
-		Validator.noSpaces(view.getTxtEmail());
-		 
+        
 	    FormUtils.addFocusEffect(view.getTxtName(), view.getLblNameError());
 	    FormUtils.addFocusEffect(view.getTxtSurname(), view.getLblSurnameError());
 	    FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
 	    FormUtils.addFocusEffect(view.getTxtPhone(), view.getLblPhoneError());
 	    FormUtils.addFocusEffect(view.getTxtPassword(), view.getLblPasswordError());
+	}
+	
+	private void initInputRestrictions() {
+		Validator.onlyLetters(view.getTxtName());
+		Validator.onlyLetters(view.getTxtSurname());
+		Validator.onlyNumbers(view.getTxtPhone());
+		Validator.noSpaces(view.getTxtEmail());
+		FormUtils.onlyDateNumbers(view.getSpBirthDate());
+	}
+	
+	private boolean handleRegisterUser(User user) {
+	    try {
+	        repository.save(user);
+	        JOptionPane.showMessageDialog(
+        	    null,
+        	    "Usuario registrado",
+        	    "Éxito",
+        	    JOptionPane.INFORMATION_MESSAGE
+        	);
+	        return true;
+	    } catch (IOException e) {
+	    	JOptionPane.showMessageDialog(
+    		    null,
+    		    e.getMessage(),
+    		    "Error",
+    		    JOptionPane.ERROR_MESSAGE
+    		);
+	    	return false;
+	    }
 	}
 	 
 	private boolean validateForm(){
@@ -229,7 +227,12 @@ public class RegistrationController {
 	        view.setEmailError(e.getMessage());
 	        return false;
 	    } catch (IOException e) {
-	        JOptionPane.showMessageDialog(null, e.getMessage());
+	    	JOptionPane.showMessageDialog(
+    		    null,
+    		    e.getMessage(),
+    		    "Error",
+    		    JOptionPane.ERROR_MESSAGE
+    		);
 	        return false;
 	    }
 	    view.clearEmailError();

@@ -6,6 +6,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -14,6 +16,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -149,6 +152,31 @@ public class FormUtils {
         return panel;
     }
     
+    public static void onlyDateNumbers(JSpinner spinner) {
+
+        JSpinner.DateEditor editor =
+                (JSpinner.DateEditor) spinner.getEditor();
+
+        JFormattedTextField textField =
+                editor.getTextField();
+
+        textField.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                char c = e.getKeyChar();
+
+                if (!Character.isDigit(c)
+                        && c != '/'
+                        && c != '-') {
+
+                    e.consume();
+                }
+            }
+        });
+    }
+    
     //bordes
     public static Border normalBorder = new RoundedBorder(UIColors.FIELD_BORDER, 2, 20);
 
@@ -207,7 +235,7 @@ public class FormUtils {
             }
         });
     }	
-    
+        
 	//manejar errores
     public static void showError(JLabel label, JComponent field, String message) {
         label.setText(message);

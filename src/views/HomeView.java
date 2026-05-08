@@ -592,9 +592,6 @@ public class HomeView extends JPanel{
 
         card.add(textWrapper, BorderLayout.CENTER);
 
-        // hover
-        VisualUtils.addHoverEffect(card, 10, 5, UIColors.CARD, UIColors.HOVER);
-
         return card;
     }
     

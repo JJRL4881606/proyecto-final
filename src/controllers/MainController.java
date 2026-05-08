@@ -24,10 +24,10 @@ public class MainController {
 	    this.frame = frame;
 	    
 	    loadWindowPreferences();
-	    registerListeners();
+	    initListeners();
 	}
 	
-	public void registerListeners( ) {
+	public void initListeners( ) {
 		view.logOut.addActionListener(e -> handleClose());
 		
 		frame.addWindowListener(new WindowAdapter() {
@@ -44,9 +44,7 @@ public class MainController {
 		    }
 		});
 		
-		view.btnUsers.addActionListener(e -> {
-			showUsers();
-		});
+		view.btnUsers.addActionListener(e -> { handleShowUsers(); });
 		
 		view.btnHome.addActionListener(e -> {
 			view.showView(MainView.HOME);
@@ -59,7 +57,7 @@ public class MainController {
 		});		
 	}
 	
-	private void showUsers() {
+	private void handleShowUsers() {
 		if(userController == null) {
 			userController = new UserController(view.usersPanel);
 		}

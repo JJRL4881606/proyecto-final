@@ -3,6 +3,7 @@ package utils;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class Validator {
@@ -34,13 +35,18 @@ public class Validator {
     public static void onlyNumbers(JTextField field) {
         field.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
+
                 if (!Character.isDigit(e.getKeyChar())) {
+                    e.consume();
+                }
+
+                if (field.getText().length() >= 10) {
                     e.consume();
                 }
             }
         });
     }
-
+    
     public static void noSpaces(JTextField field) {
         field.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
@@ -50,4 +56,18 @@ public class Validator {
             }
         });
     }    
+    
+    public static void restrictedPassword(JPasswordField field) {
+        field.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                String forbidden = "<>\"'; }{¿?¡!|´°¬~^`,¨[]";
+                if (forbidden.indexOf(c) != -1) {
+                    e.consume();
+                }
+            }
+        });
+    }
+    
 }
