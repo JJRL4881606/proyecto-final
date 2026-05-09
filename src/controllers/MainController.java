@@ -38,9 +38,7 @@ public class MainController {
 		    }
 		    
 		    public void windowOpened(WindowEvent e) {
-		        SwingUtilities.invokeLater(() -> {
-		            frame.getScroll().getViewport().setViewPosition(new Point(0, 0));
-		        });
+		        resetScroll();
 		    }
 		});
 		

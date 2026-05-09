@@ -13,7 +13,7 @@ import controllers.MainController;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 	
-	private MainView MainView;
+	private MainView mainView;
 	private JScrollPane scroll;
 
     public MainWindow() {
@@ -34,9 +34,9 @@ public class MainWindow extends JFrame {
         setIconImage(icon);
          
         // Agregar el panel con scroll
-        MainView = new MainView();
-        new MainController(MainView, this);
-        add(createViewScroll(MainView), BorderLayout.CENTER);
+        mainView = new MainView();
+        new MainController(mainView, this);
+        add(createViewScroll(mainView), BorderLayout.CENTER);
         
         this.setVisible(true);
     }
@@ -50,7 +50,7 @@ public class MainWindow extends JFrame {
     }
     
     public MainView getMainView() {
-        return MainView;
+        return mainView;
     }
     
 	public void setWindowSize(int width, int height) {
