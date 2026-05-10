@@ -73,7 +73,7 @@ public class UserRepository {
 	    for(User u : users) {
 	        if(u.getEmail().equalsIgnoreCase(email)) {
 	            throw new DuplicateEmailException(
-	                "El correo ya está registrado"
+	                "Este correo es usado por otra cuenta"
 	            );
 	        }
 	    }

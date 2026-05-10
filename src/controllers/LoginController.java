@@ -75,8 +75,8 @@ public class LoginController {
 	}
     
     private void handleLogin() {
+    	
     	view.clearErrors();
-
     	boolean valid = true;
 
     	if (!validateEmail()) valid = false;
