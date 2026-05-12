@@ -4,6 +4,10 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import models.User;
+
+import javax.swing.SwingUtilities;
+
 import utils.FormUtils;
 import utils.Validator;
 import views.LoginView;
@@ -16,13 +20,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URI;
 
-import javax.swing.SwingUtilities;
+import repository.LoginRepository;
 
 public class LoginController {
 
     private LoginView view;
+	private LoginRepository repository;
 
     public LoginController(LoginView view) {
+		repository = new LoginRepository();
         this.view = view;
         initListeners();
 		initInputRestrictions();
@@ -86,9 +92,9 @@ public class LoginController {
         	String email = view.getEmail();
         	String password = view.getPassword();
 
-        	if (email.equals("correo@gmail.com") &&
-        	    password.equals("1234")) {
-        		
+        	User user = repository.login(email, password);
+
+        	if(user != null) {        		
         		JOptionPane.showMessageDialog(
     			    null,
     			    "Sesión iniciada",

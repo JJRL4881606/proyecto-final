@@ -2,7 +2,7 @@ package controllers;
 
 import javax.swing.SwingUtilities;
 
-import utils.Config;
+import config.Config;
 import views.MainView;
 import views.MainWindow;
 import views.LoginWindow;

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class User {
 	
+	private int id;
 	private String name;
 	private String surname;
 	private String password;
@@ -19,14 +20,14 @@ public class User {
 	
 	public User() {}
 
-	public User(String email, String password) {
+	public User(int id, String email, String password) {
+		this.id = id;
 		this.email = email;
 		this.password = password;
 	}
 	
 	public User(String name, String surname, String email, String phone,
 		String country, Date birthDate, char gender) {
-			super();
 			this.name = name;
 			this.surname = surname;
 			this.email = email;
@@ -34,6 +35,27 @@ public class User {
 			this.country = country;
 			this.birthDate = birthDate;
 			this.gender = gender;
+	}
+
+	
+	public User(int id, String name, String surname, String email, String phone,
+		String country, Date birthDate, char gender) {
+			this.id = id;
+			this.name = name;
+			this.surname = surname;
+			this.email = email;
+			this.phone = phone;
+			this.country = country;
+			this.birthDate = birthDate;
+			this.gender = gender;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -106,35 +128,5 @@ public class User {
 	           "\nPaís: " + country +
 	           "\nFecha de nacimiento: " + sdf.format(birthDate) +
 	           "\nGénero: " + gender;
-	}
-	
-	public String toCsv() {
-		return name + "," +
-	           surname + "," +
-	           email + "," +
-	           phone + "," +
-	           country + "," +
-	           new SimpleDateFormat("yyyy-MM-dd").format(birthDate) + "," +
-	           gender;
-	}
-	
-	public static User fromCsv(String userData) {
-		String data[] = userData.split(",");
-		String name = data[0];
-		String surname = data[1];
-		String email = data[2];
-		String phone = data[3];
-	    String country = data[4];
-	    Date birthDate = null; 
-	    
-	    try {
-	        birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(data[5]);
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    
-	    char gender = data[6].charAt(0);
-	    	    
-	    return new User(name, surname, email, phone, country, birthDate, gender);
-	}
+	}	
 }

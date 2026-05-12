@@ -21,9 +21,9 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import components.RoundedButton;
+import config.Config;
 import tablemodels.UserTableModel;
 import utils.AppFont;
-import utils.Config;
 import utils.UIColors;
 
 @SuppressWarnings("serial")

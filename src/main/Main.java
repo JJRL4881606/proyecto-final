@@ -11,7 +11,6 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 import utils.AppFont;
 import views.LoginWindow;
-import views.MainWindow;
 
 public class Main 
 {

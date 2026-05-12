@@ -6,15 +6,16 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="src/lib/flatlaf-3.4.jar"/>
-	<classpathentry kind="lib" path="src/lib/jackson-annotations-2.17.0.jar"/>
-	<classpathentry kind="lib" path="src/lib/jackson-core-2.17.0.jar"/>
-	<classpathentry kind="lib" path="src/lib/jackson-databind-2.17.0.jar"/>
-	<classpathentry kind="lib" path="src/lib/commons-8.0.4.jar"/>
-	<classpathentry kind="lib" path="src/lib/io-8.0.4.jar"/>
-	<classpathentry kind="lib" path="src/lib/kernel-8.0.4.jar"/>
-	<classpathentry kind="lib" path="src/lib/layout-8.0.4.jar"/>
-	<classpathentry kind="lib" path="src/lib/slf4j-api-2.0.13.jar"/>
-	<classpathentry kind="lib" path="src/lib/slf4j-simple-2.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/commons-8.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/flatlaf-3.4.jar"/>
+	<classpathentry kind="lib" path="lib/io-8.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-annotations-2.17.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-core-2.17.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-databind-2.17.0.jar"/>
+	<classpathentry kind="lib" path="lib/kernel-8.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/layout-8.0.4.jar"/>
+	<classpathentry kind="lib" path="lib/mysql-connector-j-9.7.0.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-2.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-2.0.13.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
