@@ -78,4 +78,23 @@ public class RoomTypeRepository {
 
         return featuredRoomTypes;
     }
+    
+ // habitaciones disponibles para reservas
+    public List<RoomType> getAvailableRoomTypes(
+            int guests
+    ) throws IOException {
+
+        List<RoomType> availableRoomTypes =
+                new ArrayList<>();
+
+        for (RoomType roomType : getRoomTypes()) {
+
+            if (roomType.getCapacity() >= guests) {
+                availableRoomTypes.add(roomType);
+            }
+        }
+
+        return availableRoomTypes;
+    }
+    
 }

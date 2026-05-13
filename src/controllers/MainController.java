@@ -17,6 +17,7 @@ public class MainController {
 
     private MainView view;
 	private UserController userController;
+	private RoomTypeController roomTypeController;
 	private MainWindow frame;
 
 	public MainController(MainView view, MainWindow frame) {
@@ -43,6 +44,8 @@ public class MainController {
 		});
 		
 		view.btnUsers.addActionListener(e -> { handleShowUsers(); });
+		
+		view.btnRoomTypes.addActionListener(e -> { handleShowRoomTypes(); });
 		
 		view.btnHome.addActionListener(e -> {
 			view.showView(MainView.HOME);
@@ -71,6 +74,22 @@ public class MainController {
 	    resetScroll();
 	}
 	
+	private void handleShowRoomTypes() {
+		if(roomTypeController == null) {
+			roomTypeController = new RoomTypeController(view.roomTypesPanel);
+		}
+			
+		roomTypeController.loadRoomTypes();
+		
+		view.showView(MainView.ROOMTYPES);
+		updateMenuState(MainView.ROOMTYPES);
+		
+	    frame.revalidate();
+	    frame.repaint();
+
+	    resetScroll();
+	}
+	
     private void handleClose() {
 		new LoginWindow();
         Window window = SwingUtilities.getWindowAncestor(view);
@@ -80,6 +99,7 @@ public class MainController {
 	private void updateMenuState(String viewName) {
 		view.btnUsers.setEnabled(!viewName.equals(MainView.USERS));
 		view.btnHome.setEnabled(!viewName.equals(MainView.HOME));
+		view.btnRoomTypes.setEnabled(!viewName.equals(MainView.ROOMTYPES));
 	}
 	
 	private void saveWindowPreferences() {

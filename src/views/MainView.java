@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 
 import components.UnderlineMenu;
 import controllers.HomeController;
+import controllers.ReservationController;
 
 import javax.swing.ImageIcon;
 import utils.AppFont;
@@ -31,12 +32,17 @@ public class MainView extends JPanel{
 	
 	public static final String HOME = "HOME";
 	public static final String USERS = "USERS";
+	public static final String ROOMTYPES = "ROOMTYPES";
+	public static final String RESERVATIONS = "RESERVATIONS";
 	
-	public JMenuItem btnUsers;
 	public JMenuItem btnHome;
+	public JMenuItem btnUsers;
+	public JMenuItem btnRoomTypes;
 	public JMenuItem logOut;
-	public UsersView usersPanel;
 	public HomeView homePanel;
+	public UsersView usersPanel;
+	public RoomTypesView roomTypesPanel;
+	public ReservationView reservationPanel;
 	
 	private CardLayout cardLayout;
 	private JPanel container;
@@ -160,6 +166,10 @@ public class MainView extends JPanel{
         btnUsers = new JMenuItem("Ver Usuarios");
         btnUsers.setMnemonic(KeyEvent.VK_U);
         sistema.add(btnUsers);
+        
+        btnRoomTypes = new JMenuItem("Ver Tipos de Habitaciones");
+        btnRoomTypes.setMnemonic(KeyEvent.VK_T);
+        sistema.add(btnRoomTypes);
 
         return mb;
     }
@@ -206,12 +216,18 @@ public class MainView extends JPanel{
         };
 
         homePanel = new HomeView();
-        new HomeController(homePanel);
-
+        new HomeController(homePanel, this);
+        
         usersPanel = new UsersView();
-
+        roomTypesPanel = new RoomTypesView();
+        
+        reservationPanel = new ReservationView();
+        new ReservationController(reservationPanel);
+        
         container.add(homePanel, HOME);
         container.add(usersPanel, USERS);
+        container.add(roomTypesPanel, ROOMTYPES);
+        container.add(reservationPanel, RESERVATIONS);
     }        
     
     private JPanel createTransparentPanel() {
@@ -242,4 +258,9 @@ public class MainView extends JPanel{
 	public JMenuItem getBtnHome() {
 		return btnHome;
 	}	
+	
+	public JMenuItem getBtnRoomTypes() {
+		return btnRoomTypes;
+	}	
+
 }
