@@ -1,6 +1,5 @@
 package controllers;
 
-import java.io.IOException;
 import java.util.List;
 
 import models.RoomType;
@@ -23,17 +22,13 @@ public class ReservationController {
     }
 
     private void handleSearch() {
-        try {
-            int guests = view.getSearchBar().getGuests();
-            
-            List<RoomType> rooms =
-                repository.getAvailableRoomTypes(
-                        guests
-                );
-            
-            view.setRooms(rooms);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        int guests = view.getSearchBar().getGuests();
+		
+		List<RoomType> rooms =
+		    repository.getAvailableRoomTypes(
+		            guests
+		    );
+		
+		view.setRooms(rooms);
     }
 }

@@ -16,7 +16,7 @@ public class User {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date birthDate;
 	private char gender;
-	
+	private String role;	
 	
 	public User() {}
 
@@ -25,9 +25,14 @@ public class User {
 		this.email = email;
 		this.password = password;
 	}
+
+	public User(String email, String password) {
+		this.email = email;
+		this.password = password;
+	}
 	
 	public User(String name, String surname, String email, String phone,
-		String country, Date birthDate, char gender) {
+		String country, Date birthDate, char gender, String role) {
 			this.name = name;
 			this.surname = surname;
 			this.email = email;
@@ -35,11 +40,11 @@ public class User {
 			this.country = country;
 			this.birthDate = birthDate;
 			this.gender = gender;
+			this.role = role;
 	}
-
 	
 	public User(int id, String name, String surname, String email, String phone,
-		String country, Date birthDate, char gender) {
+		String country, Date birthDate, char gender, String role) {
 			this.id = id;
 			this.name = name;
 			this.surname = surname;
@@ -48,7 +53,33 @@ public class User {
 			this.country = country;
 			this.birthDate = birthDate;
 			this.gender = gender;
+			this.role = role;
 	}
+	
+	public User(String name, String surname, String password, String email,
+		String phone, String country, Date birthDate, char gender, String role){
+		    this.name = name;
+		    this.surname = surname;
+		    this.password = password;
+		    this.email = email;
+		    this.phone = phone;
+		    this.country = country;
+		    this.birthDate = birthDate;
+		    this.gender = gender;
+		    this.role = role;
+		}
+	
+	public String toString() {
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	    return "Nombre: " + name +
+	           "\nApellido: " + surname +
+	           "\nEmail: " + email +
+	           "\nTeléfono: " + phone +
+	           "\nPaís: " + country +
+	           "\nFecha de nacimiento: " + sdf.format(birthDate) +
+	           "\nGénero: " + gender;
+	}	
 	
 	public int getId() {
 		return id;
@@ -56,6 +87,14 @@ public class User {
 	
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public String getRole() {
+		return role;
+	}
+	
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public String getName() {
@@ -121,16 +160,4 @@ public class User {
 	public void setGender(char gender) {
 		this.gender = gender;
 	}
-
-	public String toString() {
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-	    return "Nombre: " + name +
-	           "\nApellido: " + surname +
-	           "\nEmail: " + email +
-	           "\nTeléfono: " + phone +
-	           "\nPaís: " + country +
-	           "\nFecha de nacimiento: " + sdf.format(birthDate) +
-	           "\nGénero: " + gender;
-	}	
 }

@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 
 import utils.FormUtils;
 import utils.Validator;
+import utils.Session;
 import views.LoginView;
 import views.MainWindow;
 import views.RegistrationWindow;
@@ -81,34 +82,43 @@ public class LoginController {
 	}
     
     private void handleLogin() {
-    	
     	view.clearErrors();
     	boolean valid = true;
 
     	if (!validateEmail()) valid = false;
     	if (!validatePassword()) valid = false;
 
-    	if (valid) {
-        	String email = view.getEmail();
-        	String password = view.getPassword();
+        if (!valid) {
+            return;
+        }
+        
+    	String email = view.getEmail();
+    	String password = view.getPassword();
 
-        	User user = repository.login(email, password);
+    	User user = repository.login(email, password);
+    	
+        if (user == null) {
+            view.setWrongError();
+            return;
+        }
 
-        	if(user != null) {        		
-        		JOptionPane.showMessageDialog(
-    			    null,
-    			    "Sesión iniciada",
-    			    "Éxito",
-    			    JOptionPane.INFORMATION_MESSAGE
-    			);
-        		new MainWindow();
+        Session.login(user);
 
-                Window window = SwingUtilities.getWindowAncestor(view);
-                if (window != null) window.dispose();
-
-            } else {
-                view.setWrongError();
+        if (Session.getRole().equals("Admin")) {
+        	
+            new MainWindow();
+            
+            Window window = SwingUtilities.getWindowAncestor(view);
+            if (window != null) {
+                window.dispose();
             }
+        } else {
+            JOptionPane.showMessageDialog(
+                view,
+                "No tienes permisos"
+            );
+
+            Session.logout();
         }
     }
 

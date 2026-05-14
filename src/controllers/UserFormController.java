@@ -29,54 +29,25 @@ public class UserFormController {
 	}
 	 
 	private void initListeners(){
-		//BOTONES
-		 view.getBtnSave().addActionListener(e -> {
-
-		    if (!validateForm()) {
-		        return;
-		    }
-
-		    User user = view.getUser();
-
-		    if (user == null) {
-		        user = new User(
-		            view.getName(),
-		            view.getSurname(),
-		            view.getEmail(),
-		            view.getPhone(),
-		            view.getCountry(),
-		            view.getBirthDate(),
-		            view.getGender()
-		        );
-		    } else {
-		        user.setName(view.getName());
-		        user.setSurname(view.getSurname());
-		        user.setEmail(view.getEmail());
-		        user.setPhone(view.getPhone());
-		        user.setCountry(view.getCountry());
-		        user.setBirthDate(view.getBirthDate());
-		        user.setGender(view.getGender());
-		    }
-
-		    view.setSaved(true);
-		    view.setUser(user);
-		    view.dispose();
-		});
-        
-        view.getBtnCancel().addActionListener(e -> {
-
-            int option = view.confirmCancel();
-
-            if (option == JOptionPane.YES_OPTION) {
-            	view.dispose();
-            }
-        });
+		view.getBtnSave().addActionListener(e -> { handleSave(); });
+        view.getBtnCancel().addActionListener(e -> { handleCancel(); });
         
         view.getComboCountry().addActionListener(e -> validateCountry());
         view.getSpBirthDate().addChangeListener(e -> validateBirthDate());
         view.getRbtnMale().addActionListener(e -> validateGender());
         view.getRbtnFemale().addActionListener(e -> validateGender());
-
+        view.getComboRole().addActionListener(e -> validateRole());
+        
+        if(view.getChkShowPassword() != null) {
+            view.getChkShowPassword().addActionListener(e -> {
+                if(view.getChkShowPassword().isSelected()) {
+                    view.getTxtPassword().setEchoChar((char) 0);
+                } else {
+                    view.getTxtPassword().setEchoChar('*');
+                }
+            });
+        }
+        
         // DOCUMENT LISTENERs
         view.getTxtName().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateName(); }
@@ -111,9 +82,52 @@ public class UserFormController {
 	private void initInputRestrictions() {
 		Validator.onlyLetters(view.getTxtName());
 		Validator.onlyLetters(view.getTxtSurname());
-		Validator.onlyNumbers(view.getTxtPhone());
+		Validator.onlyPhoneNumbers(view.getTxtPhone());
 		Validator.noSpaces(view.getTxtEmail());
 		FormUtils.onlyDateNumbers(view.getSpBirthDate());
+	}
+	
+	private void handleSave() {
+	    if (!validateForm()) {
+	        return;
+	    }
+
+	    User user = view.getUser();
+
+	    if (user == null) {
+	        user = new User(
+	            view.getName(),
+	            view.getSurname(),
+	            view.getPassword(),
+	            view.getEmail(),
+	            view.getPhone(),
+	            view.getCountry(),
+	            view.getBirthDate(),
+	            view.getGender(),
+	            view.getRole()
+	        );
+	    } else {
+	        user.setName(view.getName());
+	        user.setSurname(view.getSurname());
+	        user.setEmail(view.getEmail());
+	        user.setPhone(view.getPhone());
+	        user.setCountry(view.getCountry());
+	        user.setBirthDate(view.getBirthDate());
+	        user.setGender(view.getGender());
+	        user.setRole(view.getRole());
+	    }
+
+	    view.setSaved(true);
+	    view.setUser(user);
+	    view.dispose();
+	}
+	
+	public void handleCancel() {
+        int option = view.confirmCancel();
+
+        if (option == JOptionPane.YES_OPTION) {
+        	view.dispose();
+        }
 	}
  
 	private boolean validateForm(){
@@ -127,6 +141,7 @@ public class UserFormController {
         if(!validateCountry()) valid=false;
         if(!validateGender()) valid=false;
         if(!validateBirthDate()) valid=false;
+        if(!validateRole()) valid=false;
 
 		return valid;
 	}
@@ -207,6 +222,15 @@ public class UserFormController {
 	    view.clearPhoneError();
 		return true;
 	}
+	
+	public boolean validateCountry() {
+	    if (view.getCountryIndex() == 0) {
+	        view.setCountryError("Debe seleccionar un país");
+	        return false;
+	    }
+		view.clearCountryError();
+		return true;
+	}
 	 
 	public boolean validateBirthDate() {		 
 	    Date date = view.getBirthDate();
@@ -233,21 +257,20 @@ public class UserFormController {
 	        view.setBirthDateError("Fecha no válida");
 	        return false;
 	    }
-	    
 
 	 	view.clearBirthDateError();
 		return true;
 	}
-	 
-	public boolean validateCountry() {
-	    if (view.getCountryIndex() == 0) {
-	        view.setCountryError("Debe seleccionar un país");
+	
+	public boolean validateRole() {
+	    if (view.getRoleIndex() == 0) {
+	        view.setRoleError("Debe seleccionar un rol");
 	        return false;
 	    }
-		view.clearCountryError();
+		view.clearRoleError();
 		return true;
 	}
-	 
+
 	public boolean validateGender() {
 	    if (!view.isMaleSelected() && !view.isFemaleSelected()) {
 	        view.setGenderError("Seleccione un género");

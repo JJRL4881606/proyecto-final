@@ -17,5 +17,6 @@
 	<classpathentry kind="lib" path="lib/mysql-connector-j-9.7.0.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-2.0.13.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple-2.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/jbcrypt-0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -38,16 +38,18 @@ public class RegistrationController {
 
             if(validateForm()){
 
-                User user = new User(
-                        view.getName(),
-                        view.getSurname(),
-                        view.getEmail(),
-                        view.getPhone(),
-                        view.getCountry(),
-                        view.getBirthDate(),
-                        view.getGender()
-                );
-                
+            	User user = new User(
+            	        view.getName(),
+            	        view.getSurname(),
+            	        view.getPassword(),
+            	        view.getEmail(),
+            	        view.getPhone(),
+            	        view.getCountry(),
+            	        view.getBirthDate(),
+            	        view.getGender(),
+            	        "Admin"
+            	);
+            	
                 if(handleRegisterUser(user)) {
                     new MainWindow();
                     Window w = SwingUtilities.getWindowAncestor(view);
@@ -119,7 +121,7 @@ public class RegistrationController {
 	private void initInputRestrictions() {
 		Validator.onlyLetters(view.getTxtName());
 		Validator.onlyLetters(view.getTxtSurname());
-		Validator.onlyNumbers(view.getTxtPhone());
+		Validator.onlyPhoneNumbers(view.getTxtPhone());
 		Validator.noSpaces(view.getTxtEmail());
 		FormUtils.onlyDateNumbers(view.getSpBirthDate());
 	}
@@ -127,24 +129,26 @@ public class RegistrationController {
 	private boolean handleRegisterUser(User user) {
 	    try {
 	        repository.save(user);
+
 	        JOptionPane.showMessageDialog(
-        	    null,
-        	    "Usuario registrado",
-        	    "Éxito",
-        	    JOptionPane.INFORMATION_MESSAGE
-        	);
+	            null,
+	            "Usuario registrado",
+	            "Éxito",
+	            JOptionPane.INFORMATION_MESSAGE
+	        );
 	        return true;
-	    } catch (IOException e) {
-	    	JOptionPane.showMessageDialog(
-    		    null,
-    		    e.getMessage(),
-    		    "Error",
-    		    JOptionPane.ERROR_MESSAGE
-    		);
-	    	return false;
+
+	    } catch (Exception e) {
+	        JOptionPane.showMessageDialog(
+	            null,
+	            e.getMessage(),
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        return false;
 	    }
 	}
-	 
+	
 	private boolean validateForm(){
         view.clearErrors();
         boolean valid=true;

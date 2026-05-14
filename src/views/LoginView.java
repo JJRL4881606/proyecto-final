@@ -119,12 +119,9 @@ public class LoginView extends JPanel
 	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña", fieldWidth));
 
 	    // MOSTRAR CONTRASEÑA
-	    chkShowPassword = new JCheckBox("Mostrar contraseña");
-	    chkShowPassword.setOpaque(false);
-	    chkShowPassword.setFont(AppFont.small());
-	    chkShowPassword.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+	    chkShowPassword = FormUtils.createCheckBox();
 	    mainPanel.add(chkShowPassword);
+        add(Box.createRigidArea(new Dimension(5, 5)));
         
         // OLVIDASTE CONTRASEÑA
         lblForgotPassword = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");

@@ -185,7 +185,6 @@ public class UsersView extends JPanel{
 	
 	public void setTableModel(UserTableModel model) {
 		table.setModel(model);
-		System.out.println("Filas: " + model.getRowCount());
 		
 		if(table.getColumnCount() >= 1) {
 			table.getColumnModel().getColumn(0).setPreferredWidth(40);

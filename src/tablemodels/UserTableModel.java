@@ -14,13 +14,14 @@ public class UserTableModel extends AbstractTableModel{
 	private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 	
 	private final String[] columns = {
-		"Nombre",
-		"Apellido",
-		"Email",
-		"Teléfono",
-		"País",
-		"Fecha de nacimiento",
-		"Género",
+	    "Nombre",
+	    "Apellido",
+	    "Email",
+	    "Teléfono",
+	    "País",
+	    "Fecha de nacimiento",
+	    "Género",
+	    "Rol"
 	};
 	
 	public UserTableModel(List<User> users) {
@@ -62,6 +63,8 @@ public class UserTableModel extends AbstractTableModel{
 			    return formatter.format(user.getBirthDate());			
 			case 6:
 				return user.getGender();
+			case 7:
+			    return user.getRole();
 		}	
 		return null;	
 	}	
@@ -73,5 +76,25 @@ public class UserTableModel extends AbstractTableModel{
 	public void setUsers(List<User> users) {
 		this.users = users;
 		fireTableDataChanged();
+	}
+	
+	/* Estos métodos permiten modificar una sola fila al momento de añadir, editar o eliminar un usuario.
+	 * Deberán llamarlos en el constructor cuando hacen cada operación. Ya les puse el ejemplo con editar y
+	 * eliminar.
+	 */
+	public void removeRow(int row) {
+		users.remove(row);
+		fireTableRowsDeleted(row, row);
+	}
+
+	public void addRow(User user) {
+		int row = users.size();
+		users.add(user);
+		fireTableRowsInserted(row, row);
+	}
+
+	public void updateRow(int row, User user) {
+		users.set(row, user);
+		fireTableRowsUpdated(row, row);
 	}
 }

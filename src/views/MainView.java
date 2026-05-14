@@ -25,6 +25,7 @@ import controllers.ReservationController;
 
 import javax.swing.ImageIcon;
 import utils.AppFont;
+import utils.Session;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
@@ -57,8 +58,10 @@ public class MainView extends JPanel{
 	    
 	    this.setBackground(new Color(100,149,237)); 
 	    setLayout(new BorderLayout());
-	    initializeComponents();
 	    setVisible(true);
+	    
+	    initializeComponents();
+	    configurePermissions();
 	}
 
     public void initializeComponents() 
@@ -66,6 +69,13 @@ public class MainView extends JPanel{
         add(headerSection(), BorderLayout.NORTH);
         add(content(), BorderLayout.CENTER);
         add(inferiorSection(), BorderLayout.SOUTH);
+    }
+    
+    private void configurePermissions() {
+        if(!Session.getRole().equals("Admin")) {
+            btnUsers.setVisible(false);
+            btnRoomTypes.setVisible(false);
+        }
     }
     
     //HEADER

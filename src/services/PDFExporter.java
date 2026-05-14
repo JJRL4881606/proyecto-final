@@ -52,13 +52,13 @@ public class PDFExporter {
 
 			doc.add(new Paragraph("").setMarginTop(30));
 
-			float[] columnsWidth = { 1, 3, 3, 4, 2, 2, 2 , 1};
-
+			float[] columnsWidth = { 1, 3, 3, 4, 2, 2, 2 , 1, 1 };
+			
 			Table table = new Table(UnitValue.createPercentArray(columnsWidth)).useAllAvailableWidth();
 
 			PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
 
-			Cell cell = new Cell(1, 8).add(new Paragraph("Usuarios del sistema")).setFont(font).setFontSize(14)
+			Cell cell = new Cell(1, 9).add(new Paragraph("Usuarios del sistema")).setFont(font).setFontSize(14)
 					.setFontColor(DeviceGray.WHITE).setBackgroundColor(new DeviceRgb(45, 111, 164))
 					.setTextAlignment(TextAlignment.CENTER);
 
@@ -105,6 +105,11 @@ public class PDFExporter {
 				            .setBorderTop(new SolidBorder(1f))
 				            .setBackgroundColor(new DeviceGray(0.80f))
 				            .add(new Paragraph("Género")),
+				            
+				    new Cell().setTextAlignment(TextAlignment.CENTER)
+				            .setBorderTop(new SolidBorder(1f))
+				            .setBackgroundColor(new DeviceGray(0.80f))
+				            .add(new Paragraph("Rol")),
 				};
 
 				for (Cell celda : header) {
@@ -139,6 +144,9 @@ public class PDFExporter {
 
 			    table.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
 			            .add(new Paragraph(String.valueOf(u.getGender()))));
+			    
+			    table.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
+			            .add(new Paragraph(u.getRole())));
 
 			    indice++;
 			}

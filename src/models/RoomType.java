@@ -5,7 +5,7 @@ import java.util.List;
 
 public class RoomType {
 
-    private String typeId;
+    private int typeId;
     private String name;
     private String bedType;
     private int capacity;
@@ -16,56 +16,67 @@ public class RoomType {
 
     public RoomType() {}
 
-    public RoomType(String typeId, String name, String bedType, int capacity,
-                    double price, String imagePath,
-                    List<String> features, boolean featured) {
-        this.typeId = typeId;
-        this.name = name;
-        this.bedType = bedType;
-        this.capacity = capacity;
-        this.price = price;
-        this.imagePath = imagePath;
-        this.features = features;
-        this.featured = featured;
+    public RoomType(int typeId, String name, String bedType, int capacity,
+        double price, String imagePath, List<String> features, boolean featured) {
+	        this.typeId = typeId;
+	        this.name = name;
+	        this.bedType = bedType;
+	        this.capacity = capacity;
+	        this.price = price;
+	        this.imagePath = imagePath;
+	        this.features = features;
+	        this.featured = featured;
     }
 
-    public String toCsv() {
-        String featuresString = String.join("|", features);
-
-        return typeId + "," +
-               name + "," +
-               bedType + "," +
-               capacity + "," +
-               price + "," +
-               imagePath + "," +
-               featuresString + "," +
-               featured;
+    public String featuresToString(){
+        return String.join("|", features);
     }
 
-    public static RoomType fromCsv(String line) {
-        String[] data = line.split(",");
-
-        List<String> features = Arrays.asList(data[6].split("\\|"));
-
-        return new RoomType(
-                data[0], // typeId
-                data[1], // name
-                data[2], // bedType
-                Integer.parseInt(data[3]),
-                Double.parseDouble(data[4]),
-                data[5], // imagePath
-                features,
-                Boolean.parseBoolean(data[7])
-        );
+    public static List<String> stringToFeatures(String text){
+        return Arrays.asList(text.split("\\|"));
     }
 
-    // getters
-    public String getTypeId() { return typeId; }
-    public String getName() { return name; }
-    public String getBedType() { return bedType; }
-    public int getCapacity() { return capacity; }
-    public double getPrice() { return price; }
-    public String getImagePath() { return imagePath; }
-    public List<String> getFeatures() { return features; }
-    public boolean isFeatured() { return featured; }
+    public int getTypeId() {
+        return typeId;
+    }
+    
+    public void setTypeId(int typeId){
+    	this.typeId=typeId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getBedType() {
+        return bedType;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public List<String> getFeatures() {
+        return features;
+    }
+    
+    public void setName(String name){this.name=name;}
+    public void setBedType(String bedType){this.bedType=bedType;}
+    public void setCapacity(int capacity){this.capacity=capacity;}
+    public void setPrice(double price){this.price=price;}
+    public void setImagePath(String imagePath){this.imagePath=imagePath;}
+    public void setFeatures(List<String> features){this.features=features;}
+    public void setFeatured(boolean featured){this.featured=featured;}
+
+    public boolean isFeatured() {
+        return featured;
+    }
 }

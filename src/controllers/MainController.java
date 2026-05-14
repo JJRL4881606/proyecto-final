@@ -3,6 +3,7 @@ package controllers;
 import javax.swing.SwingUtilities;
 
 import config.Config;
+import utils.Session;
 import views.MainView;
 import views.MainWindow;
 import views.LoginWindow;
@@ -44,7 +45,6 @@ public class MainController {
 		});
 		
 		view.btnUsers.addActionListener(e -> { handleShowUsers(); });
-		
 		view.btnRoomTypes.addActionListener(e -> { handleShowRoomTypes(); });
 		
 		view.btnHome.addActionListener(e -> {
@@ -91,6 +91,8 @@ public class MainController {
 	}
 	
     private void handleClose() {
+        Session.logout();
+
 		new LoginWindow();
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) window.dispose();

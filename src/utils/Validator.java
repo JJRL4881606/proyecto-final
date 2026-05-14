@@ -32,7 +32,7 @@ public class Validator {
         });
     }
 
-    public static void onlyNumbers(JTextField field) {
+    public static void onlyPhoneNumbers(JTextField field) {
         field.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
 
@@ -41,6 +41,37 @@ public class Validator {
                 }
 
                 if (field.getText().length() >= 10) {
+                    e.consume();
+                }
+            }
+        });
+    }
+    
+    public static void onlyNumbers(JTextField field){
+    	field.addKeyListener(new KeyAdapter(){
+
+    		public void keyTyped(KeyEvent e){
+
+    			if(!Character.isDigit(e.getKeyChar())){
+    				e.consume();
+    			}
+    		}
+    	});
+    }
+    
+    public static void onlyDecimalNumbers(JTextField field) {
+        field.addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+                char c=e.getKeyChar();
+
+                if(!Character.isDigit(c) && c!='.'){
+                    e.consume();
+                }
+
+                if(c=='.' && field.getText().contains(".")){
                     e.consume();
                 }
             }

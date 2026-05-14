@@ -9,12 +9,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import controllers.MainController;
+import models.User;
 
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 	
 	private MainView mainView;
 	private JScrollPane scroll;
+	private User user;
 
     public MainWindow() {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);

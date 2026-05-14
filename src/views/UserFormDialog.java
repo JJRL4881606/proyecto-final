@@ -2,17 +2,21 @@ package views;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.Date;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -35,6 +39,9 @@ public class UserFormDialog extends JDialog{
 	private JRadioButton rbtnMale;
 	private JRadioButton rbtnFemale;
 	private ButtonGroup genderGroup;
+	private JComboBox<String> comboRole;
+	private JPasswordField txtPassword;
+	private JCheckBox chkShowPassword;
 	
     private RoundedButton btnSave;
     private RoundedButton btnCancel;
@@ -42,13 +49,15 @@ public class UserFormDialog extends JDialog{
     private User user;
     private boolean saved = false;
 	
-	JLabel lblNameError;
-	JLabel lblSurnameError;
-	JLabel lblEmailError;
-	JLabel lblPhoneError;
-	JLabel lblCountryError;
-	JLabel lblBirthDateError;
-	JLabel lblGenderError;
+    private JLabel lblNameError;
+	private JLabel lblSurnameError;
+	private JLabel lblEmailError;
+	private JLabel lblPhoneError;
+	private JLabel lblCountryError;
+	private JLabel lblBirthDateError;
+	private JLabel lblGenderError;
+	private JLabel lblRoleError;
+	private JLabel lblPasswordError;
 	
 	int fieldWidth = 300;
     		
@@ -123,6 +132,17 @@ public class UserFormDialog extends JDialog{
         lblSurnameError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)", fieldWidth));
         
+        //PASSWORD (SOLO AL CREAR USUARIO, NO AL EDITAR)
+        if(user == null) {
+            txtPassword = FormUtils.createPasswordField();
+            lblPasswordError = FormUtils.createErrorLabel();
+            panel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese una contraseña", fieldWidth));
+            
+    	    chkShowPassword = FormUtils.createCheckBox();
+    	    panel.add(chkShowPassword);
+    	    panel.add(Box.createRigidArea(new Dimension(0, 20)));
+    	}
+        
         //EMAIL
 	    txtEmail = FormUtils.createTextField();
         lblEmailError = FormUtils.createErrorLabel();
@@ -146,12 +166,17 @@ public class UserFormDialog extends JDialog{
     	//GÉNERO
     	rbtnMale = FormUtils.createRadioButton("Hombre");
     	rbtnFemale = FormUtils.createRadioButton("Mujer");
-    	
+    	    	
     	setGenderGroup(FormUtils.createRadioGroup(rbtnMale, rbtnFemale));
     	JPanel genderPanel = FormUtils.createRadioPanel(rbtnMale, rbtnFemale);
     	
     	lblGenderError = FormUtils.createErrorLabel();
     	panel.add(FormUtils.createField("Género", genderPanel, lblGenderError, "", fieldWidth));
+    	
+    	//ROL
+    	comboRole = FormUtils.createComboRole();
+    	lblRoleError = FormUtils.createErrorLabel();
+    	panel.add(FormUtils.createField("Rol", comboRole, lblRoleError, "", fieldWidth));
 
 		return scroll;
     }
@@ -166,10 +191,20 @@ public class UserFormDialog extends JDialog{
             comboCountry.setSelectedItem(user.getCountry());
             rbtnMale.setSelected(user.getGender() == 'M');
             rbtnFemale.setSelected(user.getGender() == 'F');
+            comboRole.setSelectedItem(user.getRole());
         }
     }
+    
+	public int confirmCancel() {
+	    return JOptionPane.showConfirmDialog(
+	        null,
+	        "¿Seguro que deseas cancelar? Se perderán todos los datos",
+	        "¿Seguro?",
+	        JOptionPane.YES_NO_OPTION
+	    );
+	}
 	
-	//LABELS ERROR
+	//LIMPIAR LABELS ERROR
 	public void clearErrors() {
 		clearNameError();
 		clearSurnameError();
@@ -178,6 +213,7 @@ public class UserFormDialog extends JDialog{
 		clearCountryError();
 		clearBirthDateError();
 		clearGenderError();
+		clearRoleError();
 	}
 
 	public void clearNameError(){
@@ -208,6 +244,10 @@ public class UserFormDialog extends JDialog{
 		FormUtils.clearLabel(lblGenderError);
 	}
 	
+	public void clearRoleError(){
+		FormUtils.clearError(lblRoleError, comboRole);
+	}
+	
 	//GETTERS
 	public String getName() {
 	    return txtName.getText().trim();
@@ -225,6 +265,10 @@ public class UserFormDialog extends JDialog{
 	    return txtPhone.getText().trim();
 	}
 
+	public String getPassword() {
+	    return new String(txtPassword.getPassword()).trim();
+	}
+	
 	public Date getBirthDate() {
 	    return (Date) spBirthDate.getValue();
 	}
@@ -250,6 +294,14 @@ public class UserFormDialog extends JDialog{
 	public boolean isFemaleSelected() {
 	    return rbtnFemale.isSelected();
 	}
+	
+	public String getRole() {
+		return String.valueOf(comboRole.getSelectedItem());
+	}
+	
+	public int getRoleIndex() {
+	    return comboRole.getSelectedIndex();
+	}
 
 	// TEXTFIELDS
 	public JTextField getTxtName() {
@@ -268,14 +320,27 @@ public class UserFormDialog extends JDialog{
 	    return txtPhone;
 	}
 
+	public JPasswordField getTxtPassword() {
+	    return txtPassword;
+	}
+
 	// COMBOBOX
 	public JComboBox<String> getComboCountry() {
 	    return comboCountry;
 	}
 	
+	public JComboBox<String> getComboRole() {
+	    return comboRole;
+	}
+	
 	//JSPINNER
 	public JSpinner getSpBirthDate() {
 		return spBirthDate;
+	}
+	
+	//CHECKBOX
+	public JCheckBox getChkShowPassword() {
+		return chkShowPassword;
 	}
 
 	// RADIO BUTTONS
@@ -286,7 +351,16 @@ public class UserFormDialog extends JDialog{
 	public JRadioButton getRbtnFemale() {
 	    return rbtnFemale;
 	}
-    
+        
+	public ButtonGroup getGenderGroup() {
+		return genderGroup;
+	}
+
+	public void setGenderGroup(ButtonGroup genderGroup) {
+		this.genderGroup = genderGroup;
+	}
+	
+	//user
     public boolean isSaved() {
     	return saved;
     }
@@ -302,17 +376,8 @@ public class UserFormDialog extends JDialog{
     public void setSaved(boolean saved) {
         this.saved = saved;
     }
-    
-	public ButtonGroup getGenderGroup() {
-		return genderGroup;
-	}
-
-	public void setGenderGroup(ButtonGroup genderGroup) {
-		this.genderGroup = genderGroup;
-	}
 	
 	//getters botones
-	
 	public RoundedButton getBtnSave() {
 	    return btnSave;
 	}	
@@ -321,8 +386,7 @@ public class UserFormDialog extends JDialog{
 	    return btnCancel;
 	}
 	
-	//SETTERS ERROR
-	
+	//SETTERS ERRORES
 	public void setNameError(String msg) {
 	    lblNameError.setText(msg);
 	    txtName.setBorder(FormUtils.redBorder);
@@ -357,15 +421,12 @@ public class UserFormDialog extends JDialog{
 	    lblGenderError.setText(msg);
 	}
 	
-	public int confirmCancel() {
-	    return JOptionPane.showConfirmDialog(
-	        null,
-	        "¿Seguro que deseas cancelar? Se perderán todos los datos",
-	        "¿Seguro?",
-	        JOptionPane.YES_NO_OPTION
-	    );
+	public void setRoleError(String msg) {
+	    lblRoleError.setText(msg);
+	    comboRole.setBorder(FormUtils.redBorder);
 	}
-	
+		
+	//getters labels errores
 	public JLabel getLblNameError() {
 		return lblNameError;
 	}

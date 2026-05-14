@@ -1,6 +1,5 @@
 package controllers;
 
-import java.io.IOException;
 import java.util.List;
 
 import components.SearchBar;
@@ -29,12 +28,8 @@ public class HomeController {
     }
     
     private void loadRooms() {
-        try {
-            List<RoomType> rooms = repository.getFeaturedRoomTypes();
-            view.setRooms(rooms);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<RoomType> rooms = repository.getFeaturedRoomTypes();
+		view.setRooms(rooms);
     }
     
     private void handleSearch() {

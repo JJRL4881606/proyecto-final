@@ -5,10 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.io.File;
-
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -16,12 +13,10 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
 import components.RoundedButton;
-import config.Config;
 import tablemodels.RoomTypeTableModel;
 import utils.AppFont;
 import utils.UIColors;
@@ -34,7 +29,6 @@ public class RoomTypesView extends JPanel {
 	private RoundedButton btnAdd;
 	private RoundedButton btnEdit;
 	private RoundedButton btnDelete;
-	private RoundedButton btnPdf;
 
 	public RoomTypesView() {
 		
@@ -81,15 +75,9 @@ public class RoomTypesView extends JPanel {
 			new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-delete-icon.png"))
 		);
 
-		btnPdf = new RoundedButton(
-			"Exportar a PDF",
-			new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-pdf-icon.png"))
-		);
-
 		panelButtons.add(btnAdd);
 		panelButtons.add(btnEdit);
 		panelButtons.add(btnDelete);
-		panelButtons.add(btnPdf);
 
 		topPanel.add(panelButtons, BorderLayout.CENTER);
 
@@ -97,9 +85,7 @@ public class RoomTypesView extends JPanel {
 	}
 
 	public JLabel createTitle() {
-		
 		JLabel lblTitle = new JLabel("Panel de administración de habitaciones");
-		
 		lblTitle.setBorder(new EmptyBorder(20, 20, 0, 20));
 		lblTitle.setFont(AppFont.subtitle());
 		lblTitle.setForeground(Color.BLACK);
@@ -109,7 +95,6 @@ public class RoomTypesView extends JPanel {
 	}
 
 	public void styleTable() {
-
 		table.setRowHeight(35);
 		table.setShowGrid(true);
 		table.setGridColor(new Color(230, 230, 230));
@@ -119,11 +104,9 @@ public class RoomTypesView extends JPanel {
 
 		table.setSelectionBackground(new Color(52, 152, 219));
 		table.setSelectionForeground(Color.WHITE);
-
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JTableHeader header = table.getTableHeader();
-		
 		header.setBackground(UIColors.BACKGROUND);
 		header.setForeground(Color.WHITE);
 		header.setFont(AppFont.big());
@@ -131,7 +114,6 @@ public class RoomTypesView extends JPanel {
 		header.setReorderingAllowed(false);
 
 		table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-
 			@Override
 			public Component getTableCellRendererComponent(
 					JTable table,
@@ -150,7 +132,6 @@ public class RoomTypesView extends JPanel {
 						column);
 
 				if (!isSelected) {
-
 					if (row % 2 == 0) {
 						c.setBackground(Color.WHITE);
 					} else {
@@ -167,45 +148,7 @@ public class RoomTypesView extends JPanel {
 		});
 	}
 
-	public File selectPdfFile() {
-
-		String path = Config.get(
-			"roomtypes.export.pdf",
-			System.getProperty("user.home")
-		);
-
-		JFileChooser chooser = new JFileChooser(path);
-
-		chooser.setSelectedFile(new File("reporte-habitaciones.pdf"));
-
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setAcceptAllFileFilterUsed(false);
-
-		FileNameExtensionFilter filter =
-			new FileNameExtensionFilter("Documentos PDF", "pdf");
-
-		chooser.addChoosableFileFilter(filter);
-		chooser.setFileFilter(filter);
-
-		int option = chooser.showDialog(null, "Exportar PDF de habitaciones");
-
-		if (option != JFileChooser.APPROVE_OPTION) {
-			return null;
-		}
-
-		File file = chooser.getSelectedFile();
-
-		Config.set("roomtypes.export.pdf", file.getParent());
-
-		if (!file.getName().toLowerCase().endsWith(".pdf")) {
-			file = new File(file.getAbsolutePath() + ".pdf");
-		}
-
-		return file;
-	}
-
 	public void setTableModel(RoomTypeTableModel model) {
-
 		table.setModel(model);
 
 		if (table.getColumnCount() >= 1) {
@@ -250,7 +193,6 @@ public class RoomTypesView extends JPanel {
 	}
 
 	public int getSelectedModelRow() {
-
 		int row = table.getSelectedRow();
 
 		if (row == -1) {
@@ -274,10 +216,6 @@ public class RoomTypesView extends JPanel {
 
 	public RoundedButton getBtnDelete() {
 		return btnDelete;
-	}
-
-	public RoundedButton getBtnPdf() {
-		return btnPdf;
 	}
 
 	public int getSelectedRow() {

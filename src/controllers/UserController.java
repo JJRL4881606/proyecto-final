@@ -31,7 +31,14 @@ public class UserController {
 	public void initListeners() {
 		view.getBtnAdd().addActionListener(e -> { openForm(null); });
 		view.getBtnEdit().addActionListener(e -> { editUser(); });
-		view.getBtnDelete().addActionListener(e -> { deleteUser(); });		
+
+		this.view.getBtnDelete().addActionListener(e -> {
+			boolean deleted = repo.delete(model.getUserAt(view.getSelectedRow()).getId());
+			if(deleted) {
+				model.removeRow(view.getSelectedRow());
+			}
+		});
+
 		view.getBtnPdf().addActionListener(e -> generatePdf());
 	}
 	
@@ -53,65 +60,35 @@ public class UserController {
 	
 	private void openForm(User user) {
 		UserFormDialog dialog = new UserFormDialog(null, user);
-		new UserFormController(dialog); 
+		new UserFormController(dialog);
 		dialog.setVisible(true);
 		
 		if(dialog.isSaved()) {
 			User savedUser = dialog.getUser();
 			
 			try {
-				int row = view.getSelectedModelRow();
-				
+				//Añadir nuevo
 				if(user == null) {
-				    repo.save(savedUser);
-				} else {
-				    repo.update(row, savedUser);
+					repo.save(savedUser);
+					model.addRow(savedUser); //Agrega el registro a la tabla
+				}else {
+					//Editar existente
+					int row = view.getSelectedModelRow();
+					User originalUser = model.getUserAt(row);
+					savedUser.setId(originalUser.getId());
+
+					boolean updated = repo.update(savedUser);					
+					if(updated) {
+						model.updateRow(row, savedUser); //Actualiza el registro de la tabla
+					}
 				}
-				
-				loadUsers();
+				//Ya no actualizamos toda la tabla
+				//loadUsers();
 			}catch(Exception e) {
 				e.printStackTrace();
-				JOptionPane.showMessageDialog(null, e.getMessage());
+				JOptionPane.showMessageDialog(view, e.getMessage());
 			}
 		}
-	}
-	
-	private void deleteUser() {
-		int row = view.getSelectedModelRow();
-		
-	    if (row == -1) {
-	        JOptionPane.showMessageDialog(null, "Selecciona un usuario");
-	        return;
-	    }
-
-	    int option = JOptionPane.showConfirmDialog(
-	    	    null,
-	    	    "¿Seguro que deseas eliminar este usuario?",
-	    	    "Confirmar eliminación",
-	    	    JOptionPane.YES_NO_OPTION
-	    	);
-
-	    if (option == JOptionPane.YES_OPTION) {
-	        try {
-	            repo.delete(row);
-	            loadUsers();
-
-	            JOptionPane.showMessageDialog(
-            	    null,
-            	    "Usuario eliminado correctamente",
-            	    "Éxito",
-            	    JOptionPane.INFORMATION_MESSAGE
-            	);
-	            
-	        } catch (IOException e) {
-	        	JOptionPane.showMessageDialog(
-        		    null,
-        		    e.getMessage(),
-        		    "Error",
-        		    JOptionPane.ERROR_MESSAGE
-        		);
-	        }
-	    }
 	}
 	
 	private void editUser() {
