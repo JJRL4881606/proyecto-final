@@ -3,9 +3,18 @@ package controllers;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import config.Config;
+
+import javax.swing.JFileChooser;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import models.RoomType;
-import repository.RoomTypeRepository;
 import utils.FormUtils;
 import utils.Validator;
 import views.RoomTypeFormDialog;
@@ -15,42 +24,28 @@ public class RoomTypeFormController {
 	private RoomTypeFormDialog view;
 	
 	public RoomTypeFormController(RoomTypeFormDialog view){
-		this.view=view;
-		new RoomTypeRepository();
-		
+		this.view = view;		
 		initListeners();
 		initInputRestrictions();
 	}
 
 	private void initListeners(){
-		view.getBtnSave().addActionListener(e->{handleSave();});
-		view.getBtnCancel().addActionListener(e->{handleCancel();});
-		
+		view.getBtnSave().addActionListener(e->{ handleSave(); });
+		view.getBtnCancel().addActionListener(e->{ handleCancel(); });
+	    view.getBtnSelectImage().addActionListener(e->{selectImage();});
+		view.getSpCapacity().addChangeListener(e -> validateCapacity());
         view.getComboBedType().addActionListener(e -> validateBedType());
-
 
 		view.getTxtName().getDocument().addDocumentListener(new DocumentListener(){
 			public void insertUpdate(DocumentEvent e){validateName();}
 			public void removeUpdate(DocumentEvent e){validateName();}
 			public void changedUpdate(DocumentEvent e){validateName();}
 		});
-
-		view.getTxtCapacity().getDocument().addDocumentListener(new DocumentListener(){
-			public void insertUpdate(DocumentEvent e){validateCapacity();}
-			public void removeUpdate(DocumentEvent e){validateCapacity();}
-			public void changedUpdate(DocumentEvent e){validateCapacity();}
-		});
-
+		
 		view.getTxtPrice().getDocument().addDocumentListener(new DocumentListener(){
 			public void insertUpdate(DocumentEvent e){validatePrice();}
 			public void removeUpdate(DocumentEvent e){validatePrice();}
 			public void changedUpdate(DocumentEvent e){validatePrice();}
-		});
-
-		view.getTxtImagePath().getDocument().addDocumentListener(new DocumentListener(){
-			public void insertUpdate(DocumentEvent e){validateImage();}
-			public void removeUpdate(DocumentEvent e){validateImage();}
-			public void changedUpdate(DocumentEvent e){validateImage();}
 		});
 
 		view.getTxtFeatures().getDocument().addDocumentListener(new DocumentListener(){
@@ -60,7 +55,6 @@ public class RoomTypeFormController {
 		});
 		
 		FormUtils.addFocusEffect(view.getTxtName(),view.getLblNameError());
-		FormUtils.addFocusEffect(view.getTxtCapacity(),view.getLblCapacityError());
 		FormUtils.addFocusEffect(view.getTxtPrice(),view.getLblPriceError());
 		FormUtils.addFocusEffect(view.getTxtImagePath(),view.getLblImageError());
 		FormUtils.addFocusEffect(view.getTxtFeatures(),view.getLblFeaturesError());
@@ -68,9 +62,7 @@ public class RoomTypeFormController {
 
 	private void initInputRestrictions(){
 		Validator.onlyLetters(view.getTxtName());
-		Validator.onlyNumbers(view.getTxtCapacity());
 		Validator.onlyDecimalNumbers(view.getTxtPrice());
-		Validator.noSpaces(view.getTxtImagePath());
 	}
 	
 	private void handleSave(){
@@ -78,11 +70,11 @@ public class RoomTypeFormController {
 			return;
 		}
 
-		RoomType roomType=view.getRoomType();
+		RoomType roomType = view.getRoomType();
 
-		if(roomType==null){
+		if(roomType == null){
 
-			roomType=new RoomType(
+			roomType = new RoomType(
 				0,
 				view.getName(),
 				view.getBedType(),
@@ -116,16 +108,84 @@ public class RoomTypeFormController {
 		}
 	}
 
+	private void selectImage(){
+		String lastFolder =
+	        Config.get(
+	            "room.image.folder",
+	            System.getProperty("user.home")
+	        );
+
+		JFileChooser chooser =new JFileChooser(lastFolder);
+		
+	    chooser.setAcceptAllFileFilterUsed(false);
+	    chooser.setFileFilter(
+	        new FileNameExtensionFilter(
+	            "Imágenes (*.png, *.jpg, *.jpeg)",
+	            "png",
+	            "jpg",
+	            "jpeg"
+	        )
+	    );
+
+	    int option = chooser.showOpenDialog(null);
+
+	    if(option != JFileChooser.APPROVE_OPTION){
+	        return;
+	    }
+
+	    try{
+	        File selected = chooser.getSelectedFile();
+	        
+	        Config.set(
+        	    "room.image.folder",
+        	    selected.getParent()
+        	);
+	        
+	        String fileName = selected.getName() + "_" + System.currentTimeMillis();
+
+	        File srcFolder =new File("src/assets/img/rooms");
+	        File binFolder =new File("bin/assets/img/rooms");
+
+	        srcFolder.mkdirs();
+	        binFolder.mkdirs();
+
+	        File srcDestination =new File(srcFolder,fileName);
+	        File binDestination =new File(binFolder,fileName);
+
+	        Files.copy(
+	                selected.toPath(),
+	                srcDestination.toPath(),
+	                StandardCopyOption.REPLACE_EXISTING
+	        );
+
+	        Files.copy(
+	                selected.toPath(),
+	                binDestination.toPath(),
+	                StandardCopyOption.REPLACE_EXISTING
+	        );
+	        
+	        String dbPath = "/assets/img/rooms/" + fileName;
+	        view.getTxtImagePath().setText(dbPath);
+
+	        ImageIcon icon = new ImageIcon(srcDestination.getAbsolutePath());
+	        Image image = icon.getImage().getScaledInstance(220, 120, Image.SCALE_SMOOTH);
+	        view.getLblPreview().setIcon(new ImageIcon(image));
+	        view.getLblPreview().setVisible(true);
+	        
+	    }catch(Exception ex){
+	        ex.printStackTrace();
+	    }
+	}
 	private boolean validateForm(){
 		view.clearErrors();
-		boolean valid=true;
+		boolean valid = true;
 
-		if(!validateName()) valid=false;
-		if(!validateCapacity()) valid=false;
-		if(!validateBedType()) valid=false;
-		if(!validatePrice()) valid=false;
-		if(!validateImage()) valid=false;
-		if(!validateFeatures()) valid=false;
+		if(!validateName()) valid = false;
+		if(!validateCapacity()) valid = false;
+		if(!validateBedType()) valid = false;
+		if(!validatePrice()) valid = false;
+		if(!validateImage()) valid = false;
+		if(!validateFeatures()) valid = false;
 
 		return valid;
 	}
@@ -145,23 +205,16 @@ public class RoomTypeFormController {
 		return true;
 	}
 
-	public boolean validateCapacity() {
-	    String capacity=view.getTxtCapacity().getText().trim();
+	public boolean validateCapacity(){
+	    int value = view.getCapacity();
 
-	    if(capacity.isEmpty()){
-	        view.setCapacityError("La capacidad es obligatoria");
+	    if(value < 1){
+	        view.setCapacityError("Capacidad mínima de 1");
 	        return false;
 	    }
 
-	    try{
-	        int value=Integer.parseInt(capacity);
-
-	        if(value<=0){
-	            view.setCapacityError("Debe ser mayor a 0");
-	            return false;
-	        }
-	    }catch(Exception e){
-	        view.setCapacityError("Solo números");
+	    if(value > 10){
+	        view.setCapacityError("Capacidad máxima de 10");
 	        return false;
 	    }
 
@@ -170,7 +223,7 @@ public class RoomTypeFormController {
 	}
 	
 	public boolean validatePrice(){
-	    String price=view.getTxtPrice().getText().trim();
+	    String price = view.getTxtPrice().getText().trim();
 
 	    if(price.isEmpty()){
 	        view.setPriceError("El precio es obligatorio");
@@ -178,9 +231,9 @@ public class RoomTypeFormController {
 	    }
 
 	    try{
-	        double value=Double.parseDouble(price);
+	        double value = Double.parseDouble(price);
 
-	        if(value<=0){
+	        if(value <= 0){
 	            view.setPriceError("Debe ser mayor a 0");
 	            return false;
 	        }
@@ -194,7 +247,7 @@ public class RoomTypeFormController {
 	}
 	
 	public boolean validateBedType(){
-	    if(view.getBedTypeIndex()==0){
+	    if(view.getBedTypeIndex() == 0){
 	        view.setBedTypeError("Seleccione un tipo de cama");
 	        return false;
 	    }
@@ -204,27 +257,20 @@ public class RoomTypeFormController {
 	}
 	
 	public boolean validateImage(){
-	    String image = view.getImagePath();
-
-	    if(image.isEmpty()){
-	        view.setImageError("La ruta es obligatoria");
+	    if (view.getImagePath().isEmpty()){
+	        view.setImageError("Seleccione una imagen");
 	        return false;
 	    }
-
-	    if(!image.endsWith(".jpg") && !image.endsWith(".png") && !image.endsWith(".jpeg")){
-	        view.setImageError("Formato inválido");
-	        return false;
-	    }
-
+	    
 	    view.clearImageError();
 	    return true;
 	}
 	
 	public boolean validateFeatures(){
-	    String features=view.getTxtFeatures().getText().trim();
+	    String features = view.getTxtFeatures().getText().trim();
 
 	    if(features.isEmpty()){
-	        view.setFeaturesError("Campo obligatorio");
+	        view.setFeaturesError("Las comodidades son obligatorias");
 	        return false;
 	    }
 

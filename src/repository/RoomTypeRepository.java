@@ -1,5 +1,6 @@
 package repository;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,32 +10,30 @@ import models.RoomType;
 
 public class RoomTypeRepository {
 
-    public void save(RoomType roomType){
+    public void save(RoomType roomType) {
 
-        String sql =
-        "INSERT INTO room_types(" +
-        "name,bedType,capacity,price,imagePath,features,featured)" +
-        "VALUES(?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO room_types "
+                + "(name, bedType, capacity, price, imagePath, features, featured) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)){
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement pst = connection.prepareStatement(sql)) {
 
-            ps.setString(1, roomType.getName());
-            ps.setString(2, roomType.getBedType());
-            ps.setInt(3, roomType.getCapacity());
-            ps.setDouble(4, roomType.getPrice());
-            ps.setString(5, roomType.getImagePath());
-            ps.setString(6, roomType.featuresToString());
-            ps.setBoolean(7, roomType.isFeatured());
+            pst.setString(1, roomType.getName());
+            pst.setString(2, roomType.getBedType());
+            pst.setInt(3, roomType.getCapacity());
+            pst.setDouble(4, roomType.getPrice());
+            pst.setString(5, roomType.getImagePath());
+            pst.setString(6, roomType.featuresToString());
+            pst.setBoolean(7, roomType.isFeatured());
 
-            ps.executeUpdate();
+            pst.executeUpdate();
 
-        }catch(Exception e){
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         }
     }
-
+    
     public List<RoomType> getRoomTypes(){
 
         List<RoomType> roomTypes = new ArrayList<>();
@@ -66,51 +65,56 @@ public class RoomTypeRepository {
         return roomTypes;
     }
 
-    public void delete(int id){
+    public boolean delete(int id){
 
         String sql = "DELETE FROM room_types WHERE typeId=?";
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
-            ps.setInt(1,id);
-            ps.executeUpdate();
-            
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+		try (Connection connection = DatabaseConnection.getConnection();
+				PreparedStatement pst = connection.prepareStatement(sql)) {
+
+			pst.setInt(1, id);
+			int affectedRows = pst.executeUpdate();
+			if (affectedRows > 0) {
+				System.out.println("Se eliminó");
+				return true;
+			}
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+
+		return false;
     }
 
-    public void update(RoomType roomType){
+    public boolean update(RoomType updatedRoomType) throws IOException {
 
-        String sql =
-            "UPDATE room_types SET " +
-            "name=?," +
-            "bedType=?," +
-            "capacity=?," +
-            "price=?," +
-            "imagePath=?," +
-            "features=?," +
-            "featured=? " +
-            "WHERE typeId=?";
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
-            ps.setString(1,roomType.getName());
-            ps.setString(2,roomType.getBedType());
-            ps.setInt(3,roomType.getCapacity());
-            ps.setDouble(4,roomType.getPrice());
-            ps.setString(5,roomType.getImagePath());
-            ps.setString(6,roomType.featuresToString());
-            ps.setBoolean(7,roomType.isFeatured());
-            ps.setInt(8,roomType.getTypeId());
-            ps.executeUpdate();
+    	String sql = "UPDATE room_types SET name = ?, bedType = ?, capacity = ?, "
+    	        + "price = ?, imagePath = ?, features = ?, featured = ? "
+    	        + "WHERE typeId = ?";
+    	
+		try (Connection connection = DatabaseConnection.getConnection();
+				PreparedStatement pst = connection.prepareStatement(sql)) {
 
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+            pst.setString(1,updatedRoomType.getName());
+            pst.setString(2,updatedRoomType.getBedType());
+            pst.setInt(3,updatedRoomType.getCapacity());
+            pst.setDouble(4,updatedRoomType.getPrice());
+            pst.setString(5,updatedRoomType.getImagePath());
+            pst.setString(6,updatedRoomType.featuresToString());
+            pst.setBoolean(7,updatedRoomType.isFeatured());
+            pst.setInt(8,updatedRoomType.getTypeId());
+            
+			int affectedRows = pst.executeUpdate();
+
+			if (affectedRows > 0) {
+				return true;
+			}
+
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+
+		return false;
     }
 
     public List<RoomType> getFeaturedRoomTypes(){

@@ -9,8 +9,10 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import components.RoomCard;
 import components.SearchBar;
+import components.WrapLayout;
 import models.RoomType;
 import utils.AppFont;
 
@@ -48,14 +50,9 @@ public class ReservationView extends JPanel {
     }
     
     public void createRooms() {
-        roomsContainer = new JPanel(
-                new FlowLayout(
-                        FlowLayout.CENTER,
-                        20,
-                        20
-                )
-        );
-        roomsContainer.setOpaque(false);
+    	roomsContainer = new JPanel(new WrapLayout(FlowLayout.CENTER, 20, 20));
+    	roomsContainer.setMaximumSize(new Dimension(1200, Integer.MAX_VALUE));
+    	roomsContainer.setOpaque(false);
 
         add(roomsContainer);
         add(Box.createRigidArea(new Dimension(0, 20)));
@@ -64,8 +61,17 @@ public class ReservationView extends JPanel {
     public void setRooms(List<RoomType> rooms) {
         roomsContainer.removeAll();
         
-        for (RoomType room : rooms) {
-        	roomsContainer.add(new RoomCard(room));
+        if (rooms.isEmpty()) {
+            JLabel lblNoResults = new JLabel("Sin resultados");
+            lblNoResults.setFont(AppFont.subtitle());
+            lblNoResults.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            roomsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
+            roomsContainer.add(lblNoResults);
+        } else {
+            for (RoomType room : rooms) {
+            	roomsContainer.add(new RoomCard(room));
+            }
         }
 
         roomsContainer.revalidate();

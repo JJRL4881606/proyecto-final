@@ -31,14 +31,7 @@ public class UserController {
 	public void initListeners() {
 		view.getBtnAdd().addActionListener(e -> { openForm(null); });
 		view.getBtnEdit().addActionListener(e -> { editUser(); });
-
-		this.view.getBtnDelete().addActionListener(e -> {
-			boolean deleted = repo.delete(model.getUserAt(view.getSelectedRow()).getId());
-			if(deleted) {
-				model.removeRow(view.getSelectedRow());
-			}
-		});
-
+		view.getBtnDelete().addActionListener(e -> { deleteUser(); });
 		view.getBtnPdf().addActionListener(e -> generatePdf());
 	}
 	
@@ -122,5 +115,12 @@ public class UserController {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Error al exportar");
 		}	
+	}
+	
+	public void deleteUser(){
+		boolean deleted = repo.delete(model.getUserAt(view.getSelectedRow()).getId());
+		if(deleted) {
+			model.removeRow(view.getSelectedRow());
+		}
 	}
 }

@@ -46,6 +46,7 @@ public class RegistrationView extends JPanel
 	private JCheckBox chkTerms;
 	private JRadioButton rbtnMale;
 	private JRadioButton rbtnFemale;
+	
 	private RoundedButton btnRegistration;
 	private RoundedButton btnReturn;
 	

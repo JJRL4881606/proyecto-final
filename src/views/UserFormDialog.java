@@ -63,10 +63,9 @@ public class UserFormDialog extends JDialog{
     		
     public UserFormDialog(JFrame parent, User user) {
     	super(parent, true);
-    	
     	this.user = user;
-    	setTitle(user == null ? "Agregar usuario" : "Editar usuario");
     	
+    	setTitle(user == null ? "Agregar usuario" : "Editar usuario");
     	setSize(400, 500);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -87,7 +86,6 @@ public class UserFormDialog extends JDialog{
     }
     
     private JPanel createButtonPanel() {
-
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
         
@@ -110,7 +108,6 @@ public class UserFormDialog extends JDialog{
     }
 
     private JScrollPane createFormPanel() {
-
     	JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -174,7 +171,8 @@ public class UserFormDialog extends JDialog{
     	panel.add(FormUtils.createField("Género", genderPanel, lblGenderError, "", fieldWidth));
     	
     	//ROL
-    	comboRole = FormUtils.createComboRole();
+        String[] roles = {"Seleccione un rol", "Cliente", "Admin"};
+    	comboRole = FormUtils.createCombo(roles);
     	lblRoleError = FormUtils.createErrorLabel();
     	panel.add(FormUtils.createField("Rol", comboRole, lblRoleError, "", fieldWidth));
 

@@ -75,4 +75,25 @@ public class RoomTypeTableModel extends AbstractTableModel{
 		this.roomTypes = roomTypes;
 		fireTableDataChanged();
 	}
+	
+	/* Estos métodos permiten modificar una sola fila al momento de añadir, editar o eliminar un usuario.
+	 * Deberán llamarlos en el constructor cuando hacen cada operación. Ya les puse el ejemplo con editar y
+	 * eliminar.
+	 */
+	public void removeRow(int row) {
+		roomTypes.remove(row);
+		fireTableRowsDeleted(row, row);
+	}
+
+	public void addRow(RoomType roomType) {
+		int row = roomTypes.size();
+		roomTypes.add(roomType);
+		fireTableRowsInserted(row, row);
+	}
+
+	public void updateRow(int row, RoomType roomType) {
+		roomTypes.set(row, roomType);
+		fireTableRowsUpdated(row, row);
+	}
+
 }

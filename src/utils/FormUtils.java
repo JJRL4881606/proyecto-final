@@ -114,8 +114,8 @@ public class FormUtils {
 		return date;
     }
     
-    public static JSpinner createNumberField() {
-    	JSpinner number = new RoundedSpinner(new SpinnerNumberModel(1, 1, 10, 1));
+    public static JSpinner createNumberField(int max) {
+    	JSpinner number = new RoundedSpinner(new SpinnerNumberModel(1, 1, max, 1));
     	number.setBackground(UIColors.FIELD);
     	number.setBorder(normalBorder);
 		return number;
@@ -129,10 +129,9 @@ public class FormUtils {
     	combo.setBorder(normalBorder);
     	return combo;
     }
-    
-    public static JComboBox<String> createComboRole() {
-        String[] roles = {"Seleccione un rol", "Cliente", "Admin"};
-        JComboBox<String> combo = new JComboBox<>(roles);
+        
+    public static JComboBox<String> createCombo(String[] options) {
+        JComboBox<String> combo = new JComboBox<>(options);
     	combo.setFont(AppFont.normal());
     	combo.setBackground(UIColors.FIELD);
     	combo.setBorder(normalBorder);

@@ -65,7 +65,7 @@ public class UserRepository {
 	}
 
 	public boolean delete(int id) {
-
+		
 		String sql = "DELETE FROM users WHERE id = ?";
 
 		try (Connection connection = DatabaseConnection.getConnection();
@@ -83,7 +83,6 @@ public class UserRepository {
 		}
 
 		return false;
-
 	}
 
 	public boolean update(User updatedUser) throws IOException {
@@ -98,7 +97,7 @@ public class UserRepository {
 			pst.setString(3, updatedUser.getEmail());
 			pst.setString(4, updatedUser.getPhone());
 			pst.setString(5, updatedUser.getCountry());
-			pst.setDate(6, new java.sql.Date(updatedUser.getBirthDate().getTime()));
+			pst.setDate(6, new Date(updatedUser.getBirthDate().getTime()));
 			pst.setString(7, String.valueOf(updatedUser.getGender()));
 			pst.setString(8, updatedUser.getRole());
 			pst.setInt(9, updatedUser.getId());

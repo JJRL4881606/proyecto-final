@@ -41,7 +41,7 @@ public class RoomType {
     }
     
     public void setTypeId(int typeId){
-    	this.typeId=typeId;
+    	this.typeId = typeId;
     }
 
     public String getName() {

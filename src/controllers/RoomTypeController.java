@@ -21,11 +21,10 @@ public class RoomTypeController {
 		this.repo = new RoomTypeRepository();
 
 		initListeners();
-		loadRoomTypes();
 	}
 
 	public void initListeners() {
-		view.getBtnAdd().addActionListener(e -> { handleAdd(); });
+		view.getBtnAdd().addActionListener(e -> { openForm(null); });
 		view.getBtnEdit().addActionListener(e -> { handleEdit(); });
 		view.getBtnDelete().addActionListener(e -> { handleDelete(); });
 	}
@@ -33,7 +32,7 @@ public class RoomTypeController {
 	public void loadRoomTypes() {
 		List<RoomType> roomTypes = repo.getRoomTypes();
 
-		if(model==null){
+		if(model == null){
 			model = new RoomTypeTableModel(roomTypes);
 			view.setTableModel(model);
 		}else{
@@ -41,97 +40,56 @@ public class RoomTypeController {
 		}
 	}
 
-	private void handleAdd() {
-		RoomTypeFormDialog dialog = new RoomTypeFormDialog(null, null);
-
-		dialog.getBtnSave().addActionListener(e->{
-			RoomType roomType = new RoomType(
-				0,
-				dialog.getName(),
-				dialog.getBedType(),
-				dialog.getCapacity(),
-				dialog.getPrice(),
-				dialog.getImagePath(),
-				dialog.getFeatures(),
-				dialog.isFeatured()
-			);
-
-			repo.save(roomType);
-
-			dialog.dispose();
-
-			loadRoomTypes();
-		});
-
-		dialog.getBtnCancel().addActionListener(e->{ dialog.dispose(); });
+	private void openForm(RoomType roomType) {
+		RoomTypeFormDialog dialog = new RoomTypeFormDialog(null, roomType);
+		new RoomTypeFormController(dialog);
 		dialog.setVisible(true);
+
+		if(dialog.isSaved()) {
+			RoomType savedRoomType = dialog.getRoomType();
+			
+			try {
+				//Añadir nuevo
+				if(roomType == null) {
+					repo.save(savedRoomType);
+					model.addRow(savedRoomType); //Agrega el registro a la tabla
+				}else {
+					//Editar existente
+					int row = view.getSelectedModelRow();
+					RoomType originalRoomType = model.getRoomTypeAt(row);
+					savedRoomType.setTypeId(originalRoomType.getTypeId());
+
+					boolean updated = repo.update(savedRoomType);					
+					if(updated) {
+						model.updateRow(row, savedRoomType); //Actualiza el registro de la tabla
+					}
+				}
+			}catch(Exception e) {
+				e.printStackTrace();
+				JOptionPane.showMessageDialog(view, e.getMessage());
+			}
+		}
 	}
 
 	private void handleEdit() {
 		int row = view.getSelectedModelRow();
-
-		if(row==-1){
+		
+		if(row == -1) {
 			JOptionPane.showMessageDialog(
-					null,
-					"Selecciona una habitación"
+			    null,
+			    "Selecciona una habitación",
+			    "Advertencia",
+			    JOptionPane.WARNING_MESSAGE
 			);
 			return;
 		}
-
-		RoomType roomType = model.getRoomTypeAt(row);
-
-		RoomTypeFormDialog dialog = new RoomTypeFormDialog(null, roomType);
-
-		dialog.getBtnSave().addActionListener(e->{
-			RoomType updatedRoomType = new RoomType(
-				roomType.getTypeId(),
-				dialog.getName(),
-				dialog.getBedType(),
-				dialog.getCapacity(),
-				dialog.getPrice(),
-				dialog.getImagePath(),
-				dialog.getFeatures(),
-				dialog.isFeatured()
-			);
-
-			repo.update(updatedRoomType);
-
-			dialog.dispose();
-
-			loadRoomTypes();
-
-		});
-
-		dialog.getBtnCancel().addActionListener(e->{ dialog.dispose(); });
-		dialog.setVisible(true);
+		openForm(model.getRoomTypeAt(row));
 	}
 
 	private void handleDelete() {
-		int row = view.getSelectedModelRow();
-
-		if(row==-1){
-			JOptionPane.showMessageDialog(
-					null,
-					"Selecciona una habitación"
-			);
-			return;
+		boolean deleted = repo.delete(model.getRoomTypeAt(view.getSelectedRow()).getTypeId());
+		if(deleted) {
+			model.removeRow(view.getSelectedRow());
 		}
-
-		RoomType roomType = model.getRoomTypeAt(row);
-
-		int option = JOptionPane.showConfirmDialog(
-				null,
-				"¿Eliminar habitación?",
-				"Confirmar",
-				JOptionPane.YES_NO_OPTION
-		);
-
-		if(option != JOptionPane.YES_OPTION){
-			return;
-		}
-
-		repo.delete(roomType.getTypeId());
-
-		loadRoomTypes();
 	}
 }

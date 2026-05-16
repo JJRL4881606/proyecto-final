@@ -70,7 +70,8 @@ public class SearchBar extends RoundedPanel {
 	    add(Box.createRigidArea(new Dimension(15, 0)));
 	    add(FormUtils.createField("Noches", txtNights, lblNightsError, "", 130));
 	    
-	    spGuests = FormUtils.createNumberField();
+	    int max = 10;
+		spGuests = FormUtils.createNumberField(max);
 	    lblGuestsError = FormUtils.createErrorLabel();
 	    add(Box.createRigidArea(new Dimension(15, 0)));
 	    add(FormUtils.createField("Huéspedes", spGuests, lblGuestsError, "", 130));
