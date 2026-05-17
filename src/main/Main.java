@@ -10,7 +10,7 @@ import javax.swing.plaf.FontUIResource;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import utils.AppFont;
-import views.LoginWindow;
+import views.auth.LoginWindow;
 
 public class Main 
 {
