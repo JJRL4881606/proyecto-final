@@ -2,36 +2,59 @@ package models;
 
 public class Room {
 
-    private String id;         
-    private String typeId;
+    private int roomId;
+    private int roomNumber;
     private int floor;
+    private int typeId;
+    private boolean available;
 
-    public Room() {}
+    public Room(){}
 
-    public Room(String id, String typeId, int floor) {
-        this.id = id;
+    public Room(int roomId, int roomNumber, int floor, int typeId, boolean available){
+        this.roomId = roomId;
+        this.roomNumber = roomNumber;
+        this.floor = floor;
         this.typeId = typeId;
+        this.available = available;
+    }
+
+    public int getRoomId() {
+        return roomId;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    public int getFloor() {
+        return floor;
+    }
+
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setRoomId(int roomId){
+        this.roomId = roomId;
+    }
+
+    public void setRoomNumber(int roomNumber){
+        this.roomNumber = roomNumber;
+    }
+
+    public void setFloor(int floor){
         this.floor = floor;
     }
 
-    public String toCsv() {
-        return id + "," +
-               typeId + "," +
-               floor;
+    public void setTypeId(int typeId){
+        this.typeId = typeId;
     }
 
-    public static Room fromCsv(String line) {
-        String[] data = line.split(",");
-
-        return new Room(
-            data[0],
-            data[1],
-            Integer.parseInt(data[2])
-        );
+    public void setAvailable(boolean available){
+        this.available = available;
     }
-
-    // getters
-    public String getId() { return id; }
-    public String getTypeId() { return typeId; }
-    public int getFloor() { return floor; }
 }

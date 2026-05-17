@@ -19,6 +19,7 @@ public class MainController {
     private MainView view;
 	private UserController userController;
 	private RoomTypeController roomTypeController;
+	private RoomController roomController;
 	private MainWindow frame;
 
 	public MainController(MainView view, MainWindow frame) {
@@ -46,6 +47,7 @@ public class MainController {
 		
 		view.btnUsers.addActionListener(e -> { handleShowUsers(); });
 		view.btnRoomTypes.addActionListener(e -> { handleShowRoomTypes(); });
+		view.btnRooms.addActionListener(e -> { handleShowRooms(); });
 		
 		view.btnHome.addActionListener(e -> {
 			view.showView(MainView.HOME);
@@ -65,8 +67,8 @@ public class MainController {
 			
 		userController.loadUsers();
 		
-		view.showView(MainView.USERS);
-		updateMenuState(MainView.USERS);
+		view.showView(MainView.ADMIN_USERS);
+		updateMenuState(MainView.ADMIN_USERS);
 		
 	    frame.revalidate();
 	    frame.repaint();
@@ -81,8 +83,24 @@ public class MainController {
 			
 		roomTypeController.loadRoomTypes();
 		
-		view.showView(MainView.ROOMTYPES);
-		updateMenuState(MainView.ROOMTYPES);
+		view.showView(MainView.ADMIN_ROOMTYPES);
+		updateMenuState(MainView.ADMIN_ROOMTYPES);
+		
+	    frame.revalidate();
+	    frame.repaint();
+
+	    resetScroll();
+	}	
+	
+	private void handleShowRooms() {
+		if(roomController == null) {
+			roomController = new RoomController(view.roomsPanel);
+		}
+			
+		roomController.loadRooms();
+		
+		view.showView(MainView.ADMIN_ROOMS);
+		updateMenuState(MainView.ADMIN_ROOMS);
 		
 	    frame.revalidate();
 	    frame.repaint();
@@ -99,9 +117,10 @@ public class MainController {
     }
     
 	private void updateMenuState(String viewName) {
-		view.btnUsers.setEnabled(!viewName.equals(MainView.USERS));
+		view.btnUsers.setEnabled(!viewName.equals(MainView.ADMIN_USERS));
 		view.btnHome.setEnabled(!viewName.equals(MainView.HOME));
-		view.btnRoomTypes.setEnabled(!viewName.equals(MainView.ROOMTYPES));
+		view.btnRoomTypes.setEnabled(!viewName.equals(MainView.ADMIN_ROOMTYPES));
+		view.btnRooms.setEnabled(!viewName.equals(MainView.ADMIN_ROOMS));
 	}
 	
 	private void saveWindowPreferences() {

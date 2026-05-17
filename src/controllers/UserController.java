@@ -117,10 +117,24 @@ public class UserController {
 		}	
 	}
 	
-	public void deleteUser(){
-		boolean deleted = repo.delete(model.getUserAt(view.getSelectedRow()).getId());
-		if(deleted) {
-			model.removeRow(view.getSelectedRow());
-		}
+	private void deleteUser(){
+
+	    int row = view.getSelectedModelRow();
+
+	    if(row == -1){
+	        JOptionPane.showMessageDialog(
+	            null,
+	            "Selecciona un usuario",
+	            "Advertencia",
+	            JOptionPane.WARNING_MESSAGE
+	        );
+	        return;
+	    }
+
+	    boolean deleted = repo.delete(model.getUserAt(row).getId());
+
+	    if(deleted){
+	        model.removeRow(row);
+	    }
 	}
 }

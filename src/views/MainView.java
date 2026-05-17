@@ -32,17 +32,23 @@ import utils.UIColors;
 public class MainView extends JPanel{
 	
 	public static final String HOME = "HOME";
-	public static final String USERS = "USERS";
-	public static final String ROOMTYPES = "ROOMTYPES";
+	public static final String ADMIN_USERS = "USERS";
+	public static final String ADMIN_ROOMTYPES = "ROOMTYPES";
+	public static final String ADMIN_ROOMS = "ROOMS";
 	public static final String RESERVATIONS = "RESERVATIONS";
 	
 	public JMenuItem btnHome;
 	public JMenuItem btnUsers;
 	public JMenuItem btnRoomTypes;
+	public JMenuItem btnRooms;
+	
 	public JMenuItem logOut;
+	
 	public HomeView homePanel;
 	public UsersView usersPanel;
 	public RoomTypesView roomTypesPanel;
+	public RoomsView roomsPanel;
+	
 	public ReservationView reservationPanel;
 	
 	private CardLayout cardLayout;
@@ -132,13 +138,16 @@ public class MainView extends JPanel{
         usuario.setMnemonic(KeyEvent.VK_U);
         mb.add(usuario);
 
+        //FALTA CREAR ESTAS VISTAS
+        /*
         JMenuItem miCuenta = new JMenuItem("Mi cuenta");
         miCuenta.setMnemonic(KeyEvent.VK_C);
         usuario.add(miCuenta);
-        
+
         JMenuItem misReservas = new JMenuItem("Mis reservas");
         misReservas.setMnemonic(KeyEvent.VK_R);
         usuario.add(misReservas);
+        */
         
         usuario.addSeparator();
 
@@ -151,18 +160,24 @@ public class MainView extends JPanel{
         habitaciones.setMnemonic(KeyEvent.VK_H);
         mb.add(habitaciones);
 
-        JMenuItem verHabitaciones = new JMenuItem("Ver habitaciones");
+        //FALTA CREAR ESTAS VISTAS
+        /*
+        JMenuItem verHabitaciones = new JMenuItem("Ver tipos de habitaciones");
         verHabitaciones.setMnemonic(KeyEvent.VK_V);
         habitaciones.add(verHabitaciones);
+        */
 
         // RESERVAS
         JMenu reservas = new UnderlineMenu("Reservas");
         reservas.setMnemonic(KeyEvent.VK_R);
         mb.add(reservas);
 
+        //FALTA CREAR ESTAS VISTAS
+        /*
         JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
         nuevaReserva.setMnemonic(KeyEvent.VK_N);
         reservas.add(nuevaReserva);
+        */
         
         // SISTEMA
     	JMenu sistema = new UnderlineMenu("Sistema");
@@ -173,13 +188,17 @@ public class MainView extends JPanel{
         btnHome.setMnemonic(KeyEvent.VK_I);
         sistema.add(btnHome);
         
-        btnUsers = new JMenuItem("Ver Usuarios");
+        btnUsers = new JMenuItem("Ver usuarios");
         btnUsers.setMnemonic(KeyEvent.VK_U);
         sistema.add(btnUsers);
         
-        btnRoomTypes = new JMenuItem("Ver Tipos de Habitaciones");
+        btnRoomTypes = new JMenuItem("Ver tipos de habitaciones");
         btnRoomTypes.setMnemonic(KeyEvent.VK_T);
         sistema.add(btnRoomTypes);
+        
+        btnRooms = new JMenuItem("Ver habitaciones");
+        btnRooms.setMnemonic(KeyEvent.VK_H);
+        sistema.add(btnRooms);
 
         return mb;
     }
@@ -230,13 +249,15 @@ public class MainView extends JPanel{
         
         usersPanel = new UsersView();
         roomTypesPanel = new RoomTypesView();
+        roomsPanel = new RoomsView();
         
         reservationPanel = new ReservationView();
         new ReservationController(reservationPanel);
         
         container.add(homePanel, HOME);
-        container.add(usersPanel, USERS);
-        container.add(roomTypesPanel, ROOMTYPES);
+        container.add(usersPanel, ADMIN_USERS);
+        container.add(roomTypesPanel, ADMIN_ROOMTYPES);
+        container.add(roomsPanel, ADMIN_ROOMS);
         container.add(reservationPanel, RESERVATIONS);
     }        
     

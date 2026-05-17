@@ -86,6 +86,7 @@ public class UserRepository {
 	}
 
 	public boolean update(User updatedUser) throws IOException {
+		
 		String sql = "UPDATE users SET name = ?, surname = ?, email = ?, phone = ?, country = ?,"
 				+ " birth_date = ?, gender = ?, role = ? " + "WHERE id = ?";
 

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import models.RoomType;
+import repository.RoomRepository;
 import repository.RoomTypeRepository;
 import tablemodels.RoomTypeTableModel;
 import views.RoomTypeFormDialog;
@@ -77,7 +78,7 @@ public class RoomTypeController {
 		if(row == -1) {
 			JOptionPane.showMessageDialog(
 			    null,
-			    "Selecciona una habitación",
+			    "Selecciona un tipo de habitación",
 			    "Advertencia",
 			    JOptionPane.WARNING_MESSAGE
 			);
@@ -86,10 +87,37 @@ public class RoomTypeController {
 		openForm(model.getRoomTypeAt(row));
 	}
 
-	private void handleDelete() {
-		boolean deleted = repo.delete(model.getRoomTypeAt(view.getSelectedRow()).getTypeId());
-		if(deleted) {
-			model.removeRow(view.getSelectedRow());
-		}
-	}
-}
+	private void handleDelete(){
+		//advertencia si no seleccionaste ninguna fila
+	    int row = view.getSelectedModelRow();
+
+	    if(row == -1){
+	        JOptionPane.showMessageDialog(
+	            null,
+	            "Selecciona un tipo de habitación",
+	            "Advertencia",
+	            JOptionPane.WARNING_MESSAGE
+	        );
+	        return;
+	    }
+	    
+	    //Advertencia si hay habitaciones usando este tipo
+	    RoomRepository roomRepo = new RoomRepository();
+	    int typeId = model.getRoomTypeAt(view.getSelectedRow()).getTypeId();
+
+	    if(roomRepo.existsByTypeId(typeId)){
+	        JOptionPane.showMessageDialog(
+	            null,
+	            "No puedes eliminar este tipo porque hay habitaciones usándolo",
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+	        return;
+	    }
+
+	    boolean deleted = repo.delete(model.getRoomTypeAt(row).getTypeId());
+
+	    if(deleted){
+	        model.removeRow(row);
+	    }
+	}}

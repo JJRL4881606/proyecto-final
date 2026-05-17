@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,21 +18,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
 import components.RoundedButton;
-import tablemodels.RoomTypeTableModel;
+import tablemodels.RoomTableModel;
 import utils.AppFont;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
-public class RoomTypesView extends JPanel {
+public class RoomsView extends JPanel{
 
 	private JTable table;
-	
+
 	private RoundedButton btnAdd;
 	private RoundedButton btnEdit;
 	private RoundedButton btnDelete;
 
-	public RoomTypesView() {
-		
+	public RoomsView(){
+
 		setLayout(new BorderLayout());
 
 		table = new JTable();
@@ -40,7 +41,7 @@ public class RoomTypesView extends JPanel {
 		// scroll
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
-		scroll.setPreferredSize(new Dimension(1200, 400));
+		scroll.setPreferredSize(new Dimension(1000, 400));
 
 		JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		centerPanel.setOpaque(false);
@@ -79,13 +80,13 @@ public class RoomTypesView extends JPanel {
 		panelButtons.add(btnEdit);
 		panelButtons.add(btnDelete);
 
-		topPanel.add(panelButtons, BorderLayout.CENTER);
+		topPanel.add(panelButtons,BorderLayout.CENTER);
 
 		add(topPanel, BorderLayout.NORTH);
 	}
 
 	public JLabel createTitle() {
-		JLabel lblTitle = new JLabel("Panel de administración de tipos de habitaciones");
+		JLabel lblTitle = new JLabel("Panel de administración de habitaciones");
 		lblTitle.setBorder(new EmptyBorder(20, 20, 0, 20));
 		lblTitle.setFont(AppFont.subtitle());
 		lblTitle.setForeground(Color.BLACK);
@@ -94,14 +95,14 @@ public class RoomTypesView extends JPanel {
 		return lblTitle;
 	}
 
-	public void styleTable() {
+	public void styleTable(){
 		table.setRowHeight(35);
 		table.setShowGrid(true);
 		table.setGridColor(new Color(230, 230, 230));
 		table.setBackground(Color.WHITE);
 		table.setForeground(Color.BLACK);
 		table.setFont(AppFont.normal());
-
+		
 		table.setSelectionBackground(new Color(52, 152, 219));
 		table.setSelectionForeground(Color.WHITE);
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -112,108 +113,102 @@ public class RoomTypesView extends JPanel {
 		header.setFont(AppFont.big());
 		header.setPreferredSize(new Dimension(0, 40));
 		header.setReorderingAllowed(false);
-
+		
 		table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-			@Override
-			public Component getTableCellRendererComponent(
-					JTable table,
-					Object value,
-					boolean isSelected,
-					boolean hasFocus,
-					int row,
-					int column) {
 
-				Component c = super.getTableCellRendererComponent(
-						table,
-						value,
-						isSelected,
-						hasFocus,
-						row,
-						column);
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column) {
 
-				if (!isSelected) {
-					if (row % 2 == 0) {
-						c.setBackground(Color.WHITE);
-					} else {
-						c.setBackground(new Color(245, 245, 245));
+                Component c = super.getTableCellRendererComponent(
+                        table,
+                        value,
+                        isSelected,
+                        hasFocus,
+                        row,
+                        column);
+                
+                if (!isSelected) {
+                    if (row % 2 == 0) {
+                        c.setBackground(Color.WHITE);
+                    } else {
+                        c.setBackground(new Color(245, 245, 245));
+                    }
+                    c.setForeground(Color.BLACK);
+                }
+				
+				if(column == 2) {
+					if(!isSelected) {
+						c.setForeground(new Color(41, 128, 185));
 					}
-
-					c.setForeground(Color.BLACK);
+				} else {
+					c.setFont(AppFont.normal());
 				}
-
-				c.setFont(AppFont.normal());
-
+			
 				return c;
 			}
 		});
 	}
 
-	public void setTableModel(RoomTypeTableModel model) {
+	public void setTableModel(RoomTableModel model){
 		table.setModel(model);
 
 		if (table.getColumnCount() >= 1) {
-			table.getColumnModel().getColumn(0).setPreferredWidth(150);
+			table.getColumnModel().getColumn(0).setPreferredWidth(50);
 		}
-
+		
 		if (table.getColumnCount() >= 2) {
-			table.getColumnModel().getColumn(1).setPreferredWidth(120);
+			table.getColumnModel().getColumn(1).setPreferredWidth(50);
 		}
-
+		
 		if (table.getColumnCount() >= 3) {
-			table.getColumnModel().getColumn(2).setPreferredWidth(80);
+			table.getColumnModel().getColumn(2).setPreferredWidth(100);
 		}
-
+		
 		if (table.getColumnCount() >= 4) {
-			table.getColumnModel().getColumn(3).setPreferredWidth(100);
+			table.getColumnModel().getColumn(3).setPreferredWidth(50);
 		}
-
-		if (table.getColumnCount() >= 5) {
-			table.getColumnModel().getColumn(4).setPreferredWidth(250);
-		}
-
-		if (table.getColumnCount() >= 6) {
-			table.getColumnModel().getColumn(5).setPreferredWidth(300);
-		}
-
-		if (table.getColumnCount() >= 7) {
-			table.getColumnModel().getColumn(6).setPreferredWidth(80);
-		}
-
+		
 		DefaultTableCellRenderer center = new DefaultTableCellRenderer();
 		center.setHorizontalAlignment(SwingConstants.CENTER);
 
-		table.getColumnModel().getColumn(2).setCellRenderer(center);
+		table.getColumnModel().getColumn(0).setCellRenderer(center);
+		table.getColumnModel().getColumn(1).setCellRenderer(center);
 		table.getColumnModel().getColumn(3).setCellRenderer(center);
-		table.getColumnModel().getColumn(6).setCellRenderer(center);
 	}
 
-	public int getSelectedModelRow() {
+	public int getSelectedModelRow(){
 		int row = table.getSelectedRow();
 
-		if (row == -1) {
+		if (row == -1){
 			return -1;
 		}
 
 		return table.convertRowIndexToModel(row);
 	}
 
-	public JTable getTable() {
+	public JTable getTable(){
 		return table;
 	}
 
-	public RoundedButton getBtnAdd() {
+	public RoundedButton getBtnAdd(){
 		return btnAdd;
 	}
 
-	public RoundedButton getBtnEdit() {
+	public RoundedButton getBtnEdit(){
 		return btnEdit;
 	}
 
-	public RoundedButton getBtnDelete() {
+	public RoundedButton getBtnDelete(){
 		return btnDelete;
 	}
 
-	public int getSelectedRow() {
+	public int getSelectedRow(){
 		return table.getSelectedRow();
 	}
 }

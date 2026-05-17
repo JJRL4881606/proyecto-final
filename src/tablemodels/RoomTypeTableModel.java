@@ -12,7 +12,6 @@ public class RoomTypeTableModel extends AbstractTableModel{
 	private List<RoomType> roomTypes;
 	
 	private final String[] columns = {
-		"Id",
 		"Nombre",
 		"Tipo cama",
 		"Capacidad",
@@ -48,20 +47,18 @@ public class RoomTypeTableModel extends AbstractTableModel{
 		
 		switch(columnIndex) {
 			case 0:
-				return roomType.getTypeId();
-			case 1:
 				return roomType.getName();
-			case 2:
+			case 1:
 				return roomType.getBedType();
-			case 3:
+			case 2:
 				return roomType.getCapacity();
-			case 4:
+			case 3:
 				return roomType.getPrice();
-			case 5:
+			case 4:
 				return roomType.getImagePath();
-			case 6:
+			case 5:
 				return roomType.getFeatures();
-			case 7:
+			case 6:
 				return roomType.isFeatured();
 		}	
 		return null;	

@@ -25,7 +25,6 @@ public class LoginRepository {
 			if(rs.next()) {
 				
 				String hashedPassword = rs.getString("password");
-				System.out.println(hashedPassword);
 				
 				boolean correctPassword = PasswordUtils.checkPassword(password, hashedPassword);
 				
