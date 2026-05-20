@@ -9,6 +9,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -16,12 +17,14 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import components.UnderlineMenu;
 import controllers.booking.BookingSearchController;
 import controllers.home.HomeController;
+import controllers.rooms.ShowRoomsController;
 
 import javax.swing.ImageIcon;
 import utils.AppFont;
@@ -29,7 +32,9 @@ import utils.Session;
 import utils.UIColors;
 import views.booking.BookingSearchView;
 import views.home.HomeView;
+import views.rooms.RoomDetailsView;
 import views.rooms.RoomsView;
+import views.rooms.ShowRoomsView;
 import views.roomtypes.RoomTypesView;
 import views.users.UsersView;
 
@@ -41,11 +46,14 @@ public class MainView extends JPanel{
 	public static final String ADMIN_ROOMTYPES = "ROOMTYPES";
 	public static final String ADMIN_ROOMS = "ROOMS";
 	public static final String BOOKING_SEARCH = "BOOKING_SEARCH";
+	public static final String SHOW_ROOMS = "SHOW_ROOMS";
+	public static final String ROOM_DETAILS = "ROOM_DETAILS";
 	
 	private JMenuItem btnHome;
 	private JMenuItem btnUsers;
 	private JMenuItem btnRoomTypes;
 	private JMenuItem btnRooms;
+	private JMenuItem btnShowRooms;
 	
 	private JMenuItem logOut;
 	
@@ -53,6 +61,8 @@ public class MainView extends JPanel{
 	public UsersView usersPanel;
 	public RoomTypesView roomTypesPanel;
 	public RoomsView roomsPanel;
+	public ShowRoomsView showRoomsPanel;
+	public RoomDetailsView roomDetailsPanel;
 	
 	public BookingSearchView bookingSearchPanel;
 	
@@ -139,60 +149,28 @@ public class MainView extends JPanel{
     	mb.setOpaque(true);
     	mb.setBackground(UIColors.HEADER);
     	
-        // USUARIO
-        JMenu usuario = new UnderlineMenu("Usuario");
-        usuario.setMnemonic(KeyEvent.VK_U);
-        mb.add(usuario);
-
-        //FALTA CREAR ESTAS VISTAS
-        /*
-        JMenuItem miCuenta = new JMenuItem("Mi cuenta");
-        miCuenta.setMnemonic(KeyEvent.VK_C);
-        usuario.add(miCuenta);
-
-        JMenuItem misReservas = new JMenuItem("Mis reservas");
-        misReservas.setMnemonic(KeyEvent.VK_R);
-        usuario.add(misReservas);
-        */
+        // INICIO
+        JMenu home = new UnderlineMenu("Inicio");
+        home.setMnemonic(KeyEvent.VK_R);
+        mb.add(home);
         
-        usuario.addSeparator();
-
-        logOut = new JMenuItem("Cerrar sesión");
-        logOut.setMnemonic(KeyEvent.VK_C);
-        usuario.add(logOut); 
+        btnHome = new JMenuItem("Inicio");
+        btnHome.setMnemonic(KeyEvent.VK_I);
+        home.add(btnHome);
                 
         // HABITACIONES
-        JMenu habitaciones = new UnderlineMenu("Habitaciones");
-        habitaciones.setMnemonic(KeyEvent.VK_H);
-        mb.add(habitaciones);
+        JMenu rooms = new UnderlineMenu("Habitaciones");
+        rooms.setMnemonic(KeyEvent.VK_H);
+        mb.add(rooms);
 
-        //FALTA CREAR ESTAS VISTAS
-        /*
-        JMenuItem verHabitaciones = new JMenuItem("Ver tipos de habitaciones");
-        verHabitaciones.setMnemonic(KeyEvent.VK_V);
-        habitaciones.add(verHabitaciones);
-        */
-
-        // RESERVAS
-        JMenu reservas = new UnderlineMenu("Reservas");
-        reservas.setMnemonic(KeyEvent.VK_R);
-        mb.add(reservas);
-
-        //FALTA CREAR ESTAS VISTAS
-        /*
-        JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
-        nuevaReserva.setMnemonic(KeyEvent.VK_N);
-        reservas.add(nuevaReserva);
-        */
+        btnShowRooms = new JMenuItem("Ver tipos de habitaciones");
+        btnShowRooms.setMnemonic(KeyEvent.VK_V);
+        rooms.add(btnShowRooms);
         
         // SISTEMA
     	JMenu sistema = new UnderlineMenu("Sistema");
     	sistema.setMnemonic(KeyEvent.VK_S);
         mb.add(sistema);
-
-        btnHome = new JMenuItem("Inicio");
-        btnHome.setMnemonic(KeyEvent.VK_I);
-        sistema.add(btnHome);
         
         btnUsers = new JMenuItem("Ver usuarios");
         btnUsers.setMnemonic(KeyEvent.VK_U);
@@ -205,6 +183,25 @@ public class MainView extends JPanel{
         setBtnRooms(new JMenuItem("Ver habitaciones"));
         getBtnRooms().setMnemonic(KeyEvent.VK_H);
         sistema.add(getBtnRooms());
+        
+        // USUARIO
+        JMenu usuario = new UnderlineMenu("Usuario");
+        usuario.setMnemonic(KeyEvent.VK_U);
+        mb.add(usuario);
+
+        JMenuItem miCuenta = new JMenuItem("Mi cuenta");
+        miCuenta.setMnemonic(KeyEvent.VK_C);
+        usuario.add(miCuenta);
+
+        JMenuItem misReservas = new JMenuItem("Mis reservas");
+        misReservas.setMnemonic(KeyEvent.VK_R);
+        usuario.add(misReservas);
+        
+        usuario.addSeparator();
+
+        logOut = new JMenuItem("Cerrar sesión");
+        logOut.setMnemonic(KeyEvent.VK_C);
+        usuario.add(logOut); 
 
         return mb;
     }
@@ -260,11 +257,18 @@ public class MainView extends JPanel{
         bookingSearchPanel = new BookingSearchView();
         new BookingSearchController(bookingSearchPanel);
         
+        showRoomsPanel = new ShowRoomsView();
+        new ShowRoomsController(showRoomsPanel, this);
+        
+        roomDetailsPanel = new RoomDetailsView();
+        
         container.add(homePanel, HOME);
         container.add(usersPanel, ADMIN_USERS);
         container.add(roomTypesPanel, ADMIN_ROOMTYPES);
         container.add(roomsPanel, ADMIN_ROOMS);
         container.add(bookingSearchPanel, BOOKING_SEARCH);
+        container.add(showRoomsPanel, SHOW_ROOMS);
+        container.add(roomDetailsPanel, ROOM_DETAILS);
     }        
     
     private JPanel createTransparentPanel() {
@@ -276,14 +280,31 @@ public class MainView extends JPanel{
     public void showView(String view) {
         cardLayout.show(container, view);
 
+        // actualizar botones
+        btnHome.setEnabled(!view.equals(HOME));
+        btnUsers.setEnabled(!view.equals(ADMIN_USERS));
+        btnRoomTypes.setEnabled(!view.equals(ADMIN_ROOMTYPES));
+        btnRooms.setEnabled(!view.equals(ADMIN_ROOMS));
+        btnShowRooms.setEnabled(!view.equals(SHOW_ROOMS));
+
+        // refrescar
         container.revalidate();
         container.repaint();
 
         revalidate();
         repaint();
-    }
+
+        // reiniciar scroll
+        MainWindow frame = (MainWindow)SwingUtilities.getWindowAncestor(this);
+
+        if(frame != null){
+            SwingUtilities.invokeLater(() -> {
+                frame.getScroll().getViewport().setViewPosition(new Point(0,0));
+            });
+        }
+    }	
     
-	//getters
+    //getters
     public JMenuItem getLogOut() {
         return logOut;
     }
@@ -302,6 +323,10 @@ public class MainView extends JPanel{
 
 	public JMenuItem getBtnRooms() {
 		return btnRooms;
+	}
+
+	public JMenuItem getBtnShowRooms() {
+		return btnShowRooms;
 	}
 
 	public void setBtnRooms(JMenuItem btnRooms) {

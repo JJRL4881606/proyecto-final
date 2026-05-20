@@ -12,13 +12,15 @@ public class RoomTypeTableModel extends AbstractTableModel{
 	private List<RoomType> roomTypes;
 	
 	private final String[] columns = {
-		"Nombre",
-		"Tipo cama",
-		"Capacidad",
-		"Precio",
-		"Ruta imagen",
-		"Comodidades",
-		"Destacada",
+	    "Nombre",
+	    "Tipo cama",
+	    "Capacidad",
+	    "Precio",
+	    "Imagen principal",
+	    "Comodidades",
+	    "Destacada",
+	    "Descripción",
+	    "Imágenes extra"
 	};
 	
 	public RoomTypeTableModel(List<RoomType> roomTypes) {
@@ -42,27 +44,48 @@ public class RoomTypeTableModel extends AbstractTableModel{
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		
-		RoomType roomType = roomTypes.get(rowIndex);
-		
-		switch(columnIndex) {
-			case 0:
-				return roomType.getName();
-			case 1:
-				return roomType.getBedType();
-			case 2:
-				return roomType.getCapacity();
-			case 3:
-				return roomType.getPrice();
-			case 4:
-				return roomType.getImagePath();
-			case 5:
-				return roomType.getFeatures();
-			case 6:
-				return roomType.isFeatured();
-		}	
-		return null;	
-	}	
+
+	    RoomType roomType = roomTypes.get(rowIndex);
+
+	    switch(columnIndex) {
+	        case 0:
+	            return roomType.getName();
+	        case 1:
+	            return roomType.getBedType();
+	        case 2:
+	            return roomType.getCapacity();
+	        case 3:
+	            return roomType.getPrice();
+	        case 4:
+	            return roomType.getImagePath();
+	        case 5:
+	            return roomType.featuresToString();
+	        case 6:
+	            return roomType.isFeatured();
+	        case 7:
+	            return shortenText(
+	                roomType.getDescription(),
+	                24
+	            );
+	        case 8:
+	            return roomType.getExtraImages().size() + " imágenes";
+	    }
+
+	    return null;
+	}
+	
+	private String shortenText(String text, int maxLength){
+
+	    if(text == null){
+	        return "";
+	    }
+
+	    if(text.length() <= maxLength){
+	        return text;
+	    }
+
+	    return text.substring(0, maxLength) + "...";
+	}
 	
 	public RoomType getRoomTypeAt(int row) {
 		return roomTypes.get(row);

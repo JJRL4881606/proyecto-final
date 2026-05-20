@@ -19,7 +19,7 @@ import java.awt.event.WindowEvent;
 
 public class MainController {
 
-    private MainView view;
+	private MainView view;
 	private UserController userController;
 	private RoomTypeController roomTypeController;
 	private RoomController roomController;
@@ -48,9 +48,9 @@ public class MainController {
 		    }
 		});
 		
-		view.getBtnUsers().addActionListener(e -> { handleShowUsers(); });
-		view.getBtnRoomTypes().addActionListener(e -> { handleShowRoomTypes(); });
-		view.getBtnRooms().addActionListener(e -> { handleShowRooms(); });
+		view.getBtnUsers().addActionListener(e -> { handleTableUsers(); });
+		view.getBtnRoomTypes().addActionListener(e -> { handleTableRoomTypes(); });
+		view.getBtnRooms().addActionListener(e -> { handleTableRooms(); });
 		
 		view.getBtnHome().addActionListener(e -> {
 			view.showView(MainView.HOME);
@@ -61,9 +61,11 @@ public class MainController {
 
 		    resetScroll();
 		});		
+		
+		view.getBtnShowRooms().addActionListener(e -> { handleShowRooms(); });
 	}
 	
-	private void handleShowUsers() {
+	private void handleTableUsers() {
 		if(userController == null) {
 			userController = new UserController(view.usersPanel);
 		}
@@ -79,7 +81,7 @@ public class MainController {
 	    resetScroll();
 	}
 	
-	private void handleShowRoomTypes() {
+	private void handleTableRoomTypes() {
 		if(roomTypeController == null) {
 			roomTypeController = new RoomTypeController(view.roomTypesPanel);
 		}
@@ -95,7 +97,7 @@ public class MainController {
 	    resetScroll();
 	}	
 	
-	private void handleShowRooms() {
+	private void handleTableRooms() {
 		if(roomController == null) {
 			roomController = new RoomController(view.roomsPanel);
 		}
@@ -111,6 +113,10 @@ public class MainController {
 	    resetScroll();
 	}
 	
+	private void handleShowRooms() {
+	    view.showView(MainView.SHOW_ROOMS);
+	}
+	
     private void handleClose() {
         Session.logout();
 
@@ -124,6 +130,7 @@ public class MainController {
 		view.getBtnUsers().setEnabled(!viewName.equals(MainView.ADMIN_USERS));
 		view.getBtnRoomTypes().setEnabled(!viewName.equals(MainView.ADMIN_ROOMTYPES));
 		view.getBtnRooms().setEnabled(!viewName.equals(MainView.ADMIN_ROOMS));
+		view.getBtnShowRooms().setEnabled(!viewName.equals(MainView.SHOW_ROOMS));
 	}
 	
 	private void saveWindowPreferences() {

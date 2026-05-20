@@ -1,5 +1,6 @@
 package utils;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -23,14 +24,17 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.Border;
 
 import components.RoundedBorder;
+import components.RoundedComboBox;
 import components.RoundedPasswordField;
 import components.RoundedSpinner;
+import components.RoundedTextArea;
 import components.RoundedTextField;
 
 public class FormUtils {
@@ -40,20 +44,24 @@ public class FormUtils {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
 
-        panel.setPreferredSize(new Dimension(width, 90));
-        panel.setMaximumSize(new Dimension(width, 90));
-        panel.setMinimumSize(new Dimension(width, 90));
-
+        if (!(field instanceof JTextArea)) {
+	        panel.setPreferredSize(new Dimension(width, 90));
+	        panel.setMaximumSize(new Dimension(width, 90));
+	        panel.setMinimumSize(new Dimension(width, 90));
+        }
+        
         if (labelText != null) {
             JLabel label = new JLabel(labelText);
             label.setAlignmentX(Component.CENTER_ALIGNMENT);
             panel.add(label);
         }
-
-        field.setAlignmentX(Component.CENTER_ALIGNMENT);
-        field.setPreferredSize(new Dimension(width, 45));
-        field.setMaximumSize(new Dimension(width, 45));
-        field.setMinimumSize(new Dimension(width, 45));
+                
+        if (!(field instanceof JTextArea)) {
+        	field.setAlignmentX(Component.CENTER_ALIGNMENT);
+         	field.setPreferredSize(new Dimension(width,45));
+            field.setMaximumSize(new Dimension(width,45));
+            field.setMinimumSize(new Dimension(width,45));
+        }
 
         if (field instanceof JTextField) {
             ((JTextField) field).putClientProperty(
@@ -85,6 +93,31 @@ public class FormUtils {
     	field.setFont(AppFont.normal());
         field.setBackground(UIColors.FIELD);
         field.setBorder(normalBorder);
+        return field;
+    }
+    
+    public static JTextArea createTextArea() {
+    	JTextArea area = new RoundedTextArea();
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setFont(AppFont.normal());
+    	area.setBackground(UIColors.FIELD);
+        area.setBorder(normalBorder);
+        area.setMaximumSize(new Dimension(300, 200));
+        area.setPreferredSize(new Dimension(300, 200));
+		return area;
+    }
+    
+    public static JTextField createImagePathField() {
+    	JTextField field = new RoundedTextField();
+    	field.setEditable(false);
+        field.setAlignmentX(Component.CENTER_ALIGNMENT);
+        field.setBackground(new Color(230,230,230));
+        field.setForeground(Color.GRAY);
+    	field.setFont(AppFont.normal());
+        field.setBorder(normalBorder);
+        field.setMaximumSize(new Dimension(300, 45));
+        field.setPreferredSize(new Dimension(300, 45));
         return field;
     }
     
@@ -123,7 +156,7 @@ public class FormUtils {
     
     public static JComboBox<String> createComboCountry() {
         String[] countryList = {"Seleccione el país", "Afganistán", "Albania", "Alemania", "Andorra", "Angola", "Antigua y Barbuda", "Arabia Saudita", "Argelia", "Argentina", "Armenia", "Australia", "Austria", "Azerbaiyán", "Bahamas", "Bangladés", "Baréin", "Bélgica", "Belice", "Benín", "Bielorrusia", "Birmania", "Bolivia", "Bosnia y Herzegovina", "Botsuana", "Brasil", "Brunéi", "Bulgaria", "Burkina Faso", "Burundi", "Bután", "Cabo Verde", "Camboya", "Camerún", "Canadá", "Catar", "Chad", "Chile", "China", "Chipre", "Colombia", "Comoras", "Corea del Norte", "Corea del Sur", "Costa de Marfil", "Costa Rica", "Croacia", "Cuba", "Dinamarca", "Dominica", "Ecuador", "Egipto", "El Salvador", "Emiratos Árabes Unidos", "Eritrea", "Eslovaquia", "Eslovenia", "España", "Estados Unidos", "Estonia", "Esuatini", "Etiopía", "Filipinas", "Finlandia", "Fiyi", "Francia", "Gabón", "Gambia", "Georgia", "Ghana", "Granada", "Grecia", "Guatemala", "Guinea", "Guinea-Bisáu", "Guinea Ecuatorial", "Guyana", "Haití", "Honduras", "Hungría", "India", "Indonesia", "Irak", "Irán", "Irlanda", "Islandia", "Islas Marshall", "Islas Salomón", "Israel", "Italia", "Jamaica", "Japón", "Jordania", "Kazajistán", "Kenia", "Kirguistán", "Kiribati", "Kuwait", "Laos", "Lesoto", "Letonia", "Líbano", "Liberia", "Libia", "Liechtenstein", "Lituania", "Luxemburgo", "Madagascar", "Malasia", "Malaui", "Maldivas", "Malí", "Malta", "Marruecos", "Mauricio", "Mauritania", "México", "Micronesia", "Moldavia", "Mónaco", "Mongolia", "Montenegro", "Mozambique", "Namibia", "Nauru", "Nepal", "Nicaragua", "Níger", "Nigeria", "Noruega", "Nueva Zelanda", "Omán", "Países Bajos", "Pakistán", "Palaos", "Palestina", "Panamá", "Papúa Nueva Guinea", "Paraguay", "Perú", "Polonia", "Portugal", "Reino Unido", "República Centroafricana", "República Checa", "República del Congo", "República Democrática del Congo", "República Dominicana", "Ruanda", "Rumania", "Rusia", "Samoa", "San Cristóbal y Nieves", "San Marino", "San Vicente y las Granadinas", "Santa Lucía", "Santo Tomé y Príncipe", "Senegal", "Serbia", "Seychelles", "Sierra Leona", "Singapur", "Siria", "Somalia", "Sri Lanka", "Sudáfrica", "Sudán", "Sudán del Sur", "Suecia", "Suiza", "Surinam", "Tailandia", "Taiwán", "Tanzania", "Tayikistán", "Timor Oriental", "Togo", "Tonga", "Trinidad y Tobago", "Túnez", "Turkmenistán", "Turquía", "Tuvalu", "Ucrania", "Uganda", "Uruguay", "Uzbekistán", "Vanuatu", "Vaticano", "Venezuela", "Vietnam", "Yemen", "Yibuti", "Zambia", "Zimbabue"};
-    	JComboBox<String> combo = new JComboBox<>(countryList);
+    	JComboBox<String> combo = new RoundedComboBox<>(countryList);
     	combo.setFont(AppFont.normal());
     	combo.setBackground(UIColors.FIELD);
     	combo.setBorder(normalBorder);
@@ -131,7 +164,7 @@ public class FormUtils {
     }
         
     public static JComboBox<String> createCombo(String[] options) {
-        JComboBox<String> combo = new JComboBox<>(options);
+        JComboBox<String> combo = new RoundedComboBox<>(options);
     	combo.setFont(AppFont.normal());
     	combo.setBackground(UIColors.FIELD);
     	combo.setBorder(normalBorder);

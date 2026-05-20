@@ -13,8 +13,8 @@ public class RoomTypeRepository {
     public void save(RoomType roomType) {
 
         String sql = "INSERT INTO room_types "
-                + "(name, bedType, capacity, price, imagePath, features, featured) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                + "(name, bedType, capacity, price, imagePath, features, featured, description, extraImages) "
+                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement pst = connection.prepareStatement(sql)) {
@@ -26,6 +26,8 @@ public class RoomTypeRepository {
             pst.setString(5, roomType.getImagePath());
             pst.setString(6, roomType.featuresToString());
             pst.setBoolean(7, roomType.isFeatured());
+            pst.setString(8, roomType.getDescription());
+            pst.setString(9, roomType.extraImagesToString());
 
             pst.executeUpdate();
 
@@ -54,7 +56,9 @@ public class RoomTypeRepository {
                     rs.getDouble("price"),
                     rs.getString("imagePath"),
                     RoomType.stringToFeatures(rs.getString("features")),
-                    rs.getBoolean("featured")
+                    rs.getBoolean("featured"),
+                    rs.getString("description"),
+                    RoomType.stringToFeatures(rs.getString("extraImages"))
                 ));
             }
 
@@ -89,21 +93,23 @@ public class RoomTypeRepository {
     public boolean update(RoomType updatedRoomType) throws IOException {
 
     	String sql = "UPDATE room_types SET name = ?, bedType = ?, capacity = ?, "
-    	        + "price = ?, imagePath = ?, features = ?, featured = ? "
+    	        + "price = ?, imagePath = ?, features = ?, featured = ?, description = ?, extraImages = ? "
     	        + "WHERE typeId = ?";
     	
 		try (Connection connection = DatabaseConnection.getConnection();
 				PreparedStatement pst = connection.prepareStatement(sql)) {
 
-            pst.setString(1,updatedRoomType.getName());
-            pst.setString(2,updatedRoomType.getBedType());
-            pst.setInt(3,updatedRoomType.getCapacity());
-            pst.setDouble(4,updatedRoomType.getPrice());
-            pst.setString(5,updatedRoomType.getImagePath());
-            pst.setString(6,updatedRoomType.featuresToString());
-            pst.setBoolean(7,updatedRoomType.isFeatured());
-            pst.setInt(8,updatedRoomType.getTypeId());
-            
+			pst.setString(1,updatedRoomType.getName());
+			pst.setString(2,updatedRoomType.getBedType());
+			pst.setInt(3,updatedRoomType.getCapacity());
+			pst.setDouble(4,updatedRoomType.getPrice());
+			pst.setString(5,updatedRoomType.getImagePath());
+			pst.setString(6,updatedRoomType.featuresToString());
+			pst.setBoolean(7,updatedRoomType.isFeatured());
+			pst.setString(8,updatedRoomType.getDescription());
+			pst.setString(9,updatedRoomType.extraImagesToString());
+			pst.setInt(10,updatedRoomType.getTypeId());
+			
 			int affectedRows = pst.executeUpdate();
 
 			if (affectedRows > 0) {
@@ -132,14 +138,16 @@ public class RoomTypeRepository {
 
             while(rs.next()){
                 roomTypes.add(new RoomType(
-                    rs.getInt("typeId"),
-                    rs.getString("name"),
-                    rs.getString("bedType"),
-                    rs.getInt("capacity"),
-                    rs.getDouble("price"),
-                    rs.getString("imagePath"),
-                    RoomType.stringToFeatures(rs.getString("features")),
-                    rs.getBoolean("featured")
+                        rs.getInt("typeId"),
+                        rs.getString("name"),
+                        rs.getString("bedType"),
+                        rs.getInt("capacity"),
+                        rs.getDouble("price"),
+                        rs.getString("imagePath"),
+                        RoomType.stringToFeatures(rs.getString("features")),
+                        rs.getBoolean("featured"),
+                        rs.getString("description"),
+                        RoomType.stringToFeatures(rs.getString("extraImages"))
                 ));
             }
 
@@ -165,14 +173,16 @@ public class RoomTypeRepository {
 
             while(rs.next()){
                 roomTypes.add(new RoomType(
-                    rs.getInt("typeId"),
-                    rs.getString("name"),
-                    rs.getString("bedType"),
-                    rs.getInt("capacity"),
-                    rs.getDouble("price"),
-                    rs.getString("imagePath"),
-                    RoomType.stringToFeatures(rs.getString("features")),
-                    rs.getBoolean("featured")
+                        rs.getInt("typeId"),
+                        rs.getString("name"),
+                        rs.getString("bedType"),
+                        rs.getInt("capacity"),
+                        rs.getDouble("price"),
+                        rs.getString("imagePath"),
+                        RoomType.stringToFeatures(rs.getString("features")),
+                        rs.getBoolean("featured"),
+                        rs.getString("description"),
+                        RoomType.stringToFeatures(rs.getString("extraImages"))
                 ));
             }
 

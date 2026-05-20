@@ -25,6 +25,18 @@ public class AppFont {
 		}
 	}
 	
+    public static Font title() {
+        return firasans.deriveFont(Font.BOLD, 32f);
+    }
+    
+	public static Font subtitle2() {
+		return roboto.deriveFont(Font.BOLD, 28f);
+	}
+	
+	public static Font subtitle() {
+		return roboto.deriveFont(Font.BOLD, 22f);
+	}
+	
     public static Font big() {
         return roboto.deriveFont(Font.BOLD, 18f);
     }
@@ -33,20 +45,7 @@ public class AppFont {
         return roboto.deriveFont(Font.BOLD, 15f);
     }    
     
-    public static Font paragraph() {
-        return roboto.deriveFont(15f);
-    }
-
     public static Font small() {
         return roboto.deriveFont(Font.BOLD, 13f);
     }
-	
-    public static Font title() {
-        return firasans.deriveFont(Font.BOLD, 30f);
-    }
-	
-	public static Font subtitle() {
-		return roboto.deriveFont(Font.BOLD, 22f);
-	}
-	
 }

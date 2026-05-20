@@ -54,9 +54,19 @@ public class RoomTypeFormController {
 			public void changedUpdate(DocumentEvent e){validateFeatures();}
 		});
 		
+		view.getTxtDescription().getDocument().addDocumentListener(new DocumentListener(){
+			public void insertUpdate(DocumentEvent e){validateDescription();}
+			public void removeUpdate(DocumentEvent e){validateDescription();}
+			public void changedUpdate(DocumentEvent e){validateDescription();}
+		});
+		
+		view.getBtnExtraImages().addActionListener( e->selectExtraImages() );
+		
 		FormUtils.addFocusEffect(view.getTxtName(),view.getLblNameError());
 		FormUtils.addFocusEffect(view.getTxtPrice(),view.getLblPriceError());
+		FormUtils.addFocusEffect(view.getTxtDescription(),view.getLblDescriptionError());
 		FormUtils.addFocusEffect(view.getTxtImagePath(),view.getLblImageError());
+		FormUtils.addFocusEffect(view.getTxtExtraImages(),view.getLblExtraImagesError());
 		FormUtils.addFocusEffect(view.getTxtFeatures(),view.getLblFeaturesError());
 	}
 
@@ -82,7 +92,12 @@ public class RoomTypeFormController {
 				view.getPrice(),
 				view.getImagePath(),
 				view.getFeatures(),
-				view.isFeatured()
+				view.isFeatured(),
+				
+				view.getDescription(),
+				RoomType.stringToImages(
+					view.getTxtExtraImages().getText()
+				)
 			);
 
 		}else{
@@ -93,6 +108,11 @@ public class RoomTypeFormController {
 			roomType.setImagePath(view.getImagePath());
 			roomType.setFeatures(view.getFeatures());
 			roomType.setFeatured(view.isFeatured());
+			
+			roomType.setDescription(view.getDescription());
+			roomType.setExtraImages(RoomType.stringToImages(
+				view.getTxtExtraImages().getText()
+			));
 		}
 
 		view.setSaved(true);
@@ -176,6 +196,93 @@ public class RoomTypeFormController {
 	        ex.printStackTrace();
 	    }
 	}
+	
+	private void selectExtraImages(){
+
+	    String lastFolder =
+	        Config.get(
+	            "room.image.folder",
+	            System.getProperty("user.home")
+	        );
+
+	    JFileChooser chooser = new JFileChooser(lastFolder);
+
+	    chooser.setMultiSelectionEnabled(true);
+
+	    chooser.setAcceptAllFileFilterUsed(false);
+
+	    chooser.setFileFilter(
+	        new FileNameExtensionFilter(
+	            "Imágenes (*.png, *.jpg, *.jpeg)",
+	            "png",
+	            "jpg",
+	            "jpeg"
+	        )
+	    );
+
+	    int option = chooser.showOpenDialog(null);
+
+	    if(option != JFileChooser.APPROVE_OPTION){
+	        return;
+	    }
+
+	    try{
+
+	        File[] files = chooser.getSelectedFiles();
+
+	        if(files.length > 0){
+	            Config.set(
+	                "room.image.folder",
+	                files[0].getParent()
+	            );
+	        }
+
+	        File srcFolder = new File("src/assets/img/rooms");
+	        File binFolder = new File("bin/assets/img/rooms");
+
+	        srcFolder.mkdirs();
+	        binFolder.mkdirs();
+
+	        StringBuilder paths = new StringBuilder();
+
+	        for(File selected : files){
+
+	            String fileName = System.currentTimeMillis() + "_" + selected.getName();
+
+	            File srcDestination = new File(srcFolder,fileName);
+	            File binDestination = new File(binFolder,fileName);
+
+	            Files.copy(
+	                selected.toPath(),
+	                srcDestination.toPath(),
+	                StandardCopyOption.REPLACE_EXISTING
+	            );
+
+	            Files.copy(
+	                selected.toPath(),
+	                binDestination.toPath(),
+	                StandardCopyOption.REPLACE_EXISTING
+	            );
+
+	            String dbPath = "/assets/img/rooms/" + fileName;
+
+	            paths.append(dbPath);
+	        }
+
+	        if(paths.length()>0){
+	            paths.deleteCharAt(
+	                paths.length()-1
+	            );
+	        }
+
+	        view.getTxtExtraImages().setText(paths.toString());
+
+	        validateExtraImages();
+
+	    }catch(Exception ex){
+	        ex.printStackTrace();
+	    }
+	}	
 	private boolean validateForm(){
 		view.clearErrors();
 		boolean valid = true;
@@ -186,6 +293,9 @@ public class RoomTypeFormController {
 		if(!validatePrice()) valid = false;
 		if(!validateImage()) valid = false;
 		if(!validateFeatures()) valid = false;
+		
+		if(!validateDescription()) valid = false;
+		if(!validateExtraImages()) valid = false;
 
 		return valid;
 	}
@@ -280,6 +390,41 @@ public class RoomTypeFormController {
 	    }
 
 	    view.clearFeaturesError();
+	    return true;
+	}
+	
+	private boolean validateDescription(){
+	    String description = view.getDescription();
+	    
+	    if (description.isEmpty()) {
+	        view.setDescriptionError("La descripción es obligatoria");
+	        return false;
+	    } 
+	    
+	    if(description.length() < 100){
+	        view.setDescriptionError("Mínimo 100 caracteres");
+	        return false;
+	    }
+
+	    
+	    view.clearDescriptionError();
+		return true;
+	}
+	
+	private boolean validateExtraImages(){
+
+	    String images=view.getTxtExtraImages().getText().trim();
+
+	    if(images.isEmpty()) {
+	        view.setExtraImagesError(
+	            "Selecciona imágenes extras"
+	        );
+
+	        return false;
+	    }
+
+	    view.clearExtraImagesError();
+
 	    return true;
 	}
 }
