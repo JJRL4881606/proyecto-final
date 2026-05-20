@@ -33,11 +33,14 @@ import components.RoundedButton;
 import components.RoundedImageOverlayPanel;
 import components.RoundedPanel;
 import components.SearchBar;
+import controllers.auth.LoginController;
+import controllers.rooms.RoomCardController;
 import models.RoomType;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.VisualUtils;
+import views.auth.LoginView;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
@@ -166,12 +169,15 @@ public class HomeView extends JPanel{
         roomsContainer.removeAll();
 
         for (RoomType room : rooms) {
-        	roomsContainer.add(new RoomCard(room));
+            RoomCard card = new RoomCard(room);
+            roomsContainer.add(card);
+            new RoomCardController(card, room); // controlador enlazado
         }
 
         roomsContainer.revalidate();
         roomsContainer.repaint();
     }
+
     
     public SearchBar getSearchBar() {
         return searchBar;

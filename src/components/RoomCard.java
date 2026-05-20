@@ -21,8 +21,13 @@ import utils.UIColors;
 @SuppressWarnings("serial")
 public class RoomCard extends RoundedPanel {
 
-    public RoomCard(RoomType room) {
+    private RoundedButton btnReserve;
+    private RoundedButton btnDetails;
 
+    public RoundedButton getBtnReserve() { return btnReserve; }
+    public RoundedButton getBtnDetails() { return btnDetails; }
+
+    public RoomCard(RoomType room) {
         super(25);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(UIColors.CARD);
@@ -52,7 +57,7 @@ public class RoomCard extends RoundedPanel {
         JLabel bedLabel = new JLabel(room.getBedType());
         bedLabel.setFont(AppFont.big());
         bedLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
+
         infoPanel.add(nameLabel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         infoPanel.add(bedLabel);
@@ -70,7 +75,7 @@ public class RoomCard extends RoundedPanel {
         );
 
         JLabel guestLabel = new JLabel(room.getCapacity() + " huéspedes");
-        
+
         guestsPanel.add(guestIcon);
         guestsPanel.add(guestLabel);
 
@@ -82,16 +87,8 @@ public class RoomCard extends RoundedPanel {
         featuresPanel.setOpaque(false);
 
         List<String> features = room.getFeatures();
-
         for (String feature : features) {
-
-            JPanel featureItem = new JPanel(
-                    new FlowLayout(
-                            FlowLayout.LEFT,
-                            5,
-                            0
-                    )
-            );
+            JPanel featureItem = new JPanel(new FlowLayout(FlowLayout.LEFT,5,0));
             featureItem.setOpaque(false);
 
             JLabel icon = new JLabel(
@@ -111,33 +108,27 @@ public class RoomCard extends RoundedPanel {
         infoPanel.add(featuresPanel);
 
         // acción
-        JLabel priceLabel = new JLabel(
-                "$" + room.getPrice() + " por noche"
-        );
-
+        JLabel priceLabel = new JLabel("$" + room.getPrice() + " por noche");
         priceLabel.setFont(AppFont.big());
         priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        RoundedButton btnReserve =
-            ButtonFactory.createBigButton(
+        btnReserve = ButtonFactory.createBigButton(
                 "Reservar",
                 "/assets/img/btn-icons/button-search-icon.png",
                 "Reservar habitación"
-            );
-        
-        RoundedButton btnDetails =
-            ButtonFactory.createBigButton(
+        );
+
+        btnDetails = ButtonFactory.createBigButton(
                 "Ver detalles",
                 "/assets/img/btn-icons/button-search-icon.png",
                 "Ver detalles"
-            );
-        
+        );
+
         btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnDetails.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnReserve.setMaximumSize(new Dimension(260, 45));
         btnDetails.setMaximumSize(new Dimension(260, 45));
-        
-        // action panel
+
         JPanel actionPanel = new JPanel();
         actionPanel.setOpaque(false);
         actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
@@ -146,7 +137,7 @@ public class RoomCard extends RoundedPanel {
         actionPanel.add(btnReserve);
         actionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         actionPanel.add(btnDetails);
-        
+
         add(imagePanel);
         add(Box.createVerticalGlue());
         add(infoPanel);
