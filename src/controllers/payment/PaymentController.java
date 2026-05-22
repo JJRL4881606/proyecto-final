@@ -1,7 +1,15 @@
 package controllers.payment;
 
+import java.awt.Point;
+import java.awt.Window;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 import javax.swing.*;
 
+import views.auth.LoginWindow;
+import views.main.MainView;
+import views.main.MainWindow;
 import views.payment.PaymentView;
 import views.payment.PaymentWindow;
 
@@ -10,18 +18,49 @@ public class PaymentController {
     private PaymentWindow paymentWindow;
     private PaymentView paymentView;
 
-    public PaymentController(PaymentWindow paymentWindow) {
-
-        this.paymentWindow = paymentWindow;
-        this.paymentView = paymentWindow.getPaymentView();
+    public PaymentController(PaymentWindow paymentWindow, PaymentView paymentView) {
+	    this.paymentWindow = paymentWindow;
+	    this.paymentView = paymentView;
 
         initListeners();
     }
+    
+	public void initListeners( ) {
+		paymentView.getBtnPay().addActionListener(e -> processPayment());
+		
+		//paymentView.getLogOut().addActionListener(e -> handleClose());
+		
+		paymentWindow.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent e) {
+		        handleClose();
+		    }
+		    
+		    public void windowOpened(WindowEvent e) {
+		        resetScroll();
+		    }
+		});
+			
+		paymentWindow.revalidate();
+		paymentWindow.repaint();
 
-    private void initListeners() {
+		resetScroll();
+	}
+	
+	
+    private void handleClose() {
+        //Session.logout();
 
-        paymentView.getBtnPay().addActionListener(e -> processPayment());
+		new LoginWindow();
+        Window window = SwingUtilities.getWindowAncestor(paymentView);
+        if (window != null) window.dispose();
     }
+	
+	private void resetScroll() {
+	    SwingUtilities.invokeLater(() -> {
+	    		paymentWindow.getScroll().getViewport().setViewPosition(new Point(0, 0));
+	    });
+	}
 
     private void processPayment() {
 

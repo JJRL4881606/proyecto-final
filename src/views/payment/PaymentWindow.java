@@ -12,155 +12,176 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
+import components.RoundedPanel;
 import components.UnderlineMenu;
+import controllers.main.MainController;
+import controllers.payment.PaymentController;
 import utils.AppFont;
 import utils.UIColors;
+import views.main.MainView;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class PaymentWindow extends JFrame {
-	
-	private PaymentWindow paymentWindow;
+
     private PaymentView paymentView;
     private JScrollPane scroll;
 
     public PaymentWindow() {
 
-    		UIManager.put("Menu.borderPainted", false);
-	    UIManager.put("MenuItem.borderPainted", false);
-	    UIManager.put("Menu.selectionBackground", UIColors.HEADER);
-	    UIManager.put("Menu.selectionForeground", Color.WHITE);
-	    UIManager.put("MenuItem.selectionBackground", UIColors.HEADER);
-	    UIManager.put("MenuItem.selectionForeground", Color.WHITE);
-	    
-	    this.setBackground(new Color(100,149,237)); 
-	    setLayout(new BorderLayout());
-	    add(headerSection(), BorderLayout.NORTH);
-    	
-        paymentView = new PaymentView();
+        setTitle("ATLANTIS THE PALM, FORMA DE PAGO");
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setResizable(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        this.setTitle("ATLANTIS THE PALM, FORMA DE PAGO");
-        this.setResizable(true);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		
-		JPanel background = new JPanel();
+        // PANEL PRINCIPAL
+        RoundedPanel background = new RoundedPanel(25);
         background.setLayout(new BorderLayout());
-        setContentPane(background);    
-
-        // Agregar icono
+        background.setBackground(new Color(100, 149, 237));
+        setContentPane(background);
+        
+        // ICONO
         Image icon = Toolkit.getDefaultToolkit().getImage(
-    	    getClass().getResource("/assets/img/logos/hotel-icon.png"));
-        
+                getClass().getResource("/assets/img/logos/hotel-icon.png"));
         setIconImage(icon);
-        
-        
-        this.setVisible(true);
-		
-        add(paymentView);
-    }
 
-    //HEADER
-    public JPanel headerSection() {
-        JPanel superiorPanel = new JPanel();
-        superiorPanel.setLayout(new GridLayout(1,3));
-        superiorPanel.setBackground(UIColors.HEADER);
-        superiorPanel.setBorder(new EmptyBorder(30,30,35,30));
+        // VIEW
+        paymentView = new PaymentView();
+        new PaymentController(this, paymentView);
 
-        superiorPanel.add(headerLeftSection());
-        superiorPanel.add(headerCenterSection());
-        superiorPanel.add(headerRightSection());
+     // PANEL CENTRAL
+        JPanel centerPanel = new JPanel(new BorderLayout(20, 0));
+        centerPanel.setBackground(UIColors.HEADER);
+        centerPanel.setBorder(
+                BorderFactory.createEmptyBorder(30, 30, 30, 30)
+        );
 
-        return superiorPanel;
+        // PANEL IZQUIERDO FOTO
+        JPanel leftImagePanel = createSideImagePanel(
+                "/assets/img/payment/left-banner.jpg"
+        );
+        leftImagePanel.setBackground(Color.BLACK);
+        leftImagePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(
+                		Color.BLACK, 1),
+                BorderFactory.createEmptyBorder(
+                        3, 3, 3, 3)
+        ));
+
+        // PANEL DERECHO FOTO
+        JPanel rightImagePanel = createSideImagePanel(
+                "/assets/img/payment/right-banner.jpg"
+        );
+        rightImagePanel.setBackground(Color.BLACK);
+        rightImagePanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(
+                		Color.BLACK, 1),
+                BorderFactory.createEmptyBorder(
+                        3, 3, 3, 3)
+        ));
+
+        // PANEL DEL FORMULARIO
+        paymentView = new PaymentView();
+        paymentView.setBackground(Color.WHITE);
+
+        new PaymentController(this, paymentView);
+
+        centerPanel.add(leftImagePanel, BorderLayout.WEST);
+        centerPanel.add(paymentView, BorderLayout.CENTER);
+        centerPanel.add(rightImagePanel, BorderLayout.EAST);
+
+        background.add(
+                createMainScroll(centerPanel),
+                BorderLayout.CENTER
+        );
+
+        setVisible(true);
     }
     
-    public JPanel headerCenterSection() {
-        JPanel panel = createTransparentPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER));
+    private JPanel createSideImagePanel(String imagePath) {
 
-        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/img/logos/hotel-logo.png"));
-        Image img = icon.getImage().getScaledInstance(250, 80, Image.SCALE_SMOOTH);
-        JLabel logo = new JLabel(new ImageIcon(img));
+    		JPanel panel = new JPanel(new BorderLayout());
 
-        panel.add(logo);
+        panel.setBackground(Color.WHITE);
+        panel.setPreferredSize(
+                new Dimension(260, 900));
+
+        JLabel imageLabel = new JLabel();
+        imageLabel.setHorizontalAlignment(
+                SwingConstants.CENTER);
+
+        java.net.URL imageURL =
+                getClass().getResource(imagePath);
+
+        if (imageURL != null) {
+
+            ImageIcon icon =
+                    new ImageIcon(imageURL);
+
+            Image img =
+                    icon.getImage().getScaledInstance(
+                            560,
+                            1200,
+                            Image.SCALE_SMOOTH
+                    );
+
+            imageLabel.setIcon(
+                    new ImageIcon(img));
+
+        }
+
+        panel.add(imageLabel,
+                BorderLayout.CENTER);
+
+        // Bordes redondeados
+        panel.setBorder(
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(
+                    new Color(220,220,220),
+                    1,
+                    true
+                ),
+                BorderFactory.createEmptyBorder(
+                    0,0,0,0
+                )
+            )
+        );
 
         return panel;
     }
-    
-    public JPanel headerRightSection(){
-        return createTransparentPanel();
+
+    private JScrollPane createMainScroll(JPanel panel) {
+
+        scroll = new JScrollPane(panel);
+
+        scroll.setBorder(null);
+
+        scroll.getVerticalScrollBar()
+                .setUnitIncrement(16);
+
+        scroll.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+
+        // Fondo azul detrás
+        scroll.getViewport().setBackground(
+                UIColors.HEADER
+        );
+
+        // Opcional: quitar fondo gris feo
+        scroll.setBackground(UIColors.HEADER);
+
+        return scroll;
     }
-    
-    public JPanel headerLeftSection(){
-    	JPanel panel = createTransparentPanel();
-    	panel.setLayout(new GridBagLayout());
-    	
-        JMenuBar menu = createMenu();
-        panel.add(menu);
 
-        return panel;
-    }   
-    
-    private JPanel createTransparentPanel() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        return panel;
-    }
-    
-    public JMenuBar createMenu() {
-    	JMenuBar mb = new JMenuBar();
-    	mb.setFont(AppFont.big());
-    	mb.setForeground(Color.white);
-    	mb.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
-    	mb.setOpaque(true);
-    	mb.setBackground(UIColors.HEADER);
-    	
-        // USUARIO
-        JMenu usuario = new UnderlineMenu("Usuario");
-        usuario.setMnemonic(KeyEvent.VK_U);
-        mb.add(usuario);
-
-        //FALTA CREAR ESTAS VISTAS
-        /*
-        JMenuItem miCuenta = new JMenuItem("Mi cuenta");
-        miCuenta.setMnemonic(KeyEvent.VK_C);
-        usuario.add(miCuenta);
-
-        JMenuItem misReservas = new JMenuItem("Mis reservas");
-        misReservas.setMnemonic(KeyEvent.VK_R);
-        usuario.add(misReservas);
-        */
-        
-        usuario.addSeparator();
-
-        // SISTEMA
-    	JMenu sistema = new UnderlineMenu("Sistema");
-    	sistema.setMnemonic(KeyEvent.VK_S);
-        mb.add(sistema);
-
-        JMenuItem btnExit = new JMenuItem("Salir");
-        btnExit.setMnemonic(KeyEvent.VK_I);
-        sistema.add(btnExit);
-
-        return mb;
-    }
-    
     public PaymentView getPaymentView() {
         return paymentView;
     }
-    
-    public PaymentWindow getPaymentWindow() {
-        return paymentWindow;
+
+    public JScrollPane getScroll() {
+        return scroll;
     }
-    
-	public void setWindowSize(int width, int height) {
-		setSize(width, height);
-	}
-	
-	public void setWindowLocation(int x, int y) {
-		setLocation(x, y);
-	}
-	
-	public JScrollPane getScroll() {
-	    return scroll;
-	}
 }
