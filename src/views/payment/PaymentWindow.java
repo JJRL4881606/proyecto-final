@@ -28,7 +28,7 @@ public class PaymentWindow extends JFrame {
 
     private PaymentView paymentView;
     private JScrollPane scroll;
-
+    
     public PaymentWindow() {
 
         setTitle("ATLANTIS THE PALM, FORMA DE PAGO");
@@ -52,7 +52,7 @@ public class PaymentWindow extends JFrame {
         paymentView = new PaymentView();
         new PaymentController(this, paymentView);
 
-     // PANEL CENTRAL
+        // PANEL CENTRAL
         JPanel centerPanel = new JPanel(new BorderLayout(20, 0));
         centerPanel.setBackground(UIColors.HEADER);
         centerPanel.setBorder(
@@ -64,24 +64,20 @@ public class PaymentWindow extends JFrame {
                 "/assets/img/payment/left-banner.jpg"
         );
         leftImagePanel.setBackground(Color.BLACK);
-        leftImagePanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                		Color.BLACK, 1),
+        leftImagePanel.setBorder(
                 BorderFactory.createEmptyBorder(
                         3, 3, 3, 3)
-        ));
+        );
 
         // PANEL DERECHO FOTO
         JPanel rightImagePanel = createSideImagePanel(
                 "/assets/img/payment/right-banner.jpg"
         );
         rightImagePanel.setBackground(Color.BLACK);
-        rightImagePanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                		Color.BLACK, 1),
+        rightImagePanel.setBorder(
                 BorderFactory.createEmptyBorder(
                         3, 3, 3, 3)
-        ));
+        );
 
         // PANEL DEL FORMULARIO
         paymentView = new PaymentView();
@@ -93,8 +89,29 @@ public class PaymentWindow extends JFrame {
         centerPanel.add(paymentView, BorderLayout.CENTER);
         centerPanel.add(rightImagePanel, BorderLayout.EAST);
 
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+
+        centerPanel.setPreferredSize(
+                new Dimension(screen.width - 20,
+                              centerPanel.getPreferredSize().height)
+        );
+
+        // PANEL QUE CENTRA EL centerPanel
+        JPanel wrapper = new JPanel(new GridBagLayout());
+        wrapper.setBackground(UIColors.HEADER);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        wrapper.add(centerPanel, gbc);
+
+        // AGREGAR EL WRAPPER AL SCROLL
         background.add(
-                createMainScroll(centerPanel),
+                createMainScroll(wrapper),
                 BorderLayout.CENTER
         );
 
@@ -136,20 +153,6 @@ public class PaymentWindow extends JFrame {
         panel.add(imageLabel,
                 BorderLayout.CENTER);
 
-        // Bordes redondeados
-        panel.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                    new Color(220,220,220),
-                    1,
-                    true
-                ),
-                BorderFactory.createEmptyBorder(
-                    0,0,0,0
-                )
-            )
-        );
-
         return panel;
     }
 
@@ -166,12 +169,10 @@ public class PaymentWindow extends JFrame {
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
 
-        // Fondo azul detrás
         scroll.getViewport().setBackground(
                 UIColors.HEADER
         );
 
-        // Opcional: quitar fondo gris feo
         scroll.setBackground(UIColors.HEADER);
 
         return scroll;

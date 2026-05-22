@@ -12,7 +12,7 @@ import utils.FormUtils;
 import utils.UIColors;
 
 import java.awt.*;
-
+import java.awt.event.KeyEvent;
 import java.awt.*;
 import javax.swing.*;
 
@@ -45,6 +45,8 @@ public class PaymentView extends JPanel {
 
     // Botón
     private JButton btnPay;
+    
+    private JMenuItem btnHome;
 
     // Resumen
     private JLabel lblRoom;
@@ -501,21 +503,13 @@ public class PaymentView extends JPanel {
         mb.setOpaque(true);
         mb.setBackground(UIColors.HEADER);
 
-        // USUARIO
-        JMenu usuario = new UnderlineMenu("Usuario");
-        usuario.setMnemonic('U');
-        mb.add(usuario);
-
-        usuario.addSeparator();
-
-        // SISTEMA
         JMenu sistema = new UnderlineMenu("Sistema");
-        sistema.setMnemonic('S');
+        sistema.setMnemonic(KeyEvent.VK_S);
         mb.add(sistema);
 
-        JMenuItem btnExit = new JMenuItem("Salir");
-        btnExit.setMnemonic('I');
-        sistema.add(btnExit);
+        btnHome = new JMenuItem("Inicio");
+        btnHome.setMnemonic(KeyEvent.VK_I);
+        sistema.add(btnHome);
 
         return mb;
     }
