@@ -205,23 +205,17 @@ public class FormUtils {
     
     public static void onlyDateNumbers(JSpinner spinner) {
 
-        JSpinner.DateEditor editor =
-                (JSpinner.DateEditor) spinner.getEditor();
-
-        JFormattedTextField textField =
-                editor.getTextField();
+        JSpinner.DateEditor editor = (JSpinner.DateEditor) spinner.getEditor();
+        JFormattedTextField textField = editor.getTextField();
 
         textField.addKeyListener(new KeyAdapter() {
-
+        	
             @Override
             public void keyTyped(KeyEvent e) {
 
                 char c = e.getKeyChar();
 
-                if (!Character.isDigit(c)
-                        && c != '/'
-                        && c != '-') {
-
+                if (!Character.isDigit(c) && c != '/' && c != '-') {
                     e.consume();
                 }
             }

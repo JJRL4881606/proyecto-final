@@ -36,22 +36,11 @@ public class RoomFormController {
 		}
 
 		if(view.getRoom() != null){
-
+			
 			for(int i = 0; i < roomTypes.size(); i++){
-
-				if(
-					roomTypes.get(i)
-					.getTypeId()
-
-					==
-
-					view.getRoom()
-					.getTypeId()
-				){
-
-					view.getComboRoomType()
-						.setSelectedIndex(i+1);
-
+				
+				if(roomTypes.get(i).getTypeId() == view.getRoom().getTypeId()){
+					view.getComboRoomType().setSelectedIndex(i+1);
 					break;
 				}
 			}

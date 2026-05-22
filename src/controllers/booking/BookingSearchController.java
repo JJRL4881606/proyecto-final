@@ -24,11 +24,10 @@ public class BookingSearchController {
     private void handleSearch() {
         int guests = view.getSearchBar().getGuests();
 		
-		List<RoomType> rooms =
-		    repository.getAvailableRoomTypes(
-		            guests
-		    );
+		List<RoomType> rooms = repository.getAvailableRoomTypes(guests);
 		
 		view.setRooms(rooms);
     }
+    
+    
 }

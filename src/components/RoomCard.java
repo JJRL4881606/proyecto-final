@@ -12,6 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import models.Amenity;
 import models.RoomType;
 import utils.AppFont;
 import utils.ButtonFactory;
@@ -81,23 +82,26 @@ public class RoomCard extends RoundedPanel {
         JPanel featuresPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         featuresPanel.setOpaque(false);
 
-        List<String> features = room.getFeatures();
+        List<Amenity> amenities = room.getAmenities();
 
-        for (int i = 0; i < Math.min(4, features.size()); i++) {
+        for(int i=0; i<Math.min(4, amenities.size()); i++){
 
-            JPanel featureItem = new JPanel(
-                new FlowLayout(FlowLayout.LEFT, 5, 0)
-            );
-
+            JPanel featureItem = new JPanel(new FlowLayout(FlowLayout.LEFT,5,0));
             featureItem.setOpaque(false);
 
-            JLabel icon = new JLabel(
-                FormUtils.loadIcon(
-                    "/assets/img/icons/check-icon.png", 14
+            JLabel icon = new JLabel(FormUtils.loadIcon(
+                    "/assets/img/icons/check-icon.png",
+                    14
                 )
             );
 
-            JLabel text = new JLabel(features.get(i));
+            String amenityName = amenities.get(i).getName();
+
+            if(amenityName.length() > 17){
+                amenityName = amenityName.substring(0,14) + "...";
+            }
+
+            JLabel text = new JLabel(amenityName);
 
             featureItem.add(icon);
             featureItem.add(text);
@@ -108,26 +112,21 @@ public class RoomCard extends RoundedPanel {
         infoPanel.add(featuresPanel);
 
         // acción
-        JLabel priceLabel = new JLabel(
-                "$" + room.getPrice() + " por noche"
-        );
-
+        JLabel priceLabel = new JLabel("$" + room.getPrice() + " por noche");
         priceLabel.setFont(AppFont.big());
         priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        btnReserve =
-            ButtonFactory.createBigButton(
-                "Reservar",
-                "/assets/img/btn-icons/button-search-icon.png",
-                "Reservar habitación"
-            );
+        btnReserve = ButtonFactory.createBigButton(
+            "Reservar",
+            "/assets/img/btn-icons/button-reserve-icon.png",
+            "Reservar habitación"
+        );
         
-        btnDetails =
-            ButtonFactory.createBigButton(
-                "Ver detalles",
-                "/assets/img/btn-icons/button-search-icon.png",
-                "Ver detalles"
-            );
+        btnDetails = ButtonFactory.createBigButton(
+            "Ver detalles",
+            "/assets/img/btn-icons/button-search-icon.png",
+            "Ver detalles"
+        );
         
         btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnDetails.setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class RoomType {
     private int capacity;
     private double price;
     private String imagePath;
-    private List<String> features;
+    private List<Amenity> amenities;
     private boolean featured;
     
     private String description;
@@ -20,7 +21,7 @@ public class RoomType {
     public RoomType() {}
 
     public RoomType(int typeId, String name, String bedType, int capacity,
-        double price, String imagePath, List<String> features,
+        double price, String imagePath, List<Amenity> amenities,
         boolean featured,String description, List<String> extraImages) {
 	        this.typeId = typeId;
 	        this.name = name;
@@ -28,29 +29,23 @@ public class RoomType {
 	        this.capacity = capacity;
 	        this.price = price;
 	        this.imagePath = imagePath;
-	        this.features = features;
+	        this.amenities = amenities;
 	        this.featured = featured;
 	        
 	        this.description = description;
 	        this.extraImages = extraImages;
     }
 
-    public String featuresToString(){
-        if(features == null){
-            return "";
-        }
-
-        return String.join("|", features);
-    }
     
     public static List<String> stringToFeatures(String text){
         if(text == null || text.isEmpty()){
             return List.of();
         }
 
-        return Arrays.asList(
-            text.split("\\|")
-        );
+        return Arrays.stream(text.split("\\|"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();    
     }
     
     public String extraImagesToString(){
@@ -61,16 +56,25 @@ public class RoomType {
         return String.join("|", extraImages);
     }
     
-    public static List<String> stringToImages(String text){
-        if(text == null || text.isEmpty()){
-            return List.of();
+    public static List<String> stringToImages(String text) {
+
+        List<String> list = new ArrayList<>();
+
+        if (text == null || text.trim().isEmpty()) {
+            return list;
         }
 
-        return Arrays.asList(
-            text.split("\\|")
-        );
-    }
+        String[] parts = text.split("\\|");
 
+        for (String p : parts) {
+            if (p != null && !p.trim().isEmpty()) {
+                list.add(p.trim());
+            }
+        }
+
+        return list;
+    }
+    
     //getters y setters
     public int getTypeId() {
         return typeId;
@@ -100,8 +104,8 @@ public class RoomType {
         return imagePath;
     }
 
-    public List<String> getFeatures() {
-        return features;
+    public List<Amenity> getAmenities(){
+        return amenities;
     }
     
     public String getDescription(){
@@ -120,13 +124,33 @@ public class RoomType {
         this.extraImages = extraImages;
     }
     
-    public void setName(String name){ this.name = name; }
-    public void setBedType(String bedType){ this.bedType = bedType; }
-    public void setCapacity(int capacity){ this.capacity = capacity; }
-    public void setPrice(double price){ this.price = price; }
-    public void setImagePath(String imagePath){ this.imagePath = imagePath; }
-    public void setFeatures(List<String> features){ this.features = features; }
-    public void setFeatured(boolean featured){ this.featured = featured; }
+    public void setName(String name){
+    	this.name = name; 
+    }
+    
+    public void setBedType(String bedType){
+    	this.bedType = bedType; 
+    }
+    
+    public void setCapacity(int capacity){
+    	this.capacity = capacity; 
+    }
+    
+    public void setPrice(double price){
+    	this.price = price;
+    }
+    
+    public void setImagePath(String imagePath){
+    	this.imagePath = imagePath; 
+    }
+    
+    public void setAmenities(List<Amenity> amenities){
+        this.amenities=amenities;
+    }
+    
+    public void setFeatured(boolean featured){
+    	this.featured = featured; 
+    }
 
     public boolean isFeatured() {
         return featured;

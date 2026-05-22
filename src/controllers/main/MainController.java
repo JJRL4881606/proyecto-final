@@ -3,6 +3,7 @@ package controllers.main;
 import javax.swing.SwingUtilities;
 
 import config.Config;
+import controllers.amenities.AmenityController;
 import controllers.rooms.RoomController;
 import controllers.roomtypes.RoomTypeController;
 import controllers.users.UserController;
@@ -23,6 +24,7 @@ public class MainController {
 	private UserController userController;
 	private RoomTypeController roomTypeController;
 	private RoomController roomController;
+	private AmenityController amenityController;
 	private MainWindow frame;
 
 	public MainController(MainView view, MainWindow frame) {
@@ -51,6 +53,7 @@ public class MainController {
 		view.getBtnUsers().addActionListener(e -> { handleTableUsers(); });
 		view.getBtnRoomTypes().addActionListener(e -> { handleTableRoomTypes(); });
 		view.getBtnRooms().addActionListener(e -> { handleTableRooms(); });
+		view.getBtnAmenities().addActionListener(e -> { handleTableAmenities(); });
 		
 		view.getBtnHome().addActionListener(e -> {
 			view.showView(MainView.HOME);
@@ -113,6 +116,22 @@ public class MainController {
 	    resetScroll();
 	}
 	
+	private void handleTableAmenities() {
+		if(amenityController == null) {
+			amenityController = new AmenityController(view.amenitiesPanel);
+		}
+			
+		amenityController.loadAmenities();
+		
+		view.showView(MainView.ADMIN_AMENITIES);
+		updateMenuState(MainView.ADMIN_AMENITIES);
+		
+	    frame.revalidate();
+	    frame.repaint();
+
+	    resetScroll();
+	}
+	
 	private void handleShowRooms() {
 	    view.showView(MainView.SHOW_ROOMS);
 	}
@@ -130,6 +149,7 @@ public class MainController {
 		view.getBtnUsers().setEnabled(!viewName.equals(MainView.ADMIN_USERS));
 		view.getBtnRoomTypes().setEnabled(!viewName.equals(MainView.ADMIN_ROOMTYPES));
 		view.getBtnRooms().setEnabled(!viewName.equals(MainView.ADMIN_ROOMS));
+		view.getBtnAmenities().setEnabled(!viewName.equals(MainView.ADMIN_AMENITIES));
 		view.getBtnShowRooms().setEnabled(!viewName.equals(MainView.SHOW_ROOMS));
 	}
 	

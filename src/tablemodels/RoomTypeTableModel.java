@@ -1,9 +1,11 @@
 package tablemodels;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.table.AbstractTableModel;
 
+import models.Amenity;
 import models.RoomType;
 
 @SuppressWarnings("serial")
@@ -48,28 +50,35 @@ public class RoomTypeTableModel extends AbstractTableModel{
 	    RoomType roomType = roomTypes.get(rowIndex);
 
 	    switch(columnIndex) {
-	        case 0:
-	            return roomType.getName();
-	        case 1:
-	            return roomType.getBedType();
-	        case 2:
-	            return roomType.getCapacity();
-	        case 3:
-	            return roomType.getPrice();
-	        case 4:
-	            return roomType.getImagePath();
-	        case 5:
-	            return roomType.featuresToString();
-	        case 6:
-	            return roomType.isFeatured();
-	        case 7:
-	            return shortenText(
-	                roomType.getDescription(),
-	                24
-	            );
-	        case 8:
-	            return roomType.getExtraImages().size() + " imágenes";
-	    }
+		    case 0:
+		        return roomType.getName();
+		    case 1:
+		        return roomType.getBedType();
+		    case 2:
+		        return roomType.getCapacity();
+		    case 3:
+		        return "$" + roomType.getPrice();
+		    case 4:
+		        return roomType.getImagePath();
+		    case 5:
+		        return roomType.getAmenities()
+		            .stream()
+		            .map(Amenity::getName)
+		            .collect(Collectors.joining(", "));
+		    case 6:
+		    	if(roomType.isFeatured() == true) {
+		    		return "Si";
+		    	}
+		        return "No";
+		    case 7:
+		        return shortenText(
+		            roomType.getDescription(),
+		            24
+		        );
+	
+		    case 8:
+		        return roomType.getExtraImages().size() + " imagen(es)";
+		}
 
 	    return null;
 	}

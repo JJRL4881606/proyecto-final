@@ -1,195 +1,221 @@
 package repository;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import config.DatabaseConnection;
+import models.Amenity;
 import models.RoomType;
 
 public class RoomTypeRepository {
 
-    public void save(RoomType roomType) {
+    private AmenityRepository amenityRepo=new AmenityRepository();
 
-        String sql = "INSERT INTO room_types "
-                + "(name, bedType, capacity, price, imagePath, features, featured, description, extraImages) "
-                + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void save(RoomType roomType){
 
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement pst = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO room_types(name, bedType, capacity, price, imagePath, featured, description, extraImages) "
+        + "VALUES(?,?,?,?,?,?,?,?)";
 
-            pst.setString(1, roomType.getName());
-            pst.setString(2, roomType.getBedType());
-            pst.setInt(3, roomType.getCapacity());
-            pst.setDouble(4, roomType.getPrice());
-            pst.setString(5, roomType.getImagePath());
-            pst.setString(6, roomType.featuresToString());
-            pst.setBoolean(7, roomType.isFeatured());
-            pst.setString(8, roomType.getDescription());
-            pst.setString(9, roomType.extraImagesToString());
+        try(
+            Connection conn=DatabaseConnection.getConnection();
+            PreparedStatement pst=conn.prepareStatement(
+                sql,
+                Statement.RETURN_GENERATED_KEYS
+            )
+        ){
+            pst.setString(1,roomType.getName());
+            pst.setString(2,roomType.getBedType());
+            pst.setInt(3,roomType.getCapacity());
+            pst.setDouble(4,roomType.getPrice());
+            pst.setString(5,roomType.getImagePath());
+            pst.setBoolean(6,roomType.isFeatured());
+            pst.setString(7,roomType.getDescription());
+            pst.setString(8,roomType.extraImagesToString());
 
             pst.executeUpdate();
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    public List<RoomType> getRoomTypes(){
+            ResultSet rs=pst.getGeneratedKeys();
 
-        List<RoomType> roomTypes = new ArrayList<>();
+            if(rs.next()){
 
-        String sql = "SELECT * FROM room_types";
+                int typeId=rs.getInt(1);
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery()
-        ){
-            while(rs.next()){
-                roomTypes.add(new RoomType(
-                    rs.getInt("typeId"),
-                    rs.getString("name"),
-                    rs.getString("bedType"),
-                    rs.getInt("capacity"),
-                    rs.getDouble("price"),
-                    rs.getString("imagePath"),
-                    RoomType.stringToFeatures(rs.getString("features")),
-                    rs.getBoolean("featured"),
-                    rs.getString("description"),
-                    RoomType.stringToFeatures(rs.getString("extraImages"))
-                ));
+                saveAmenities(
+                    conn,
+                    typeId,
+                    roomType.getAmenities()
+                );
             }
 
-        }catch(Exception e){
+        } catch(Exception e){
             e.printStackTrace();
         }
-
-        return roomTypes;
     }
 
-    public boolean delete(int id){
-
-        String sql = "DELETE FROM room_types WHERE typeId=?";
-
-		try (Connection connection = DatabaseConnection.getConnection();
-				PreparedStatement pst = connection.prepareStatement(sql)) {
-
-			pst.setInt(1, id);
-			int affectedRows = pst.executeUpdate();
-			if (affectedRows > 0) {
-				System.out.println("Se eliminó");
-				return true;
-			}
-
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
-		return false;
-    }
-
-    public boolean update(RoomType updatedRoomType) throws IOException {
-
-    	String sql = "UPDATE room_types SET name = ?, bedType = ?, capacity = ?, "
-    	        + "price = ?, imagePath = ?, features = ?, featured = ?, description = ?, extraImages = ? "
-    	        + "WHERE typeId = ?";
+    private void saveAmenities(Connection conn, int typeId, List<Amenity> amenities)throws SQLException{
     	
-		try (Connection connection = DatabaseConnection.getConnection();
-				PreparedStatement pst = connection.prepareStatement(sql)) {
+        String sql = "INSERT INTO roomtype_amenities(typeId,amenityId) VALUES(?,?)";
 
-			pst.setString(1,updatedRoomType.getName());
-			pst.setString(2,updatedRoomType.getBedType());
-			pst.setInt(3,updatedRoomType.getCapacity());
-			pst.setDouble(4,updatedRoomType.getPrice());
-			pst.setString(5,updatedRoomType.getImagePath());
-			pst.setString(6,updatedRoomType.featuresToString());
-			pst.setBoolean(7,updatedRoomType.isFeatured());
-			pst.setString(8,updatedRoomType.getDescription());
-			pst.setString(9,updatedRoomType.extraImagesToString());
-			pst.setInt(10,updatedRoomType.getTypeId());
-			
-			int affectedRows = pst.executeUpdate();
+        for(Amenity a:amenities){
 
-			if (affectedRows > 0) {
-				return true;
-			}
+            PreparedStatement ps=
+            conn.prepareStatement(sql);
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
+            ps.setInt(1,typeId);
+            ps.setInt(2,a.getAmenityId());
 
-		return false;
+            ps.executeUpdate();
+        }
     }
 
-    public List<RoomType> getFeaturedRoomTypes(){
+    public List<RoomType> getRoomTypes(){
 
-        List<RoomType> roomTypes = new ArrayList<>();
+        List<RoomType> roomTypes=new ArrayList<>();
 
-        String sql = "SELECT * FROM room_types " + "WHERE featured = ? " + "LIMIT 3";
+        String sql="SELECT * FROM room_types";
 
         try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
+            Connection conn=DatabaseConnection.getConnection();
+            PreparedStatement ps=conn.prepareStatement(sql);
+            ResultSet rs=ps.executeQuery()
         ){
-            ps.setBoolean(1,true);
-            ResultSet rs = ps.executeQuery();
 
             while(rs.next()){
-                roomTypes.add(new RoomType(
+
+                roomTypes.add(
+                    new RoomType(
                         rs.getInt("typeId"),
                         rs.getString("name"),
                         rs.getString("bedType"),
                         rs.getInt("capacity"),
                         rs.getDouble("price"),
                         rs.getString("imagePath"),
-                        RoomType.stringToFeatures(rs.getString("features")),
+                        null,
                         rs.getBoolean("featured"),
                         rs.getString("description"),
-                        RoomType.stringToFeatures(rs.getString("extraImages"))
-                ));
+                        RoomType.stringToImages(
+                            rs.getString("extraImages")
+                        )
+                    )
+                );
             }
 
         }catch(Exception e){
             e.printStackTrace();
         }
 
+        for(RoomType room:roomTypes){
+
+            room.setAmenities(
+                amenityRepo.getAmenitiesByRoomType(
+                    room.getTypeId()
+                )
+            );
+        }
+
         return roomTypes;
+    }
+    
+    public boolean delete(int id){
+
+        String sql = "DELETE FROM room_types WHERE typeId = ?";
+
+        try(Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pst = conn.prepareStatement(sql)){
+	            pst.setInt(1,id);
+	            return pst.executeUpdate()>0;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean update(RoomType roomType){
+
+        String sql = "UPDATE room_types " +
+        "SET name=?, bedType=?, capacity=?, price=?, imagePath=?, featured=?, description=?, extraImages=? " +
+        "WHERE typeId=?";
+
+        try(Connection conn=DatabaseConnection.getConnection()){
+
+            conn.setAutoCommit(false);
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1,roomType.getName());
+            ps.setString(2,roomType.getBedType());
+            ps.setInt(3,roomType.getCapacity());
+            ps.setDouble(4,roomType.getPrice());
+            ps.setString(5,roomType.getImagePath());
+            ps.setBoolean(6,roomType.isFeatured());
+            ps.setString(7,roomType.getDescription());
+            ps.setString(8,roomType.extraImagesToString());
+            ps.setInt(9,roomType.getTypeId());
+
+            ps.executeUpdate();
+
+            PreparedStatement delete =
+                conn.prepareStatement(
+                    "DELETE FROM roomtype_amenities WHERE typeId=?"
+                );
+
+            delete.setInt(
+                1,
+                roomType.getTypeId()
+            );
+
+            delete.executeUpdate();
+
+            // insertar nuevas
+            PreparedStatement insert =
+                conn.prepareStatement(
+                    "INSERT INTO roomtype_amenities(typeId,amenityId) VALUES(?,?)"
+                );
+
+            for(Amenity a : roomType.getAmenities()){
+
+                insert.setInt(
+                    1,
+                    roomType.getTypeId()
+                );
+
+                insert.setInt(
+                    2,
+                    a.getAmenityId()
+                );
+
+                insert.addBatch();
+            }
+
+            insert.executeBatch();
+
+            conn.commit();
+
+            return true;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    public List<RoomType> getFeaturedRoomTypes(){
+        return getRoomTypes()
+            .stream()
+            .filter(RoomType::isFeatured)
+            .limit(3)
+            .toList();
     }
 
     public List<RoomType> getAvailableRoomTypes(int guests){
-
-        List<RoomType> roomTypes = new ArrayList<>();
-
-        String sql = "SELECT * FROM room_types " + "WHERE capacity >= ?";
-
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
-            ps.setInt(1, guests);
-            ResultSet rs = ps.executeQuery();
-
-            while(rs.next()){
-                roomTypes.add(new RoomType(
-                        rs.getInt("typeId"),
-                        rs.getString("name"),
-                        rs.getString("bedType"),
-                        rs.getInt("capacity"),
-                        rs.getDouble("price"),
-                        rs.getString("imagePath"),
-                        RoomType.stringToFeatures(rs.getString("features")),
-                        rs.getBoolean("featured"),
-                        rs.getString("description"),
-                        RoomType.stringToFeatures(rs.getString("extraImages"))
-                ));
-            }
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return roomTypes;
+        return getRoomTypes()
+            .stream()
+            .filter(
+                r->r.getCapacity()>=guests
+            )
+            .toList();
     }
 }

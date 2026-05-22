@@ -47,12 +47,6 @@ public class RoomTypeFormController {
 			public void removeUpdate(DocumentEvent e){validatePrice();}
 			public void changedUpdate(DocumentEvent e){validatePrice();}
 		});
-
-		view.getTxtFeatures().getDocument().addDocumentListener(new DocumentListener(){
-			public void insertUpdate(DocumentEvent e){validateFeatures();}
-			public void removeUpdate(DocumentEvent e){validateFeatures();}
-			public void changedUpdate(DocumentEvent e){validateFeatures();}
-		});
 		
 		view.getTxtDescription().getDocument().addDocumentListener(new DocumentListener(){
 			public void insertUpdate(DocumentEvent e){validateDescription();}
@@ -67,7 +61,6 @@ public class RoomTypeFormController {
 		FormUtils.addFocusEffect(view.getTxtDescription(),view.getLblDescriptionError());
 		FormUtils.addFocusEffect(view.getTxtImagePath(),view.getLblImageError());
 		FormUtils.addFocusEffect(view.getTxtExtraImages(),view.getLblExtraImagesError());
-		FormUtils.addFocusEffect(view.getTxtFeatures(),view.getLblFeaturesError());
 	}
 
 	private void initInputRestrictions(){
@@ -85,30 +78,28 @@ public class RoomTypeFormController {
 		if(roomType == null){
 
 			roomType = new RoomType(
-				0,
-				view.getName(),
-				view.getBedType(),
-				view.getCapacity(),
-				view.getPrice(),
-				view.getImagePath(),
-				view.getFeatures(),
-				view.isFeatured(),
-				
-				view.getDescription(),
-				RoomType.stringToImages(
-					view.getTxtExtraImages().getText()
-				)
-			);
+			    0,
+			    view.getName(),
+			    view.getBedType(),
+			    view.getCapacity(),
+			    view.getPrice(),
+			    view.getImagePath(),
+			    view.getSelectedAmenities(),
+			    view.isFeatured(),
 
+			    view.getDescription(),
+			    RoomType.stringToImages(
+			        view.getTxtExtraImages().getText()
+			    )
+			);
 		}else{
 			roomType.setName(view.getName());
 			roomType.setBedType(view.getBedType());
 			roomType.setCapacity(view.getCapacity());
 			roomType.setPrice(view.getPrice());
 			roomType.setImagePath(view.getImagePath());
-			roomType.setFeatures(view.getFeatures());
-			roomType.setFeatured(view.isFeatured());
-			
+			roomType.setAmenities(view.getSelectedAmenities());
+			roomType.setFeatured(view.isFeatured());	
 			roomType.setDescription(view.getDescription());
 			roomType.setExtraImages(RoomType.stringToImages(
 				view.getTxtExtraImages().getText()
@@ -129,11 +120,10 @@ public class RoomTypeFormController {
 	}
 
 	private void selectImage(){
-		String lastFolder =
-	        Config.get(
-	            "room.image.folder",
-	            System.getProperty("user.home")
-	        );
+		String lastFolder = Config.get(
+            "room.image.folder",
+            System.getProperty("user.home")
+        );
 
 		JFileChooser chooser =new JFileChooser(lastFolder);
 		
@@ -199,43 +189,26 @@ public class RoomTypeFormController {
 	
 	private void selectExtraImages(){
 
-	    String lastFolder =
-	        Config.get(
-	            "room.image.folder",
-	            System.getProperty("user.home")
-	        );
-
-	    JFileChooser chooser = new JFileChooser(lastFolder);
-
-	    chooser.setMultiSelectionEnabled(true);
-
-	    chooser.setAcceptAllFileFilterUsed(false);
-
-	    chooser.setFileFilter(
-	        new FileNameExtensionFilter(
-	            "Imágenes (*.png, *.jpg, *.jpeg)",
-	            "png",
-	            "jpg",
-	            "jpeg"
-	        )
+	    String lastFolder = Config.get(
+	        "room.image.folder",
+	        System.getProperty("user.home")
 	    );
 
-	    int option = chooser.showOpenDialog(null);
+	    JFileChooser chooser = new JFileChooser(lastFolder);
+	    chooser.setMultiSelectionEnabled(true);
+	    chooser.setAcceptAllFileFilterUsed(false);
 
-	    if(option != JFileChooser.APPROVE_OPTION){
-	        return;
-	    }
+	    chooser.setFileFilter(new FileNameExtensionFilter(
+	        "Imágenes (*.png, *.jpg, *.jpeg)",
+	        "png","jpg","jpeg"
+	    ));
+
+	    int option = chooser.showOpenDialog(null);
+	    if(option != JFileChooser.APPROVE_OPTION) return;
 
 	    try{
 
 	        File[] files = chooser.getSelectedFiles();
-
-	        if(files.length > 0){
-	            Config.set(
-	                "room.image.folder",
-	                files[0].getParent()
-	            );
-	        }
 
 	        File srcFolder = new File("src/assets/img/rooms");
 	        File binFolder = new File("bin/assets/img/rooms");
@@ -247,42 +220,37 @@ public class RoomTypeFormController {
 
 	        for(File selected : files){
 
-	            String fileName = System.currentTimeMillis() + "_" + selected.getName();
+	            String original = selected.getName();
+	            String ext = "";
 
-	            File srcDestination = new File(srcFolder,fileName);
-	            File binDestination = new File(binFolder,fileName);
+	            int dot = original.lastIndexOf(".");
+	            if(dot > 0) {
+	            	ext = original.substring(dot);
+	            }
 
-	            Files.copy(
-	                selected.toPath(),
-	                srcDestination.toPath(),
-	                StandardCopyOption.REPLACE_EXISTING
-	            );
+	            String fileName = System.currentTimeMillis() + "_room" + ext;
 
-	            Files.copy(
-	                selected.toPath(),
-	                binDestination.toPath(),
-	                StandardCopyOption.REPLACE_EXISTING
-	            );
+	            File srcDest = new File(srcFolder, fileName);
+	            File binDest = new File(binFolder, fileName);
+
+	            Files.copy(selected.toPath(), srcDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	            Files.copy(selected.toPath(), binDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 	            String dbPath = "/assets/img/rooms/" + fileName;
 
+	            if(paths.length() > 0) {
+	            	paths.append("|");
+	            }
 	            paths.append(dbPath);
 	        }
-
-	        if(paths.length()>0){
-	            paths.deleteCharAt(
-	                paths.length()-1
-	            );
-	        }
-
+	        
 	        view.getTxtExtraImages().setText(paths.toString());
-
 	        validateExtraImages();
 
 	    }catch(Exception ex){
 	        ex.printStackTrace();
 	    }
-	}	
+	}
 	private boolean validateForm(){
 		view.clearErrors();
 		boolean valid = true;
@@ -292,7 +260,6 @@ public class RoomTypeFormController {
 		if(!validateBedType()) valid = false;
 		if(!validatePrice()) valid = false;
 		if(!validateImage()) valid = false;
-		if(!validateFeatures()) valid = false;
 		
 		if(!validateDescription()) valid = false;
 		if(!validateExtraImages()) valid = false;
@@ -375,24 +342,7 @@ public class RoomTypeFormController {
 	    view.clearImageError();
 	    return true;
 	}
-	
-	public boolean validateFeatures(){
-	    String features = view.getTxtFeatures().getText().trim();
-
-	    if(features.isEmpty()){
-	        view.setFeaturesError("Las comodidades son obligatorias");
-	        return false;
-	    }
-
-	    if(features.startsWith("|") || features.endsWith("|")){
-	        view.setFeaturesError("Formato inválido");
-	        return false;
-	    }
-
-	    view.clearFeaturesError();
-	    return true;
-	}
-	
+		
 	private boolean validateDescription(){
 	    String description = view.getDescription();
 	    
@@ -412,8 +362,7 @@ public class RoomTypeFormController {
 	}
 	
 	private boolean validateExtraImages(){
-
-	    String images=view.getTxtExtraImages().getText().trim();
+	    String images = view.getTxtExtraImages().getText().trim();
 
 	    if(images.isEmpty()) {
 	        view.setExtraImagesError(
@@ -424,7 +373,6 @@ public class RoomTypeFormController {
 	    }
 
 	    view.clearExtraImagesError();
-
 	    return true;
 	}
 }

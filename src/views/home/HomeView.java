@@ -171,7 +171,7 @@ public class HomeView extends JPanel{
 
         RoundedButton reserveBtn = ButtonFactory.createBigButton(
                 "Reservar ahora",
-                "/assets/img/btn-icons/button-search-icon.png",
+                "/assets/img/btn-icons/button-reserve-icon.png",
                 "Ir a reservar"
         );
 
@@ -366,7 +366,7 @@ public class HomeView extends JPanel{
         section.setOpaque(false);
 
         // título
-        JLabel title = new JLabel("Servicios");
+        JLabel title = new JLabel("Servicios y amenidades");
         title.setFont(AppFont.title());
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -405,8 +405,8 @@ public class HomeView extends JPanel{
         RoundedPanel card = new RoundedPanel(25);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBackground(UIColors.CARD);
-        card.setPreferredSize(new Dimension(160, 120));
-        card.setMaximumSize(new Dimension(160, 120));
+        card.setPreferredSize(new Dimension(200, 120));
+        card.setMaximumSize(new Dimension(200, 120));
         card.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         // icono
@@ -415,7 +415,7 @@ public class HomeView extends JPanel{
 
         // texto
         JLabel label = new JLabel(name);
-        label.setFont(AppFont.normal());
+        label.setFont(AppFont.big());
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         card.add(icon);

@@ -37,8 +37,9 @@ public class WrapLayout extends FlowLayout {
 
             int targetWidth = target.getSize().width;
 
-            if (targetWidth == 0)
+            if (targetWidth == 0) {
                 targetWidth = Integer.MAX_VALUE;
+            }
 
             int hgap = getHgap();
             int vgap = getVgap();
@@ -84,11 +85,11 @@ public class WrapLayout extends FlowLayout {
             dim.width += insets.left + insets.right + hgap * 2;
             dim.height += insets.top + insets.bottom + vgap * 2;
 
-            Container scrollPane = SwingUtilities.getAncestorOfClass(
-                    JScrollPane.class, target);
+            Container scrollPane = SwingUtilities.getAncestorOfClass(JScrollPane.class, target);
 
-            if (scrollPane != null)
+            if (scrollPane != null) {
                 dim.width -= (hgap + 1);
+            }
 
             return dim;
         }

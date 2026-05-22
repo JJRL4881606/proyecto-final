@@ -30,6 +30,7 @@ import javax.swing.ImageIcon;
 import utils.AppFont;
 import utils.Session;
 import utils.UIColors;
+import views.amenities.AmenitiesView;
 import views.booking.BookingSearchView;
 import views.home.HomeView;
 import views.rooms.RoomDetailsView;
@@ -45,6 +46,7 @@ public class MainView extends JPanel{
 	public static final String ADMIN_USERS = "USERS";
 	public static final String ADMIN_ROOMTYPES = "ROOMTYPES";
 	public static final String ADMIN_ROOMS = "ROOMS";
+	public static final String ADMIN_AMENITIES = "AMENITIES";
 	public static final String BOOKING_SEARCH = "BOOKING_SEARCH";
 	public static final String SHOW_ROOMS = "SHOW_ROOMS";
 	public static final String ROOM_DETAILS = "ROOM_DETAILS";
@@ -53,6 +55,7 @@ public class MainView extends JPanel{
 	private JMenuItem btnUsers;
 	private JMenuItem btnRoomTypes;
 	private JMenuItem btnRooms;
+	private JMenuItem btnAmenities;
 	private JMenuItem btnShowRooms;
 	
 	private JMenuItem logOut;
@@ -61,6 +64,7 @@ public class MainView extends JPanel{
 	public UsersView usersPanel;
 	public RoomTypesView roomTypesPanel;
 	public RoomsView roomsPanel;
+	public AmenitiesView amenitiesPanel;
 	public ShowRoomsView showRoomsPanel;
 	public RoomDetailsView roomDetailsPanel;
 	
@@ -82,7 +86,7 @@ public class MainView extends JPanel{
 	    setVisible(true);
 	    
 	    initializeComponents();
-	    configurePermissions();
+	    //configurePermissions();
 	}
 
     public void initializeComponents() 
@@ -92,13 +96,16 @@ public class MainView extends JPanel{
         add(inferiorSection(), BorderLayout.SOUTH);
     }
     
+    //POR AHORA ESTÁ DESACTIVADO PARA AVANZAR
+    /*
     private void configurePermissions() {
         if(!Session.getRole().equals("Admin")) {
             btnUsers.setVisible(false);
             btnRoomTypes.setVisible(false);
             btnRooms.setVisible(false);
+            btnAmenities.setVisible(false);
         }
-    }
+    }*/
     
     //HEADER
     public JPanel headerSection() {
@@ -184,6 +191,10 @@ public class MainView extends JPanel{
         getBtnRooms().setMnemonic(KeyEvent.VK_H);
         sistema.add(getBtnRooms());
         
+        btnAmenities = new JMenuItem("Ver amenidades");
+        btnAmenities.setMnemonic(KeyEvent.VK_A);
+        sistema.add(btnAmenities);
+        
         // USUARIO
         JMenu usuario = new UnderlineMenu("Usuario");
         usuario.setMnemonic(KeyEvent.VK_U);
@@ -223,11 +234,20 @@ public class MainView extends JPanel{
         inferiorPanel.setBackground(UIColors.HEADER);
         inferiorPanel.setBorder(new EmptyBorder(30,30,30,30));
 
-        JLabel lblCopy = new JLabel("Copyright © 2026 ATLANTIS THE PALM, DUBAI. All rights reserved");
+        JLabel lblCopy = new JLabel("Copyright © 2026 ATLANTIS THE PALM, DUBAI. All rights reserved ");
         lblCopy.setFont(AppFont.normal());
         lblCopy.setForeground(Color.white);
-
         inferiorPanel.add(lblCopy);
+
+        JLabel lblNumber = new JLabel("| Teléfono: 555-666-999-1 ");
+        lblNumber.setFont(AppFont.normal());
+        lblNumber.setForeground(Color.white);
+        inferiorPanel.add(lblNumber);
+
+        JLabel lblEmail = new JLabel("| Correo: atlantis_the_palm_dubai_info@atlantishotel.com");
+        lblEmail.setFont(AppFont.normal());
+        lblEmail.setForeground(Color.white);
+        inferiorPanel.add(lblEmail);
 
         return inferiorPanel;
     }
@@ -253,6 +273,7 @@ public class MainView extends JPanel{
         usersPanel = new UsersView();
         roomTypesPanel = new RoomTypesView();
         roomsPanel = new RoomsView();
+        amenitiesPanel = new AmenitiesView();
         
         bookingSearchPanel = new BookingSearchView();
         new BookingSearchController(bookingSearchPanel);
@@ -266,6 +287,7 @@ public class MainView extends JPanel{
         container.add(usersPanel, ADMIN_USERS);
         container.add(roomTypesPanel, ADMIN_ROOMTYPES);
         container.add(roomsPanel, ADMIN_ROOMS);
+        container.add(amenitiesPanel, ADMIN_AMENITIES);
         container.add(bookingSearchPanel, BOOKING_SEARCH);
         container.add(showRoomsPanel, SHOW_ROOMS);
         container.add(roomDetailsPanel, ROOM_DETAILS);
@@ -323,6 +345,10 @@ public class MainView extends JPanel{
 
 	public JMenuItem getBtnRooms() {
 		return btnRooms;
+	}
+	
+	public JMenuItem getBtnAmenities() {
+		return btnAmenities;
 	}
 
 	public JMenuItem getBtnShowRooms() {

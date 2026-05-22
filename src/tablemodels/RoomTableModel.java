@@ -55,8 +55,11 @@ public class RoomTableModel extends AbstractTableModel{
 				return room.getFloor();
 			case 2:
 			    return getRoomTypeName(room.getTypeId());
-			case 3:
-				return room.isAvailable();
+			case 3:				
+		    	if(room.isAvailable() == true) {
+		    		return "Disponible";
+		    	}
+		        return "Ocupada";
 		}
 
 		return null;
