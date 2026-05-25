@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -28,11 +27,12 @@ public class RoomFormDialog extends JDialog {
     private JSpinner spRoomNumber;
     private JSpinner spFloor;
     private JComboBox<String> comboRoomType;
-    private JCheckBox chkAvailable;
-
+    private JComboBox<String> comboStatus;
+    
     private JLabel lblRoomNumberError;
     private JLabel lblFloorError;
     private JLabel lblRoomTypeError;
+    private JLabel lblStatusError;
 
     private RoundedButton btnSave;
     private RoundedButton btnCancel;
@@ -72,13 +72,13 @@ public class RoomFormDialog extends JDialog {
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
 
-        btnSave = ButtonFactory.createBigButton(
+        btnSave = ButtonFactory.createGoldButton(
             "GUARDAR",
             "/assets/img/btn-icons/button-save-icon.png",
             "Haz clic para guardar"
         );
 
-        btnCancel = ButtonFactory.createBigButton(
+        btnCancel = ButtonFactory.createGoldButton(
             "CANCELAR",
             "/assets/img/btn-icons/button-cancel-icon.png",
             "Haz clic para cancelar"
@@ -118,9 +118,10 @@ public class RoomFormDialog extends JDialog {
         panel.add(FormUtils.createField("Tipo habitación", comboRoomType, lblRoomTypeError, "Seleccione tipo", fieldWidth));
 
         //DISPONIBLE
-        chkAvailable = FormUtils.createCheckBox();
-        chkAvailable.setText("Disponible");
-        panel.add(chkAvailable);
+        String[] status = {"Disponible", "Ocupado", "Fuera de servicio"};
+        comboStatus = FormUtils.createCombo(status);
+        lblStatusError = FormUtils.createErrorLabel();
+        panel.add(FormUtils.createField( "Estado", comboStatus, lblStatusError, "Seleccione estado", fieldWidth));      
         
         panel.add(Box.createRigidArea(new Dimension(0,20)));
 
@@ -131,7 +132,7 @@ public class RoomFormDialog extends JDialog {
         if(room != null){
             spRoomNumber.setValue(room.getRoomNumber());
             spFloor.setValue(room.getFloor());
-            chkAvailable.setSelected(room.isAvailable());
+            comboStatus.setSelectedItem(room.getStatus());
         }
     }
 
@@ -157,10 +158,14 @@ public class RoomFormDialog extends JDialog {
         return comboRoomType.getSelectedIndex();
     }
 
-    public boolean isAvailable(){
-    	return chkAvailable.isSelected();
+    public String getStatus(){
+        return comboStatus.getSelectedItem().toString();
     }
-
+    
+    public JComboBox<String> getComboStatus(){
+        return comboStatus;
+    }
+    
     public RoundedButton getBtnSave(){
         return btnSave;
     }
@@ -198,7 +203,6 @@ public class RoomFormDialog extends JDialog {
     }
 
     //ERRORES
-
     public void clearRoomNumberError(){
         FormUtils.clearError(lblRoomNumberError,spRoomNumber);
     }

@@ -1,11 +1,14 @@
 package repository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import config.DatabaseConnection;
 import models.Amenity;
+import models.Room;
+import models.RoomStatus;
 import models.RoomType;
 
 public class RoomTypeRepository {
@@ -73,7 +76,7 @@ public class RoomTypeRepository {
 
         List<RoomType> roomTypes=new ArrayList<>();
 
-        String sql="SELECT * FROM room_types";
+        String sql = "SELECT * FROM room_types";
 
         try(
             Connection conn=DatabaseConnection.getConnection();
@@ -139,7 +142,7 @@ public class RoomTypeRepository {
         "SET name=?, bedType=?, capacity=?, price=?, imagePath=?, featured=?, description=?, extraImages=? " +
         "WHERE typeId=?";
 
-        try(Connection conn=DatabaseConnection.getConnection()){
+        try(Connection conn = DatabaseConnection.getConnection()){
 
             conn.setAutoCommit(false);
 
@@ -170,10 +173,9 @@ public class RoomTypeRepository {
             delete.executeUpdate();
 
             // insertar nuevas
-            PreparedStatement insert =
-                conn.prepareStatement(
-                    "INSERT INTO roomtype_amenities(typeId,amenityId) VALUES(?,?)"
-                );
+            PreparedStatement insert = conn.prepareStatement(
+                "INSERT INTO roomtype_amenities(typeId,amenityId) VALUES(?,?)"
+            );
 
             for(Amenity a : roomType.getAmenities()){
 
@@ -210,12 +212,86 @@ public class RoomTypeRepository {
             .toList();
     }
 
-    public List<RoomType> getAvailableRoomTypes(int guests){
-        return getRoomTypes()
-            .stream()
-            .filter(
-                r->r.getCapacity()>=guests
-            )
-            .toList();
+    public List<RoomType> getAvailableRoomTypes(int guests, LocalDate checkIn, LocalDate checkOut){
+
+        List<RoomType> available = new ArrayList<>();
+
+        RoomRepository roomRepo = new RoomRepository();
+        ReservationRepository reservationRepo = new ReservationRepository();
+
+        for(RoomType type : getRoomTypes()){
+
+            if(type.getCapacity() < guests){
+                continue;
+            }
+
+            List<Room> rooms = roomRepo.findByTypeId(type.getTypeId());
+
+            if(rooms.isEmpty()){
+                continue;
+            }
+
+            boolean found = false;
+
+            for(Room room : rooms){
+
+            	if(room.getStatus().equals(RoomStatus.AVAILABLE) && reservationRepo.isRoomAvailable(room.getRoomId(), checkIn, checkOut)){
+                    found = true;
+                    break;
+                }
+            }
+
+            if(found){
+                available.add(type);
+            }
+        }
+
+        return available;
+    }
+    
+    public RoomType getById(int id){
+
+        String sql = "SELECT * FROM room_types WHERE typeId=?";
+
+        try(
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ){
+
+            ps.setInt(1,id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if(rs.next()){
+
+                RoomType room = new RoomType(
+                    rs.getInt("typeId"),
+                    rs.getString("name"),
+                    rs.getString("bedType"),
+                    rs.getInt("capacity"),
+                    rs.getDouble("price"),
+                    rs.getString("imagePath"),
+                    null,
+                    rs.getBoolean("featured"),
+                    rs.getString("description"),
+                    RoomType.stringToImages(
+                        rs.getString("extraImages")
+                    )
+                );
+
+                room.setAmenities(
+                    amenityRepo.getAmenitiesByRoomType(
+                        room.getTypeId()
+                    )
+                );
+
+                return room;
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return new RoomType();
     }
 }

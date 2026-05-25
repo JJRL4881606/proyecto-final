@@ -4,6 +4,7 @@ import java.util.List;
 
 import components.RoomCard;
 import components.SearchBar;
+import controllers.rooms.RoomCardController;
 import models.RoomType;
 import repository.RoomTypeRepository;
 import views.home.HomeView;
@@ -21,9 +22,8 @@ public class HomeController {
         this.repository = new RoomTypeRepository();
 
         loadRooms();
-        loadRoomEvents();
         initListeners();
-    }
+	}
 	
     private void initListeners() {
     	view.getSearchBar().getBtnSearch().addActionListener(e -> { handleSearch(); });
@@ -32,7 +32,12 @@ public class HomeController {
     
     private void loadRooms() {
         List<RoomType> rooms = repository.getFeaturedRoomTypes();
-		view.setRooms(rooms);
+
+        view.setRooms(rooms);
+
+        for(RoomCard card:view.getRoomCards()){
+            new RoomCardController(card, mainView);
+        }
     }
     
     private void handleSearch() {
@@ -40,7 +45,7 @@ public class HomeController {
             SearchBar homeSearch = view.getSearchBar();
             int guests = homeSearch.getGuests();
 
-            List<RoomType> rooms = repository.getAvailableRoomTypes(guests);
+            List<RoomType> rooms = repository.getAvailableRoomTypes(guests, homeSearch.getCheckIn(), homeSearch.getCheckOut());
 
             // pasar datos al booking searchbar
             SearchBar bookingSearch = mainView.bookingSearchPanel.getSearchBar();
@@ -49,6 +54,7 @@ public class HomeController {
             bookingSearch.setGuests(homeSearch.getGuests());
 
             mainView.bookingSearchPanel.setRooms(rooms);
+            mainView.bookingSearchController.loadRoomControllers();
             mainView.showView(MainView.BOOKING_SEARCH);
             mainView.getBtnHome().setEnabled(true);
             
@@ -59,16 +65,5 @@ public class HomeController {
     
     private void handleShowRooms() {
         mainView.showView(MainView.SHOW_ROOMS);
-    }
-    
-    private void loadRoomEvents(){
-        for(RoomCard card : view.getRoomCards()){
-        	
-            card.getBtnDetails().addActionListener(e->{
-            	
-                mainView.roomDetailsPanel.setRoom(card.getRoom());
-                mainView.showView(MainView.ROOM_DETAILS);
-            });
-        }
     }
 }

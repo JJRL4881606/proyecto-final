@@ -95,13 +95,13 @@ public class AmenitiesFormDialog extends JDialog{
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
 
-        btnSave = ButtonFactory.createBigButton(
+        btnSave = ButtonFactory.createGoldButton(
             "GUARDAR",
             "/assets/img/btn-icons/button-save-icon.png",
             "Haz clic para guardar"
         );
 
-        btnCancel = ButtonFactory.createBigButton(
+        btnCancel = ButtonFactory.createGoldButton(
             "CANCELAR",
             "/assets/img/btn-icons/button-cancel-icon.png",
             "Haz clic para cancelar"

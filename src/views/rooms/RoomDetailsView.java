@@ -7,10 +7,9 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -18,11 +17,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JViewport;
 
+import components.RoundedButton;
 import components.RoundedImagePanel;
 import components.RoundedPanel;
 import models.Amenity;
 import models.RoomType;
 import utils.AppFont;
+import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
 import utils.VisualUtils;
@@ -37,7 +38,12 @@ public class RoomDetailsView extends JPanel {
     private JLabel lblPrice;
     private JLabel lblBed;
     private JLabel lblCapacity;
+    private JButton btnReserve;
     private JTextArea lblDescription;
+    private RoomType room;
+    
+    //para que el panel de descripcion crezca segun necesite
+    private RoundedPanel bookingLeftPanel;
     
     private JPanel carouselPanel;
     private JScrollPane carouselScroll;
@@ -52,23 +58,17 @@ public class RoomDetailsView extends JPanel {
 
         add(Box.createRigidArea(new Dimension(0,40)));
 	    add(VisualUtils.createDivider()); 
-        add(Box.createRigidArea(new Dimension(0,40)));
+        add(Box.createRigidArea(new Dimension(0,50)));
 
         add(createTitleSection());
 
         add(Box.createRigidArea(new Dimension(0,40)));
+        
+        add(createBookingSection());
 
-        add(createInfoSection());
-
-        add(Box.createRigidArea(new Dimension(0,40)));
+        add(Box.createRigidArea(new Dimension(0,50)));
 	    add(VisualUtils.createDivider()); 
-        add(Box.createRigidArea(new Dimension(0,40)));
-
-        add(createDescriptionSection());
-
-        add(Box.createRigidArea(new Dimension(0,10)));
-	    add(VisualUtils.createDivider()); 
-        add(Box.createRigidArea(new Dimension(0,40)));
+        add(Box.createRigidArea(new Dimension(0,50)));
 
         add(createFeaturesSection());
 
@@ -98,22 +98,88 @@ public class RoomDetailsView extends JPanel {
 
         return lblName;
     }
+    
+    private JPanel createBookingSection() {
 
-    private JPanel createInfoSection() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER,30,0));
-        panel.setOpaque(false);
+        JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER,40,0));
+        wrapper.setOpaque(false);
+
+        // izquierda
+        bookingLeftPanel = new RoundedPanel(30);
+        
+        RoundedPanel left = bookingLeftPanel;
+        left.setBackground(UIColors.CARD);
+        left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
+        left.setPreferredSize(new Dimension(800,200));
+        left.setMinimumSize(new Dimension(800,200));
+        left.setMaximumSize(new Dimension(800,Integer.MAX_VALUE));
+        
+        JLabel title = new JLabel("Descripción");
+        title.setFont(AppFont.subtitle2());
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        lblDescription = new JTextArea();
+        lblDescription.setOpaque(false);
+        lblDescription.setEditable(false);
+        lblDescription.setFocusable(false);
+        lblDescription.setLineWrap(true);
+        lblDescription.setWrapStyleWord(true);
+        lblDescription.setColumns(35);
+        lblDescription.setFont(AppFont.subtitle());
+        lblDescription.setMargin(new Insets(25, 30, 25, 30));
+
+        left.add(Box.createRigidArea(new Dimension(0,50)));
+        left.add(title);
+        left.add(lblDescription);
+        left.add(Box.createRigidArea(new Dimension(0,20)));
+
+        // derecha
+        RoundedPanel right = new RoundedPanel(30);
+        right.setBackground(UIColors.CARD);
+        right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
+
+        Dimension rightSize = new Dimension(320,450);
+
+        right.setPreferredSize(rightSize);
+        right.setMinimumSize(rightSize);
+        right.setMaximumSize(rightSize);
 
         lblPrice = new JLabel();
         lblBed = new JLabel();
         lblCapacity = new JLabel();
 
-        panel.add(createInfoItem("/assets/img/icons/price-icon.png", lblPrice));
-        panel.add(createInfoItem("/assets/img/icons/bed-icon.png", lblBed));
-        panel.add(createInfoItem("/assets/img/icons/guest-icon.png", lblCapacity));
+        JPanel info = new JPanel();
+        info.setOpaque(false);
+        info.setLayout(new BoxLayout(info,BoxLayout.Y_AXIS));
+        
+        info.add(createInfoItem("/assets/img/icons/price-icon.png", lblPrice));
+        info.add(createInfoItem("/assets/img/icons/bed-icon.png", lblBed));
+        info.add(createInfoItem("/assets/img/icons/guest-icon.png", lblCapacity));
 
-        return panel;
+        btnReserve = ButtonFactory.createBlueButton(
+            "RESERVAR",
+            "/assets/img/btn-icons/button-reserve-icon.png",
+            "Haz clic para reservar"
+        );
+        btnReserve.setFont(AppFont.subtitle());
+        btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        Dimension btn = new Dimension(220,55);
+        btnReserve.setPreferredSize(btn);
+        btnReserve.setMaximumSize(btn);
+
+        right.add(Box.createRigidArea(new Dimension(0,50)));
+        right.add(info);
+        right.add(Box.createRigidArea(new Dimension(0,30)));
+        right.add(btnReserve);
+        right.add(Box.createRigidArea(new Dimension(0,20)));
+        
+        wrapper.add(left);
+        wrapper.add(right);
+
+        return wrapper;
     }
-
+    
     private JPanel createInfoItem(String iconPath, JLabel label){
         RoundedPanel card = new RoundedPanel(30);
 
@@ -136,33 +202,6 @@ public class RoomDetailsView extends JPanel {
         card.add(content);
 
         return card;
-    }
-    
-    private JPanel createDescriptionSection() {
-        JPanel panel = new JPanel();
-        panel.setOpaque(false);
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-
-        JLabel title = new JLabel("Descripción");
-        title.setFont(AppFont.subtitle2());
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        lblDescription = new JTextArea();
-        lblDescription.setOpaque(false);
-        lblDescription.setFocusable(false);
-        lblDescription.setMaximumSize(new Dimension(700,Integer.MAX_VALUE));
-        lblDescription.setFont(AppFont.subtitle());
-        lblDescription.setEditable(false);
-        lblDescription.setLineWrap(true);
-        lblDescription.setWrapStyleWord(true);
-        lblDescription.setColumns(50);
-        lblDescription.setMargin(new Insets(30, 0, 30, 0));
-
-        panel.add(title);
-        panel.add(Box.createRigidArea(new Dimension(0, 20)));
-        panel.add(lblDescription);
-
-        return panel;
     }
 
     private JPanel createFeaturesSection() {
@@ -209,9 +248,9 @@ public class RoomDetailsView extends JPanel {
         carouselScroll = new JScrollPane(carouselPanel);
         carouselScroll.setBorder(null);
         carouselScroll.setOpaque(true);
-        carouselScroll.setPreferredSize(new Dimension(1000,200));
-        carouselScroll.setMaximumSize(new Dimension(1000,200));
-        carouselScroll.setMinimumSize(new Dimension(1000,200));
+        carouselScroll.setPreferredSize(new Dimension(1200,200));
+        carouselScroll.setMaximumSize(new Dimension(1200,200));
+        carouselScroll.setMinimumSize(new Dimension(1200,200));
         carouselScroll.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         carouselScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -222,49 +261,44 @@ public class RoomDetailsView extends JPanel {
         carouselScroll.getHorizontalScrollBar().setUnitIncrement(18);
         carouselScroll.getHorizontalScrollBar().setBlockIncrement(350);
         
+        //botones
         JPanel controls = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         controls.setOpaque(false);
-
-        JLabel left = new JLabel("<");
-        JLabel right = new JLabel(">");
         
-        left.setFont(AppFont.title());
-        right.setFont(AppFont.title());
+        RoundedButton left = ButtonFactory.createBlueButton("", "/assets/img/btn-icons/button-left-icon.png", "");
+        RoundedButton right = ButtonFactory.createBlueButton("", "/assets/img/btn-icons/button-right-icon.png", "");
 
-        left.setPreferredSize(new Dimension(60,60));
-        right.setPreferredSize(new Dimension(60,60));
-        
-        left.setHorizontalAlignment(JLabel.CENTER);
-        right.setHorizontalAlignment(JLabel.CENTER);
+        Dimension btnSize = new Dimension(60,60);
 
-        left.setVerticalAlignment(JLabel.CENTER);
-        right.setVerticalAlignment(JLabel.CENTER);
-        
+        left.setPreferredSize(btnSize);
+        right.setPreferredSize(btnSize);
+
+        left.setFont(AppFont.subtitle2());
+        right.setFont(AppFont.subtitle2());
+
+        left.setFocusPainted(false);
+        right.setFocusPainted(false);
+
         left.setCursor(new Cursor(Cursor.HAND_CURSOR));
         right.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        left.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e){
-                JScrollBar bar = carouselScroll.getHorizontalScrollBar();
-
-                bar.setValue(bar.getValue() - 320);
-            }
-        });        
-        
-        right.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e){
-                JScrollBar bar = carouselScroll.getHorizontalScrollBar();
-
-                bar.setValue(bar.getValue() + 320);
-            }
+        left.addActionListener(e -> {
+            JScrollBar bar = carouselScroll.getHorizontalScrollBar();
+            bar.setValue(bar.getValue() - 320);
         });
-        
+
+        right.addActionListener(e -> {
+            JScrollBar bar = carouselScroll.getHorizontalScrollBar();
+            bar.setValue(bar.getValue() + 320);
+        });
+
         controls.add(left);
         controls.add(right);
 
         container.add(title);
         container.add(Box.createRigidArea(new Dimension(0, 20)));
         
+        //wrapper
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER));
     	wrapper.setOpaque(false);
     	wrapper.add(carouselScroll);
@@ -293,10 +327,11 @@ public class RoomDetailsView extends JPanel {
     }
     
     public void setRoom(RoomType room) {
+        this.room = room;
+
         imageContainer.removeAll();
-
+        
         imagePanel = new RoundedImagePanel(room.getImagePath(), 900, 500, 30);
-
         imageContainer.add(imagePanel);
 
         lblName.setText(room.getName());
@@ -305,11 +340,23 @@ public class RoomDetailsView extends JPanel {
         lblCapacity.setText(room.getCapacity() + " huéspedes");
 
         lblDescription.setText(room.getDescription());
-        lblDescription.setSize(900, Short.MAX_VALUE);
+        lblDescription.setSize(730, Short.MAX_VALUE);
 
         Dimension size = lblDescription.getPreferredSize();
-        lblDescription.setMaximumSize(new Dimension(1000, size.height));
+        Dimension descSize = new Dimension(730, size.height);
 
+        lblDescription.setPreferredSize(descSize);
+        lblDescription.setMinimumSize(descSize);
+        lblDescription.setMaximumSize(descSize);
+
+        // altura total tarjeta
+        int panelHeight = size.height + 110;
+
+        bookingLeftPanel.setPreferredSize(new Dimension(800, panelHeight));
+        bookingLeftPanel.setMinimumSize(new Dimension(800, panelHeight));
+        bookingLeftPanel.revalidate();
+        bookingLeftPanel.repaint();
+         
         featuresPanel.removeAll();
 
         for(Amenity amenity : room.getAmenities()){
@@ -389,5 +436,13 @@ public class RoomDetailsView extends JPanel {
         repaint();
         revalidate();
         repaint();        
+    }
+    
+    public JButton getBtnReserve() {
+        return btnReserve;
+    }
+
+    public RoomType getRoom() {
+        return room;
     }
 }

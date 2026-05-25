@@ -92,13 +92,13 @@ public class RoomTypeFormDialog extends JDialog {
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
 
-        btnSave = ButtonFactory.createBigButton(
+        btnSave = ButtonFactory.createGoldButton(
             "GUARDAR",
             "/assets/img/btn-icons/button-save-icon.png",
             "Haz clic para guardar"
         );
 
-        btnCancel = ButtonFactory.createBigButton(
+        btnCancel = ButtonFactory.createGoldButton(
             "CANCELAR",
             "/assets/img/btn-icons/button-cancel-icon.png",
             "Haz clic para cancelar"
@@ -170,7 +170,7 @@ public class RoomTypeFormDialog extends JDialog {
             null
         );
         btnSelectImage.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+        
         imagePanel.add(btnSelectImage);
         imagePanel.add(Box.createRigidArea(new Dimension(0,10)));
         imagePanel.add(txtImagePath);
@@ -179,9 +179,9 @@ public class RoomTypeFormDialog extends JDialog {
         imagePanel.add(Box.createRigidArea(new Dimension(0,10)));
         imagePanel.add(lblImageError);
         
-        panel.add(Box.createRigidArea(new Dimension(0,10)));
-        panel.add(lblImageTitle);
         panel.add(Box.createRigidArea(new Dimension(0,20)));
+        panel.add(lblImageTitle);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
         panel.add(imagePanel);
         panel.add(Box.createRigidArea(new Dimension(0,20)));
         
@@ -205,20 +205,20 @@ public class RoomTypeFormDialog extends JDialog {
         panel.add(txtExtraImages);
         panel.add(Box.createRigidArea(new Dimension(0,10)));
         panel.add(lblExtraImagesError);
-        panel.add(Box.createRigidArea(new Dimension(0,10)));
+        panel.add(Box.createRigidArea(new Dimension(0,20)));
 
         //COMODIDADES
-        amenities = new AmenityRepository().getAmenities();
-
         JPanel amenityPanel = new JPanel();
         amenityPanel.setOpaque(false);
         amenityPanel.setLayout(new BoxLayout(amenityPanel, BoxLayout.Y_AXIS));
+        
+        amenities = new AmenityRepository().getAmenities();
 
         for(Amenity a:amenities){
 
             JCheckBox chk = new JCheckBox(a.getName());
             chk.setOpaque(false);
-            chk.setAlignmentX(Component.LEFT_ALIGNMENT);
+            chk.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             amenitiesChecks.add(chk);
 
@@ -227,7 +227,7 @@ public class RoomTypeFormDialog extends JDialog {
         }
 
         JLabel lblAmenities = new JLabel("Comodidades");
-        lblAmenities.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblAmenities.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panel.add(lblAmenities);
         panel.add(Box.createRigidArea(new Dimension(0,10)));
@@ -236,11 +236,17 @@ public class RoomTypeFormDialog extends JDialog {
         panel.add(Box.createRigidArea(new Dimension(0,10)));
         
         //destacada o no
+        
+        JLabel lblFeatured = new JLabel("Destacada");
+        lblFeatured.setAlignmentX(Component.CENTER_ALIGNMENT);
+
         chkFeatured = FormUtils.createCheckBox();
         chkFeatured.setText("Habitación destacada");
-
-        panel.add(chkFeatured);
+        
         panel.add(Box.createRigidArea(new Dimension(0,20)));
+        panel.add(lblFeatured);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
+        panel.add(chkFeatured);
 
         return scroll;
     }

@@ -89,13 +89,13 @@ public class UserFormDialog extends JDialog{
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
         
-        btnSave = ButtonFactory.createBigButton(
+        btnSave = ButtonFactory.createGoldButton(
     	    "GUARDAR",
     	    "/assets/img/btn-icons/button-save-icon.png",
     	    "Haz click para iniciar sesión"
     	);
 
-        btnCancel = ButtonFactory.createBigButton(
+        btnCancel = ButtonFactory.createGoldButton(
     	    "CANCELAR",
     	    "/assets/img/btn-icons/button-cancel-icon.png",
     	    "Haz click para cancelar"

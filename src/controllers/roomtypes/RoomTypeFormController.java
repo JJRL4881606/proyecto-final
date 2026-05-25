@@ -176,6 +176,8 @@ public class RoomTypeFormController {
 	        
 	        String dbPath = "/assets/img/rooms/" + fileName;
 	        view.getTxtImagePath().setText(dbPath);
+	        
+	        validateImage();
 
 	        ImageIcon icon = new ImageIcon(srcDestination.getAbsolutePath());
 	        Image image = icon.getImage().getScaledInstance(220, 120, Image.SCALE_SMOOTH);
@@ -237,6 +239,7 @@ public class RoomTypeFormController {
 	            Files.copy(selected.toPath(), binDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 	            String dbPath = "/assets/img/rooms/" + fileName;
+	            validateExtraImages();
 
 	            if(paths.length() > 0) {
 	            	paths.append("|");

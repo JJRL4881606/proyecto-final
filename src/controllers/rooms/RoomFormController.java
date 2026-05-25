@@ -111,13 +111,13 @@ public class RoomFormController {
 	            roomNumber,
 	            view.getFloor(),
 	            typeId,
-	            view.isAvailable()
+	            view.getStatus()
 	        );
 	    }else{
 	        room.setRoomNumber(roomNumber);
 	        room.setFloor(view.getFloor());
 	        room.setTypeId(typeId);
-	        room.setAvailable(view.isAvailable());
+	        room.setStatus(view.getStatus());
 	    }
 
 	    view.setSaved(true);

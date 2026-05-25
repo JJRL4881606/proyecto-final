@@ -26,7 +26,7 @@ public class AppFont {
 	}
 	
     public static Font title() {
-        return firasans.deriveFont(Font.BOLD, 32f);
+        return firasans.deriveFont(Font.BOLD, 34f);
     }
     
 	public static Font subtitle2() {

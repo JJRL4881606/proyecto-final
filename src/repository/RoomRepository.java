@@ -13,7 +13,7 @@ public class RoomRepository {
     public void save(Room room){
 
         String sql = "INSERT INTO rooms "
-                + "(roomNumber, floor, typeId, available) "
+                + "(roomNumber, floor, typeId, status) "
                 + "VALUES (?, ?, ?, ?)";
 
         try(
@@ -23,13 +23,16 @@ public class RoomRepository {
             pst.setInt(1, room.getRoomNumber());
             pst.setInt(2, room.getFloor());
             pst.setInt(3, room.getTypeId());
-            pst.setBoolean(4, room.isAvailable());
+            pst.setString(4, room.getStatus());
+            
+            System.out.println(room.getStatus());
 
             pst.executeUpdate();
 
         }catch(SQLException ex){
             ex.printStackTrace();
         }
+        
     }
 
     public List<Room> getRooms(){
@@ -51,7 +54,7 @@ public class RoomRepository {
                         rs.getInt("roomNumber"),
                         rs.getInt("floor"),
                         rs.getInt("typeId"),
-                        rs.getBoolean("available")
+                        rs.getString("status")
                     )
                 );
 
@@ -87,18 +90,18 @@ public class RoomRepository {
 
     public boolean update(Room updatedRoom) throws IOException{
 
-        String sql = "UPDATE rooms "
-              + "SET roomNumber = ?, floor = ?, "
-              + "typeId = ?, available = ? "
-              + "WHERE roomId = ?";
-
+    	String sql = "UPDATE rooms "
+    		      + "SET roomNumber=?, floor=?, "
+    		      + "typeId=?, status=? "
+    		      + "WHERE roomId=?";
+    	
 		try (Connection connection = DatabaseConnection.getConnection();
 				PreparedStatement pst = connection.prepareStatement(sql)) {
 
 			pst.setInt(1,updatedRoom.getRoomNumber());
             pst.setInt(2,updatedRoom.getFloor());
             pst.setInt(3,updatedRoom.getTypeId());
-            pst.setBoolean(4,updatedRoom.isAvailable());
+            pst.setString(4,updatedRoom.getStatus());
             pst.setInt(5,updatedRoom.getRoomId());
 
             int affectedRows = pst.executeUpdate();
@@ -133,7 +136,7 @@ public class RoomRepository {
                     rs.getInt("roomNumber"),
                     rs.getInt("floor"),
                     rs.getInt("typeId"),
-                    rs.getBoolean("available")
+                    rs.getString("status")
                 );
             }
 
@@ -166,7 +169,7 @@ public class RoomRepository {
                         rs.getInt("roomNumber"),
                         rs.getInt("floor"),
                         rs.getInt("typeId"),
-                        rs.getBoolean("available")
+                        rs.getString("status")
                     )
                 );
             }
@@ -221,5 +224,39 @@ public class RoomRepository {
         }
 
         return false;
+    }
+    
+    public List<Room> getByType(int typeId){
+
+        List<Room> rooms=new ArrayList<>();
+
+        String sql="SELECT * FROM rooms WHERE typeId=?";
+
+        try(
+            Connection conn=DatabaseConnection.getConnection();
+            PreparedStatement ps=conn.prepareStatement(sql)
+        ){
+
+            ps.setInt(1,typeId);
+
+            ResultSet rs=ps.executeQuery();
+
+            while(rs.next()){
+                rooms.add(
+                    new Room(
+                        rs.getInt("roomId"),
+                        rs.getInt("roomNumber"),
+                        rs.getInt("floor"),
+                        rs.getInt("typeId"),
+                        rs.getString("status")
+                    )
+                );
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return rooms;
     }
 }

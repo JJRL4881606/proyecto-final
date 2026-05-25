@@ -104,7 +104,6 @@ public class HomeView extends JPanel{
 	    bg.setLayout(new BorderLayout());
 
 	    searchBar = new SearchBar();
-	    searchBar.setPreferredSize(new Dimension(900, 120));
 	    
 	    JPanel centerWrapper = new JPanel(new GridBagLayout());
 	    centerWrapper.setOpaque(false);
@@ -169,9 +168,9 @@ public class HomeView extends JPanel{
         subtitle.setFont(AppFont.normal());
         subtitle.setForeground(Color.WHITE);
 
-        RoundedButton reserveBtn = ButtonFactory.createBigButton(
+        RoundedButton reserveBtn = ButtonFactory.createGoldButton(
                 "Reservar ahora",
-                "/assets/img/btn-icons/button-reserve-icon.png",
+                "/assets/img/btn-icons/button-reserve-black-icon.png",
                 "Ir a reservar"
         );
 
@@ -321,17 +320,21 @@ public class HomeView extends JPanel{
         // contenedor horizontal de habitaciones
         roomsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         roomsContainer.setOpaque(false);
-        roomsContainer.setPreferredSize(new Dimension(sectionWidth, 600));
+        roomsContainer.setPreferredSize(new Dimension(sectionWidth, 650));
 
         // botón ver más
         JPanel showRooms = new JPanel();
         showRooms.setOpaque(false);
 
-        btnShowRooms = ButtonFactory.createBigButton(
+        btnShowRooms = ButtonFactory.createGoldButton(
                 "Ver más habitaciones",
                 "/assets/img/btn-icons/button-add-icon.png",
                 "Haz click para ver más habitaciones"
         );
+	    Dimension btn = new Dimension(250,40);
+	    btnShowRooms.setPreferredSize(btn);
+	    btnShowRooms.setMinimumSize(btn);
+	    btnShowRooms.setMaximumSize(btn);
 
 		showRooms.add(btnShowRooms);
 
@@ -346,16 +349,19 @@ public class HomeView extends JPanel{
     }
     
     public void setRooms(List<RoomType> rooms) {
-        roomsContainer.removeAll();
 
-        for (RoomType room : rooms) {
-            RoomCard card = new RoomCard(room);
+        roomsContainer.removeAll();
+        roomCards.clear();
+
+        for(RoomType room:rooms){
+
+            RoomCard card=new RoomCard(room);
 
             roomCards.add(card);
 
             roomsContainer.add(card);
         }
-        
+
         roomsContainer.revalidate();
         roomsContainer.repaint();
     }

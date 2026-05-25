@@ -18,6 +18,7 @@ import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
+import utils.VisualUtils;
 
 @SuppressWarnings("serial")
 public class RoomCard extends RoundedPanel {
@@ -34,8 +35,8 @@ public class RoomCard extends RoundedPanel {
 	    
 	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(UIColors.CARD);
-        setPreferredSize(new Dimension(320, 550));
-        setMaximumSize(new Dimension(320, 550));
+        setPreferredSize(new Dimension(340, 610));
+        setMaximumSize(new Dimension(340, 610));
         setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
         // imagen
@@ -60,6 +61,7 @@ public class RoomCard extends RoundedPanel {
         bedLabel.setFont(AppFont.big());
         bedLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         infoPanel.add(nameLabel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         infoPanel.add(bedLabel);
@@ -84,21 +86,17 @@ public class RoomCard extends RoundedPanel {
 
         List<Amenity> amenities = room.getAmenities();
 
-        for(int i=0; i<Math.min(4, amenities.size()); i++){
+        for(int i = 0; i < Math.min(4, amenities.size()); i++){
 
             JPanel featureItem = new JPanel(new FlowLayout(FlowLayout.LEFT,5,0));
             featureItem.setOpaque(false);
 
-            JLabel icon = new JLabel(FormUtils.loadIcon(
-                    "/assets/img/icons/check-icon.png",
-                    14
-                )
-            );
+            JLabel icon = new JLabel(FormUtils.loadIcon("/assets/img/icons/check-icon.png",14));
 
             String amenityName = amenities.get(i).getName();
 
-            if(amenityName.length() > 17){
-                amenityName = amenityName.substring(0,14) + "...";
+            if(amenityName.length() > 18){
+                amenityName = amenityName.substring(0,15) + "...";
             }
 
             JLabel text = new JLabel(amenityName);
@@ -116,13 +114,13 @@ public class RoomCard extends RoundedPanel {
         priceLabel.setFont(AppFont.big());
         priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        btnReserve = ButtonFactory.createBigButton(
+        btnReserve = ButtonFactory.createBlueButton(
             "Reservar",
             "/assets/img/btn-icons/button-reserve-icon.png",
             "Reservar habitación"
         );
         
-        btnDetails = ButtonFactory.createBigButton(
+        btnDetails = ButtonFactory.createGoldButton(
             "Ver detalles",
             "/assets/img/btn-icons/button-search-icon.png",
             "Ver detalles"
@@ -130,24 +128,36 @@ public class RoomCard extends RoundedPanel {
         
         btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnDetails.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnReserve.setMaximumSize(new Dimension(260, 45));
-        btnDetails.setMaximumSize(new Dimension(260, 45));
+        
+	    Dimension btn = new Dimension(170,40);
+	    btnReserve.setPreferredSize(btn);
+	    btnReserve.setMinimumSize(btn);
+	    btnReserve.setMaximumSize(btn);
+        
+	    btnDetails.setPreferredSize(btn);
+	    btnDetails.setMinimumSize(btn);
+	    btnDetails.setMaximumSize(btn);
         
         // action panel
         JPanel actionPanel = new JPanel();
         actionPanel.setOpaque(false);
         actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
+        actionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         actionPanel.add(priceLabel);
+        actionPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        actionPanel.add(VisualUtils.createSmallDivider()); 
         actionPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         actionPanel.add(btnReserve);
         actionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         actionPanel.add(btnDetails);
         
+        add(Box.createRigidArea(new Dimension(0, 17)));
         add(imagePanel);
         add(Box.createVerticalGlue());
         add(infoPanel);
         add(Box.createVerticalGlue());
         add(actionPanel);
+        add(Box.createRigidArea(new Dimension(0, 10)));
     }
     
     //getters

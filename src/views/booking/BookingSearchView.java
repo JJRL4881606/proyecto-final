@@ -3,6 +3,7 @@ package views.booking;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
@@ -21,6 +22,8 @@ public class BookingSearchView extends JPanel {
 
     private JPanel roomsContainer;
     private SearchBar searchBar;
+    
+    private List<RoomCard> roomCards = new ArrayList<>();
     
     public BookingSearchView() {
         setOpaque(false);
@@ -62,6 +65,9 @@ public class BookingSearchView extends JPanel {
         roomsContainer.removeAll();
         
         if (rooms.isEmpty()) {
+        	
+        	roomCards.clear();
+        	
             JLabel lblNoResults = new JLabel("Sin resultados");
             lblNoResults.setFont(AppFont.subtitle());
             lblNoResults.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -69,9 +75,13 @@ public class BookingSearchView extends JPanel {
             roomsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
             roomsContainer.add(lblNoResults);
         } else {
-            for (RoomType room : rooms) {
-            	roomsContainer.add(new RoomCard(room));
-            }
+        	roomCards.clear();
+        	
+        	for(RoomType room:rooms){
+        	    RoomCard card = new RoomCard(room);
+        	    roomCards.add(card);
+        	    roomsContainer.add(card);
+        	}
         }
 
         roomsContainer.revalidate();
@@ -80,5 +90,9 @@ public class BookingSearchView extends JPanel {
     
     public SearchBar getSearchBar() {
         return searchBar;
+    }
+    
+    public List<RoomCard> getRoomCards(){
+        return roomCards;
     }
 }

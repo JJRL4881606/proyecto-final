@@ -4,6 +4,7 @@ import javax.swing.SwingUtilities;
 
 import config.Config;
 import controllers.amenities.AmenityController;
+import controllers.booking.ReservationController;
 import controllers.rooms.RoomController;
 import controllers.roomtypes.RoomTypeController;
 import controllers.users.UserController;
@@ -15,6 +16,8 @@ import views.main.MainWindow;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -25,6 +28,7 @@ public class MainController {
 	private RoomTypeController roomTypeController;
 	private RoomController roomController;
 	private AmenityController amenityController;
+	private ReservationController reservationController;
 	private MainWindow frame;
 
 	public MainController(MainView view, MainWindow frame) {
@@ -54,6 +58,8 @@ public class MainController {
 		view.getBtnRoomTypes().addActionListener(e -> { handleTableRoomTypes(); });
 		view.getBtnRooms().addActionListener(e -> { handleTableRooms(); });
 		view.getBtnAmenities().addActionListener(e -> { handleTableAmenities(); });
+		view.getBtnReservations().addActionListener(e -> { handleTableReservations(); });
+		view.getBtnAccount().addActionListener(e -> { handleAccount(); });
 		
 		view.getBtnHome().addActionListener(e -> {
 			view.showView(MainView.HOME);
@@ -66,6 +72,36 @@ public class MainController {
 		});		
 		
 		view.getBtnShowRooms().addActionListener(e -> { handleShowRooms(); });
+		
+		view.getLblLogo().addMouseListener(
+		    new MouseAdapter() {
+		    	
+		        @Override
+		        public void mouseClicked(MouseEvent e) {
+		        	
+		            view.showView(MainView.HOME);
+
+		            updateMenuState(MainView.HOME);
+
+		            frame.revalidate();
+		            frame.repaint();
+
+		            resetScroll();
+		        }
+		    }
+		);
+	}
+	
+	private void handleAccount() {
+
+	    view.showView(MainView.ACCOUNT);
+
+	    updateMenuState(MainView.ACCOUNT);
+
+	    frame.revalidate();
+	    frame.repaint();
+
+	    resetScroll();
 	}
 	
 	private void handleTableUsers() {
@@ -130,6 +166,21 @@ public class MainController {
 	    frame.repaint();
 
 	    resetScroll();
+	}	
+	private void handleTableReservations() {
+		if(reservationController == null) {
+			reservationController = new ReservationController(view.reservationsPanel);
+		}
+			
+		reservationController.loadReservations();
+		
+		view.showView(MainView.ADMIN_RESERVATIONS);
+		updateMenuState(MainView.ADMIN_RESERVATIONS);
+		
+	    frame.revalidate();
+	    frame.repaint();
+
+	    resetScroll();
 	}
 	
 	private void handleShowRooms() {
@@ -150,7 +201,9 @@ public class MainController {
 		view.getBtnRoomTypes().setEnabled(!viewName.equals(MainView.ADMIN_ROOMTYPES));
 		view.getBtnRooms().setEnabled(!viewName.equals(MainView.ADMIN_ROOMS));
 		view.getBtnAmenities().setEnabled(!viewName.equals(MainView.ADMIN_AMENITIES));
+		view.getBtnReservations().setEnabled(!viewName.equals(MainView.ADMIN_RESERVATIONS));
 		view.getBtnShowRooms().setEnabled(!viewName.equals(MainView.SHOW_ROOMS));
+		view.getBtnAccount().setEnabled(!viewName.equals(MainView.ACCOUNT));
 	}
 	
 	private void saveWindowPreferences() {

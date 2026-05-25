@@ -61,4 +61,12 @@ public class VisualUtils {
         line.setBackground(new Color(0, 0, 0, 30));
         return line;
     }
+    
+    public static JPanel createSmallDivider() {
+        JPanel line = new JPanel();
+        line.setMaximumSize(new Dimension(300, 1));
+        line.setPreferredSize(new Dimension(300, 1));
+        line.setBackground(new Color(0, 0, 0, 30));
+        return line;
+    }
 }

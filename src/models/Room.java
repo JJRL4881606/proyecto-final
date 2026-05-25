@@ -6,16 +6,16 @@ public class Room {
     private int roomNumber;
     private int floor;
     private int typeId;
-    private boolean available;
-
+    private String status;
+    
     public Room(){}
 
-    public Room(int roomId, int roomNumber, int floor, int typeId, boolean available){
+    public Room(int roomId, int roomNumber, int floor, int typeId, String status){
         this.roomId = roomId;
         this.roomNumber = roomNumber;
         this.floor = floor;
         this.typeId = typeId;
-        this.available = available;
+        this.status = status;
     }
 
     public int getRoomId() {
@@ -34,8 +34,8 @@ public class Room {
         return typeId;
     }
 
-    public boolean isAvailable() {
-        return available;
+    public String getStatus(){
+        return status;
     }
 
     public void setRoomId(int roomId){
@@ -54,7 +54,7 @@ public class Room {
         this.typeId = typeId;
     }
 
-    public void setAvailable(boolean available){
-        this.available = available;
+    public void setStatus(String status){
+        this.status = status;
     }
 }
