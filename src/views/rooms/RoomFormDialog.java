@@ -1,6 +1,7 @@
 package views.rooms;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -65,42 +66,20 @@ public class RoomFormDialog extends JDialog {
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
         panel.add(new JLabel("Formulario habitación"));
-        
-        return panel;
-    }
-
-    private JPanel createButtonPanel(){
-        JPanel panel = new JPanel();
-        panel.setBackground(UIColors.CARD);
-
-        btnSave = ButtonFactory.createGoldButton(
-            "GUARDAR",
-            "/assets/img/btn-icons/button-save-icon.png",
-            "Haz clic para guardar"
-        );
-
-        btnCancel = ButtonFactory.createGoldButton(
-            "CANCELAR",
-            "/assets/img/btn-icons/button-cancel-icon.png",
-            "Haz clic para cancelar"
-        );
-
-        panel.add(btnSave);
-        panel.add(btnCancel);
-
         return panel;
     }
 
     private JScrollPane createFormPanel(){
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(15,20,15,20));
+    	JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        JScrollPane scroll = new JScrollPane(panel);
-        scroll.setBorder(null);
-        scroll.setHorizontalScrollBar(null);
-        scroll.getVerticalScrollBar().setUnitIncrement(14);
+		JScrollPane scroll = new JScrollPane(panel);
+		scroll.setBorder(null);
+		scroll.setHorizontalScrollBar(null);
+		scroll.getVerticalScrollBar().setUnitIncrement(14);
 
         //NUMERO HABITACION
         spRoomNumber = FormUtils.createNumberField(9999);
@@ -127,6 +106,28 @@ public class RoomFormDialog extends JDialog {
         panel.add(Box.createRigidArea(new Dimension(0,20)));
 
         return scroll;
+    }
+    
+    private JPanel createButtonPanel(){
+        JPanel panel = new JPanel();
+        panel.setBackground(UIColors.CARD);
+
+        btnSave = ButtonFactory.createGoldButton(
+            "GUARDAR",
+            "/assets/img/btn-icons/button-save-icon.png",
+            "Haz clic para guardar"
+        );
+
+        btnCancel = ButtonFactory.createGoldButton(
+            "CANCELAR",
+            "/assets/img/btn-icons/button-cancel-icon.png",
+            "Haz clic para cancelar"
+        );
+
+        panel.add(btnSave);
+        panel.add(btnCancel);
+
+        return panel;
     }
 
     private void loadData(){

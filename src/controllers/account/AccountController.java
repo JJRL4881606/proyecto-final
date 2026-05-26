@@ -2,11 +2,12 @@ package controllers.account;
 
 import java.awt.Window;
 import java.text.SimpleDateFormat;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import models.User;
 import utils.Session;
+import views.account.AccountEditDialog;
 import views.account.AccountView;
+import views.account.PasswordDialog;
 import views.auth.LoginWindow;
 
 public class AccountController {
@@ -20,9 +21,15 @@ public class AccountController {
     }
 
     private void initListeners() {
-        view.getBtnPassword().addActionListener(e -> {
-            JOptionPane.showMessageDialog(view, "Próximamente");
-        });
+    	view.getBtnPassword().addActionListener(e->{
+
+    	    PasswordDialog dialog = new PasswordDialog(null);
+
+    	    new PasswordController(dialog);
+
+    	    dialog.setVisible(true);
+
+    	});
 
         view.getBtnLogout().addActionListener(e -> {
             Session.logout();
@@ -41,6 +48,20 @@ public class AccountController {
             if(window != null){
                 window.dispose();
             }
+        });
+        
+        view.getBtnEdit().addActionListener(e->{
+
+        	AccountEditDialog dialog = new AccountEditDialog(
+    			null,
+    			Session.getCurrentUser()
+    		);
+
+        	new AccountEditController(dialog);
+
+        	dialog.setVisible(true);
+
+        	loadUser();
         });
     }
     

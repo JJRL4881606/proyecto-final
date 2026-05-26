@@ -2,6 +2,7 @@ package views.booking;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.sql.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -69,25 +70,20 @@ public class ReservationFormDialog extends JDialog {
             e.printStackTrace();
         }
         
-        rooms = new RoomRepository()
-        	    .getRooms()
-        	    .stream()
-        	    .filter(room -> {
+        rooms = new RoomRepository().getRooms().stream().filter(room -> {
+	        if(reservation != null &&
+	           room.getRoomId() == reservation.getRoomId()){
+	            return true;
+	        }
 
-        	        if(reservation != null &&
-        	           room.getRoomId() == reservation.getRoomId()){
-        	            return true;
-        	        }
+	        return room.getStatus().equals(
+	            RoomStatus.AVAILABLE
+	        );
 
-        	        return room.getStatus().equals(
-        	            RoomStatus.AVAILABLE
-        	        );
-
-        	    })
-        	    .toList();
+	    })
+	    .toList();
         
         setTitle(reservation == null ? "Agregar reservación" : "Editar reservación");
-
         setSize(450, 600);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -107,28 +103,17 @@ public class ReservationFormDialog extends JDialog {
         return panel;
     }
 
-    private JPanel createButtonPanel() {
-        JPanel panel = new JPanel();
-        panel.setBackground(UIColors.CARD);
-
-        btnSave = ButtonFactory.createGoldButton("GUARDAR", "/assets/img/btn-icons/button-save-icon.png", "");
-        btnCancel = ButtonFactory.createGoldButton("CANCELAR", "/assets/img/btn-icons/button-cancel-icon.png", "");
-
-        panel.add(btnSave);
-        panel.add(btnCancel);
-        return panel;
-    }
-
     private JScrollPane createFormPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(15,20,15,20));
+    	JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
-        JScrollPane scroll = new JScrollPane(panel);
-        scroll.setBorder(null);
-        scroll.setHorizontalScrollBar(null);
-        scroll.getVerticalScrollBar().setUnitIncrement(14);
+		JScrollPane scroll = new JScrollPane(panel);
+		scroll.setBorder(null);
+		scroll.setHorizontalScrollBar(null);
+		scroll.getVerticalScrollBar().setUnitIncrement(14);
 
         String[] userNames = new String[users.size()+1];
         userNames[0] = "Seleccione un usuario";
@@ -182,6 +167,15 @@ public class ReservationFormDialog extends JDialog {
 
         return scroll;
     }
+
+	private JPanel createButtonPanel() {
+		JPanel panel = new JPanel();
+		btnSave = ButtonFactory.createGoldButton("GUARDAR", "/assets/img/btn-icons/button-save-icon.png", "Guardar");
+		btnCancel = ButtonFactory.createGoldButton("CANCELAR", "/assets/img/btn-icons/button-cancel-icon.png", "Cancelar");
+		panel.add(btnSave);
+		panel.add(btnCancel);
+		return panel;
+	}
 
     private void loadData(){
 

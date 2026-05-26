@@ -5,12 +5,15 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import models.Reservation;
 import models.Room;
+import models.User;
 import repository.RoomRepository;
+import repository.UserRepository;
 
 @SuppressWarnings("serial")
 public class ReservationTableModel extends AbstractTableModel {
 
     private List<Reservation> reservations;
+    private UserRepository userRepo = new UserRepository();
     private RoomRepository roomRepo = new RoomRepository();
     private final String[] columns = {"Usuario", "Habitación", "Entrada", "Salida", "Huéspedes", "Estado", "Total", "Creada"};
 
@@ -35,8 +38,13 @@ public class ReservationTableModel extends AbstractTableModel {
         Reservation reservation = reservations.get(rowIndex);
 
         switch (columnIndex) {
-            case 0: return reservation.getUserId();
-            
+	        case 0:
+	            User user = userRepo.findById(
+	                reservation.getUserId()
+	            );
+	
+	            return user != null ? user.getName() + " " + user.getSurname() : "-";     
+	            
             case 1:
                 Room room = roomRepo.findById(
                     reservation.getRoomId()

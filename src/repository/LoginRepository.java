@@ -26,6 +26,7 @@ public class LoginRepository {
                 if (!correctPassword) return null;
 
                 User user = new User();
+
                 user.setId(rs.getInt("id"));
                 user.setName(rs.getString("name"));
                 user.setSurname(rs.getString("surname"));
@@ -35,6 +36,10 @@ public class LoginRepository {
                 user.setBirthDate(rs.getDate("birth_date"));
                 user.setGender(rs.getString("gender").charAt(0));
                 user.setRole(rs.getString("role"));
+
+                user.setPassword(
+                    rs.getString("password")
+                );
 
                 return user;
             }

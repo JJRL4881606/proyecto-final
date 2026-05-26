@@ -52,11 +52,17 @@ public class AmenitiesFormDialog extends JDialog{
     }
     
     private JPanel createFormPanel(){
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(15,20,15,20));
+    	JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
+		JScrollPane scroll = new JScrollPane(panel);
+		scroll.setBorder(null);
+		scroll.setHorizontalScrollBar(null);
+		scroll.getVerticalScrollBar().setUnitIncrement(14);
+		
         //nombre
         txtName = FormUtils.createTextField();
         lblNameError = FormUtils.createErrorLabel();

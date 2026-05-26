@@ -54,6 +54,11 @@ public class UserRepository {
 				User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("surname"),
 						rs.getString("email"), rs.getString("phone"), rs.getString("country"), rs.getDate("birth_date"),
 						rs.getString("gender").charAt(0), rs.getString("role"));
+				
+				user.setPassword(
+				    rs.getString("password")
+				);
+				
 				users.add(user);
 			}
 
@@ -125,5 +130,73 @@ public class UserRepository {
 				throw new DuplicateEmailException("Este correo es usado por otra cuenta");
 			}
 		}
+	}
+	
+	public User findById(int id){
+
+	    String sql = "SELECT * FROM users WHERE id=?";
+
+	    try(
+	        Connection connection = DatabaseConnection.getConnection();
+	        PreparedStatement pst = connection.prepareStatement(sql)
+	    ){
+
+	        pst.setInt(1,id);
+
+	        ResultSet rs = pst.executeQuery();
+
+	        if(rs.next()){
+
+	        	User user = new User(
+        		    rs.getInt("id"),
+        		    rs.getString("name"),
+        		    rs.getString("surname"),
+        		    rs.getString("email"),
+        		    rs.getString("phone"),
+        		    rs.getString("country"),
+        		    rs.getDate("birth_date"),
+        		    rs.getString("gender").charAt(0),
+        		    rs.getString("role")
+        		);
+
+        		user.setPassword(
+        		    rs.getString("password")
+        		);
+
+        		return user;
+	        }
+
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return null;
+	}
+	
+	public void updatePassword(int id, String password){
+
+	    String sql = "UPDATE users SET password=? WHERE id=?";
+
+	    try(
+	        Connection conn = DatabaseConnection.getConnection();
+	        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+	        String hash = PasswordUtils.hashPassword(password);
+
+	        stmt.setString(
+	            1,
+	            hash
+	        );
+
+	        stmt.setInt(
+	            2,
+	            id
+	        );
+
+	        stmt.executeUpdate();
+
+	    }catch(SQLException e){
+	        e.printStackTrace();
+	    }
 	}
 }
