@@ -183,20 +183,47 @@ public class UserRepository {
 
 	        String hash = PasswordUtils.hashPassword(password);
 
-	        stmt.setString(
-	            1,
-	            hash
-	        );
-
-	        stmt.setInt(
-	            2,
-	            id
-	        );
-
+	        stmt.setString(1, hash);
+	        stmt.setInt(2, id);
 	        stmt.executeUpdate();
 
 	    }catch(SQLException e){
 	        e.printStackTrace();
 	    }
+	}
+	
+	public User findByEmail(String email){
+
+	    String sql = "SELECT * FROM users WHERE email=?";
+
+	    try(Connection conn = DatabaseConnection.getConnection();
+	        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+	        stmt.setString(1, email);
+
+	        ResultSet rs = stmt.executeQuery();
+
+	        if(rs.next()){
+
+	            User user = new User();
+	            user.setId(rs.getInt("id"));
+	            user.setName(rs.getString("name"));
+	            user.setSurname(rs.getString("surname"));
+	            user.setEmail(rs.getString("email"));
+	            user.setPhone(rs.getString("phone"));
+	            user.setCountry(rs.getString("country"));
+	            user.setBirthDate(rs.getDate("birth_date"));
+	            user.setGender(rs.getString("gender").charAt(0));
+	            user.setRole(rs.getString("role"));
+	            user.setPassword(rs.getString("password"));
+
+	            return user;
+	        }
+
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return null;
 	}
 }

@@ -12,6 +12,7 @@ import utils.FormUtils;
 import utils.Validator;
 import utils.Session;
 import views.auth.LoginView;
+import views.auth.PasswordRecoveryDialog;
 import views.auth.RegistrationWindow;
 import views.main.MainWindow;
 
@@ -61,14 +62,15 @@ public class LoginController {
         });
         
         view.getLblForgotPassword().addMouseListener(new MouseAdapter() {
-            @Override
             public void mouseClicked(MouseEvent e) {
-                try {
-                	//esto es mientras hacemos el modulo de cambiar contraseña
-                    Desktop.getDesktop().browse(new URI("https://www.google.com"));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+
+                PasswordRecoveryDialog dialog = new PasswordRecoveryDialog(
+                    view.getWindow()
+                );
+
+                new PasswordRecoveryController(dialog);
+
+                dialog.setVisible(true);
             }
         });
 

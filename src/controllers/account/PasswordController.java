@@ -28,92 +28,46 @@ public class PasswordController {
 
         view.getChkShowPassword().addActionListener(e -> {
 
-            char passwordChar =
-                view.getChkShowPassword().isSelected()
-                ? (char)0
-                : '•';
+            char passwordChar = view.getChkShowPassword().isSelected() ? (char)0 : '•';
 
-            view.getTxtCurrentPassword()
-                .setEchoChar(passwordChar);
-
-            view.getTxtNewPassword()
-                .setEchoChar(passwordChar);
-
-            view.getTxtConfirmPassword()
-                .setEchoChar(passwordChar);
+            view.getTxtCurrentPassword().setEchoChar(passwordChar);
+            view.getTxtNewPassword().setEchoChar(passwordChar);
+            view.getTxtConfirmPassword().setEchoChar(passwordChar);
         });
         
         view.getTxtCurrentPassword().getDocument().addDocumentListener(
     	    new DocumentListener() {
-
-    	    public void insertUpdate(DocumentEvent e){
-    	        validateCurrentPassword();
-    	    }
-
-    	    public void removeUpdate(DocumentEvent e){
-    	        validateCurrentPassword();
-    	    }
-
-    	    public void changedUpdate(DocumentEvent e){
-    	        validateCurrentPassword();
-    	    }
+    	    public void insertUpdate(DocumentEvent e){validateCurrentPassword();}
+    	    public void removeUpdate(DocumentEvent e){validateCurrentPassword();}
+    	    public void changedUpdate(DocumentEvent e){validateCurrentPassword();}
     	});
 
     	view.getTxtNewPassword().getDocument().addDocumentListener(
     	    new DocumentListener() {
-
-    	    public void insertUpdate(DocumentEvent e){
-    	        validateNewPassword();
-    	    }
-
-    	    public void removeUpdate(DocumentEvent e){
-    	        validateNewPassword();
-    	    }
-
-    	    public void changedUpdate(DocumentEvent e){
-    	        validateNewPassword();
-    	    }
+    	    public void insertUpdate(DocumentEvent e){validateNewPassword();}
+    	    public void removeUpdate(DocumentEvent e){validateNewPassword();}
+    	    public void changedUpdate(DocumentEvent e){validateNewPassword();}
     	});
 
     	view.getTxtConfirmPassword().getDocument().addDocumentListener(
     	    new DocumentListener() {
-
-    	    public void insertUpdate(DocumentEvent e){
-    	        validateConfirmPassword();
-    	    }
-
-    	    public void removeUpdate(DocumentEvent e){
-    	        validateConfirmPassword();
-    	    }
-
-    	    public void changedUpdate(DocumentEvent e){
-    	        validateConfirmPassword();
-    	    }
+    	    public void insertUpdate(DocumentEvent e){validateConfirmPassword();}
+    	    public void removeUpdate(DocumentEvent e){validateConfirmPassword();}
+    	    public void changedUpdate(DocumentEvent e){validateConfirmPassword();}
     	});
     	
-    	FormUtils.addFocusEffect(
-		    view.getTxtCurrentPassword(),
-		    view.getLblCurrentError()
-		);
-
-		FormUtils.addFocusEffect(
-		    view.getTxtNewPassword(),
-		    view.getLblNewError()
-		);
-
-		FormUtils.addFocusEffect(
-		    view.getTxtConfirmPassword(),
-		    view.getLblConfirmError()
-		);
+    	FormUtils.addFocusEffect(view.getTxtCurrentPassword(), view.getLblCurrentError());
+		FormUtils.addFocusEffect(view.getTxtNewPassword(), view.getLblNewError());
+		FormUtils.addFocusEffect(view.getTxtConfirmPassword(), view.getLblConfirmError());
     }
     
     private boolean validateForm(){
 
-        boolean valid=true;
+        boolean valid = true;
 
-        if(!validateCurrentPassword()) valid=false;
-        if(!validateNewPassword()) valid=false;
-        if(!validateConfirmPassword()) valid=false;
+        if(!validateCurrentPassword()) valid = false;
+        if(!validateNewPassword()) valid = false;
+        if(!validateConfirmPassword()) valid = false;
 
         return valid;
     }
@@ -176,33 +130,22 @@ public class PasswordController {
     
     public boolean validateCurrentPassword(){
 
-        String current =
-            view.getCurrentPassword();
+        String current = view.getCurrentPassword();
 
         if(current.isBlank()){
-
-            view.setCurrentError(
-                "Campo obligatorio"
-            );
-
+            view.setCurrentError("Campo obligatorio");
             return false;
         }
 
-        User user =
-            Session.getCurrentUser();
+        User user = Session.getCurrentUser();
 
-        boolean correct =
-            PasswordUtils.checkPassword(
-                current,
-                user.getPassword()
-            );
+        boolean correct = PasswordUtils.checkPassword(
+            current,
+            user.getPassword()
+        );
 
         if(!correct){
-
-            view.setCurrentError(
-                "Contraseña incorrecta"
-            );
-
+            view.setCurrentError("Contraseña incorrecta");
             return false;
         }
 
@@ -212,25 +155,16 @@ public class PasswordController {
     }
     
     public boolean validateNewPassword(){
-
-        String password =
-            view.getNewPassword();
+    	
+        String password = view.getNewPassword();
 
         if(password.isBlank()){
-
-            view.setNewError(
-                "Campo obligatorio"
-            );
-
+            view.setNewError("Campo obligatorio");
             return false;
         }
 
         if(password.length()<8){
-
-            view.setNewError(
-                "Mínimo 8 caracteres"
-            );
-
+            view.setNewError("Mínimo 8 caracteres");
             return false;
         }
 
@@ -241,26 +175,15 @@ public class PasswordController {
     
     public boolean validateConfirmPassword(){
 
-        String confirm =
-            view.getConfirmPassword();
+        String confirm = view.getConfirmPassword();
 
         if(confirm.isBlank()){
-
-            view.setConfirmError(
-                "Campo obligatorio"
-            );
-
+            view.setConfirmError("Campo obligatorio");
             return false;
         }
 
-        if(!confirm.equals(
-            view.getNewPassword()
-        )){
-
-            view.setConfirmError(
-                "Las contraseñas no coinciden"
-            );
-
+        if(!confirm.equals(view.getNewPassword())){
+            view.setConfirmError("Las contraseñas no coinciden");
             return false;
         }
 

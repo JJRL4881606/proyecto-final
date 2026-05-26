@@ -1,33 +1,27 @@
-package views.account;
+package views.auth;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
+import java.awt.*;
+import javax.swing.*;
 
 import components.RoundedButton;
-import utils.ButtonFactory;
 import utils.FormUtils;
+import utils.ButtonFactory;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
-public class PasswordDialog extends JDialog {
+public class PasswordRecoveryDialog extends JDialog {
 
-    private JPasswordField txtCurrentPassword;
+    private JTextField txtEmail;
+    private JComboBox<String> comboCountry;
+
     private JPasswordField txtNewPassword;
     private JPasswordField txtConfirmPassword;
 
-    private JLabel lblCurrentError;
+    private JLabel lblEmailError;
+    private JLabel lblCountryError;
     private JLabel lblNewError;
     private JLabel lblConfirmError;
-
+    
     private JCheckBox chkShowPassword;
 
     private RoundedButton btnSave;
@@ -35,10 +29,10 @@ public class PasswordDialog extends JDialog {
 
     int fieldWidth = 300;
 
-    public PasswordDialog(JFrame parent){
-        super(parent,true);
+    public PasswordRecoveryDialog(JFrame parent){
+        super(parent, true);
 
-        setTitle("Cambiar contraseña");
+        setTitle("Recuperar contraseña");
 		setSize(450, 600);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
@@ -47,12 +41,12 @@ public class PasswordDialog extends JDialog {
         add(createTitlePanel(), BorderLayout.NORTH);
         add(createFormPanel());
         add(createButtonPanel(), BorderLayout.SOUTH);
-    }
-	
+    }	
+    
     private JPanel createTitlePanel() {
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
-        panel.add(new JLabel("Formulario cambio de contraseña"));
+        panel.add(new JLabel("Formulario recuperación de contraseña"));
         return panel;
     }
 
@@ -68,17 +62,21 @@ public class PasswordDialog extends JDialog {
 		scroll.setHorizontalScrollBar(null);
 		scroll.getVerticalScrollBar().setUnitIncrement(14);
 
-        txtCurrentPassword = FormUtils.createPasswordField();
-        lblCurrentError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Contraseña actual", txtCurrentPassword, lblCurrentError, "", fieldWidth));
+		txtEmail = FormUtils.createTextField();
+		lblEmailError = FormUtils.createErrorLabel();
+		panel.add(FormUtils.createField("Correo", txtEmail, lblEmailError, "Ingrese el correo", fieldWidth));
+
+		comboCountry = FormUtils.createComboCountry();
+		lblCountryError = FormUtils.createErrorLabel();
+		panel.add(FormUtils.createField("País", comboCountry, lblCountryError, "Ingrese el país", fieldWidth));
 
         txtNewPassword = FormUtils.createPasswordField();
         lblNewError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Nueva contraseña", txtNewPassword, lblNewError, "", fieldWidth));
+        panel.add(FormUtils.createField("Nueva contraseña", txtNewPassword, lblNewError, "Ingrese la nueva contraseña", fieldWidth));
 
         txtConfirmPassword = FormUtils.createPasswordField();
         lblConfirmError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Confirmar contraseña", txtConfirmPassword, lblConfirmError, "", fieldWidth));
+        panel.add(FormUtils.createField("Confirmar contraseña", txtConfirmPassword, lblConfirmError, "Confirme la nueva contraseña", fieldWidth));
 
         chkShowPassword = FormUtils.createCheckBox();
         panel.add(chkShowPassword);
@@ -95,12 +93,22 @@ public class PasswordDialog extends JDialog {
 		return panel;
 	}
 
-    public String getCurrentPassword(){
-        return new String(
-            txtCurrentPassword.getPassword()
-        );
+    // GETTERS
+	public JTextField getTxtEmail(){ return txtEmail; }
+
+    public JPasswordField getTxtNewPassword(){
+        return txtNewPassword;
     }
 
+    public JPasswordField getTxtConfirmPassword(){
+        return txtConfirmPassword;
+    }
+    
+	public JComboBox<String> getComboCountry(){ return comboCountry; }
+
+    public String getEmail(){ return txtEmail.getText().trim(); }
+	public String getCountry() { return String.valueOf(comboCountry.getSelectedItem()); }
+	
     public String getNewPassword(){
         return new String(
             txtNewPassword.getPassword()
@@ -116,38 +124,11 @@ public class PasswordDialog extends JDialog {
     public RoundedButton getBtnSave(){ return btnSave; }
     public RoundedButton getBtnCancel(){ return btnCancel; }
 
-    public JCheckBox getChkShowPassword(){
-        return chkShowPassword;
-    }
+    public JCheckBox getChkShowPassword(){ return chkShowPassword; }
 
-    public JPasswordField getTxtCurrentPassword(){
-        return txtCurrentPassword;
-    }
-
-    public JPasswordField getTxtNewPassword(){
-        return txtNewPassword;
-    }
-
-    public JPasswordField getTxtConfirmPassword(){
-        return txtConfirmPassword;
-    }
-    
-    public JLabel getLblCurrentError(){
-        return lblCurrentError;
-    }
-
-    public JLabel getLblNewError(){
-        return lblNewError;
-    }
-
-    public JLabel getLblConfirmError(){
-        return lblConfirmError;
-    }
-
-    public void setCurrentError(String msg){
-        lblCurrentError.setText(msg);
-        txtCurrentPassword.setBorder(FormUtils.redBorder);
-    }
+    // ERRORES
+	public void setEmailError(String msg){ lblEmailError.setText(msg); txtEmail.setBorder(FormUtils.redBorder); }
+	public void setCountryError(String msg){ lblCountryError.setText(msg); comboCountry.setBorder(FormUtils.redBorder); }
 
     public void setNewError(String msg){
         lblNewError.setText(msg);
@@ -160,15 +141,20 @@ public class PasswordDialog extends JDialog {
     }
     
     public void clearErrors(){
-    	clearCurrentError();
-    	clearNewError();
-    	clearConfirmError();
+	    clearEmailError(); 
+	    clearCountryError(); 
+	    clearNewError(); 
+	    clearConfirmError(); 
     }
     
-    public void clearCurrentError(){
-        FormUtils.clearError(lblCurrentError, txtCurrentPassword);
+    public void clearEmailError(){
+        FormUtils.clearError(lblEmailError, txtEmail);
     }
-
+    
+    public void clearCountryError(){
+        FormUtils.clearError(lblCountryError, comboCountry);
+    }
+    
     public void clearNewError(){
         FormUtils.clearError(lblNewError, txtNewPassword);
     }
@@ -176,4 +162,21 @@ public class PasswordDialog extends JDialog {
     public void clearConfirmError(){
         FormUtils.clearError(lblConfirmError, txtConfirmPassword);
     }
+    
+	public JLabel getLblEmailError(){
+		return lblEmailError; 
+	}
+	
+	public JLabel getLblCountryError(){
+		return lblCountryError; 
+	}
+
+    public JLabel getLblNewError(){
+        return lblNewError;
+    }
+
+    public JLabel getLblConfirmError(){
+        return lblConfirmError;
+    }
+
 }

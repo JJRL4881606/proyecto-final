@@ -48,7 +48,6 @@ public class AccountEditController {
         FormUtils.addFocusEffect(view.getTxtSurname(), view.getLblSurnameError());
         FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
         FormUtils.addFocusEffect(view.getTxtPhone(), view.getLblPhoneError());
-
     }
 
     private void addDocumentListener(JTextComponent textComponent, Runnable validationMethod) {
