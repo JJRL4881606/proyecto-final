@@ -94,30 +94,26 @@ public class ReservationRepository {
         return false;
     }
     
-    public boolean isRoomAvailable(int roomId, LocalDate checkIn, LocalDate checkOut){
+    public boolean isRoomAvailable(int roomId, LocalDate checkIn, LocalDate checkOut, int reservationId) {
+        String sql = "SELECT 1 FROM reservations WHERE roomId=? AND reservationId != ? " +
+                     "AND status IN (?, ?) AND (checkInDate < ? AND checkOutDate > ?) LIMIT 1";
 
-        String sql =
-            "SELECT 1 FROM reservations " +
-            "WHERE roomId=? " +
-            "AND status IN ('" + ReservationStatus.PENDING + "','" + ReservationStatus.CONFIRMED + "') " +
-            "AND (checkInDate < ? AND checkOutDate > ?) " +
-            "LIMIT 1";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        try (
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
             ps.setInt(1, roomId);
-            ps.setDate(2, Date.valueOf(checkOut));
-            ps.setDate(3, Date.valueOf(checkIn));
+            ps.setInt(2, reservationId);
+            ps.setString(3, ReservationStatus.PENDING.toString());
+            ps.setString(4, ReservationStatus.CONFIRMED.toString());
+            ps.setDate(5, Date.valueOf(checkOut));
+            ps.setDate(6, Date.valueOf(checkIn));
 
-            ResultSet rs = ps.executeQuery();
-
-            return !rs.next(); // TRUE = disponible
-        } catch(Exception e){
+            try (ResultSet rs = ps.executeQuery()) {
+                return !rs.next();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 }

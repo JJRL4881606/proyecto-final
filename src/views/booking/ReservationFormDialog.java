@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import components.RoundedButton;
 import models.Reservation;
 import models.Room;
+import models.RoomStatus;
 import models.RoomType;
 import models.User;
 import repository.RoomRepository;
@@ -67,8 +68,23 @@ public class ReservationFormDialog extends JDialog {
             e.printStackTrace();
         }
         
-        rooms = new RoomRepository().getRooms();
+        rooms = new RoomRepository()
+        	    .getRooms()
+        	    .stream()
+        	    .filter(room -> {
 
+        	        if(reservation != null &&
+        	           room.getRoomId() == reservation.getRoomId()){
+        	            return true;
+        	        }
+
+        	        return room.getStatus().equals(
+        	            RoomStatus.AVAILABLE
+        	        );
+
+        	    })
+        	    .toList();
+        
         setTitle(reservation == null ? "Agregar reservación" : "Editar reservación");
 
         setSize(450, 600);
@@ -148,7 +164,7 @@ public class ReservationFormDialog extends JDialog {
         lblCheckOutError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Fecha salida", spCheckOut, lblCheckOutError, "", fieldWidth));
 
-        spGuests = FormUtils.createNumberField(20);
+        spGuests = FormUtils.createNumberField(10);
         lblGuestsError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Huéspedes", spGuests, lblGuestsError, "", fieldWidth));
 

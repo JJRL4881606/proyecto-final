@@ -235,7 +235,14 @@ public class RoomTypeRepository {
 
             for(Room room : rooms){
 
-            	if(room.getStatus().equals(RoomStatus.AVAILABLE) && reservationRepo.isRoomAvailable(room.getRoomId(), checkIn, checkOut)){
+                boolean roomAvailable = reservationRepo.isRoomAvailable(
+                    room.getRoomId(),
+                    checkIn,
+                    checkOut,
+                    0
+                );
+
+                if(roomAvailable){
                     found = true;
                     break;
                 }
