@@ -19,7 +19,7 @@ public class RoomTypeTableModel extends AbstractTableModel{
 	    "Capacidad",
 	    "Precio",
 	    "Imagen principal",
-	    "Comodidades",
+	    "Amenidades",
 	    "Destacada",
 	    "Descripción",
 	    "Imágenes extra"

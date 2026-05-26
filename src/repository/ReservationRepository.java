@@ -103,8 +103,8 @@ public class ReservationRepository {
 
             ps.setInt(1, roomId);
             ps.setInt(2, reservationId);
-            ps.setString(3, ReservationStatus.PENDING.toString());
-            ps.setString(4, ReservationStatus.CONFIRMED.toString());
+            ps.setString(3, ReservationStatus.PENDING);
+            ps.setString(4, ReservationStatus.CONFIRMED);
             ps.setDate(5, Date.valueOf(checkOut));
             ps.setDate(6, Date.valueOf(checkIn));
 
@@ -115,5 +115,33 @@ public class ReservationRepository {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    public boolean hasActiveReservation(int roomId){
+
+        String sql =
+            "SELECT 1 FROM reservations " +
+            "WHERE roomId=? " +
+            "AND status IN (?,?) " +
+            "LIMIT 1";
+
+        try(
+            Connection conn=DatabaseConnection.getConnection();
+            PreparedStatement ps=conn.prepareStatement(sql)
+        ){
+
+            ps.setInt(1,roomId);
+            ps.setString(2,ReservationStatus.PENDING);
+            ps.setString(3,ReservationStatus.CONFIRMED);
+
+            ResultSet rs=ps.executeQuery();
+
+            return rs.next();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

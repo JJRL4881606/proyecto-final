@@ -68,7 +68,7 @@ public class AmenitiesView extends JPanel {
 
     private JLabel createTitle() {
 
-        JLabel lbl = new JLabel("Panel de administración de comodidades");
+        JLabel lbl = new JLabel("Panel de administración de amenidades");
 
         lbl.setBorder(new EmptyBorder(20,20,0,20));
         lbl.setFont(AppFont.subtitle());

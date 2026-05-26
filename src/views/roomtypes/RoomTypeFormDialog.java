@@ -207,7 +207,7 @@ public class RoomTypeFormDialog extends JDialog {
         panel.add(lblExtraImagesError);
         panel.add(Box.createRigidArea(new Dimension(0,20)));
 
-        //COMODIDADES
+        //AMENIDADES
         JPanel amenityPanel = new JPanel();
         amenityPanel.setOpaque(false);
         amenityPanel.setLayout(new BoxLayout(amenityPanel, BoxLayout.Y_AXIS));
@@ -226,7 +226,7 @@ public class RoomTypeFormDialog extends JDialog {
             amenityPanel.add(Box.createRigidArea(new Dimension(0,5)));
         }
 
-        JLabel lblAmenities = new JLabel("Comodidades");
+        JLabel lblAmenities = new JLabel("Amenidades");
         lblAmenities.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panel.add(lblAmenities);

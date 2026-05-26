@@ -17,6 +17,7 @@ import javax.swing.JSpinner;
 
 import components.RoundedButton;
 import models.Room;
+import models.RoomStatus;
 import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
@@ -118,7 +119,7 @@ public class RoomFormDialog extends JDialog {
         panel.add(FormUtils.createField("Tipo habitación", comboRoomType, lblRoomTypeError, "Seleccione tipo", fieldWidth));
 
         //DISPONIBLE
-        String[] status = {"Disponible", "Ocupado", "Fuera de servicio"};
+        String[] status = {"Seleccione estado", RoomStatus.AVAILABLE, RoomStatus.OCCUPIED, RoomStatus.OUT_OF_SERVICE};
         comboStatus = FormUtils.createCombo(status);
         lblStatusError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField( "Estado", comboStatus, lblStatusError, "Seleccione estado", fieldWidth));      
@@ -214,11 +215,16 @@ public class RoomFormDialog extends JDialog {
     public void clearRoomTypeError(){
         FormUtils.clearError(lblRoomTypeError,comboRoomType);
     }
+    
+    public void clearStatusError(){
+        FormUtils.clearError(lblStatusError,comboStatus);
+    }
 
     public void clearErrors(){
         clearRoomNumberError();
         clearFloorError();
         clearRoomTypeError();
+        clearStatusError();
     }
 
     public void setRoomNumberError(String msg){
@@ -234,5 +240,10 @@ public class RoomFormDialog extends JDialog {
     public void setRoomTypeError(String msg){
         lblRoomTypeError.setText(msg);
         comboRoomType.setBorder(FormUtils.redBorder);
+    }
+    
+    public void setStatusError(String msg){
+    	lblStatusError.setText(msg);
+    	comboStatus.setBorder(FormUtils.redBorder);
     }
 }

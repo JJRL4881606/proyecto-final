@@ -17,6 +17,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import components.RoundedButton;
 import models.Reservation;
+import models.ReservationStatus;
 import models.Room;
 import models.RoomStatus;
 import models.RoomType;
@@ -168,7 +169,8 @@ public class ReservationFormDialog extends JDialog {
         lblGuestsError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Huéspedes", spGuests, lblGuestsError, "", fieldWidth));
 
-        comboStatus = FormUtils.createCombo(new String[]{"Seleccione estado", "Pendiente", "Confirmada", "Cancelada", "Completada"});
+        String[] status = {"Seleccione estado", ReservationStatus.PENDING, ReservationStatus.CONFIRMED, ReservationStatus.CANCELED, ReservationStatus.COMPLETED };
+        comboStatus = FormUtils.createCombo(status);
         lblStatusError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Estado", comboStatus, lblStatusError, "", fieldWidth));
         		

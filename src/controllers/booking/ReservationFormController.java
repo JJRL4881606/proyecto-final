@@ -142,17 +142,26 @@ public class ReservationFormController {
         	Room room = roomRepo.findById(reservation.getRoomId());
 
         	if(room != null){
-        		if(!reservation.getStatus().equals(ReservationStatus.CANCELED)){
+
+        	    if(
+        	        reservation.getStatus().equals(ReservationStatus.PENDING) ||
+        	        reservation.getStatus().equals(ReservationStatus.CONFIRMED)
+        	    ){
         	        room.setStatus(RoomStatus.OCCUPIED);
-        	    }else{
+
+        	    }else if(
+        	        reservation.getStatus().equals(ReservationStatus.CANCELED) ||
+        	        reservation.getStatus().equals(ReservationStatus.COMPLETED)
+        	    ){
         	        room.setStatus(RoomStatus.AVAILABLE);
         	    }
-        	    
-        	    try {
-					roomRepo.update(room);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+
+        	    try{
+        	        roomRepo.update(room);
+
+        	    }catch(IOException e){
+        	        e.printStackTrace();
+        	    }
         	}
         	
         view.dispose();

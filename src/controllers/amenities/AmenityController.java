@@ -79,7 +79,7 @@ public class AmenityController {
         if(row == -1){
             JOptionPane.showMessageDialog(
                 null,
-                "Selecciona una comodidad"
+                "Selecciona una amenidad"
             );
 
             return;
@@ -95,7 +95,7 @@ public class AmenityController {
         if(row == -1){
             JOptionPane.showMessageDialog(
                 null,
-                "Selecciona una comodidad"
+                "Selecciona una amenidad"
             );
             
             return;
