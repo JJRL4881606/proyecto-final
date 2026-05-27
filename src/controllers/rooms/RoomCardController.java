@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import components.RoomCard;
 import models.RoomType;
+import models.User;
 import views.auth.LoginView;
 import views.home.HomeView;
 import views.main.MainWindow;
@@ -17,10 +18,12 @@ public class RoomCardController {
 
     private RoomCard roomCard;
     private RoomType room;
+    private User user;
 
-    public RoomCardController(RoomCard roomCard, RoomType room) {
+    public RoomCardController(RoomCard roomCard, RoomType room, User user) {
         this.roomCard = roomCard;
         this.room = room;
+        this.user = user;
         initController();
     }
 
@@ -36,7 +39,7 @@ public class RoomCardController {
                 }
 
                 // Abrir nueva ventana de pago
-                PaymentWindow paymentWindow = new PaymentWindow();
+                PaymentWindow paymentWindow = new PaymentWindow(room,user);
                 paymentWindow.setVisible(true);
             }
         });

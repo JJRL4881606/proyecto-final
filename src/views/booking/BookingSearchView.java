@@ -13,7 +13,9 @@ import javax.swing.JPanel;
 import components.RoomCard;
 import components.SearchBar;
 import components.WrapLayout;
+import controllers.rooms.RoomCardController;
 import models.RoomType;
+import models.User;
 import utils.AppFont;
 
 @SuppressWarnings("serial")
@@ -21,8 +23,10 @@ public class BookingSearchView extends JPanel {
 
     private JPanel roomsContainer;
     private SearchBar searchBar;
+    private User user;
     
-    public BookingSearchView() {
+    public BookingSearchView(User user) {
+    		this.user = user;
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         initializeComponents();
@@ -50,9 +54,9 @@ public class BookingSearchView extends JPanel {
     }
     
     public void createRooms() {
-    	roomsContainer = new JPanel(new WrapLayout(FlowLayout.CENTER, 20, 20));
-    	roomsContainer.setMaximumSize(new Dimension(1200, Integer.MAX_VALUE));
-    	roomsContainer.setOpaque(false);
+	    	roomsContainer = new JPanel(new WrapLayout(FlowLayout.CENTER, 20, 20));
+	    	roomsContainer.setMaximumSize(new Dimension(1200, Integer.MAX_VALUE));
+	    	roomsContainer.setOpaque(false);
 
         add(roomsContainer);
         add(Box.createRigidArea(new Dimension(0, 20)));
@@ -70,7 +74,9 @@ public class BookingSearchView extends JPanel {
             roomsContainer.add(lblNoResults);
         } else {
             for (RoomType room : rooms) {
-            	roomsContainer.add(new RoomCard(room));
+            		RoomCard card = new RoomCard(room);
+                roomsContainer.add(card);
+                new RoomCardController(card, room, user);
             }
         }
 

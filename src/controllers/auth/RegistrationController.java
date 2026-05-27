@@ -51,7 +51,7 @@ public class RegistrationController {
             	);
             	
                 if(handleRegisterUser(user)) {
-                    new MainWindow();
+                    new MainWindow(user);
                     Window w = SwingUtilities.getWindowAncestor(view);
                     if (w != null) {
                         w.dispose();

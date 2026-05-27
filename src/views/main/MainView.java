@@ -22,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 import components.UnderlineMenu;
 import controllers.booking.BookingSearchController;
 import controllers.home.HomeController;
+import models.User;
 
 import javax.swing.ImageIcon;
 import utils.AppFont;
@@ -59,7 +60,10 @@ public class MainView extends JPanel{
 	private CardLayout cardLayout;
 	private JPanel container;
 	
-	public MainView() {
+	private User user;
+	
+	public MainView(User user) {
+		this.user = user;
 	    UIManager.put("Menu.borderPainted", false);
 	    UIManager.put("MenuItem.borderPainted", false);
 	    UIManager.put("Menu.selectionBackground", UIColors.HEADER);
@@ -250,14 +254,14 @@ public class MainView extends JPanel{
             }
         };
 
-        homePanel = new HomeView();
+        homePanel = new HomeView(user);
         new HomeController(homePanel, this);
         
         usersPanel = new UsersView();
         roomTypesPanel = new RoomTypesView();
         roomsPanel = new RoomsView();
         
-        bookingSearchPanel = new BookingSearchView();
+        bookingSearchPanel = new BookingSearchView(user);
         new BookingSearchController(bookingSearchPanel);
         
         container.add(homePanel, HOME);

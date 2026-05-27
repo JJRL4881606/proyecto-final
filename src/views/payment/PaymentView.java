@@ -6,6 +6,8 @@ import javax.swing.border.EmptyBorder;
 import components.RoundedImageOverlayPanel;
 import components.RoundedPanel;
 import components.UnderlineMenu;
+import models.RoomType;
+import models.User;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -13,6 +15,8 @@ import utils.UIColors;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.Calendar;
+import java.util.Date;
 import java.awt.*;
 import javax.swing.*;
 
@@ -29,10 +33,13 @@ public class PaymentView extends JPanel {
     private JLabel lblLastNameError;
     private JLabel lblEmailError;
     private JLabel lblPhoneError;
-
+    private JLabel lblCheckInError;
+    private JLabel lblCheckOutError;
+    private JLabel lblNights;
     private JLabel lblCardNumberError;
     private JLabel lblExpirationDateError;
     private JLabel lblCVVError;
+    private JTextArea txtaFeatures;
 
     // Campos tarjeta
     private JTextField txtCardNumber;
@@ -42,6 +49,9 @@ public class PaymentView extends JPanel {
     // Checkboxes
     private JCheckBox chkTerms;
     private JCheckBox chkPolicies;
+    
+    private JSpinner spCheckIn;
+    private JSpinner spCheckOut;
 
     // Botón
     private JButton btnPay;
@@ -55,8 +65,13 @@ public class PaymentView extends JPanel {
     private JLabel lblTotal;
 
     private int fieldWidth = 500;
+    private RoomType room;
+    
+    private User user;
 
-    public PaymentView() {
+    public PaymentView(RoomType room,User user) {
+    		this.room = room;
+    		this.user = user;
         initComponents();
     }
 
@@ -95,7 +110,7 @@ public class PaymentView extends JPanel {
                         0,5,10,0));
         
         JPanel personalPanel =
-                new JPanel(new GridLayout(4, 1, 10, 10));
+                new JPanel(new GridLayout(3, 1, 10, 10));
 
         personalPanel.setBorder(
         	        BorderFactory.createEmptyBorder(
@@ -104,7 +119,8 @@ public class PaymentView extends JPanel {
         	    );
         txtFirstName = FormUtils.createTextField();
         lblFirstNameError = FormUtils.createErrorLabel();
-
+        txtFirstName.setText(user.getName());
+        
         personalPanel.add(
                 FormUtils.createField(
                         "Nombres",
@@ -115,6 +131,8 @@ public class PaymentView extends JPanel {
 
         txtLastName = FormUtils.createTextField();
         lblLastNameError = FormUtils.createErrorLabel();
+        txtLastName.setText(user.getSurname());
+        System.out.println("appellido: "+user.getSurname());
 
         personalPanel.add(
                 FormUtils.createField(
@@ -126,6 +144,7 @@ public class PaymentView extends JPanel {
 
         txtEmail = FormUtils.createTextField();
         lblEmailError = FormUtils.createErrorLabel();
+        txtEmail.setText(user.getEmail());
 
         personalPanel.add(
                 FormUtils.createField(
@@ -137,6 +156,8 @@ public class PaymentView extends JPanel {
 
         txtPhone = FormUtils.createTextField();
         lblPhoneError = FormUtils.createErrorLabel();
+        txtPhone.setText(user.getPhone());
+        System.out.println("appellido: "+user.getPhone());
 
         personalPanel.add(
                 FormUtils.createField(
@@ -145,7 +166,73 @@ public class PaymentView extends JPanel {
                         lblPhoneError,
                         "Ingrese su teléfono",
                         fieldWidth));
+        
+        // FECHA ACTUAL
+        Calendar calendar = Calendar.getInstance();
 
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        Date today = calendar.getTime();
+
+
+        // FECHA ENTRADA
+        spCheckIn = FormUtils.createDateField();
+
+        JSpinner.DateEditor editorIn =
+                (JSpinner.DateEditor) spCheckIn.getEditor();
+
+        editorIn.getTextField().setEditable(false);
+
+        SpinnerDateModel checkInModel =
+                (SpinnerDateModel) spCheckIn.getModel();
+
+        checkInModel.setStart(today);
+        spCheckIn.setValue(today);
+
+        lblCheckInError = FormUtils.createErrorLabel();
+
+        personalPanel.add(
+                FormUtils.createField(
+                        "Fecha de entrada",
+                        spCheckIn,
+                        lblCheckInError,
+                        "",
+                        fieldWidth
+                )
+        );
+
+
+        // FECHA SALIDA
+        calendar.add(Calendar.DAY_OF_MONTH, 1);
+        Date tomorrow = calendar.getTime();
+
+        spCheckOut = FormUtils.createDateField();
+
+        JSpinner.DateEditor editorOut =
+                (JSpinner.DateEditor) spCheckOut.getEditor();
+
+        editorOut.getTextField().setEditable(false);
+
+        SpinnerDateModel checkOutModel =
+                (SpinnerDateModel) spCheckOut.getModel();
+
+        checkOutModel.setStart(tomorrow);
+        spCheckOut.setValue(tomorrow);
+
+        lblCheckOutError = FormUtils.createErrorLabel();
+
+        personalPanel.add(
+                FormUtils.createField(
+                        "Fecha de salida",
+                        spCheckOut,
+                        lblCheckOutError,
+                        "",
+                        fieldWidth
+                )
+        );
         // ===== DATOS TARJETA =====
         JLabel lblTarjeta =
                 new JLabel("Datos de la tarjeta");
@@ -275,9 +362,9 @@ public class PaymentView extends JPanel {
 
         RoundedImageOverlayPanel bg =
                 new RoundedImageOverlayPanel(
-                        "/assets/img/about/about1.png",
+                        room.getImagePath(),
                         30,
-                        new Color(0,0,0,140)
+                        new Color(0,0,0,0)
                 );
 
         // MUY IMPORTANTE
@@ -318,7 +405,7 @@ public class PaymentView extends JPanel {
         // ================= PRICE =================
 
         JLabel lblPrice =
-                new JLabel("$6,780.28 MXN");
+                new JLabel("$ " + room.getPrice() + " por noche");
 
         lblPrice.setFont(new Font(
                 "SansSerif",
@@ -335,37 +422,46 @@ public class PaymentView extends JPanel {
 
         lblRoom =
                 new JLabel(
-                        "Habitación: Junior Suite"
+                        "Habitación: " + room.getName()
                 );
 
         lblCheckIn =
                 new JLabel(
-                        "Entrada: 04/06/2026"
+                		
+                        "Entrada: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format(spCheckIn.getValue())
                 );
 
         lblCheckOut =
                 new JLabel(
-                        "Salida: 05/06/2026"
+                        "Salida: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format(spCheckOut.getValue())
                 );
 
-        JLabel lblGuests =
-                new JLabel("Huéspedes: 2");
+        JLabel lblCapacity =
+                new JLabel("Capacidad: " + room.getCapacity() + " huespedes");
+        
+        JLabel lblBedType =
+                new JLabel("Tipo de cama: " + room.getBedType() + " huespedes");
 
-        JLabel lblNights =
+        lblNights =
                 new JLabel("Estancia: 1 noche");
+        
+        txtaFeatures =
+        		new JTextArea("Incluye: " + room.getFeatures());
+        txtaFeatures.setLineWrap(true);
+        txtaFeatures.setWrapStyleWord(true);
 
         // aplicar fuente
         lblRoom.setFont(infoFont);
         lblCheckIn.setFont(infoFont);
         lblCheckOut.setFont(infoFont);
-        lblGuests.setFont(infoFont);
+        lblCapacity.setFont(infoFont);
         lblNights.setFont(infoFont);
 
         // ================= TOTAL =================
 
         lblTotal =
                 new JLabel(
-                        "Total: $532.79 USD"
+                        "Total: " + room.getPrice()
                 );
 
         lblTotal.setFont(new Font(
@@ -381,6 +477,20 @@ public class PaymentView extends JPanel {
 
         JSeparator bottomSeparator =
                 new JSeparator();
+        
+        lblHotel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblAddress.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblPrice.setAlignmentX(Component.LEFT_ALIGNMENT);
+        topSeparator.setAlignmentX(Component.LEFT_ALIGNMENT);
+        bg.setAlignmentX(Component.LEFT_ALIGNMENT);
+        txtaFeatures.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblRoom.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblCheckIn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblCheckOut.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblBedType.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblCapacity.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblNights.setAlignmentX(Component.LEFT_ALIGNMENT);
+        lblTotal.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // ================= ADD COMPONENTS =================
 
@@ -400,6 +510,9 @@ public class PaymentView extends JPanel {
         // IMAGE
         rightPanel.add(bg);
         rightPanel.add(Box.createVerticalStrut(25));
+        
+        rightPanel.add(txtaFeatures);
+        rightPanel.add(Box.createVerticalStrut(25));
 
         rightPanel.add(bottomSeparator);
         rightPanel.add(Box.createVerticalStrut(25));
@@ -413,13 +526,15 @@ public class PaymentView extends JPanel {
 
         rightPanel.add(lblCheckOut);
         rightPanel.add(Box.createVerticalStrut(12));
+        
+        rightPanel.add(lblBedType);
+        rightPanel.add(Box.createVerticalStrut(12));
 
-        rightPanel.add(lblGuests);
+        rightPanel.add(lblCapacity);
         rightPanel.add(Box.createVerticalStrut(12));
 
         rightPanel.add(lblNights);
         rightPanel.add(Box.createVerticalStrut(25));
-
         // TOTAL
         rightPanel.add(new JSeparator());
         rightPanel.add(Box.createVerticalStrut(20));
@@ -515,6 +630,9 @@ public class PaymentView extends JPanel {
     }
 
     // ===== GETTERS =====
+    public JMenuItem getBtnHome() {
+        return btnHome;
+    }
 
     public JTextField getTxtFirstName() {
         return txtFirstName;
@@ -554,5 +672,33 @@ public class PaymentView extends JPanel {
 
     public JButton getBtnPay() {
         return btnPay;
+    }
+    
+    public JSpinner getSpCheckIn() {
+        return spCheckIn;
+    }
+    
+    public JSpinner getSpCheckOut() {
+        return spCheckOut;
+    }
+    
+    public JLabel getLblCheckIn() {
+        return lblCheckIn;
+    }
+    
+    public JLabel getLblCheckOut() {
+        return lblCheckOut;
+    }
+    
+    public JLabel getLblNights() {
+        return lblNights;
+    }
+    
+    public JLabel getLblTotal() {
+        return lblTotal;
+    }
+    
+    public RoomType getRoom() {
+        return room;
     }
 }
