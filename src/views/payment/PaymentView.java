@@ -296,22 +296,17 @@ public class PaymentView extends JPanel {
 
         // CHECKBOXES
 
-        chkTerms = new JCheckBox(
-                "Acepto términos y condiciones");
+        chkTerms = new JCheckBox("Acepto términos y condiciones");
 
-        chkPolicies = new JCheckBox(
-                "Acepto políticas de cancelación");
+        chkPolicies = new JCheckBox("Acepto políticas de cancelación");
 
         // BOTÓN
+        btnPay = ButtonFactory.createGoldButton(
+            "CONFIRMAR PAGO",
+            "/assets/img/btn-icons/button-save-icon.png",
+            "Haz click para confirmar el pago");
 
-        btnPay =
-                ButtonFactory.createBigButton(
-                        "CONFIRMAR PAGO",
-                        "/assets/img/btn-icons/button-save-icon.png",
-                        "Haz click para confirmar el pago");
-
-        btnPay.setBackground(
-                new Color(112, 238, 156));
+        btnPay.setBackground(new Color(112, 238, 156));
 
         // ALIGNMENTS
         personalPanel.setAlignmentX(LEFT_ALIGNMENT);

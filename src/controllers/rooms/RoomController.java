@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import models.Room;
 import models.RoomType;
+import repository.ReservationRepository;
 import repository.RoomRepository;
 import repository.RoomTypeRepository;
 import tablemodels.RoomTableModel;
@@ -95,17 +96,39 @@ public class RoomController {
 
 	    int row = view.getSelectedModelRow();
 
-	    if(row == -1){
+	    if(row==-1){
+
 	        JOptionPane.showMessageDialog(
 	            null,
 	            "Selecciona una habitación",
 	            "Advertencia",
 	            JOptionPane.WARNING_MESSAGE
 	        );
+
 	        return;
 	    }
 
-	    boolean deleted = repo.delete(model.getRoomAt(row).getRoomId());
+	    Room room=model.getRoomAt(row);
+
+	    ReservationRepository reservationRepo =
+	        new ReservationRepository();
+
+	    if(reservationRepo.hasActiveReservation(
+	        room.getRoomId()
+	    )){
+
+	        JOptionPane.showMessageDialog(
+	            null,
+	            "No puedes eliminar esta habitación porque tiene reservas activas",
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+
+	        return;
+	    }
+
+	    boolean deleted=
+	        repo.delete(room.getRoomId());
 
 	    if(deleted){
 	        model.removeRow(row);

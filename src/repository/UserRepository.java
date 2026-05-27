@@ -54,6 +54,11 @@ public class UserRepository {
 				User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("surname"),
 						rs.getString("email"), rs.getString("phone"), rs.getString("country"), rs.getDate("birth_date"),
 						rs.getString("gender").charAt(0), rs.getString("role"));
+				
+				user.setPassword(
+				    rs.getString("password")
+				);
+				
 				users.add(user);
 			}
 
@@ -125,5 +130,124 @@ public class UserRepository {
 				throw new DuplicateEmailException("Este correo es usado por otra cuenta");
 			}
 		}
+	}
+	
+	public User findById(int id){
+
+	    String sql = "SELECT * FROM users WHERE id=?";
+
+	    try(
+	        Connection connection = DatabaseConnection.getConnection();
+	        PreparedStatement pst = connection.prepareStatement(sql)
+	    ){
+
+	        pst.setInt(1,id);
+
+	        ResultSet rs = pst.executeQuery();
+
+	        if(rs.next()){
+
+	        	User user = new User(
+        		    rs.getInt("id"),
+        		    rs.getString("name"),
+        		    rs.getString("surname"),
+        		    rs.getString("email"),
+        		    rs.getString("phone"),
+        		    rs.getString("country"),
+        		    rs.getDate("birth_date"),
+        		    rs.getString("gender").charAt(0),
+        		    rs.getString("role")
+        		);
+
+        		user.setPassword(
+        		    rs.getString("password")
+        		);
+
+        		return user;
+	        }
+
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return null;
+	}
+	
+	public void updatePassword(int id, String password){
+
+	    String sql = "UPDATE users SET password=? WHERE id=?";
+
+	    try(
+	        Connection conn = DatabaseConnection.getConnection();
+	        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+	        String hash = PasswordUtils.hashPassword(password);
+
+	        stmt.setString(1, hash);
+	        stmt.setInt(2, id);
+	        stmt.executeUpdate();
+
+	    }catch(SQLException e){
+	        e.printStackTrace();
+	    }
+	}
+	
+	public User findByEmail(String email){
+
+	    String sql = "SELECT * FROM users WHERE email=?";
+
+	    try(Connection conn = DatabaseConnection.getConnection();
+	        PreparedStatement stmt = conn.prepareStatement(sql)){
+
+	        stmt.setString(1, email);
+
+	        ResultSet rs = stmt.executeQuery();
+
+	        if(rs.next()){
+
+	            User user = new User();
+	            user.setId(rs.getInt("id"));
+	            user.setName(rs.getString("name"));
+	            user.setSurname(rs.getString("surname"));
+	            user.setEmail(rs.getString("email"));
+	            user.setPhone(rs.getString("phone"));
+	            user.setCountry(rs.getString("country"));
+	            user.setBirthDate(rs.getDate("birth_date"));
+	            user.setGender(rs.getString("gender").charAt(0));
+	            user.setRole(rs.getString("role"));
+	            user.setPassword(rs.getString("password"));
+
+	            return user;
+	        }
+
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return null;
+	}
+	
+	public boolean hasReservationsByUser(int userId){
+
+	    String sql =
+	        "SELECT 1 FROM reservations " +
+	        "WHERE userId=? LIMIT 1";
+
+	    try(
+	        Connection conn=DatabaseConnection.getConnection();
+	        PreparedStatement ps=conn.prepareStatement(sql)
+	    ){
+
+	        ps.setInt(1,userId);
+
+	        ResultSet rs=ps.executeQuery();
+
+	        return rs.next();
+
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return false;
 	}
 }

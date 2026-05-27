@@ -47,17 +47,20 @@ public class RoomTypeFormController {
 			public void removeUpdate(DocumentEvent e){validatePrice();}
 			public void changedUpdate(DocumentEvent e){validatePrice();}
 		});
-
-		view.getTxtFeatures().getDocument().addDocumentListener(new DocumentListener(){
-			public void insertUpdate(DocumentEvent e){validateFeatures();}
-			public void removeUpdate(DocumentEvent e){validateFeatures();}
-			public void changedUpdate(DocumentEvent e){validateFeatures();}
+		
+		view.getTxtDescription().getDocument().addDocumentListener(new DocumentListener(){
+			public void insertUpdate(DocumentEvent e){validateDescription();}
+			public void removeUpdate(DocumentEvent e){validateDescription();}
+			public void changedUpdate(DocumentEvent e){validateDescription();}
 		});
+		
+		view.getBtnExtraImages().addActionListener( e->selectExtraImages() );
 		
 		FormUtils.addFocusEffect(view.getTxtName(),view.getLblNameError());
 		FormUtils.addFocusEffect(view.getTxtPrice(),view.getLblPriceError());
+		FormUtils.addFocusEffect(view.getTxtDescription(),view.getLblDescriptionError());
 		FormUtils.addFocusEffect(view.getTxtImagePath(),view.getLblImageError());
-		FormUtils.addFocusEffect(view.getTxtFeatures(),view.getLblFeaturesError());
+		FormUtils.addFocusEffect(view.getTxtExtraImages(),view.getLblExtraImagesError());
 	}
 
 	private void initInputRestrictions(){
@@ -75,24 +78,32 @@ public class RoomTypeFormController {
 		if(roomType == null){
 
 			roomType = new RoomType(
-				0,
-				view.getName(),
-				view.getBedType(),
-				view.getCapacity(),
-				view.getPrice(),
-				view.getImagePath(),
-				view.getFeatures(),
-				view.isFeatured()
-			);
+			    0,
+			    view.getName(),
+			    view.getBedType(),
+			    view.getCapacity(),
+			    view.getPrice(),
+			    view.getImagePath(),
+			    view.getSelectedAmenities(),
+			    view.isFeatured(),
 
+			    view.getDescription(),
+			    RoomType.stringToImages(
+			        view.getTxtExtraImages().getText()
+			    )
+			);
 		}else{
 			roomType.setName(view.getName());
 			roomType.setBedType(view.getBedType());
 			roomType.setCapacity(view.getCapacity());
 			roomType.setPrice(view.getPrice());
 			roomType.setImagePath(view.getImagePath());
-			roomType.setFeatures(view.getFeatures());
-			roomType.setFeatured(view.isFeatured());
+			roomType.setAmenities(view.getSelectedAmenities());
+			roomType.setFeatured(view.isFeatured());	
+			roomType.setDescription(view.getDescription());
+			roomType.setExtraImages(RoomType.stringToImages(
+				view.getTxtExtraImages().getText()
+			));
 		}
 
 		view.setSaved(true);
@@ -109,11 +120,10 @@ public class RoomTypeFormController {
 	}
 
 	private void selectImage(){
-		String lastFolder =
-	        Config.get(
-	            "room.image.folder",
-	            System.getProperty("user.home")
-	        );
+		String lastFolder = Config.get(
+            "room.image.folder",
+            System.getProperty("user.home")
+        );
 
 		JFileChooser chooser =new JFileChooser(lastFolder);
 		
@@ -166,12 +176,80 @@ public class RoomTypeFormController {
 	        
 	        String dbPath = "/assets/img/rooms/" + fileName;
 	        view.getTxtImagePath().setText(dbPath);
+	        
+	        validateImage();
 
 	        ImageIcon icon = new ImageIcon(srcDestination.getAbsolutePath());
 	        Image image = icon.getImage().getScaledInstance(220, 120, Image.SCALE_SMOOTH);
 	        view.getLblPreview().setIcon(new ImageIcon(image));
 	        view.getLblPreview().setVisible(true);
 	        
+	    }catch(Exception ex){
+	        ex.printStackTrace();
+	    }
+	}
+	
+	private void selectExtraImages(){
+
+	    String lastFolder = Config.get(
+	        "room.image.folder",
+	        System.getProperty("user.home")
+	    );
+
+	    JFileChooser chooser = new JFileChooser(lastFolder);
+	    chooser.setMultiSelectionEnabled(true);
+	    chooser.setAcceptAllFileFilterUsed(false);
+
+	    chooser.setFileFilter(new FileNameExtensionFilter(
+	        "Imágenes (*.png, *.jpg, *.jpeg)",
+	        "png","jpg","jpeg"
+	    ));
+
+	    int option = chooser.showOpenDialog(null);
+	    if(option != JFileChooser.APPROVE_OPTION) return;
+
+	    try{
+
+	        File[] files = chooser.getSelectedFiles();
+
+	        File srcFolder = new File("src/assets/img/rooms");
+	        File binFolder = new File("bin/assets/img/rooms");
+
+	        srcFolder.mkdirs();
+	        binFolder.mkdirs();
+
+	        StringBuilder paths = new StringBuilder();
+
+	        for(File selected : files){
+
+	            String original = selected.getName();
+	            String ext = "";
+
+	            int dot = original.lastIndexOf(".");
+	            if(dot > 0) {
+	            	ext = original.substring(dot);
+	            }
+
+	            String fileName = System.currentTimeMillis() + "_room" + ext;
+
+	            File srcDest = new File(srcFolder, fileName);
+	            File binDest = new File(binFolder, fileName);
+
+	            Files.copy(selected.toPath(), srcDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	            Files.copy(selected.toPath(), binDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+	            String dbPath = "/assets/img/rooms/" + fileName;
+	            validateExtraImages();
+
+	            if(paths.length() > 0) {
+	            	paths.append("|");
+	            }
+	            paths.append(dbPath);
+	        }
+	        
+	        view.getTxtExtraImages().setText(paths.toString());
+	        validateExtraImages();
+
 	    }catch(Exception ex){
 	        ex.printStackTrace();
 	    }
@@ -185,7 +263,9 @@ public class RoomTypeFormController {
 		if(!validateBedType()) valid = false;
 		if(!validatePrice()) valid = false;
 		if(!validateImage()) valid = false;
-		if(!validateFeatures()) valid = false;
+		
+		if(!validateDescription()) valid = false;
+		if(!validateExtraImages()) valid = false;
 
 		return valid;
 	}
@@ -265,21 +345,37 @@ public class RoomTypeFormController {
 	    view.clearImageError();
 	    return true;
 	}
+		
+	private boolean validateDescription(){
+	    String description = view.getDescription();
+	    
+	    if (description.isEmpty()) {
+	        view.setDescriptionError("La descripción es obligatoria");
+	        return false;
+	    } 
+	    
+	    if(description.length() < 100){
+	        view.setDescriptionError("Mínimo 100 caracteres");
+	        return false;
+	    }
+
+	    
+	    view.clearDescriptionError();
+		return true;
+	}
 	
-	public boolean validateFeatures(){
-	    String features = view.getTxtFeatures().getText().trim();
+	private boolean validateExtraImages(){
+	    String images = view.getTxtExtraImages().getText().trim();
 
-	    if(features.isEmpty()){
-	        view.setFeaturesError("Las comodidades son obligatorias");
+	    if(images.isEmpty()) {
+	        view.setExtraImagesError(
+	            "Selecciona imágenes extras"
+	        );
+
 	        return false;
 	    }
 
-	    if(features.startsWith("|") || features.endsWith("|")){
-	        view.setFeaturesError("Formato inválido");
-	        return false;
-	    }
-
-	    view.clearFeaturesError();
+	    view.clearExtraImagesError();
 	    return true;
 	}
 }

@@ -1,10 +1,9 @@
 package views.roomtypes;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,11 +17,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.util.List;
 
 import components.RoundedButton;
+import models.Amenity;
 import models.RoomType;
+import repository.AmenityRepository;
 import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
@@ -34,19 +36,25 @@ public class RoomTypeFormDialog extends JDialog {
     private JComboBox<String> comboBedType;
     private JSpinner spCapacity;
     private JTextField txtPrice;
-    private JTextField txtFeatures;
     private JCheckBox chkFeatured;
     
     private JTextField txtImagePath;
     private RoundedButton btnSelectImage;
     private JLabel lblPreview;
+    private List<JCheckBox> amenitiesChecks = new ArrayList<>();
+    private List<Amenity> amenities = new ArrayList<>();
+    
+    private JTextArea txtDescription;
+    private JTextField txtExtraImages;
+    private RoundedButton btnExtraImages;
 
     private JLabel lblNameError;
     private JLabel lblBedTypeError;
     private JLabel lblCapacityError;
     private JLabel lblPriceError;
     private JLabel lblImageError;
-    private JLabel lblFeaturesError;
+    private JLabel lblDescriptionError;
+    private JLabel lblExtraImagesError;
 
     private RoundedButton btnSave;
     private RoundedButton btnCancel;
@@ -84,13 +92,13 @@ public class RoomTypeFormDialog extends JDialog {
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
 
-        btnSave = ButtonFactory.createBigButton(
+        btnSave = ButtonFactory.createGoldButton(
             "GUARDAR",
             "/assets/img/btn-icons/button-save-icon.png",
             "Haz clic para guardar"
         );
 
-        btnCancel = ButtonFactory.createBigButton(
+        btnCancel = ButtonFactory.createGoldButton(
             "CANCELAR",
             "/assets/img/btn-icons/button-cancel-icon.png",
             "Haz clic para cancelar"
@@ -134,21 +142,19 @@ public class RoomTypeFormDialog extends JDialog {
         txtPrice = FormUtils.createTextField();
         lblPriceError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Precio", txtPrice, lblPriceError, "Ingrese el precio", fieldWidth));
+        
+        //descripcion
+        txtDescription = FormUtils.createTextArea();
+        lblDescriptionError = FormUtils.createErrorLabel();
+                
+        panel.add(FormUtils.createField("Descripción", txtDescription, lblDescriptionError, "Ingrese la descripción", fieldWidth));
 
-        //IMAGEN
-        btnSelectImage = new RoundedButton(
-                "Seleccionar imagen",
-                null
-        );
-        btnSelectImage.setAlignmentX(Component.CENTER_ALIGNMENT);
+        //IMAGEN        
+        JLabel lblImageTitle = new JLabel("Imagen");
+        lblImageTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        txtImagePath = FormUtils.createTextField();
-        txtImagePath.setEditable(false);
-        txtImagePath.setMaximumSize(new Dimension(fieldWidth,45));
-        txtImagePath.setPreferredSize(new Dimension(fieldWidth,45));
-        txtImagePath.setAlignmentX(Component.CENTER_ALIGNMENT);
-        txtImagePath.setBackground(new Color(230,230,230));
-        txtImagePath.setForeground(Color.GRAY);
+        txtImagePath = FormUtils.createImagePathField();
+        lblImageError = FormUtils.createErrorLabel();
 
         lblPreview = new JLabel();
         lblPreview.setPreferredSize(new Dimension(220,120));
@@ -159,33 +165,88 @@ public class RoomTypeFormDialog extends JDialog {
         imagePanel.setOpaque(false);
         imagePanel.setLayout(new BoxLayout(imagePanel, BoxLayout.Y_AXIS));
 
-        JLabel lblImageTitle = new JLabel("Imagen");
-        lblImageTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnSelectImage = new RoundedButton(
+            "Seleccionar imagen",
+            null
+        );
+        btnSelectImage.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        lblImageError = FormUtils.createErrorLabel();
-        
-        imagePanel.add(Box.createRigidArea(new Dimension(0,10)));
         imagePanel.add(btnSelectImage);
+        imagePanel.add(Box.createRigidArea(new Dimension(0,10)));
         imagePanel.add(txtImagePath);
         imagePanel.add(Box.createRigidArea(new Dimension(0,10)));
         imagePanel.add(lblPreview);
-        imagePanel.add(lblImageError);
-
-        panel.add(lblImageTitle);
         imagePanel.add(Box.createRigidArea(new Dimension(0,10)));
-        panel.add(imagePanel);
-        imagePanel.add(Box.createRigidArea(new Dimension(0,20)));
+        imagePanel.add(lblImageError);
         
-        //FEATURES
-        txtFeatures = FormUtils.createTextField();
-        lblFeaturesError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Comodidades", txtFeatures, lblFeaturesError, "Ingrese comodidades (Wifi|TV|Jacuzzi|etc)", fieldWidth));
+        panel.add(Box.createRigidArea(new Dimension(0,20)));
+        panel.add(lblImageTitle);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
+        panel.add(imagePanel);
+        panel.add(Box.createRigidArea(new Dimension(0,20)));
+        
+        //Imagenes adicionales
+        JLabel lblExtraImagesTitle = new JLabel("Imagenes extra");
+        lblExtraImagesTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        btnExtraImages = new RoundedButton(
+		    "Seleccionar imágenes extras",
+		    null
+		);
+        btnExtraImages.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        txtExtraImages = FormUtils.createImagePathField();
+        lblExtraImagesError = FormUtils.createErrorLabel();
+        
+        panel.add(lblExtraImagesTitle);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
+        panel.add(btnExtraImages);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
+        panel.add(txtExtraImages);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
+        panel.add(lblExtraImagesError);
+        panel.add(Box.createRigidArea(new Dimension(0,20)));
+
+        //AMENIDADES
+        JPanel amenityPanel = new JPanel();
+        amenityPanel.setOpaque(false);
+        amenityPanel.setLayout(new BoxLayout(amenityPanel, BoxLayout.Y_AXIS));
+        
+        amenities = new AmenityRepository().getAmenities();
+
+        for(Amenity a:amenities){
+
+            JCheckBox chk = new JCheckBox(a.getName());
+            chk.setOpaque(false);
+            chk.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            amenitiesChecks.add(chk);
+
+            amenityPanel.add(chk);
+            amenityPanel.add(Box.createRigidArea(new Dimension(0,5)));
+        }
+
+        JLabel lblAmenities = new JLabel("Amenidades");
+        lblAmenities.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        panel.add(lblAmenities);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
+
+        panel.add(amenityPanel);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
+        
+        //destacada o no
+        
+        JLabel lblFeatured = new JLabel("Destacada");
+        lblFeatured.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         chkFeatured = FormUtils.createCheckBox();
         chkFeatured.setText("Habitación destacada");
-
-        panel.add(chkFeatured);
+        
         panel.add(Box.createRigidArea(new Dimension(0,20)));
+        panel.add(lblFeatured);
+        panel.add(Box.createRigidArea(new Dimension(0,10)));
+        panel.add(chkFeatured);
 
         return scroll;
     }
@@ -197,12 +258,27 @@ public class RoomTypeFormDialog extends JDialog {
             spCapacity.setValue(roomType.getCapacity());
             txtPrice.setText(String.valueOf(roomType.getPrice()));
             
+            txtDescription.setText(
+        	    roomType.getDescription()
+        	);
+            
             txtImagePath.setText(roomType.getImagePath());
             if(!roomType.getImagePath().isEmpty()){
                 lblPreview.setVisible(true);
             }
             
-            txtFeatures.setText(roomType.featuresToString());
+            txtExtraImages.setText(
+        	    roomType.extraImagesToString()
+        	);
+            
+            for(JCheckBox chk:amenitiesChecks) {
+                for(Amenity a:roomType.getAmenities()) {
+                    if(chk.getText().equals(a.getName())) {
+                        chk.setSelected(true);
+                    }
+                }
+            }
+            
             chkFeatured.setSelected(roomType.isFeatured());
         }
     }
@@ -232,6 +308,10 @@ public class RoomTypeFormDialog extends JDialog {
     public double getPrice(){
         return Double.parseDouble(txtPrice.getText());
     }
+    
+    public String getDescription(){
+        return txtDescription.getText().trim();
+    }
 
     public String getImagePath(){
         return txtImagePath.getText();
@@ -248,13 +328,19 @@ public class RoomTypeFormDialog extends JDialog {
     public boolean isFeatured(){
         return chkFeatured.isSelected();
     }
+    
+    public List<Amenity> getSelectedAmenities(){
 
-    public List<String> getFeatures(){
-        return Arrays.asList(
-                txtFeatures
-                .getText()
-                .split("\\|")
-        );
+        List<Amenity> selected = new ArrayList<>();
+
+        for(int i=0;i<amenitiesChecks.size();i++) {
+            if(amenitiesChecks.get(i).isSelected()) {
+                selected.add(amenities.get(i)); {
+                }
+            }
+        }
+
+        return selected;
     }
 
     public RoundedButton getBtnSave() {
@@ -277,23 +363,36 @@ public class RoomTypeFormDialog extends JDialog {
         return roomType;
     }
     
-    public JTextField getTxtName(){return txtName;}
+    public JTextField getTxtName(){
+    	return txtName;
+    }
+    
+    public JTextArea getTxtDescription() {
+		return txtDescription;
+    }
     public JComboBox<String> getComboBedType(){return comboBedType;}
     
 	public int getBedTypeIndex() {
 	    return comboBedType.getSelectedIndex();
 	}
+	
+	public JTextField getTxtExtraImages(){
+	    return txtExtraImages;
+	}
+
+    public RoundedButton getBtnExtraImages(){
+        return btnExtraImages;
+    }
 
     public JSpinner getSpCapacity(){return spCapacity;}
     public JTextField getTxtPrice(){return txtPrice;}
     public JTextField getTxtImagePath(){return txtImagePath;}
-    public JTextField getTxtFeatures(){return txtFeatures;}
 
     public void setRoomType(RoomType roomType){
     	this.roomType=roomType;
     }
     
-  //LIMPIAR ERRORES
+    //LIMPIAR ERRORES
     public void clearNameError(){
     	FormUtils.clearError(lblNameError,txtName);
     }
@@ -308,14 +407,17 @@ public class RoomTypeFormDialog extends JDialog {
 
     public void clearPriceError(){
     	FormUtils.clearError(lblPriceError,txtPrice);
+    }    
+    
+    public void clearDescriptionError(){
+        FormUtils.clearError(lblDescriptionError,txtDescription);
     }
-
     public void clearImageError(){
     	FormUtils.clearError(lblImageError,txtImagePath);
     }
-
-    public void clearFeaturesError(){
-    	FormUtils.clearError(lblFeaturesError,txtFeatures);
+    
+    public void clearExtraImagesError(){
+        FormUtils.clearError(lblExtraImagesError,txtExtraImages);
     }
 
     public void clearErrors(){
@@ -324,7 +426,8 @@ public class RoomTypeFormDialog extends JDialog {
     	clearCapacityError();
     	clearPriceError();
     	clearImageError();
-    	clearFeaturesError();
+        clearDescriptionError();
+        clearExtraImagesError();
     }
     
   //SETTERS ERRORES
@@ -352,10 +455,15 @@ public class RoomTypeFormDialog extends JDialog {
     	lblImageError.setText(msg);
     	txtImagePath.setBorder(FormUtils.redBorder);
     }
+    
+    public void setDescriptionError(String msg){
+        lblDescriptionError.setText(msg);
+        txtDescription.setBorder(FormUtils.redBorder);
+    }
 
-    public void setFeaturesError(String msg){
-    	lblFeaturesError.setText(msg);
-    	txtFeatures.setBorder(FormUtils.redBorder);
+    public void setExtraImagesError(String msg){
+        lblExtraImagesError.setText(msg);
+        txtExtraImages.setBorder(FormUtils.redBorder);
     }
     
     public JLabel getLblNameError(){
@@ -373,8 +481,12 @@ public class RoomTypeFormDialog extends JDialog {
     public JLabel getLblImageError(){
     	return lblImageError;
     }
-
-    public JLabel getLblFeaturesError(){
-    	return lblFeaturesError;
+    
+    public JLabel getLblDescriptionError(){
+    	return lblDescriptionError;
+    }
+    
+    public JLabel getLblExtraImagesError(){
+    	return lblExtraImagesError;
     }
 }

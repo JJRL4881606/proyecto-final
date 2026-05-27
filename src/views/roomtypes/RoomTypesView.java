@@ -160,7 +160,7 @@ public class RoomTypesView extends JPanel {
 		}
 
 		if (table.getColumnCount() >= 3) {
-			table.getColumnModel().getColumn(2).setPreferredWidth(80);
+			table.getColumnModel().getColumn(2).setPreferredWidth(100);
 		}
 
 		if (table.getColumnCount() >= 4) {
@@ -168,15 +168,23 @@ public class RoomTypesView extends JPanel {
 		}
 
 		if (table.getColumnCount() >= 5) {
-			table.getColumnModel().getColumn(4).setPreferredWidth(250);
+			table.getColumnModel().getColumn(4).setPreferredWidth(200);
 		}
 
 		if (table.getColumnCount() >= 6) {
-			table.getColumnModel().getColumn(5).setPreferredWidth(300);
+			table.getColumnModel().getColumn(5).setPreferredWidth(250);
 		}
 
 		if (table.getColumnCount() >= 7) {
-			table.getColumnModel().getColumn(6).setPreferredWidth(80);
+			table.getColumnModel().getColumn(6).setPreferredWidth(100);
+		}
+		
+		if (table.getColumnCount() >= 8) {
+		    table.getColumnModel().getColumn(7).setPreferredWidth(200);
+		}
+
+		if (table.getColumnCount() >= 9) {
+		    table.getColumnModel().getColumn(8).setPreferredWidth(150);
 		}
 
 		DefaultTableCellRenderer center = new DefaultTableCellRenderer();

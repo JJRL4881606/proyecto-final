@@ -4,7 +4,9 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import models.Room;
+import models.RoomStatus;
 import models.RoomType;
+import repository.ReservationRepository;
 import repository.RoomRepository;
 import repository.RoomTypeRepository;
 import views.rooms.RoomFormDialog;
@@ -25,7 +27,6 @@ public class RoomFormController {
 
 		loadRoomTypes();
 		initListeners();
-		initInputRestrictions();
 	}
 
 	private void loadRoomTypes(){
@@ -36,22 +37,11 @@ public class RoomFormController {
 		}
 
 		if(view.getRoom() != null){
-
+			
 			for(int i = 0; i < roomTypes.size(); i++){
-
-				if(
-					roomTypes.get(i)
-					.getTypeId()
-
-					==
-
-					view.getRoom()
-					.getTypeId()
-				){
-
-					view.getComboRoomType()
-						.setSelectedIndex(i+1);
-
+				
+				if(roomTypes.get(i).getTypeId() == view.getRoom().getTypeId()){
+					view.getComboRoomType().setSelectedIndex(i+1);
 					break;
 				}
 			}
@@ -65,10 +55,7 @@ public class RoomFormController {
 		view.getSpRoomNumber().addChangeListener(e->validateRoomNumber());
 		view.getSpFloor().addChangeListener(e->validateFloor());
 		view.getComboRoomType().addActionListener(e->validateRoomType());
-	}
-
-	private void initInputRestrictions(){
-		// vacío por ahora
+		view.getComboStatus().addActionListener(e->validateStatus());
 	}
 
 	private void handleSave(){
@@ -91,7 +78,7 @@ public class RoomFormController {
 	            return;
 	        }
 	    }else{
-	        // EDITAR: permitir mismo número si es el mismo registro
+	        // Al editar, permitir mismo número si es el mismo registro
 	        Room current = view.getRoom();
 
 	        if(current.getRoomNumber() != roomNumber &&
@@ -115,20 +102,52 @@ public class RoomFormController {
 	    int typeId = roomType.getTypeId();
 
 	    Room room = view.getRoom();
+	    
+	    //
+	    ReservationRepository reservationRepo = new ReservationRepository();
 
+	    if(room != null){
+	        boolean activeReservation =
+	            reservationRepo.hasActiveReservation(
+	                room.getRoomId()
+	            );
+
+	        String selectedStatus = view.getStatus();
+
+	        // Si tiene reservación activa
+	        boolean invalidStatus = selectedStatus.equals(RoomStatus.AVAILABLE) || selectedStatus.equals(RoomStatus.OUT_OF_SERVICE);
+
+	        if(activeReservation && invalidStatus){
+	            JOptionPane.showMessageDialog(
+	                null,
+	                "La habitación tiene una reservación activa y no puede cambiarse a ese estado"
+	            );
+	            return;
+	        }
+	        
+	        // Si NO tiene reservación activa
+	        if(!activeReservation && selectedStatus.equals(RoomStatus.OCCUPIED)){
+	            JOptionPane.showMessageDialog(
+	                null,
+	                "No puedes marcar una habitación como ocupada si no tiene reservaciones activas"
+	            );
+	            return;
+	        }
+	    }
+	    
 	    if(room == null){
 	        room = new Room(
 	            0,
 	            roomNumber,
 	            view.getFloor(),
 	            typeId,
-	            view.isAvailable()
+	            view.getStatus()
 	        );
 	    }else{
 	        room.setRoomNumber(roomNumber);
 	        room.setFloor(view.getFloor());
 	        room.setTypeId(typeId);
-	        room.setAvailable(view.isAvailable());
+	        room.setStatus(view.getStatus());
 	    }
 
 	    view.setSaved(true);
@@ -152,6 +171,7 @@ public class RoomFormController {
 		if(!validateRoomNumber()) valid = false;
 		if(!validateFloor()) valid = false;
 		if(!validateRoomType()) valid = false;
+		if(!validateStatus()) valid = false;
 
 		return valid;
 	}
@@ -189,6 +209,17 @@ public class RoomFormController {
 		}
 
 		view.clearRoomTypeError();
+
+		return true;
+	}	
+	
+	private boolean validateStatus(){
+		if(view.getComboStatus().getSelectedIndex() == 0){
+			view.setStatusError("Seleccione el estado");
+			return false;
+		}
+
+		view.clearStatusError();
 
 		return true;
 	}

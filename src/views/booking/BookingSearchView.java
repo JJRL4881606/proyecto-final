@@ -3,6 +3,7 @@ package views.booking;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Box;
@@ -27,6 +28,9 @@ public class BookingSearchView extends JPanel {
     
     public BookingSearchView(User user) {
     		this.user = user;
+    private List<RoomCard> roomCards = new ArrayList<>();
+    
+    public BookingSearchView() {
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         initializeComponents();
@@ -66,6 +70,9 @@ public class BookingSearchView extends JPanel {
         roomsContainer.removeAll();
         
         if (rooms.isEmpty()) {
+        	
+        	roomCards.clear();
+        	
             JLabel lblNoResults = new JLabel("Sin resultados");
             lblNoResults.setFont(AppFont.subtitle());
             lblNoResults.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -86,5 +93,9 @@ public class BookingSearchView extends JPanel {
     
     public SearchBar getSearchBar() {
         return searchBar;
+    }
+    
+    public List<RoomCard> getRoomCards(){
+        return roomCards;
     }
 }

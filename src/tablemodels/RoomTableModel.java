@@ -19,7 +19,7 @@ public class RoomTableModel extends AbstractTableModel{
 		"Número",
 		"Piso",
 		"Tipo habitación",
-		"Disponible"
+		"Estado"
 	};
 
 	public RoomTableModel(List<Room> rooms, List<RoomType> roomTypes) {
@@ -55,8 +55,8 @@ public class RoomTableModel extends AbstractTableModel{
 				return room.getFloor();
 			case 2:
 			    return getRoomTypeName(room.getTypeId());
-			case 3:
-				return room.isAvailable();
+			case 3:				
+				return room.getStatus();
 		}
 
 		return null;

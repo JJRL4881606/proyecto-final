@@ -36,6 +36,7 @@ public class RoomTypeController {
 		if(model == null){
 			model = new RoomTypeTableModel(roomTypes);
 			view.setTableModel(model);
+			
 		}else{
 			model.setRoomTypes(roomTypes);
 		}
@@ -51,20 +52,32 @@ public class RoomTypeController {
 			
 			try {
 				//Añadir nuevo
-				if(roomType == null) {
-					repo.save(savedRoomType);
-					model.addRow(savedRoomType); //Agrega el registro a la tabla
-				}else {
-					//Editar existente
-					int row = view.getSelectedModelRow();
-					RoomType originalRoomType = model.getRoomTypeAt(row);
-					savedRoomType.setTypeId(originalRoomType.getTypeId());
+				if(roomType == null){
 
-					boolean updated = repo.update(savedRoomType);					
-					if(updated) {
-						model.updateRow(row, savedRoomType); //Actualiza el registro de la tabla
-					}
+				    repo.save(savedRoomType);
+				    loadRoomTypes();
+
+				}else{
+
+				    int row=view.getSelectedModelRow();
+
+				    RoomType original = model.getRoomTypeAt(row);
+
+				    savedRoomType.setTypeId(
+				        original.getTypeId()
+				    );
+
+				    boolean updated=
+				        repo.update(savedRoomType);
+
+				    if(updated){
+				        loadRoomTypes();
+				    }
 				}
+
+				view.revalidate();
+				view.repaint();
+				
 			}catch(Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(view, e.getMessage());
@@ -118,6 +131,7 @@ public class RoomTypeController {
 	    boolean deleted = repo.delete(model.getRoomTypeAt(row).getTypeId());
 
 	    if(deleted){
-	        model.removeRow(row);
+	        loadRoomTypes();
 	    }
-	}}
+	}
+}
