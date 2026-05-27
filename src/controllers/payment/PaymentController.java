@@ -4,9 +4,14 @@ import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
+import models.User;
 import views.auth.LoginWindow;
 import views.main.MainView;
 import views.main.MainWindow;
@@ -17,12 +22,16 @@ public class PaymentController {
 
     private PaymentWindow paymentWindow;
     private PaymentView paymentView;
+    private long estancia;
+    private User user;
 
     public PaymentController(PaymentWindow paymentWindow, PaymentView paymentView) {
 	    this.paymentWindow = paymentWindow;
 	    this.paymentView = paymentView;
+	    this.user = user;
 
         initListeners();
+        setupDateValidation();
     }
     
 	public void initListeners( ) {
@@ -41,14 +50,39 @@ public class PaymentController {
 		    }
 		});
 			
-		paymentWindow.revalidate();
-		paymentWindow.repaint();
-
-		resetScroll();
+		paymentView.getBtnHome().addActionListener(e -> {
+			new MainWindow(user);
+            
+            Window window = SwingUtilities.getWindowAncestor(paymentView);
+            if (window != null) {
+                window.dispose();
+            }
+		});	
+		
+		paymentView.getSpCheckIn().addChangeListener(e -> updateLabelCheckIn() );
+		paymentView.getSpCheckOut().addChangeListener(e -> updateLabelCheckOut() );
 	}
 	
 	
-    private void handleClose() {
+	protected void updateLabelCheckIn() {
+		paymentView.getLblCheckIn().setText("Entrada: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format(paymentView.getSpCheckIn().getValue()));
+		estancia = ( ((Date) paymentView.getSpCheckOut().getValue()).getTime() 
+	            - ((Date) paymentView.getSpCheckIn().getValue()).getTime() )
+	            / (1000 * 60 * 60 * 24);
+		paymentView.getLblNights().setText("Estancia: " + estancia + " noche/s");
+		paymentView.getLblTotal().setText("$ " + (estancia * paymentView.getRoom().getPrice()));
+	}
+	
+	protected void updateLabelCheckOut() {
+		paymentView.getLblCheckOut().setText("Salida: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format(paymentView.getSpCheckOut().getValue()));
+		estancia = ( ((Date) paymentView.getSpCheckOut().getValue()).getTime() 
+	            - ((Date) paymentView.getSpCheckIn().getValue()).getTime() )
+	            / (1000 * 60 * 60 * 24);
+		paymentView.getLblNights().setText("Estancia: " + estancia + " noche/s");
+		paymentView.getLblTotal().setText("Total: $ " + (estancia * paymentView.getRoom().getPrice()));
+	}
+
+	private void handleClose() {
         //Session.logout();
 
 		new LoginWindow();
@@ -114,5 +148,65 @@ public class PaymentController {
                 "Éxito",
                 JOptionPane.INFORMATION_MESSAGE
         );
+    }
+    
+    private void setupDateValidation() {
+
+        JSpinner spCheckIn = paymentView.getSpCheckIn();
+        JSpinner spCheckOut = paymentView.getSpCheckOut();
+
+        // ================= CHECK IN =================
+        spCheckIn.addChangeListener(e -> {
+
+            Date checkInDate =
+                    (Date) spCheckIn.getValue();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(checkInDate);
+
+            // mínimo checkout = +1 día
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+
+            Date minCheckOut = cal.getTime();
+
+            SpinnerDateModel checkOutModel =
+                    (SpinnerDateModel)
+                            spCheckOut.getModel();
+
+            // actualizar mínimo permitido
+            checkOutModel.setStart(minCheckOut);
+
+            // si checkout quedó inválido
+            Date currentCheckOut =
+                    (Date) spCheckOut.getValue();
+
+            if (currentCheckOut.before(minCheckOut)) {
+                spCheckOut.setValue(minCheckOut);
+            }
+        });
+
+
+        // ================= CHECK OUT =================
+        spCheckOut.addChangeListener(e -> {
+
+            Date checkInDate =
+                    (Date) spCheckIn.getValue();
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(checkInDate);
+
+            // mínimo permitido
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+
+            Date minCheckOut = cal.getTime();
+
+            Date selectedCheckOut =
+                    (Date) spCheckOut.getValue();
+
+            // si el usuario intenta una fecha inválida
+            if (selectedCheckOut.before(minCheckOut)) {
+                spCheckOut.setValue(minCheckOut);
+            }
+        });
     }
 }

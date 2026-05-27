@@ -37,6 +37,7 @@ import components.SearchBar;
 import controllers.auth.LoginController;
 import controllers.rooms.RoomCardController;
 import models.RoomType;
+import models.User;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -54,8 +55,11 @@ public class HomeView extends JPanel{
 	private List<RoomCard> roomCards = new ArrayList<>();
 	
 	private int sectionWidth = 1100; 
+	
+	private User user;
 
-	public HomeView() {
+	public HomeView(User user) {
+		this.user = user;
 	    this.setBackground(Color.WHITE);
 	    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	    
@@ -174,7 +178,7 @@ public class HomeView extends JPanel{
         for (RoomType room : rooms) {
             RoomCard card = new RoomCard(room);
             roomsContainer.add(card);
-            new RoomCardController(card, room); // controlador enlazado
+            new RoomCardController(card, room, user); // controlador enlazado
         }
 
         roomsContainer.revalidate();

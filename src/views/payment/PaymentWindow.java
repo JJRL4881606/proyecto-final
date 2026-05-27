@@ -26,6 +26,8 @@ import components.RoundedPanel;
 import components.UnderlineMenu;
 import controllers.main.MainController;
 import controllers.payment.PaymentController;
+import models.RoomType;
+import models.User;
 import utils.AppFont;
 import utils.UIColors;
 import views.main.MainView;
@@ -38,9 +40,12 @@ public class PaymentWindow extends JFrame {
 
     private PaymentView paymentView;
     private JScrollPane scroll;
+    private RoomType room;
+    private User user;
     
-    public PaymentWindow() {
-
+    public PaymentWindow(RoomType room,User user) {
+    		this.room = room;
+    		this.user = user;
         setTitle("ATLANTIS THE PALM, FORMA DE PAGO");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setResizable(true);
@@ -57,10 +62,6 @@ public class PaymentWindow extends JFrame {
         Image icon = Toolkit.getDefaultToolkit().getImage(
                 getClass().getResource("/assets/img/logos/hotel-icon.png"));
         setIconImage(icon);
-
-        // VIEW
-        paymentView = new PaymentView();
-        new PaymentController(this, paymentView);
 
         // PANEL CENTRAL
         JPanel centerPanel = new JPanel(new BorderLayout(20, 0));
@@ -90,7 +91,7 @@ public class PaymentWindow extends JFrame {
         );
 
         // PANEL DEL FORMULARIO
-        paymentView = new PaymentView();
+        paymentView = new PaymentView(room,user);
         paymentView.setBackground(Color.WHITE);
 
         new PaymentController(this, paymentView);

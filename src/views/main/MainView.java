@@ -27,6 +27,7 @@ import components.UnderlineMenu;
 import controllers.account.AccountController;
 import controllers.booking.BookingSearchController;
 import controllers.home.HomeController;
+import models.User;
 import controllers.rooms.RoomDetailsController;
 import controllers.rooms.ShowRoomsController;
 
@@ -85,6 +86,10 @@ public class MainView extends JPanel{
 	private CardLayout cardLayout;
 	private JPanel container;
 	
+	private User user;
+	
+	public MainView(User user) {
+		this.user = user;
 	private JLabel lblLogo;
 	
 	public MainView() {
@@ -297,16 +302,17 @@ public class MainView extends JPanel{
             }
         };
 
-        homePanel = new HomeView();
+        homePanel = new HomeView(user);
         new HomeController(homePanel, this);
         
         usersPanel = new UsersView();
         roomTypesPanel = new RoomTypesView();
         roomsPanel = new RoomsView();
+        
+        bookingSearchPanel = new BookingSearchView(user);
+        new BookingSearchController(bookingSearchPanel);
         amenitiesPanel = new AmenitiesView();
         reservationsPanel = new ReservationsView();
-
-        bookingSearchPanel = new BookingSearchView();
         bookingSearchController = new BookingSearchController(bookingSearchPanel, this);        
         
         showRoomsPanel = new ShowRoomsView();

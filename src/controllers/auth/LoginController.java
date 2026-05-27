@@ -108,7 +108,7 @@ public class LoginController {
 
         if (Session.getRole().equals("Admin")) {
         	
-            new MainWindow();
+            new MainWindow(user);
             
             Window window = SwingUtilities.getWindowAncestor(view);
             if (window != null) {

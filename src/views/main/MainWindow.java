@@ -18,7 +18,8 @@ public class MainWindow extends JFrame {
 	private JScrollPane scroll;
 	private User user;
 
-    public MainWindow() {
+    public MainWindow(User user) {
+    		this.user = user;
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
@@ -36,7 +37,7 @@ public class MainWindow extends JFrame {
         setIconImage(icon);
          
         // Agregar el panel con scroll
-        mainView = new MainView();
+        mainView = new MainView(user);
         new MainController(mainView, this);
         add(createViewScroll(mainView), BorderLayout.CENTER);
         
