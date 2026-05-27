@@ -26,6 +26,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.List;
 
 import components.RoomCard;
@@ -47,9 +48,11 @@ import utils.UIColors;
 public class HomeView extends JPanel{
 	
 	private SearchBar searchBar;
-	private RoundedButton btnSeeRooms;
+	private RoundedButton btnShowRooms;
 	
 	private JPanel roomsContainer;
+	private List<RoomCard> roomCards = new ArrayList<>();
+	
 	private int sectionWidth = 1100; 
 
 	public HomeView() {
@@ -104,7 +107,6 @@ public class HomeView extends JPanel{
 	    bg.setLayout(new BorderLayout());
 
 	    searchBar = new SearchBar();
-	    searchBar.setPreferredSize(new Dimension(900, 120));
 	    
 	    JPanel centerWrapper = new JPanel(new GridBagLayout());
 	    centerWrapper.setOpaque(false);
@@ -115,6 +117,7 @@ public class HomeView extends JPanel{
 
 	    return container;
 	}
+	            
 	    
     public JPanel createRooms() {
         JPanel roomsPanel = new JPanel();
@@ -240,9 +243,9 @@ public class HomeView extends JPanel{
         subtitle.setFont(AppFont.normal());
         subtitle.setForeground(Color.WHITE);
 
-        RoundedButton reserveBtn = ButtonFactory.createBigButton(
+        RoundedButton reserveBtn = ButtonFactory.createGoldButton(
                 "Reservar ahora",
-                "/assets/img/btn-icons/button-search-icon.png",
+                "/assets/img/btn-icons/button-reserve-black-icon.png",
                 "Ir a reservar"
         );
 
@@ -366,6 +369,77 @@ public class HomeView extends JPanel{
 
         return card;
     }
+    
+    public JPanel createRooms() {
+        JPanel roomsPanel = new JPanel();
+        roomsPanel.setLayout(new BoxLayout(roomsPanel, BoxLayout.Y_AXIS));
+        roomsPanel.setOpaque(false);
+        
+        // HEADER SECTION
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
+        headerPanel.setOpaque(false);
+
+        JLabel titleLabel = new JLabel("Habitaciones destacadas");
+        titleLabel.setFont(AppFont.title());
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel subtitleLabel = new JLabel("Descubre nuestras mejores habitaciones");
+        subtitleLabel.setFont(AppFont.big());
+        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        headerPanel.add(titleLabel);
+        headerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
+        headerPanel.add(subtitleLabel);
+
+        // contenedor horizontal de habitaciones
+        roomsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        roomsContainer.setOpaque(false);
+        roomsContainer.setPreferredSize(new Dimension(sectionWidth, 650));
+
+        // botón ver más
+        JPanel showRooms = new JPanel();
+        showRooms.setOpaque(false);
+
+        btnShowRooms = ButtonFactory.createGoldButton(
+                "Ver más habitaciones",
+                "/assets/img/btn-icons/button-add-icon.png",
+                "Haz click para ver más habitaciones"
+        );
+	    Dimension btn = new Dimension(250,40);
+	    btnShowRooms.setPreferredSize(btn);
+	    btnShowRooms.setMinimumSize(btn);
+	    btnShowRooms.setMaximumSize(btn);
+
+		showRooms.add(btnShowRooms);
+
+        roomsPanel.add(headerPanel);
+        roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        roomsPanel.add(roomsContainer);
+        roomsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        roomsPanel.add(showRooms);
+        roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        return roomsPanel;
+    }
+    
+    public void setRooms(List<RoomType> rooms) {
+
+        roomsContainer.removeAll();
+        roomCards.clear();
+
+        for(RoomType room:rooms){
+
+            RoomCard card=new RoomCard(room);
+
+            roomCards.add(card);
+
+            roomsContainer.add(card);
+        }
+
+        roomsContainer.revalidate();
+        roomsContainer.repaint();
+    }
         
     public JPanel createServicesSection() {
         JPanel section = new JPanel();
@@ -373,7 +447,7 @@ public class HomeView extends JPanel{
         section.setOpaque(false);
 
         // título
-        JLabel title = new JLabel("Servicios");
+        JLabel title = new JLabel("Servicios y amenidades");
         title.setFont(AppFont.title());
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -412,8 +486,8 @@ public class HomeView extends JPanel{
         RoundedPanel card = new RoundedPanel(25);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBackground(UIColors.CARD);
-        card.setPreferredSize(new Dimension(160, 120));
-        card.setMaximumSize(new Dimension(160, 120));
+        card.setPreferredSize(new Dimension(200, 120));
+        card.setMaximumSize(new Dimension(200, 120));
         card.setBorder(BorderFactory.createEmptyBorder(15, 10, 15, 10));
 
         // icono
@@ -422,7 +496,7 @@ public class HomeView extends JPanel{
 
         // texto
         JLabel label = new JLabel(name);
-        label.setFont(AppFont.normal());
+        label.setFont(AppFont.big());
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         card.add(icon);
@@ -512,5 +586,21 @@ public class HomeView extends JPanel{
         wrapper.add(section);
 
         return wrapper;
+    }
+    
+    //GETTERS Y SETTERS
+    public SearchBar getSearchBar() {
+        return searchBar;
+    }
+    
+    public RoundedButton getBtnShowRooms() {
+        return btnShowRooms;
+    }
+    
+    public JPanel getRoomsContainer(){
+        return roomsContainer;
+    }
+    public List<RoomCard> getRoomCards(){
+        return roomCards;
     }
 }

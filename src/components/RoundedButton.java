@@ -20,7 +20,8 @@ public class RoundedButton extends JButton {
         setFocusPainted(false);
         setBorderPainted(false);
         setOpaque(false);
-
+        setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

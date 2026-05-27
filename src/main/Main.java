@@ -12,6 +12,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import utils.AppFont;
 import views.auth.LoginWindow;
 import views.main.MainWindow;
+import views.payment.PaymentWindow;
 
 public class Main 
 {
@@ -19,8 +20,9 @@ public class Main
 	public static void main(String[] args) {
         FlatLightLaf.setup();
         UIManager.put("defaultFont", new FontUIResource(AppFont.normal()));
-        LoginWindow ventanita = new LoginWindow();
-        //MainWindow ventanita = new MainWindow();
+        //LoginWindow ventanita = new LoginWindow();
+        MainWindow ventanita = new MainWindow();
+        //PaymentWindow ventana = new PaymentWindow();
         //showOnScreen(0, ventanita);
     }
 

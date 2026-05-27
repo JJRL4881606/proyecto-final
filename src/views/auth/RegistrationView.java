@@ -193,26 +193,30 @@ public class RegistrationView extends JPanel
 	
 	//CREAR EL BOTÓN
 	private JPanel createButton() {
-		JPanel panel = new JPanel(new GridLayout(2, 1, 0, 10));
-		panel.setOpaque(false);
-	    panel.setBorder(new EmptyBorder(5, 20, 10, 20));
+		JPanel panelButtons = new JPanel(new GridLayout(2, 1, 0, 10));
+		panelButtons.setOpaque(false);
+		panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
+		
+        Dimension btn = new Dimension(340,100);
+        panelButtons.setPreferredSize(btn);
+        panelButtons.setMaximumSize(btn);
         
-        btnRegistration = ButtonFactory.createBigButton(
+        btnRegistration = ButtonFactory.createGoldButton(
     	    "CREAR CUENTA",
     	    "/assets/img/btn-icons/button-save-icon.png",
     	    "Haz click para registrarte"
     	);
 
-        btnReturn = ButtonFactory.createBigButton(
+        btnReturn = ButtonFactory.createGoldButton(
     	    "REGRESAR",
     	    "/assets/img/btn-icons/button-back-icon.png",
     	    "Haz click para regresar al login"
     	);
 				
-        panel.add(btnRegistration);
-		panel.add(btnReturn);
+        panelButtons.add(btnRegistration);
+        panelButtons.add(btnReturn);
 
-        return panel;
+        return panelButtons;
 	}	
 	
 	//LABELS ERROR

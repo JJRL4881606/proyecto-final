@@ -4,11 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -16,20 +18,29 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import views.account.AccountView;
 import components.UnderlineMenu;
+import controllers.account.AccountController;
 import controllers.booking.BookingSearchController;
 import controllers.home.HomeController;
+import controllers.rooms.RoomDetailsController;
+import controllers.rooms.ShowRoomsController;
 
 import javax.swing.ImageIcon;
 import utils.AppFont;
 import utils.Session;
 import utils.UIColors;
+import views.amenities.AmenitiesView;
 import views.booking.BookingSearchView;
+import views.booking.ReservationsView;
 import views.home.HomeView;
+import views.rooms.RoomDetailsView;
 import views.rooms.RoomsView;
+import views.rooms.ShowRoomsView;
 import views.roomtypes.RoomTypesView;
 import views.users.UsersView;
 
@@ -40,12 +51,21 @@ public class MainView extends JPanel{
 	public static final String ADMIN_USERS = "USERS";
 	public static final String ADMIN_ROOMTYPES = "ROOMTYPES";
 	public static final String ADMIN_ROOMS = "ROOMS";
+	public static final String ADMIN_AMENITIES = "AMENITIES";
 	public static final String BOOKING_SEARCH = "BOOKING_SEARCH";
+	public static final String ADMIN_RESERVATIONS = "RESERVATIONS";
+	public static final String SHOW_ROOMS = "SHOW_ROOMS";
+	public static final String ROOM_DETAILS = "ROOM_DETAILS";
+	public static final String ACCOUNT = "ACCOUNT";
 	
 	private JMenuItem btnHome;
 	private JMenuItem btnUsers;
 	private JMenuItem btnRoomTypes;
 	private JMenuItem btnRooms;
+	private JMenuItem btnAmenities;
+	private JMenuItem btnReservations;
+	private JMenuItem btnShowRooms;
+	private JMenuItem btnAccount;
 	
 	private JMenuItem logOut;
 	
@@ -53,11 +73,19 @@ public class MainView extends JPanel{
 	public UsersView usersPanel;
 	public RoomTypesView roomTypesPanel;
 	public RoomsView roomsPanel;
+	public AmenitiesView amenitiesPanel;
+	public ReservationsView reservationsPanel;
+	public ShowRoomsView showRoomsPanel;
+	public RoomDetailsView roomDetailsPanel;
+	public AccountView accountPanel;
 	
 	public BookingSearchView bookingSearchPanel;
+	public BookingSearchController bookingSearchController;
 	
 	private CardLayout cardLayout;
 	private JPanel container;
+	
+	private JLabel lblLogo;
 	
 	public MainView() {
 	    UIManager.put("Menu.borderPainted", false);
@@ -72,7 +100,7 @@ public class MainView extends JPanel{
 	    setVisible(true);
 	    
 	    initializeComponents();
-	    configurePermissions();
+	    //configurePermissions();
 	}
 
     public void initializeComponents() 
@@ -82,13 +110,16 @@ public class MainView extends JPanel{
         add(inferiorSection(), BorderLayout.SOUTH);
     }
     
+    //POR AHORA ESTÁ DESACTIVADO PARA AVANZAR, agregar faltantes
+    /*
     private void configurePermissions() {
         if(!Session.getRole().equals("Admin")) {
             btnUsers.setVisible(false);
             btnRoomTypes.setVisible(false);
             btnRooms.setVisible(false);
+            btnAmenities.setVisible(false);
         }
-    }
+    }*/
     
     //HEADER
     public JPanel headerSection() {
@@ -109,11 +140,14 @@ public class MainView extends JPanel{
         panel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         ImageIcon icon = new ImageIcon(getClass().getResource("/assets/img/logos/hotel-logo.png"));
-        Image img = icon.getImage().getScaledInstance(250, 80, Image.SCALE_SMOOTH);
-        JLabel logo = new JLabel(new ImageIcon(img));
 
-        panel.add(logo);
+    	Image img = icon.getImage().getScaledInstance( 250, 80, Image.SCALE_SMOOTH);
 
+    	lblLogo = new JLabel(new ImageIcon(img));
+    	lblLogo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    	
+    	panel.add(lblLogo);
+    	
         return panel;
     }
     
@@ -139,60 +173,28 @@ public class MainView extends JPanel{
     	mb.setOpaque(true);
     	mb.setBackground(UIColors.HEADER);
     	
-        // USUARIO
-        JMenu usuario = new UnderlineMenu("Usuario");
-        usuario.setMnemonic(KeyEvent.VK_U);
-        mb.add(usuario);
-
-        //FALTA CREAR ESTAS VISTAS
-        /*
-        JMenuItem miCuenta = new JMenuItem("Mi cuenta");
-        miCuenta.setMnemonic(KeyEvent.VK_C);
-        usuario.add(miCuenta);
-
-        JMenuItem misReservas = new JMenuItem("Mis reservas");
-        misReservas.setMnemonic(KeyEvent.VK_R);
-        usuario.add(misReservas);
-        */
+        // INICIO
+        JMenu home = new UnderlineMenu("Inicio");
+        home.setMnemonic(KeyEvent.VK_R);
+        mb.add(home);
         
-        usuario.addSeparator();
-
-        logOut = new JMenuItem("Cerrar sesión");
-        logOut.setMnemonic(KeyEvent.VK_C);
-        usuario.add(logOut); 
+        btnHome = new JMenuItem("Inicio");
+        btnHome.setMnemonic(KeyEvent.VK_I);
+        home.add(btnHome);
                 
         // HABITACIONES
-        JMenu habitaciones = new UnderlineMenu("Habitaciones");
-        habitaciones.setMnemonic(KeyEvent.VK_H);
-        mb.add(habitaciones);
+        JMenu rooms = new UnderlineMenu("Habitaciones");
+        rooms.setMnemonic(KeyEvent.VK_H);
+        mb.add(rooms);
 
-        //FALTA CREAR ESTAS VISTAS
-        /*
-        JMenuItem verHabitaciones = new JMenuItem("Ver tipos de habitaciones");
-        verHabitaciones.setMnemonic(KeyEvent.VK_V);
-        habitaciones.add(verHabitaciones);
-        */
-
-        // RESERVAS
-        JMenu reservas = new UnderlineMenu("Reservas");
-        reservas.setMnemonic(KeyEvent.VK_R);
-        mb.add(reservas);
-
-        //FALTA CREAR ESTAS VISTAS
-        /*
-        JMenuItem nuevaReserva = new JMenuItem("Nueva reserva");
-        nuevaReserva.setMnemonic(KeyEvent.VK_N);
-        reservas.add(nuevaReserva);
-        */
+        btnShowRooms = new JMenuItem("Ver tipos de habitaciones");
+        btnShowRooms.setMnemonic(KeyEvent.VK_V);
+        rooms.add(btnShowRooms);
         
         // SISTEMA
     	JMenu sistema = new UnderlineMenu("Sistema");
     	sistema.setMnemonic(KeyEvent.VK_S);
         mb.add(sistema);
-
-        btnHome = new JMenuItem("Inicio");
-        btnHome.setMnemonic(KeyEvent.VK_I);
-        sistema.add(btnHome);
         
         btnUsers = new JMenuItem("Ver usuarios");
         btnUsers.setMnemonic(KeyEvent.VK_U);
@@ -205,6 +207,33 @@ public class MainView extends JPanel{
         setBtnRooms(new JMenuItem("Ver habitaciones"));
         getBtnRooms().setMnemonic(KeyEvent.VK_H);
         sistema.add(getBtnRooms());
+        
+        btnAmenities = new JMenuItem("Ver amenidades");
+        btnAmenities.setMnemonic(KeyEvent.VK_A);
+        sistema.add(btnAmenities);
+        
+        btnReservations = new JMenuItem("Ver reservaciones");
+        btnReservations.setMnemonic(KeyEvent.VK_R);
+        sistema.add(btnReservations);
+        
+        // USUARIO
+        JMenu usuario = new UnderlineMenu("Usuario");
+        usuario.setMnemonic(KeyEvent.VK_U);
+        mb.add(usuario);
+
+        btnAccount = new JMenuItem("Mi cuenta");
+        btnAccount.setMnemonic(KeyEvent.VK_C);
+        usuario.add(btnAccount);
+
+        JMenuItem misReservas = new JMenuItem("Mis reservas");
+        misReservas.setMnemonic(KeyEvent.VK_R);
+        usuario.add(misReservas);
+        
+        usuario.addSeparator();
+
+        logOut = new JMenuItem("Cerrar sesión");
+        logOut.setMnemonic(KeyEvent.VK_C);
+        usuario.add(logOut); 
 
         return mb;
     }
@@ -222,18 +251,36 @@ public class MainView extends JPanel{
     
     //INFERIOR
     public JPanel inferiorSection() {
-        JPanel inferiorPanel = new JPanel();
+        JPanel inferiorPanel = new JPanel(new BorderLayout(25,0));
         inferiorPanel.setBackground(UIColors.HEADER);
-        inferiorPanel.setBorder(new EmptyBorder(30,30,30,30));
+        inferiorPanel.setBorder(new EmptyBorder(25,35,25,35));
+
+        // Logo izquierda
+        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/img/logos/hotel-logo.png"));
+        Image img = icon.getImage().getScaledInstance(125, 40, Image.SCALE_SMOOTH);
+        JLabel logo = new JLabel(new ImageIcon(img));
+
+        // Información derecha
+        JPanel infoPanel = createTransparentPanel();
+        infoPanel.setLayout(new GridLayout(3,1,0,8));
 
         JLabel lblCopy = new JLabel("Copyright © 2026 ATLANTIS THE PALM, DUBAI. All rights reserved");
-        lblCopy.setFont(AppFont.normal());
-        lblCopy.setForeground(Color.white);
+        JLabel lblNumber = new JLabel("Teléfono: 555-666-999-1");
+        JLabel lblEmail = new JLabel("Correo: atlantis_the_palm_dubai_info@atlantishotel.com");
 
-        inferiorPanel.add(lblCopy);
+        JLabel[] labels = {lblCopy, lblNumber, lblEmail};
+
+        for(JLabel lbl : labels){
+            lbl.setFont(AppFont.normal());
+            lbl.setForeground(Color.WHITE);
+            infoPanel.add(lbl);
+        }
+
+        inferiorPanel.add(logo, BorderLayout.WEST);
+        inferiorPanel.add(infoPanel, BorderLayout.CENTER);
 
         return inferiorPanel;
-    }
+    }    
     
     private void createViews() {
         cardLayout = new CardLayout();
@@ -256,15 +303,31 @@ public class MainView extends JPanel{
         usersPanel = new UsersView();
         roomTypesPanel = new RoomTypesView();
         roomsPanel = new RoomsView();
-        
+        amenitiesPanel = new AmenitiesView();
+        reservationsPanel = new ReservationsView();
+
         bookingSearchPanel = new BookingSearchView();
-        new BookingSearchController(bookingSearchPanel);
+        bookingSearchController = new BookingSearchController(bookingSearchPanel, this);        
+        
+        showRoomsPanel = new ShowRoomsView();
+        new ShowRoomsController(showRoomsPanel, this);
+        
+        roomDetailsPanel = new RoomDetailsView();
+        new RoomDetailsController(roomDetailsPanel, this);
+        
+        accountPanel = new AccountView();
+        new AccountController(accountPanel);
         
         container.add(homePanel, HOME);
         container.add(usersPanel, ADMIN_USERS);
         container.add(roomTypesPanel, ADMIN_ROOMTYPES);
         container.add(roomsPanel, ADMIN_ROOMS);
+        container.add(amenitiesPanel, ADMIN_AMENITIES);
+        container.add(reservationsPanel, ADMIN_RESERVATIONS);
         container.add(bookingSearchPanel, BOOKING_SEARCH);
+        container.add(showRoomsPanel, SHOW_ROOMS);
+        container.add(roomDetailsPanel, ROOM_DETAILS);
+        container.add(accountPanel, ACCOUNT);
     }        
     
     private JPanel createTransparentPanel() {
@@ -276,14 +339,31 @@ public class MainView extends JPanel{
     public void showView(String view) {
         cardLayout.show(container, view);
 
+        // actualizar botones
+        btnHome.setEnabled(!view.equals(HOME));
+        btnUsers.setEnabled(!view.equals(ADMIN_USERS));
+        btnRoomTypes.setEnabled(!view.equals(ADMIN_ROOMTYPES));
+        btnRooms.setEnabled(!view.equals(ADMIN_ROOMS));
+        btnShowRooms.setEnabled(!view.equals(SHOW_ROOMS));
+
+        // refrescar
         container.revalidate();
         container.repaint();
 
         revalidate();
         repaint();
-    }
+
+        // reiniciar scroll
+        MainWindow frame = (MainWindow)SwingUtilities.getWindowAncestor(this);
+
+        if(frame != null){
+            SwingUtilities.invokeLater(() -> {
+                frame.getScroll().getViewport().setViewPosition(new Point(0,0));
+            });
+        }
+    }	
     
-	//getters
+    //getters
     public JMenuItem getLogOut() {
         return logOut;
     }
@@ -303,9 +383,28 @@ public class MainView extends JPanel{
 	public JMenuItem getBtnRooms() {
 		return btnRooms;
 	}
+	
+	public JMenuItem getBtnAmenities() {
+		return btnAmenities;
+	}
+	
+	public JMenuItem getBtnReservations() {
+		return btnReservations;
+	}
+
+	public JMenuItem getBtnShowRooms() {
+		return btnShowRooms;
+	}
+
+	public JMenuItem getBtnAccount() {
+		return btnAccount;
+	}
 
 	public void setBtnRooms(JMenuItem btnRooms) {
 		this.btnRooms = btnRooms;
 	}	
-
+	
+	public JLabel getLblLogo() {
+	    return lblLogo;
+	}
 }

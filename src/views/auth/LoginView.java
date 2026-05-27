@@ -134,6 +134,7 @@ public class LoginView extends JPanel
         lblForgotPassword.setFont(AppFont.small());
         lblForgotPassword.setAlignmentX(CENTER_ALIGNMENT);
         lblForgotPassword.setHorizontalAlignment(SwingConstants.CENTER);
+        
         lblForgotPassword.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 lblForgotPassword.setForeground(Color.RED);
@@ -159,24 +160,26 @@ public class LoginView extends JPanel
 	}
 	    
     // CREAR LOS BOTONES
-    
 	public JPanel createButtons() {
 		JPanel panelButtons = new JPanel(new GridLayout(2, 1, 0, 10));
 		panelButtons.setOpaque(false);
 		panelButtons.setBorder(new EmptyBorder(5, 20, 10, 20));
+		
+        Dimension btn = new Dimension(340,100);
+        panelButtons.setPreferredSize(btn);
+        panelButtons.setMaximumSize(btn);
 
-	    btnLogin = ButtonFactory.createBigButton(
+	    btnLogin = ButtonFactory.createGoldButton(
 	            "INICIAR SESIÓN",
 	            "/assets/img/btn-icons/button-login-icon.png",
 	            "Haz click para iniciar sesión"
 	    );
-
-	    btnRegistration = ButtonFactory.createBigButton(
+	    btnRegistration = ButtonFactory.createGoldButton(
 	            "CREAR CUENTA",
 	            "/assets/img/btn-icons/button-registration-icon.png",
 	            "Haz click para registrarte"
 	    );
-				
+		
 		panelButtons.add(btnLogin);	
 		panelButtons.add(btnRegistration);
 		

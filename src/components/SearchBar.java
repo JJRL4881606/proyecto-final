@@ -2,6 +2,9 @@ package components;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,6 +16,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 
+import utils.AppFont;
 import utils.ButtonFactory;
 import utils.DateUtils;
 import utils.FormUtils;
@@ -48,8 +52,11 @@ public class SearchBar extends RoundedPanel {
 	    setBorder(BorderFactory.createEmptyBorder(25, 35, 25, 35));
 	    setAlignmentX(CENTER_ALIGNMENT);
 	    putClientProperty("FlatLaf.style", "arc:20");
-	    setPreferredSize(new Dimension(900, 120));
-	    setMaximumSize(new Dimension(900, 120));
+	    
+	    Dimension size = new Dimension(1000,120);
+	    setPreferredSize(size);
+	    setMinimumSize(size);
+	    setMaximumSize(size);
 	    
 	    add(Box.createHorizontalGlue());
 	    
@@ -76,14 +83,20 @@ public class SearchBar extends RoundedPanel {
 	    add(Box.createRigidArea(new Dimension(15, 0)));
 	    add(FormUtils.createField("Huéspedes", spGuests, lblGuestsError, "", 130));
 
-	    btnSearch = ButtonFactory.createBigButton(
+	    btnSearch = ButtonFactory.createGoldButton(
 	            "Buscar",
 	            "/assets/img/btn-icons/button-search-icon.png",
 	            "Haz click para buscar"
 	    );
-	    add(Box.createRigidArea(new Dimension(15, 0)));
+	    btnSearch.setFont(AppFont.subtitle());
+	    
+	    Dimension btn = new Dimension(160,50);
+	    btnSearch.setPreferredSize(btn);
+	    btnSearch.setMinimumSize(btn);
+	    btnSearch.setMaximumSize(btn);
+	    
+	    add(Box.createRigidArea(new Dimension(30, 0)));
 	    add(btnSearch);	
-	    add(Box.createRigidArea(new Dimension(0, 10)));
 	    add(Box.createHorizontalGlue());
     }
     
@@ -133,12 +146,22 @@ public class SearchBar extends RoundedPanel {
 
         Date checkIn = DateUtils.normalize((Date) spCheckInDate.getValue());
         Date checkOut = DateUtils.normalize((Date) spCheckOutDate.getValue());
+        
+        //checar fechas nulas
+        if (checkIn == null || checkOut == null) return;
 
-        // evitar fechas pasadas (si permite hoy)
+        // evitar fechas pasadas
         if (checkIn.before(today)) {
         	spCheckInDate.setValue(today);
             checkIn = today;
         }
+        
+        //no permitir periodo demasiado largo
+        long days = ChronoUnit.DAYS.between(getCheckIn(), getCheckOut());
+
+    	if (days > 030) {
+    	    spCheckOutDate.setValue(DateUtils.addDays(checkIn,30));
+    	}
 
         // actualizar mínimo checkout = checkIn + 1 día
         Date minCheckOut = DateUtils.addDays(checkIn, 1);
@@ -150,10 +173,9 @@ public class SearchBar extends RoundedPanel {
         modelIn.setStart(today);
 
         // evitar salida < entrada
-        if (!checkOut.after(checkIn)) {
-            checkOut = minCheckOut;
-            spCheckOutDate.setValue(checkOut);
-        }
+        if(!checkOut.after(checkIn) && !checkOut.equals(minCheckOut)){
+        	    spCheckOutDate.setValue(minCheckOut);
+        }        
         
         // calcular noches
         calculateNights();
@@ -171,21 +193,18 @@ public class SearchBar extends RoundedPanel {
         });
     }
         
-    private void calculateNights() {
-        Date checkIn = (Date) spCheckInDate.getValue();
-        Date checkOut = (Date) spCheckOutDate.getValue();
+    private void calculateNights(){
 
-        long diff = checkOut.getTime() - checkIn.getTime();
-        long nights = diff / (1000 * 60 * 60 * 24);
+        long nights = ChronoUnit.DAYS.between(
+            getCheckIn(),
+            getCheckOut()
+        );
 
-        // evitar negativos
-        if (nights <= 0) {
-        	txtNights.setText("1");
-        } else {
-        	txtNights.setText(String.valueOf(nights));
-        }
+        txtNights.setText(
+            String.valueOf(Math.max(1, nights))
+        );
     }
-
+    
     // GETTERS
     public JSpinner getSpCheckInDate() {
         return spCheckInDate;
@@ -237,5 +256,19 @@ public class SearchBar extends RoundedPanel {
 
     public void setGuests(int guests) {
         spGuests.setValue(guests);
+    }
+    
+    public LocalDate getCheckIn(){
+        return getCheckInDate()
+            .toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
+    }
+
+    public LocalDate getCheckOut(){
+        return getCheckOutDate()
+            .toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
     }
 }

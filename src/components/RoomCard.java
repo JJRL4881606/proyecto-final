@@ -12,15 +12,28 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import models.Amenity;
 import models.RoomType;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
+import utils.VisualUtils;
 
 @SuppressWarnings("serial")
 public class RoomCard extends RoundedPanel {
 
+	private RoundedButton btnDetails;
+	private RoundedButton btnReserve;
+	private RoomType room;
+	
+	public RoomCard(RoomType room) {
+
+	    super(25);
+
+	    this.room = room;
+	    
+	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     private RoundedButton btnReserve;
     private RoundedButton btnDetails;
 
@@ -31,18 +44,17 @@ public class RoomCard extends RoundedPanel {
         super(25);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(UIColors.CARD);
-        setPreferredSize(new Dimension(320, 550));
-        setMaximumSize(new Dimension(320, 550));
+        setPreferredSize(new Dimension(340, 610));
+        setMaximumSize(new Dimension(340, 610));
         setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
         // imagen
-        RoundedImagePanel imagePanel =
-                new RoundedImagePanel(
-                        room.getImagePath(),
-                        280,
-                        180,
-                        20
-                );
+        RoundedImagePanel imagePanel = new RoundedImagePanel(
+            room.getImagePath(),
+            280,
+            180,
+            20
+        );
         imagePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // info
@@ -57,7 +69,8 @@ public class RoomCard extends RoundedPanel {
         JLabel bedLabel = new JLabel(room.getBedType());
         bedLabel.setFont(AppFont.big());
         bedLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+        
+        infoPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         infoPanel.add(nameLabel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         infoPanel.add(bedLabel);
@@ -67,13 +80,7 @@ public class RoomCard extends RoundedPanel {
         JPanel guestsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER,5,0));
         guestsPanel.setOpaque(false);
 
-        JLabel guestIcon = new JLabel(
-                FormUtils.loadIcon(
-                        "/assets/img/icons/guest-icon.png",
-                        25
-                )
-        );
-
+        JLabel guestIcon = new JLabel(FormUtils.loadIcon("/assets/img/icons/guest-icon.png", 25));
         JLabel guestLabel = new JLabel(room.getCapacity() + " huéspedes");
 
         guestsPanel.add(guestIcon);
@@ -86,25 +93,31 @@ public class RoomCard extends RoundedPanel {
         JPanel featuresPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         featuresPanel.setOpaque(false);
 
+        List<Amenity> amenities = room.getAmenities();
+
+        for(int i = 0; i < Math.min(4, amenities.size()); i++){
+
         List<String> features = room.getFeatures();
         for (String feature : features) {
             JPanel featureItem = new JPanel(new FlowLayout(FlowLayout.LEFT,5,0));
             featureItem.setOpaque(false);
 
-            JLabel icon = new JLabel(
-                    FormUtils.loadIcon(
-                            "/assets/img/icons/check-icon.png",
-                            14
-                    )
-            );
-            JLabel text = new JLabel(feature);
+            JLabel icon = new JLabel(FormUtils.loadIcon("/assets/img/icons/check-icon.png",14));
+
+            String amenityName = amenities.get(i).getName();
+
+            if(amenityName.length() > 18){
+                amenityName = amenityName.substring(0,15) + "...";
+            }
+
+            JLabel text = new JLabel(amenityName);
 
             featureItem.add(icon);
             featureItem.add(text);
 
             featuresPanel.add(featureItem);
         }
-
+        
         infoPanel.add(featuresPanel);
 
         // acción
@@ -112,36 +125,63 @@ public class RoomCard extends RoundedPanel {
         priceLabel.setFont(AppFont.big());
         priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        btnReserve = ButtonFactory.createBigButton(
-                "Reservar",
-                "/assets/img/btn-icons/button-search-icon.png",
-                "Reservar habitación"
+        btnReserve = ButtonFactory.createBlueButton(
+            "Reservar",
+            "/assets/img/btn-icons/button-reserve-icon.png",
+            "Reservar habitación"
         );
-
-        btnDetails = ButtonFactory.createBigButton(
-                "Ver detalles",
-                "/assets/img/btn-icons/button-search-icon.png",
-                "Ver detalles"
+        
+        btnDetails = ButtonFactory.createGoldButton(
+            "Ver detalles",
+            "/assets/img/btn-icons/button-search-icon.png",
+            "Ver detalles"
         );
-
+        
         btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnDetails.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnReserve.setMaximumSize(new Dimension(260, 45));
-        btnDetails.setMaximumSize(new Dimension(260, 45));
-
+        
+	    Dimension btn = new Dimension(170,40);
+	    btnReserve.setPreferredSize(btn);
+	    btnReserve.setMinimumSize(btn);
+	    btnReserve.setMaximumSize(btn);
+        
+	    btnDetails.setPreferredSize(btn);
+	    btnDetails.setMinimumSize(btn);
+	    btnDetails.setMaximumSize(btn);
+        
+        // action panel
         JPanel actionPanel = new JPanel();
         actionPanel.setOpaque(false);
         actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.Y_AXIS));
+        actionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         actionPanel.add(priceLabel);
+        actionPanel.add(Box.createRigidArea(new Dimension(0, 20)));
+        actionPanel.add(VisualUtils.createSmallDivider()); 
         actionPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         actionPanel.add(btnReserve);
         actionPanel.add(Box.createRigidArea(new Dimension(0, 10)));
         actionPanel.add(btnDetails);
+        
+        add(Box.createRigidArea(new Dimension(0, 17)));
 
         add(imagePanel);
         add(Box.createVerticalGlue());
         add(infoPanel);
         add(Box.createVerticalGlue());
         add(actionPanel);
+        add(Box.createRigidArea(new Dimension(0, 10)));
+    }
+    
+    //getters
+    public RoundedButton getBtnDetails() {
+        return btnDetails;
+    }
+
+    public RoundedButton getBtnReserve() {
+        return btnReserve;
+    }
+
+    public RoomType getRoom() {
+        return room;
     }
 }

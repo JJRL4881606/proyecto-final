@@ -2,6 +2,16 @@ package views.payment;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.*;
+import components.RoundedPanel;
+import controllers.payment.PaymentController;
+import utils.UIColors;
+import java.awt.*;
+
+@SuppressWarnings("serial")
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
