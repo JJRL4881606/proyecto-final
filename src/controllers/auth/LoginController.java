@@ -82,7 +82,7 @@ public class LoginController {
 		Validator.noSpaces(view.getTxtEmail());
 		Validator.restrictedPassword(view.getTxtPassword());
 	}
-    
+	
     private void handleLogin() {
     	view.clearErrors();
     	boolean valid = true;

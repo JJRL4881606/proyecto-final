@@ -8,6 +8,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 import views.auth.LoginWindow;
+import views.main.MainView;
+import views.main.MainWindow;
 import views.payment.PaymentView;
 import views.payment.PaymentWindow;
 

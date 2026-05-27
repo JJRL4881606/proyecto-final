@@ -15,6 +15,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 @SuppressWarnings("serial")
+import java.awt.*;
+import javax.swing.*;
+
 public class PaymentView extends JPanel {
 
     // Campos datos personales

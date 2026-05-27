@@ -34,6 +34,15 @@ public class RoomCard extends RoundedPanel {
 	    this.room = room;
 	    
 	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+    private RoundedButton btnReserve;
+    private RoundedButton btnDetails;
+
+    public RoundedButton getBtnReserve() { return btnReserve; }
+    public RoundedButton getBtnDetails() { return btnDetails; }
+
+    public RoomCard(RoomType room) {
+        super(25);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(UIColors.CARD);
         setPreferredSize(new Dimension(340, 610));
         setMaximumSize(new Dimension(340, 610));
@@ -73,7 +82,7 @@ public class RoomCard extends RoundedPanel {
 
         JLabel guestIcon = new JLabel(FormUtils.loadIcon("/assets/img/icons/guest-icon.png", 25));
         JLabel guestLabel = new JLabel(room.getCapacity() + " huéspedes");
-        
+
         guestsPanel.add(guestIcon);
         guestsPanel.add(guestLabel);
 
@@ -88,6 +97,8 @@ public class RoomCard extends RoundedPanel {
 
         for(int i = 0; i < Math.min(4, amenities.size()); i++){
 
+        List<String> features = room.getFeatures();
+        for (String feature : features) {
             JPanel featureItem = new JPanel(new FlowLayout(FlowLayout.LEFT,5,0));
             featureItem.setOpaque(false);
 
@@ -152,6 +163,7 @@ public class RoomCard extends RoundedPanel {
         actionPanel.add(btnDetails);
         
         add(Box.createRigidArea(new Dimension(0, 17)));
+
         add(imagePanel);
         add(Box.createVerticalGlue());
         add(infoPanel);

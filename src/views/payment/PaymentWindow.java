@@ -12,6 +12,28 @@ import utils.UIColors;
 import java.awt.*;
 
 @SuppressWarnings("serial")
+import java.awt.FlowLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import components.RoundedPanel;
+import components.UnderlineMenu;
+import controllers.main.MainController;
+import controllers.payment.PaymentController;
+import utils.AppFont;
+import utils.UIColors;
+import views.main.MainView;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 public class PaymentWindow extends JFrame {
 
     private PaymentView paymentView;
