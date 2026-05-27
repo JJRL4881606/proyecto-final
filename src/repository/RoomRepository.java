@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import config.DatabaseConnection;
+import models.ReservationStatus;
 import models.Room;
 
 public class RoomRepository {
@@ -258,5 +259,34 @@ public class RoomRepository {
         }
 
         return rooms;
+    }
+    
+    public boolean hasActiveReservation(int roomId){
+
+        String sql =
+            "SELECT 1 FROM reservations " +
+            "WHERE roomId=? " +
+            "AND status IN (?,?) " +
+            "AND checkOutDate >= CURDATE() " +
+            "LIMIT 1";
+
+        try(
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ){
+
+            ps.setInt(1,roomId);
+            ps.setString(2,ReservationStatus.PENDING);
+            ps.setString(3,ReservationStatus.CONFIRMED);
+
+            ResultSet rs=ps.executeQuery();
+
+            return rs.next();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

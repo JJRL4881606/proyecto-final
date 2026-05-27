@@ -8,7 +8,6 @@ import java.util.List;
 import config.DatabaseConnection;
 import models.Amenity;
 import models.Room;
-import models.RoomStatus;
 import models.RoomType;
 
 public class RoomTypeRepository {

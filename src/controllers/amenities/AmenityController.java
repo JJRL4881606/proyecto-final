@@ -100,6 +100,19 @@ public class AmenityController {
             
             return;
         }
+        
+        Amenity amenity = model.getAmenityAt(row);
+
+    	if(repo.isUsed(amenity.getAmenityId())){
+    	    JOptionPane.showMessageDialog(
+    	        null,
+    	        "No puedes eliminar esta amenidad porque está siendo utilizada por tipos de habitación",
+    	        "Error",
+    	        JOptionPane.ERROR_MESSAGE
+    	    );
+
+    	    return;
+    	}
 
         boolean deleted = repo.delete(model.getAmenityAt(row).getAmenityId());
 

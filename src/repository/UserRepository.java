@@ -226,4 +226,28 @@ public class UserRepository {
 
 	    return null;
 	}
+	
+	public boolean hasReservationsByUser(int userId){
+
+	    String sql =
+	        "SELECT 1 FROM reservations " +
+	        "WHERE userId=? LIMIT 1";
+
+	    try(
+	        Connection conn=DatabaseConnection.getConnection();
+	        PreparedStatement ps=conn.prepareStatement(sql)
+	    ){
+
+	        ps.setInt(1,userId);
+
+	        ResultSet rs=ps.executeQuery();
+
+	        return rs.next();
+
+	    }catch(Exception e){
+	        e.printStackTrace();
+	    }
+
+	    return false;
+	}
 }

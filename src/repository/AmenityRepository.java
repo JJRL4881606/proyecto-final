@@ -129,4 +129,32 @@ public class AmenityRepository {
 
         return false;
     }
+    
+    public boolean isUsed(int amenityId){
+
+        String sql=
+            "SELECT 1 FROM roomtype_amenities " +
+            "WHERE amenityId=? LIMIT 1";
+
+        try(
+            Connection conn=
+                DatabaseConnection.getConnection();
+
+            PreparedStatement ps=
+                conn.prepareStatement(sql)
+        ){
+
+            ps.setInt(1,amenityId);
+
+            ResultSet rs=
+                ps.executeQuery();
+
+            return rs.next();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

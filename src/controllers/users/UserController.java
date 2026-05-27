@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import models.User;
 import services.PDFExporter;
+import repository.ReservationRepository;
 import repository.UserRepository;
 import tablemodels.UserTableModel;
 import views.users.UserFormDialog;
@@ -130,7 +131,21 @@ public class UserController {
 	        );
 	        return;
 	    }
+	    
+	    User user = model.getUserAt(row);
 
+	    ReservationRepository reservationRepo = new ReservationRepository();
+
+	    if(reservationRepo.hasReservationsByUser(user.getId())){
+	        JOptionPane.showMessageDialog(
+	            null,
+	            "No puedes eliminar este usuario porque tiene reservaciones registradas",
+	            "Error",
+	            JOptionPane.ERROR_MESSAGE
+	        );
+
+	        return;
+	    }
 	    boolean deleted = repo.delete(model.getUserAt(row).getId());
 
 	    if(deleted){

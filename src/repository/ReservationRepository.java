@@ -144,4 +144,62 @@ public class ReservationRepository {
 
         return false;
     }
+    
+    public boolean hasReservationsByUser(int userId){
+
+        String sql=
+            "SELECT 1 FROM reservations " +
+            "WHERE userId=? LIMIT 1";
+
+        try(
+            Connection conn=
+                DatabaseConnection.getConnection();
+
+            PreparedStatement ps=
+                conn.prepareStatement(sql)
+        ){
+
+            ps.setInt(1,userId);
+
+            ResultSet rs=
+                ps.executeQuery();
+
+            return rs.next();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    
+    public boolean hasReservationsByRoom(int roomId){
+
+        String sql =
+            "SELECT 1 FROM reservations " +
+            "WHERE roomId=? LIMIT 1";
+
+        try(
+            Connection conn =
+                DatabaseConnection.getConnection();
+
+            PreparedStatement ps =
+                conn.prepareStatement(sql)
+        ){
+
+            ps.setInt(1, roomId);
+
+            ResultSet rs =
+                ps.executeQuery();
+
+            return rs.next();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    
+    
 }
