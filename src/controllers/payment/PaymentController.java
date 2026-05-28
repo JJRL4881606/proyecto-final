@@ -25,7 +25,7 @@ public class PaymentController {
     private long estancia;
     private User user;
 
-    public PaymentController(PaymentWindow paymentWindow, PaymentView paymentView) {
+    public PaymentController(PaymentWindow paymentWindow, PaymentView paymentView, User user) {
 	    this.paymentWindow = paymentWindow;
 	    this.paymentView = paymentView;
 	    this.user = user;
@@ -85,7 +85,7 @@ public class PaymentController {
 	private void handleClose() {
         //Session.logout();
 
-		new LoginWindow();
+		new LoginWindow(user);
         Window window = SwingUtilities.getWindowAncestor(paymentView);
         if (window != null) window.dispose();
     }

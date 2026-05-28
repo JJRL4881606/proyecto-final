@@ -43,6 +43,7 @@ import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.VisualUtils;
 import views.auth.LoginView;
+import views.main.MainView;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
@@ -57,12 +58,15 @@ public class HomeView extends JPanel{
 	private int sectionWidth = 1100; 
 	
 	private User user;
+	private MainView mainView;
 
-	public HomeView(User user) {
-		this.user = user;
+	public HomeView(MainView mainView, User user) {
+	    this.mainView = mainView;
+	    this.user = user;
+
 	    this.setBackground(Color.WHITE);
 	    this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-	    
+
 	    initializeComponents();
 	    setVisible(true);
 	}
@@ -121,8 +125,6 @@ public class HomeView extends JPanel{
 
 	    return container;
 	}
-	            
-	    
     public JPanel createRooms() {
         JPanel roomsPanel = new JPanel();
         roomsPanel.setLayout(new BoxLayout(roomsPanel, BoxLayout.Y_AXIS));
@@ -148,50 +150,56 @@ public class HomeView extends JPanel{
         // contenedor horizontal de habitaciones
         roomsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         roomsContainer.setOpaque(false);
-        roomsContainer.setPreferredSize(new Dimension(sectionWidth, 600));
+        roomsContainer.setPreferredSize(new Dimension(sectionWidth, 650));
 
         // botón ver más
-        JPanel seeRooms = new JPanel();
-        seeRooms.setOpaque(false);
+        JPanel showRooms = new JPanel();
+        showRooms.setOpaque(false);
 
-        btnSeeRooms = ButtonFactory.createBigButton(
-                "Ver más",
+        btnShowRooms = ButtonFactory.createGoldButton(
+                "Ver más habitaciones",
                 "/assets/img/btn-icons/button-add-icon.png",
                 "Haz click para ver más habitaciones"
         );
+	    Dimension btn = new Dimension(250,40);
+	    btnShowRooms.setPreferredSize(btn);
+	    btnShowRooms.setMinimumSize(btn);
+	    btnShowRooms.setMaximumSize(btn);
 
-        seeRooms.add(btnSeeRooms);
+		showRooms.add(btnShowRooms);
 
         roomsPanel.add(headerPanel);
         roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         roomsPanel.add(roomsContainer);
         roomsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        roomsPanel.add(seeRooms);
+        roomsPanel.add(showRooms);
         roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         return roomsPanel;
     }
     
     public void setRooms(List<RoomType> rooms) {
+
         roomsContainer.removeAll();
+        roomCards.clear();
 
         for (RoomType room : rooms) {
+
             RoomCard card = new RoomCard(room);
+
+            roomCards.add(card);
             roomsContainer.add(card);
-            new RoomCardController(card, room, user); // controlador enlazado
+
+            new RoomCardController(
+                card,
+                mainView,
+                room,
+                user
+            );
         }
 
         roomsContainer.revalidate();
         roomsContainer.repaint();
-    }
-
-    
-    public SearchBar getSearchBar() {
-        return searchBar;
-    }
-    
-    public RoundedButton getBtnSeeRooms() {
-        return btnSeeRooms;
     }
     
     public JPanel createPromosSection() {
@@ -373,77 +381,6 @@ public class HomeView extends JPanel{
 
         return card;
     }
-    
-    public JPanel createRooms() {
-        JPanel roomsPanel = new JPanel();
-        roomsPanel.setLayout(new BoxLayout(roomsPanel, BoxLayout.Y_AXIS));
-        roomsPanel.setOpaque(false);
-        
-        // HEADER SECTION
-        JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
-        headerPanel.setOpaque(false);
-
-        JLabel titleLabel = new JLabel("Habitaciones destacadas");
-        titleLabel.setFont(AppFont.title());
-        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel subtitleLabel = new JLabel("Descubre nuestras mejores habitaciones");
-        subtitleLabel.setFont(AppFont.big());
-        subtitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        headerPanel.add(titleLabel);
-        headerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
-        headerPanel.add(subtitleLabel);
-
-        // contenedor horizontal de habitaciones
-        roomsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
-        roomsContainer.setOpaque(false);
-        roomsContainer.setPreferredSize(new Dimension(sectionWidth, 650));
-
-        // botón ver más
-        JPanel showRooms = new JPanel();
-        showRooms.setOpaque(false);
-
-        btnShowRooms = ButtonFactory.createGoldButton(
-                "Ver más habitaciones",
-                "/assets/img/btn-icons/button-add-icon.png",
-                "Haz click para ver más habitaciones"
-        );
-	    Dimension btn = new Dimension(250,40);
-	    btnShowRooms.setPreferredSize(btn);
-	    btnShowRooms.setMinimumSize(btn);
-	    btnShowRooms.setMaximumSize(btn);
-
-		showRooms.add(btnShowRooms);
-
-        roomsPanel.add(headerPanel);
-        roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        roomsPanel.add(roomsContainer);
-        roomsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        roomsPanel.add(showRooms);
-        roomsPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-
-        return roomsPanel;
-    }
-    
-    public void setRooms(List<RoomType> rooms) {
-
-        roomsContainer.removeAll();
-        roomCards.clear();
-
-        for(RoomType room:rooms){
-
-            RoomCard card=new RoomCard(room);
-
-            roomCards.add(card);
-
-            roomsContainer.add(card);
-        }
-
-        roomsContainer.revalidate();
-        roomsContainer.repaint();
-    }
         
     public JPanel createServicesSection() {
         JPanel section = new JPanel();
@@ -592,19 +529,20 @@ public class HomeView extends JPanel{
         return wrapper;
     }
     
-    //GETTERS Y SETTERS
+ // GETTERS Y SETTERS
     public SearchBar getSearchBar() {
         return searchBar;
     }
-    
+
     public RoundedButton getBtnShowRooms() {
         return btnShowRooms;
     }
-    
-    public JPanel getRoomsContainer(){
+
+    public JPanel getRoomsContainer() {
         return roomsContainer;
     }
-    public List<RoomCard> getRoomCards(){
+
+    public List<RoomCard> getRoomCards() {
         return roomCards;
     }
 }

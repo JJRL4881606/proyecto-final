@@ -8,6 +8,7 @@ import controllers.booking.ReservationController;
 import controllers.rooms.RoomController;
 import controllers.roomtypes.RoomTypeController;
 import controllers.users.UserController;
+import models.User;
 import utils.Session;
 import views.auth.LoginWindow;
 import views.main.MainView;
@@ -30,11 +31,12 @@ public class MainController {
 	private AmenityController amenityController;
 	private ReservationController reservationController;
 	private MainWindow frame;
+	private User user;
 
-	public MainController(MainView view, MainWindow frame) {
+	public MainController(MainView view, MainWindow frame, User user) {
 	    this.view = view;
 	    this.frame = frame;
-	    
+	    this.user = user;
 	    loadWindowPreferences();
 	    initListeners();
 	}
@@ -190,7 +192,7 @@ public class MainController {
     private void handleClose() {
         Session.logout();
 
-		new LoginWindow();
+		new LoginWindow(user);
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) window.dispose();
     }

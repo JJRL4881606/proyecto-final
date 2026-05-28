@@ -18,6 +18,7 @@ import controllers.rooms.RoomCardController;
 import models.RoomType;
 import models.User;
 import utils.AppFont;
+import views.main.MainView;
 
 @SuppressWarnings("serial")
 public class BookingSearchView extends JPanel {
@@ -25,12 +26,11 @@ public class BookingSearchView extends JPanel {
     private JPanel roomsContainer;
     private SearchBar searchBar;
     private User user;
+    private List<RoomCard> roomCards = new ArrayList<>();
+    private MainView mainView;
     
     public BookingSearchView(User user) {
     		this.user = user;
-    private List<RoomCard> roomCards = new ArrayList<>();
-    
-    public BookingSearchView() {
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         initializeComponents();
@@ -83,7 +83,7 @@ public class BookingSearchView extends JPanel {
             for (RoomType room : rooms) {
             		RoomCard card = new RoomCard(room);
                 roomsContainer.add(card);
-                new RoomCardController(card, room, user);
+                new RoomCardController( card, mainView, room, user);
             }
         }
 

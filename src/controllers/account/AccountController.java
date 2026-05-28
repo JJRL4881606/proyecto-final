@@ -13,8 +13,9 @@ import views.auth.LoginWindow;
 public class AccountController {
 
     private AccountView view;
+    private User user;
 
-    public AccountController(AccountView view) {
+    public AccountController(AccountView view, User user) {
         this.view = view;
         loadUser();
         initListeners();
@@ -33,7 +34,7 @@ public class AccountController {
 
         view.getBtnLogout().addActionListener(e -> {
             Session.logout();
-            new LoginWindow();
+            new LoginWindow(user);
             Window window = SwingUtilities.getWindowAncestor(view);
             if (window != null) {
                 window.dispose();
@@ -42,7 +43,7 @@ public class AccountController {
         
         view.getBtnLogin().addActionListener(e -> {
         	
-            new LoginWindow();
+            new LoginWindow(user);
             Window window = SwingUtilities.getWindowAncestor(view);
 
             if(window != null){

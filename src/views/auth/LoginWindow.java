@@ -8,13 +8,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import controllers.auth.LoginController;
+import models.User;
 
 @SuppressWarnings("serial")
 public class LoginWindow extends JFrame {
 	
 	private LoginView loginView;
+	private User user;
 
-    public LoginWindow() {
+    public LoginWindow(User user) {
+    		this.user = user;
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Login | ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
@@ -32,7 +35,7 @@ public class LoginWindow extends JFrame {
                 
 		//Agregar panel
         LoginView loginview = new LoginView();
-        new LoginController(loginview);
+        new LoginController(loginview,user);
         background.add(createViewScroll(loginview), BorderLayout.CENTER);
                 
         this.setVisible(true);

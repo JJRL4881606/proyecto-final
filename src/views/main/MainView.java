@@ -87,12 +87,10 @@ public class MainView extends JPanel{
 	private JPanel container;
 	
 	private User user;
+	private JLabel lblLogo;
 	
 	public MainView(User user) {
 		this.user = user;
-	private JLabel lblLogo;
-	
-	public MainView() {
 	    UIManager.put("Menu.borderPainted", false);
 	    UIManager.put("MenuItem.borderPainted", false);
 	    UIManager.put("Menu.selectionBackground", UIColors.HEADER);
@@ -301,8 +299,7 @@ public class MainView extends JPanel{
                 return super.getPreferredSize();
             }
         };
-
-        homePanel = new HomeView(user);
+        homePanel = new HomeView(this, user);
         new HomeController(homePanel, this);
         
         usersPanel = new UsersView();
@@ -310,7 +307,7 @@ public class MainView extends JPanel{
         roomsPanel = new RoomsView();
         
         bookingSearchPanel = new BookingSearchView(user);
-        new BookingSearchController(bookingSearchPanel);
+        new BookingSearchController(bookingSearchPanel,this);
         amenitiesPanel = new AmenitiesView();
         reservationsPanel = new ReservationsView();
         bookingSearchController = new BookingSearchController(bookingSearchPanel, this);        
@@ -322,7 +319,7 @@ public class MainView extends JPanel{
         new RoomDetailsController(roomDetailsPanel, this);
         
         accountPanel = new AccountView();
-        new AccountController(accountPanel);
+        new AccountController(accountPanel, user);
         
         container.add(homePanel, HOME);
         container.add(usersPanel, ADMIN_USERS);

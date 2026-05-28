@@ -24,9 +24,11 @@ public class RegistrationController {
 
 	private RegistrationView view;
 	private UserRepository repository;
+	private User user;
 	 
-	public RegistrationController(RegistrationView view) {
+	public RegistrationController(RegistrationView view,User user) {
         this.view = view;
+        this.user = user;
         this.repository = new UserRepository();
         initListeners();
         initInputRestrictions();
@@ -149,7 +151,7 @@ public class RegistrationController {
         int option = view.confirmReturn();
 
         if (option == JOptionPane.YES_OPTION) {
-            new LoginWindow();
+            new LoginWindow(user);
 	        Window window = SwingUtilities.getWindowAncestor(view);
 
             if (window != null) {

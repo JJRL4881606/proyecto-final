@@ -23,17 +23,19 @@ public class RoomCardController {
 
     private RoomCard roomCard;
     private MainView mainView;
+    private RoomType room;
+    private User user;
 
-    public RoomCardController(RoomCard roomCard, MainView mainView) {
+    public RoomCardController(RoomCard roomCard, MainView mainView, RoomType room, User user) {
         this.roomCard = roomCard;
         this.mainView = mainView;
-
-        initListeners();
+        this.room = room;
+        this.user = user;
+        initController();
     }
 
-    private void initListeners() {
-
-        // detalles
+    private void initController() {
+    		// detalles
         roomCard.getBtnDetails().addActionListener(e -> {
             mainView.roomDetailsPanel.setRoom(
                 roomCard.getRoom()
@@ -45,7 +47,7 @@ public class RoomCardController {
         });
 
         // reservar
-        roomCard.getBtnReserve().addActionListener(e -> {
+        /*roomCard.getBtnReserve().addActionListener(e -> {
 
             SearchBar bookingSearch =
                 mainView.bookingSearchPanel.getSearchBar();
@@ -61,20 +63,8 @@ public class RoomCardController {
             mainView.showView(
                 MainView.BOOKING_SEARCH
             );
-        });
-    }
-}
-    private RoomType room;
-    private User user;
-
-    public RoomCardController(RoomCard roomCard, RoomType room, User user) {
-        this.roomCard = roomCard;
-        this.room = room;
-        this.user = user;
-        initController();
-    }
-
-    private void initController() {
+        });*/
+    	
         // Acción para reservar
         roomCard.getBtnReserve().addActionListener(new ActionListener() {
             @Override
@@ -88,14 +78,6 @@ public class RoomCardController {
                 // Abrir nueva ventana de pago
                 PaymentWindow paymentWindow = new PaymentWindow(room,user);
                 paymentWindow.setVisible(true);
-            }
-        });
-
-        // Acción para ver detalles
-        roomCard.getBtnDetails().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Falta por hacer @JOSUE");
             }
         });
     }

@@ -2,40 +2,27 @@ package views.payment;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
-import javax.swing.*;
-import components.RoundedPanel;
-import controllers.payment.PaymentController;
-import utils.UIColors;
-import java.awt.*;
 
-@SuppressWarnings("serial")
-import java.awt.FlowLayout;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 import components.RoundedPanel;
-import components.UnderlineMenu;
-import controllers.main.MainController;
 import controllers.payment.PaymentController;
 import models.RoomType;
 import models.User;
-import utils.AppFont;
 import utils.UIColors;
-import views.main.MainView;
 
-import java.awt.*;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-
+@SuppressWarnings("serial")
 public class PaymentWindow extends JFrame {
 
     private PaymentView paymentView;
@@ -44,12 +31,15 @@ public class PaymentWindow extends JFrame {
     private User user;
     
     public PaymentWindow(RoomType room,User user) {
-    		this.room = room;
-    		this.user = user;
-        setTitle("ATLANTIS THE PALM, FORMA DE PAGO");
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setResizable(true);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.room = room;
+		this.user = user;
+	    setTitle("ATLANTIS THE PALM, FORMA DE PAGO");
+	    setExtendedState(JFrame.MAXIMIZED_BOTH);
+	    setResizable(true);
+        
+		// setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	     
         setLocationRelativeTo(null);
 
         // PANEL PRINCIPAL
@@ -94,7 +84,7 @@ public class PaymentWindow extends JFrame {
         paymentView = new PaymentView(room,user);
         paymentView.setBackground(Color.WHITE);
 
-        new PaymentController(this, paymentView);
+        new PaymentController(this, paymentView, user);
 
         centerPanel.add(leftImagePanel, BorderLayout.WEST);
         centerPanel.add(paymentView, BorderLayout.CENTER);

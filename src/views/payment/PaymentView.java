@@ -1,6 +1,35 @@
 package views.payment;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.KeyEvent;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.ImageIcon;
+
 import javax.swing.border.EmptyBorder;
 
 import components.RoundedImageOverlayPanel;
@@ -12,13 +41,6 @@ import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.util.Calendar;
-import java.util.Date;
-import java.awt.*;
-import javax.swing.*;
 
 public class PaymentView extends JPanel {
 
@@ -132,7 +154,6 @@ public class PaymentView extends JPanel {
         txtLastName = FormUtils.createTextField();
         lblLastNameError = FormUtils.createErrorLabel();
         txtLastName.setText(user.getSurname());
-        System.out.println("appellido: "+user.getSurname());
 
         personalPanel.add(
                 FormUtils.createField(
@@ -157,7 +178,6 @@ public class PaymentView extends JPanel {
         txtPhone = FormUtils.createTextField();
         lblPhoneError = FormUtils.createErrorLabel();
         txtPhone.setText(user.getPhone());
-        System.out.println("appellido: "+user.getPhone());
 
         personalPanel.add(
                 FormUtils.createField(
@@ -244,17 +264,19 @@ public class PaymentView extends JPanel {
         
         JPanel cardPanel =
                 new JPanel(new GridLayout(3, 1, 10, 10));
-
-        BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(
-                    new Color(220,220,220),
-                    1,
-                    true // rounded
-                ),
-                BorderFactory.createEmptyBorder(
-                    15,15,15,15
-                )
-            );
+        
+        cardPanel.setBorder(
+        	    BorderFactory.createCompoundBorder(
+        	        BorderFactory.createLineBorder(
+        	            new Color(220,220,220),
+        	            1,
+        	            true
+        	        ),
+        	        BorderFactory.createEmptyBorder(
+        	            15,15,15,15
+        	        )
+        	    )
+        	);
 
         txtCardNumber = FormUtils.createTextField();
         lblCardNumberError =
@@ -435,13 +457,38 @@ public class PaymentView extends JPanel {
                 new JLabel("Capacidad: " + room.getCapacity() + " huespedes");
         
         JLabel lblBedType =
-                new JLabel("Tipo de cama: " + room.getBedType() + " huespedes");
+                new JLabel("Tipo de cama: " + room.getBedType());
 
         lblNights =
                 new JLabel("Estancia: 1 noche");
         
+        StringBuilder featuresText =
+                new StringBuilder("Incluye: ");
+
+        if (room.getAmenities() != null) {
+
+            for (int i = 0;
+                 i < room.getAmenities().size();
+                 i++) {
+
+                featuresText.append(
+                    room.getAmenities()
+                        .get(i)
+                        .getName()
+                );
+
+                if (i <
+                    room.getAmenities().size() - 1) {
+
+                    featuresText.append(", ");
+                }
+            }
+        }
+
         txtaFeatures =
-        		new JTextArea("Incluye: " + room.getFeatures());
+                new JTextArea(
+                    featuresText.toString()
+                );
         txtaFeatures.setLineWrap(true);
         txtaFeatures.setWrapStyleWord(true);
 

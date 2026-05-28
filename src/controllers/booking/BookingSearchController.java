@@ -34,12 +34,6 @@ public class BookingSearchController {
         view.getSearchBar().getBtnSearch().addActionListener(e->handleSearch());
     }
 
-    public void loadRoomControllers(){
-        for(RoomCard card:view.getRoomCards()){
-            new RoomCardController(card,mainView);
-        }
-    }
-
     private void handleSearch(){
 
         int guests = view.getSearchBar().getGuests();
@@ -81,13 +75,11 @@ public class BookingSearchController {
         }
                 
         List<RoomType> rooms = repository.getAvailableRoomTypes(
-            guests,
-            checkIn,
-            checkOut
-        );
-      
-        view.setRooms(rooms);
+        	    guests,
+        	    checkIn,
+        	    checkOut
+        	);
 
-        loadRoomControllers();
+        	view.setRooms(rooms);
     }
 }

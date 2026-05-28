@@ -28,10 +28,12 @@ public class LoginController {
 
     private LoginView view;
 	private LoginRepository repository;
+	private User userAnterior;
 
-    public LoginController(LoginView view) {
+    public LoginController(LoginView view, User user) {
+    		this.userAnterior = user;
 		repository = new LoginRepository();
-        this.view = view;
+		this.view = view;
         initListeners();
 		initInputRestrictions();
     }
@@ -98,6 +100,10 @@ public class LoginController {
     	String password = view.getPassword();
 
     	User user = repository.login(email, password);
+    	if(userAnterior != null && userAnterior.getEmail() == email) 
+    	{
+    		user = userAnterior;
+    	}
     	
         if (user == null) {
             view.setWrongError();
@@ -126,7 +132,7 @@ public class LoginController {
 
     private void handleRegister() {
         RegistrationWindow reg = new RegistrationWindow();
-        new RegistrationController(reg.getRegistrationView());
+        new RegistrationController(reg.getRegistrationView(),userAnterior);
 
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) window.dispose();

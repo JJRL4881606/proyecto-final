@@ -31,13 +31,10 @@ public class HomeController {
     }
     
     private void loadRooms() {
-        List<RoomType> rooms = repository.getFeaturedRoomTypes();
+        List<RoomType> rooms =
+            repository.getFeaturedRoomTypes();
 
         view.setRooms(rooms);
-
-        for(RoomCard card:view.getRoomCards()){
-            new RoomCardController(card, mainView);
-        }
     }
     
     private void handleSearch() {
@@ -54,7 +51,6 @@ public class HomeController {
             bookingSearch.setGuests(homeSearch.getGuests());
 
             mainView.bookingSearchPanel.setRooms(rooms);
-            mainView.bookingSearchController.loadRoomControllers();
             mainView.showView(MainView.BOOKING_SEARCH);
             mainView.getBtnHome().setEnabled(true);
             

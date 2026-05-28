@@ -38,7 +38,7 @@ public class MainWindow extends JFrame {
          
         // Agregar el panel con scroll
         mainView = new MainView(user);
-        new MainController(mainView, this);
+        new MainController(mainView, this, user);
         add(createViewScroll(mainView), BorderLayout.CENTER);
         
         this.setVisible(true);
