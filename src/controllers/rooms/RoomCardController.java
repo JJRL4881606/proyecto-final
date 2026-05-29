@@ -1,18 +1,11 @@
 package controllers.rooms;
 
-import java.util.List;
-
 import components.RoomCard;
-import components.SearchBar;
 import views.main.MainView;
 import javax.swing.*;
 
-import components.RoomCard;
 import models.RoomType;
 import models.User;
-import views.auth.LoginView;
-import views.home.HomeView;
-import views.main.MainWindow;
 import views.payment.PaymentWindow;
 
 import java.awt.Window;
@@ -35,7 +28,7 @@ public class RoomCardController {
     }
 
     private void initController() {
-    		// detalles
+    	// detalles
         roomCard.getBtnDetails().addActionListener(e -> {
             mainView.roomDetailsPanel.setRoom(
                 roomCard.getRoom()

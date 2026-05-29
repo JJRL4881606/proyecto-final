@@ -10,6 +10,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -42,6 +43,7 @@ import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
 
+@SuppressWarnings("serial")
 public class PaymentView extends JPanel {
 
     // Campos datos personales
@@ -77,7 +79,6 @@ public class PaymentView extends JPanel {
 
     // Botón
     private JButton btnPay;
-    
     private JMenuItem btnHome;
 
     // Resumen
@@ -92,8 +93,8 @@ public class PaymentView extends JPanel {
     private User user;
 
     public PaymentView(RoomType room,User user) {
-    		this.room = room;
-    		this.user = user;
+		this.room = room;
+		this.user = user;
         initComponents();
     }
 
@@ -102,49 +103,29 @@ public class PaymentView extends JPanel {
         setLayout(new BorderLayout(20, 20));
         setBackground(Color.WHITE);
 
-        setBorder(
-                BorderFactory.createEmptyBorder(
-                        15, 15, 15, 15)
-        );
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         
         // HEADER
         this.add(headerSection(), BorderLayout.NORTH);
 
         // ================= LEFT PANEL =================
-
         RoundedPanel leftPanel = new RoundedPanel(50);
-        leftPanel.setLayout(
-                new BoxLayout(leftPanel,
-                        BoxLayout.Y_AXIS));
-        
-        leftPanel.setBorder(
-                BorderFactory.createEmptyBorder(
-                    30,30,30,30
-                ));
+        leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.Y_AXIS));
+        leftPanel.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
 
         // ===== DATOS PERSONALES =====
-        JLabel lblPersonal =
-                new JLabel("Datos Personales");
-
+        JLabel lblPersonal =new JLabel("Datos Personales");
         lblPersonal.setFont(AppFont.big());
-        lblPersonal.setBorder(
-                BorderFactory.createEmptyBorder(
-                        0,5,10,0));
+        lblPersonal.setBorder(BorderFactory.createEmptyBorder(0,5,10,0));
         
-        JPanel personalPanel =
-                new JPanel(new GridLayout(3, 1, 10, 10));
-
-        personalPanel.setBorder(
-        	        BorderFactory.createEmptyBorder(
-        	            15,15,15,15
-        	        )
-        	    );
+        JPanel personalPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        personalPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+        
         txtFirstName = FormUtils.createTextField();
         lblFirstNameError = FormUtils.createErrorLabel();
         txtFirstName.setText(user.getName());
         
-        personalPanel.add(
-                FormUtils.createField(
+        personalPanel.add(FormUtils.createField(
                         "Nombres",
                         txtFirstName,
                         lblFirstNameError,
@@ -155,8 +136,7 @@ public class PaymentView extends JPanel {
         lblLastNameError = FormUtils.createErrorLabel();
         txtLastName.setText(user.getSurname());
 
-        personalPanel.add(
-                FormUtils.createField(
+        personalPanel.add(FormUtils.createField(
                         "Apellidos",
                         txtLastName,
                         lblLastNameError,
@@ -167,8 +147,7 @@ public class PaymentView extends JPanel {
         lblEmailError = FormUtils.createErrorLabel();
         txtEmail.setText(user.getEmail());
 
-        personalPanel.add(
-                FormUtils.createField(
+        personalPanel.add(FormUtils.createField(
                         "Correo",
                         txtEmail,
                         lblEmailError,
@@ -179,8 +158,7 @@ public class PaymentView extends JPanel {
         lblPhoneError = FormUtils.createErrorLabel();
         txtPhone.setText(user.getPhone());
 
-        personalPanel.add(
-                FormUtils.createField(
+        personalPanel.add(FormUtils.createField(
                         "Teléfono",
                         txtPhone,
                         lblPhoneError,
@@ -201,21 +179,18 @@ public class PaymentView extends JPanel {
         // FECHA ENTRADA
         spCheckIn = FormUtils.createDateField();
 
-        JSpinner.DateEditor editorIn =
-                (JSpinner.DateEditor) spCheckIn.getEditor();
+        JSpinner.DateEditor editorIn = (JSpinner.DateEditor) spCheckIn.getEditor();
 
         editorIn.getTextField().setEditable(false);
 
-        SpinnerDateModel checkInModel =
-                (SpinnerDateModel) spCheckIn.getModel();
+        SpinnerDateModel checkInModel = (SpinnerDateModel) spCheckIn.getModel();
 
         checkInModel.setStart(today);
         spCheckIn.setValue(today);
 
         lblCheckInError = FormUtils.createErrorLabel();
 
-        personalPanel.add(
-                FormUtils.createField(
+        personalPanel.add(FormUtils.createField(
                         "Fecha de entrada",
                         spCheckIn,
                         lblCheckInError,
@@ -227,25 +202,20 @@ public class PaymentView extends JPanel {
 
         // FECHA SALIDA
         calendar.add(Calendar.DAY_OF_MONTH, 1);
+        
         Date tomorrow = calendar.getTime();
-
         spCheckOut = FormUtils.createDateField();
 
-        JSpinner.DateEditor editorOut =
-                (JSpinner.DateEditor) spCheckOut.getEditor();
-
+        JSpinner.DateEditor editorOut = (JSpinner.DateEditor) spCheckOut.getEditor();
         editorOut.getTextField().setEditable(false);
 
-        SpinnerDateModel checkOutModel =
-                (SpinnerDateModel) spCheckOut.getModel();
-
+        SpinnerDateModel checkOutModel = (SpinnerDateModel) spCheckOut.getModel();
         checkOutModel.setStart(tomorrow);
         spCheckOut.setValue(tomorrow);
 
         lblCheckOutError = FormUtils.createErrorLabel();
 
-        personalPanel.add(
-                FormUtils.createField(
+        personalPanel.add(FormUtils.createField(
                         "Fecha de salida",
                         spCheckOut,
                         lblCheckOutError,
@@ -258,12 +228,9 @@ public class PaymentView extends JPanel {
                 new JLabel("Datos de la tarjeta");
 
         lblTarjeta.setFont(AppFont.big());
-        lblTarjeta.setBorder(
-                BorderFactory.createEmptyBorder(
-                        0,5,10,0));
+        lblTarjeta.setBorder(BorderFactory.createEmptyBorder(0,5,10,0));
         
-        JPanel cardPanel =
-                new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel cardPanel = new JPanel(new GridLayout(3, 1, 10, 10));
         
         cardPanel.setBorder(
         	    BorderFactory.createCompoundBorder(
@@ -384,21 +351,13 @@ public class PaymentView extends JPanel {
                         new Color(0,0,0,0)
                 );
 
-        // MUY IMPORTANTE
-        bg.setPreferredSize(
-                new Dimension(270, 230)
-        );
-
-        bg.setMaximumSize(
-                new Dimension(Integer.MAX_VALUE, 230)
-        );
-
+        bg.setPreferredSize(new Dimension(270, 230));
+        bg.setMaximumSize(new Dimension(Integer.MAX_VALUE, 230));
         bg.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // ================= HOTEL =================
 
-        JLabel lblHotel =
-                new JLabel("ATLANTIS THE PALM");
+        JLabel lblHotel = new JLabel("ATLANTIS THE PALM");
 
         lblHotel.setFont(new Font(
                 "SansSerif",
@@ -445,12 +404,12 @@ public class PaymentView extends JPanel {
         lblCheckIn =
                 new JLabel(
                 		
-                        "Entrada: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format(spCheckIn.getValue())
+                        "Entrada: " + new SimpleDateFormat("dd/MM/yyyy").format(spCheckIn.getValue())
                 );
 
         lblCheckOut =
                 new JLabel(
-                        "Salida: " + new java.text.SimpleDateFormat("dd/MM/yyyy").format(spCheckOut.getValue())
+                        "Salida: " + new SimpleDateFormat("dd/MM/yyyy").format(spCheckOut.getValue())
                 );
 
         JLabel lblCapacity =

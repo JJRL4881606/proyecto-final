@@ -127,7 +127,7 @@ public class RoomTypeFormDialog extends JDialog {
         panel.add(FormUtils.createField("Nombre", txtName, lblNameError, "Ingrese el nombre", fieldWidth));
 
         //TIPO CAMA
-        String[] options = {"Seleccione un tipo", "King Bed", "Queen Bed", "Single Bed" };
+        String[] options = {"Seleccione un tipo", "Individual", "Matrimonial", "Queen Size", "King Size"};
         comboBedType = FormUtils.createCombo(options);
         lblBedTypeError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Tipo de cama", comboBedType, lblBedTypeError, "Ingrese el tipo de cama", fieldWidth));
@@ -189,10 +189,7 @@ public class RoomTypeFormDialog extends JDialog {
         JLabel lblExtraImagesTitle = new JLabel("Imagenes extra");
         lblExtraImagesTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-        btnExtraImages = new RoundedButton(
-		    "Seleccionar imágenes extras",
-		    null
-		);
+        btnExtraImages = new RoundedButton("Seleccionar imágenes extras", null);
         btnExtraImages.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         txtExtraImages = FormUtils.createImagePathField();

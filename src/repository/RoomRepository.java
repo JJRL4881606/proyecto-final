@@ -58,7 +58,6 @@ public class RoomRepository {
                         rs.getString("status")
                     )
                 );
-
             }
 
         }catch(Exception e){

@@ -151,7 +151,7 @@ public class RoomTypeFormController {
         	    selected.getParent()
         	);
 	        
-	        String fileName = selected.getName() + "_" + System.currentTimeMillis();
+	        String fileName = selected.getName();
 
 	        File srcFolder =new File("src/assets/img/rooms");
 	        File binFolder =new File("bin/assets/img/rooms");
@@ -222,15 +222,7 @@ public class RoomTypeFormController {
 
 	        for(File selected : files){
 
-	            String original = selected.getName();
-	            String ext = "";
-
-	            int dot = original.lastIndexOf(".");
-	            if(dot > 0) {
-	            	ext = original.substring(dot);
-	            }
-
-	            String fileName = System.currentTimeMillis() + "_room" + ext;
+	            String fileName = selected.getName();
 
 	            File srcDest = new File(srcFolder, fileName);
 	            File binDest = new File(binFolder, fileName);
@@ -239,11 +231,11 @@ public class RoomTypeFormController {
 	            Files.copy(selected.toPath(), binDest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
 	            String dbPath = "/assets/img/rooms/" + fileName;
-	            validateExtraImages();
 
 	            if(paths.length() > 0) {
-	            	paths.append("|");
+	                paths.append("|");
 	            }
+
 	            paths.append(dbPath);
 	        }
 	        
@@ -254,6 +246,7 @@ public class RoomTypeFormController {
 	        ex.printStackTrace();
 	    }
 	}
+	
 	private boolean validateForm(){
 		view.clearErrors();
 		boolean valid = true;

@@ -6,19 +6,13 @@ import java.time.LocalDateTime;
 public class Reservation {
 
     private int reservationId;
-
     private int userId;
     private int roomId;
-
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
-
     private int guests;
-
     private String status;
-
     private double total;
-
     private LocalDateTime createdAt;
 
     public Reservation() {}

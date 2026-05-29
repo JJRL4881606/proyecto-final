@@ -147,16 +147,13 @@ public class ReservationRepository {
     
     public boolean hasReservationsByUser(int userId){
 
-        String sql=
+        String sql =
             "SELECT 1 FROM reservations " +
             "WHERE userId=? LIMIT 1";
 
         try(
-            Connection conn=
-                DatabaseConnection.getConnection();
-
-            PreparedStatement ps=
-                conn.prepareStatement(sql)
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
         ){
 
             ps.setInt(1,userId);

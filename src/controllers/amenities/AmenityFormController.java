@@ -106,7 +106,7 @@ public class AmenityFormController {
         	    selected.getParent()
         	);
 	        
-	        String fileName = selected.getName() + "_" + System.currentTimeMillis();
+	        String fileName = selected.getName();
 
             File srcFolder = new File("src/assets/img/icons");
             File binFolder = new File("bin/assets/img/icons");
