@@ -4,13 +4,20 @@ import java.awt.Point;
 import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import java.sql.Statement;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import config.DatabaseConnection;
 import models.User;
 import views.auth.LoginWindow;
 import views.main.MainView;
@@ -22,7 +29,7 @@ public class PaymentController {
 
     private PaymentWindow paymentWindow;
     private PaymentView paymentView;
-    private long estancia;
+    private long estancia ;
     private User user;
 
     public PaymentController(PaymentWindow paymentWindow, PaymentView paymentView, User user) {
@@ -30,6 +37,10 @@ public class PaymentController {
 	    this.paymentView = paymentView;
 	    this.user = user;
 
+	    estancia = ( ((Date) paymentView.getSpCheckOut().getValue()).getTime() 
+	            - ((Date) paymentView.getSpCheckIn().getValue()).getTime() )
+	            / (1000 * 60 * 60 * 24);
+	    
         initListeners();
         setupDateValidation();
     }
@@ -83,8 +94,6 @@ public class PaymentController {
 	}
 
 	private void handleClose() {
-        //Session.logout();
-
 		new LoginWindow(user);
         Window window = SwingUtilities.getWindowAncestor(paymentView);
         if (window != null) window.dispose();
@@ -102,10 +111,7 @@ public class PaymentController {
         String lastName = paymentView.getTxtLastName().getText().trim();
         String email = paymentView.getTxtEmail().getText().trim();
         String phone = paymentView.getTxtPhone().getText().trim();
-
-        String cardNumber = paymentView.getTxtCardNumber().getText().trim();
-        String expiration = paymentView.getTxtExpirationDate().getText().trim();
-        String cvv = paymentView.getTxtCVV().getText().trim();
+        int cmbPaymentMethodSelected = paymentView.getCmbPaymentMethod().getSelectedIndex();
 
         boolean termsAccepted =
                 paymentView.getChkTerms().isSelected();
@@ -118,9 +124,7 @@ public class PaymentController {
                 lastName.isEmpty() ||
                 email.isEmpty() ||
                 phone.isEmpty() ||
-                cardNumber.isEmpty() ||
-                expiration.isEmpty() ||
-                cvv.isEmpty()) {
+                cmbPaymentMethodSelected == 0) {
 
             JOptionPane.showMessageDialog(
                     paymentWindow,
@@ -141,16 +145,280 @@ public class PaymentController {
             );
             return;
         }
-
-        JOptionPane.showMessageDialog(
-                paymentWindow,
-                "Pago realizado correctamente",
-                "Éxito",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+        
+        finishPayment();
     }
     
-    private void setupDateValidation() {
+    public void finishPayment() {
+
+        Connection conn = null;
+
+        try {
+
+            conn = DatabaseConnection.getConnection();
+
+            conn.setAutoCommit(false);
+
+            // ========= VALIDAR MÉTODO DE PAGO =========
+            if (paymentView.getCmbPaymentMethod().getSelectedIndex() == 0) {
+
+                JOptionPane.showMessageDialog(
+                        paymentView,
+                        "Seleccione un método de pago"
+                );
+
+                return;
+            }
+
+            // ========= OBTENER DATOS =========
+            int userId =
+                    user.getId();
+
+            int selectedTypeId =
+                    paymentView
+                            .getRoom()
+                            .getTypeId();
+
+            double total =
+                    estancia *
+                    paymentView
+                            .getRoom()
+                            .getPrice();
+            
+            // ========= BUSCAR HABITACIÓN DISPONIBLE =========
+            int roomId = -1;
+
+            String roomSql =
+                    "SELECT roomId "
+                  + "FROM rooms "
+                  + "WHERE typeId = ? "
+                  + "AND status = 'Disponible' "
+                  + "LIMIT 1";
+
+            PreparedStatement roomStmt =
+                    conn.prepareStatement(
+                            roomSql
+                    );
+
+            roomStmt.setInt(
+                    1,
+                    selectedTypeId
+            );
+
+            ResultSet roomRs =
+                    roomStmt.executeQuery();
+
+            if (roomRs.next()) {
+
+                roomId =
+                        roomRs.getInt(
+                                "roomId"
+                        );
+
+            } else {
+
+                JOptionPane.showMessageDialog(
+                        paymentView,
+                        "No hay habitaciones disponibles"
+                );
+
+                conn.rollback();
+                return;
+            }
+
+            // ========= GUARDAR RESERVACIÓN =========
+            String reservationSql =
+                    "INSERT INTO reservations "
+                  + "(userId, roomId, "
+                  + "checkInDate, "
+                  + "checkOutDate, "
+                  + "guests, total, status) "
+                  + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement reservationStmt =
+                    conn.prepareStatement(
+                            reservationSql,
+                            Statement.RETURN_GENERATED_KEYS
+                    );
+
+            reservationStmt.setInt(
+                    1,
+                    userId
+            );
+
+            reservationStmt.setInt(
+                    2,
+                    roomId
+            );
+
+            reservationStmt.setDate(
+                    3,
+                    new java.sql.Date(
+                            ((Date)
+                                    paymentView
+                                            .getSpCheckIn()
+                                            .getValue())
+                                    .getTime()
+                    )
+            );
+
+            reservationStmt.setDate(
+                    4,
+                    new java.sql.Date(
+                            ((Date)
+                                    paymentView
+                                            .getSpCheckOut()
+                                            .getValue())
+                                    .getTime()
+                    )
+            );
+
+            reservationStmt.setInt(
+                    5,
+                    paymentView.getGuests()
+            );
+
+            reservationStmt.setDouble(
+                    6,
+                    total
+            );
+
+            reservationStmt.setString(
+                    7,
+                    "Confirmada"
+            );
+
+            reservationStmt.executeUpdate();
+
+            // ========= OBTENER reservationId =========
+            ResultSet generatedKeys =
+                    reservationStmt
+                            .getGeneratedKeys();
+
+            int reservationId = -1;
+
+            if (generatedKeys.next()) {
+
+                reservationId =
+                        generatedKeys.getInt(
+                                1
+                        );
+            }
+
+            if (reservationId == -1) {
+
+                throw new SQLException(
+                        "No se pudo generar reservationId"
+                );
+            }
+
+            // ========= GUARDAR PAYMENT =========
+            String paymentSql =
+                    "INSERT INTO payments "
+                  + "(reservationId, amount, method, paymentDate) "
+                  + "VALUES (?, ?, ?, ?)";
+
+            PreparedStatement paymentStmt =
+                    conn.prepareStatement(
+                            paymentSql
+                    );
+
+            paymentStmt.setInt(
+                    1,
+                    reservationId
+            );
+
+            paymentStmt.setDouble(
+                    2,
+                    total
+            );
+
+            paymentStmt.setString(
+                    3,
+                    String.valueOf(
+                            paymentView
+                                    .getCmbPaymentMethod()
+                                    .getSelectedItem()
+                    )
+            );
+
+            paymentStmt.setDate(
+                    4,
+                    java.sql.Date.valueOf(
+                            LocalDate.now()
+                    )
+            );
+
+            paymentStmt.executeUpdate();
+
+            // ========= ACTUALIZAR HABITACIÓN =========
+            String updateRoomSql =
+                    "UPDATE rooms "
+                  + "SET status = ? "
+                  + "WHERE roomId = ?";
+
+            PreparedStatement updateRoomStmt =
+                    conn.prepareStatement(
+                            updateRoomSql
+                    );
+
+            updateRoomStmt.setString(
+                    1,
+                    "Ocupado"
+            );
+
+            updateRoomStmt.setInt(
+                    2,
+                    roomId
+            );
+
+            updateRoomStmt.executeUpdate();
+
+            // ========= CONFIRMAR TRANSACCIÓN =========
+            conn.commit();
+
+            JOptionPane.showMessageDialog(
+                    paymentView,
+                    "Pago realizado correctamente"
+            );
+            handleClose();
+
+        } catch (Exception ex) {
+
+            try {
+
+                if (conn != null) {
+                    conn.rollback();
+                }
+
+            } catch (SQLException e) {
+
+                e.printStackTrace();
+            }
+
+            ex.printStackTrace();
+
+            JOptionPane.showMessageDialog(
+                    paymentView,
+                    "Error al finalizar pago"
+            );
+
+        } finally {
+
+            try {
+
+                if (conn != null) {
+                    conn.close();
+                }
+
+            } catch (SQLException e) {
+
+                e.printStackTrace();
+            }
+        }
+    }
+
+	private void setupDateValidation() {
 
         JSpinner spCheckIn = paymentView.getSpCheckIn();
         JSpinner spCheckOut = paymentView.getSpCheckOut();

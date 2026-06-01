@@ -19,6 +19,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -29,6 +31,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.ImageIcon;
 
 import javax.swing.border.EmptyBorder;
@@ -36,6 +39,7 @@ import javax.swing.border.EmptyBorder;
 import components.RoundedImageOverlayPanel;
 import components.RoundedPanel;
 import components.UnderlineMenu;
+import models.Room;
 import models.RoomType;
 import models.User;
 import utils.AppFont;
@@ -51,6 +55,8 @@ public class PaymentView extends JPanel {
     private JTextField txtLastName;
     private JTextField txtEmail;
     private JTextField txtPhone;
+    private JSpinner spGuests;
+    private JLabel lblGuestsError;
 
     // Error labels
     private JLabel lblFirstNameError;
@@ -60,15 +66,10 @@ public class PaymentView extends JPanel {
     private JLabel lblCheckInError;
     private JLabel lblCheckOutError;
     private JLabel lblNights;
-    private JLabel lblCardNumberError;
-    private JLabel lblExpirationDateError;
-    private JLabel lblCVVError;
     private JTextArea txtaFeatures;
 
-    // Campos tarjeta
-    private JTextField txtCardNumber;
-    private JTextField txtExpirationDate;
-    private JTextField txtCVV;
+    // Campos de pago
+    private JComboBox<String> cmbPaymentMethod;
 
     // Checkboxes
     private JCheckBox chkTerms;
@@ -118,34 +119,37 @@ public class PaymentView extends JPanel {
         lblPersonal.setFont(AppFont.big());
         lblPersonal.setBorder(BorderFactory.createEmptyBorder(0,5,10,0));
         
-        JPanel personalPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel personalPanel = new JPanel(new GridLayout(4, 1, 10, 10));
         personalPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
         
         txtFirstName = FormUtils.createTextField();
         lblFirstNameError = FormUtils.createErrorLabel();
         txtFirstName.setText(user.getName());
+        txtFirstName.setEditable(false);
         
         personalPanel.add(FormUtils.createField(
                         "Nombres",
                         txtFirstName,
                         lblFirstNameError,
-                        "Ingrese sus nombres",
+                        "nombres",
                         fieldWidth));
 
         txtLastName = FormUtils.createTextField();
         lblLastNameError = FormUtils.createErrorLabel();
         txtLastName.setText(user.getSurname());
+        txtLastName.setEditable(false);
 
         personalPanel.add(FormUtils.createField(
                         "Apellidos",
                         txtLastName,
                         lblLastNameError,
-                        "Ingrese sus apellidos",
+                        "apellidos",
                         fieldWidth));
 
         txtEmail = FormUtils.createTextField();
         lblEmailError = FormUtils.createErrorLabel();
         txtEmail.setText(user.getEmail());
+        txtEmail.setEditable(false);
 
         personalPanel.add(FormUtils.createField(
                         "Correo",
@@ -157,6 +161,7 @@ public class PaymentView extends JPanel {
         txtPhone = FormUtils.createTextField();
         lblPhoneError = FormUtils.createErrorLabel();
         txtPhone.setText(user.getPhone());
+        txtPhone.setEditable(false);
 
         personalPanel.add(FormUtils.createField(
                         "Teléfono",
@@ -223,66 +228,131 @@ public class PaymentView extends JPanel {
                         fieldWidth
                 )
         );
-        // ===== DATOS TARJETA =====
-        JLabel lblTarjeta =
-                new JLabel("Datos de la tarjeta");
-
-        lblTarjeta.setFont(AppFont.big());
-        lblTarjeta.setBorder(BorderFactory.createEmptyBorder(0,5,10,0));
         
-        JPanel cardPanel = new JPanel(new GridLayout(3, 1, 10, 10));
+        // ===== HUÉSPEDES =====
+        int maxGuests =
+        		room.getCapacity();
+
+        SpinnerNumberModel guestsModel =
+                new SpinnerNumberModel(
+                        1,          // valor inicial
+                        1,          // mínimo
+                        maxGuests,  // máximo según habitación
+                        1           // incremento
+                );
+
+        spGuests = new JSpinner(
+                guestsModel
+        );
+
+        // Tamaño
+        spGuests.setPreferredSize(
+                new Dimension(
+                        fieldWidth,
+                        40
+                )
+        );
+
+        // Editor del spinner
+        JSpinner.NumberEditor guestEditor =
+                new JSpinner.NumberEditor(
+                        spGuests,
+                        "#"
+                );
+
+        spGuests.setEditor(
+                guestEditor
+        );
+
+        // Campo interno del spinner
+        JFormattedTextField guestField =
+                guestEditor.getTextField();
+
+        guestField.setEditable(false);
+        guestField.setHorizontalAlignment(
+                JTextField.CENTER
+        );
+
+        lblGuestsError =
+                FormUtils.createErrorLabel();
+
+        personalPanel.add(
+                FormUtils.createField(
+                        "Cantidad de huéspedes",
+                        spGuests,
+                        lblGuestsError,
+                        "",
+                        fieldWidth
+                )
+        );
+     // ===== MÉTODO DE PAGO =====
+        JLabel lblMetodoPago =
+                new JLabel("Método de pago");
+
+        lblMetodoPago.setFont(AppFont.big());
+
+        lblMetodoPago.setBorder(
+                BorderFactory.createEmptyBorder(
+                        0, 5, 10, 0
+                )
+        );
+
+        JPanel paymentPanel =
+                new JPanel(
+                        new BorderLayout(
+                                10,10
+                        )
+                );
+
+        paymentPanel.setBorder(
+                BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(
+                                new Color(220,220,220),
+                                1,
+                                true
+                        ),
+                        BorderFactory.createEmptyBorder(
+                                15,15,15,15
+                        )
+                )
+        );
+
+        String[] paymentMethods = {
+                "Selecciona método",
+                "Efectivo",
+                "Tarjeta",
+                "Transferencia"
+        };
+
+        cmbPaymentMethod =
+                new JComboBox<>(
+                        paymentMethods
+                );
         
-        cardPanel.setBorder(
-        	    BorderFactory.createCompoundBorder(
-        	        BorderFactory.createLineBorder(
-        	            new Color(220,220,220),
-        	            1,
-        	            true
-        	        ),
-        	        BorderFactory.createEmptyBorder(
-        	            15,15,15,15
-        	        )
-        	    )
-        	);
+        cmbPaymentMethod.setPreferredSize(
+                new Dimension(300, 45)
+        );
 
-        txtCardNumber = FormUtils.createTextField();
-        lblCardNumberError =
-                FormUtils.createErrorLabel();
+        cmbPaymentMethod.setMaximumSize(
+                new Dimension(
+                        Integer.MAX_VALUE,
+                        45
+                )
+        );
 
-        cardPanel.add(
-                FormUtils.createField(
-                        "Número de tarjeta",
-                        txtCardNumber,
-                        lblCardNumberError,
-                        "Ingrese su número de tarjeta",
-                        fieldWidth));
+        cmbPaymentMethod.setMinimumSize(
+                new Dimension(100, 45)
+        );
 
-        txtExpirationDate =
-                FormUtils.createTextField();
+        paymentPanel.add(
+                new JLabel("Método:"),
+                BorderLayout.NORTH
+        );
 
-        lblExpirationDateError =
-                FormUtils.createErrorLabel();
-
-        cardPanel.add(
-                FormUtils.createField(
-                        "Fecha de vencimiento",
-                        txtExpirationDate,
-                        lblExpirationDateError,
-                        "MM/YY",
-                        fieldWidth));
-
-        txtCVV = FormUtils.createTextField();
-        lblCVVError =
-                FormUtils.createErrorLabel();
-
-        cardPanel.add(
-                FormUtils.createField(
-                        "CVV",
-                        txtCVV,
-                        lblCVVError,
-                        "Ingrese el CVV",
-                        fieldWidth));
-
+        paymentPanel.add(
+                cmbPaymentMethod,
+                BorderLayout.CENTER
+        );
         // CHECKBOXES
 
         chkTerms = new JCheckBox("Acepto términos y condiciones");
@@ -299,7 +369,6 @@ public class PaymentView extends JPanel {
 
         // ALIGNMENTS
         personalPanel.setAlignmentX(LEFT_ALIGNMENT);
-        cardPanel.setAlignmentX(LEFT_ALIGNMENT);
         chkTerms.setAlignmentX(LEFT_ALIGNMENT);
         chkPolicies.setAlignmentX(LEFT_ALIGNMENT);
         btnPay.setAlignmentX(LEFT_ALIGNMENT);
@@ -307,7 +376,8 @@ public class PaymentView extends JPanel {
         // AGREGAR A LEFT PANEL
         leftPanel.add(personalPanel);
         leftPanel.add(Box.createVerticalStrut(20));
-        leftPanel.add(cardPanel);
+        leftPanel.add(lblMetodoPago);
+        leftPanel.add(paymentPanel);
         leftPanel.add(Box.createVerticalStrut(20));
         leftPanel.add(chkTerms);
         leftPanel.add(Box.createVerticalStrut(8));
@@ -346,7 +416,7 @@ public class PaymentView extends JPanel {
 
         RoundedImageOverlayPanel bg =
                 new RoundedImageOverlayPanel(
-                        room.getImagePath(),
+                		room.getImagePath(),
                         30,
                         new Color(0,0,0,0)
                 );
@@ -431,13 +501,13 @@ public class PaymentView extends JPanel {
                  i++) {
 
                 featuresText.append(
-                    room.getAmenities()
+                		room.getAmenities()
                         .get(i)
                         .getName()
                 );
 
                 if (i <
-                    room.getAmenities().size() - 1) {
+                		room.getAmenities().size() - 1) {
 
                     featuresText.append(", ");
                 }
@@ -634,6 +704,13 @@ public class PaymentView extends JPanel {
     public JMenuItem getBtnHome() {
         return btnHome;
     }
+    
+    public int getGuests(){
+
+        return (Integer)
+                spGuests
+                        .getValue();
+    }
 
     public JTextField getTxtFirstName() {
         return txtFirstName;
@@ -651,16 +728,8 @@ public class PaymentView extends JPanel {
         return txtPhone;
     }
 
-    public JTextField getTxtCardNumber() {
-        return txtCardNumber;
-    }
-
-    public JTextField getTxtExpirationDate() {
-        return txtExpirationDate;
-    }
-
-    public JTextField getTxtCVV() {
-        return txtCVV;
+    public JComboBox<String> getCmbPaymentMethod() {
+        return cmbPaymentMethod;
     }
 
     public JCheckBox getChkTerms() {
@@ -700,6 +769,6 @@ public class PaymentView extends JPanel {
     }
     
     public RoomType getRoom() {
-        return room;
+    		return room;
     }
 }

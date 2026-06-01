@@ -111,7 +111,6 @@ public class LoginController {
         }
 
         Session.login(user);
-
         if (Session.getRole().equals("Admin")) {
         	
             new MainWindow(user);
