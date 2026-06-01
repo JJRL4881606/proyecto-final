@@ -17,7 +17,6 @@ public class AmenityRepository {
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
         ){
-
             ps.setString(1, amenity.getName());
             ps.setString(2, amenity.getIcon());
 
@@ -56,7 +55,7 @@ public class AmenityRepository {
 
     public boolean delete(int id) {
 
-        String sql = "DELETE FROM amenities WHERE amenityId=?";
+        String sql = "DELETE FROM amenities WHERE amenityId = ?";
 
         try(
             Connection conn = DatabaseConnection.getConnection();
@@ -110,13 +109,12 @@ public class AmenityRepository {
 
     public boolean update(Amenity amenity) {
 
-        String sql = "UPDATE amenities SET name=?,icon=? WHERE amenityId=?";
+        String sql = "UPDATE amenities SET name = ?, icon = ? WHERE amenityId = ?";
 
         try(
             Connection conn = DatabaseConnection.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql)
         ){
-
             ps.setString(1, amenity.getName());
             ps.setString(2, amenity.getIcon());
             ps.setInt(3, amenity.getAmenityId());
@@ -132,22 +130,15 @@ public class AmenityRepository {
     
     public boolean isUsed(int amenityId){
 
-        String sql=
-            "SELECT 1 FROM roomtype_amenities " +
-            "WHERE amenityId=? LIMIT 1";
+        String sql = "SELECT 1 FROM roomtype_amenities WHERE amenityId = ? LIMIT 1";
 
         try(
-            Connection conn=
-                DatabaseConnection.getConnection();
-
-            PreparedStatement ps=
-                conn.prepareStatement(sql)
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
         ){
-
             ps.setInt(1,amenityId);
-
-            ResultSet rs=
-                ps.executeQuery();
+            
+            ResultSet rs = ps.executeQuery();
 
             return rs.next();
 

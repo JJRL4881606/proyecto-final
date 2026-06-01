@@ -17,17 +17,8 @@ public class Reservation {
 
     public Reservation() {}
 
-    public Reservation(
-        int reservationId,
-        int userId,
-        int roomId,
-        LocalDate checkInDate,
-        LocalDate checkOutDate,
-        int guests,
-        String status,
-        double total,
-        LocalDateTime createdAt
-    ) {
+    public Reservation(int reservationId, int userId, int roomId, LocalDate checkInDate,
+        LocalDate checkOutDate, int guests, String status, double total, LocalDateTime createdAt) {
 
         this.reservationId = reservationId;
         this.userId = userId;
@@ -40,6 +31,7 @@ public class Reservation {
         this.createdAt = createdAt;
     }
 
+    //getters y setters
     public int getReservationId() {
         return reservationId;
     }

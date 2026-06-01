@@ -21,6 +21,7 @@ import components.RoundedButton;
 import components.RoundedImagePanel;
 import components.RoundedPanel;
 import models.Amenity;
+import models.RoomImage;
 import models.RoomType;
 import utils.AppFont;
 import utils.ButtonFactory;
@@ -402,19 +403,23 @@ public class RoomDetailsView extends JPanel {
         carouselPanel.removeAll();
         carouselPanel.setSize(carouselPanel.getPreferredSize());
 
-        if (room.getExtraImages() != null && !room.getExtraImages().isEmpty()) {
-        	for (String img : room.getExtraImages()) {
+        if(room.getExtraImages() != null && !room.getExtraImages().isEmpty()){
 
-        	    if (img == null || img.trim().isEmpty()) {
-        	    	continue;
-        	    }
+        	for(RoomImage img : room.getExtraImages()){
+        		
+                if(img == null || img.getImagePath() == null ||
+                    img.getImagePath().trim().isEmpty()){
+                    continue;
+                }
 
-        	    RoundedImagePanel panel = createCarouselImage(img);
+                RoundedImagePanel panel = createCarouselImage(
+                    img.getImagePath()
+                );
 
-        	    if (panel != null) {
-        	        carouselPanel.add(panel);
-        	    }
-        	}
+                if(panel != null){
+                    carouselPanel.add(panel);
+                }
+            }
         }
 
         int count = room.getExtraImages() != null ? room.getExtraImages().size() : 0;

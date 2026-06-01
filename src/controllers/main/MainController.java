@@ -8,7 +8,6 @@ import controllers.booking.ReservationController;
 import controllers.rooms.RoomController;
 import controllers.roomtypes.RoomTypeController;
 import controllers.users.UserController;
-import models.User;
 import utils.Session;
 import views.auth.LoginWindow;
 import views.main.MainView;
@@ -31,12 +30,11 @@ public class MainController {
 	private AmenityController amenityController;
 	private ReservationController reservationController;
 	private MainWindow frame;
-	private User user;
+	//private User user;
 
-	public MainController(MainView view, MainWindow frame, User user) {
+	public MainController(MainView view, MainWindow frame) {
 	    this.view = view;
 	    this.frame = frame;
-	    this.user = user;
 	    loadWindowPreferences();
 	    initListeners();
 	}
@@ -62,6 +60,7 @@ public class MainController {
 		view.getBtnAmenities().addActionListener(e -> { handleTableAmenities(); });
 		view.getBtnReservations().addActionListener(e -> { handleTableReservations(); });
 		view.getBtnAccount().addActionListener(e -> { handleAccount(); });
+		view.getBtnMyReservations().addActionListener(e -> handleMyReservations());
 		
 		view.getBtnHome().addActionListener(e -> {
 			view.showView(MainView.HOME);
@@ -95,10 +94,20 @@ public class MainController {
 	}
 	
 	private void handleAccount() {
-
 	    view.showView(MainView.ACCOUNT);
 
 	    updateMenuState(MainView.ACCOUNT);
+
+	    frame.revalidate();
+	    frame.repaint();
+
+	    resetScroll();
+	}
+	
+	private void handleMyReservations() {
+	    view.showView(MainView.MY_RESERVATIONS);
+
+	    updateMenuState(MainView.MY_RESERVATIONS);
 
 	    frame.revalidate();
 	    frame.repaint();
@@ -192,7 +201,7 @@ public class MainController {
     private void handleClose() {
         Session.logout();
 
-		new LoginWindow(user);
+        new LoginWindow(null);
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) window.dispose();
     }
@@ -206,6 +215,7 @@ public class MainController {
 		view.getBtnReservations().setEnabled(!viewName.equals(MainView.ADMIN_RESERVATIONS));
 		view.getBtnShowRooms().setEnabled(!viewName.equals(MainView.SHOW_ROOMS));
 		view.getBtnAccount().setEnabled(!viewName.equals(MainView.ACCOUNT));
+		view.getBtnMyReservations().setEnabled(!viewName.equals(MainView.MY_RESERVATIONS));
 	}
 	
 	private void saveWindowPreferences() {

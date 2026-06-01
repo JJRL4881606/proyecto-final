@@ -14,11 +14,9 @@ import models.User;
 public class LoginWindow extends JFrame {
 	
 	private LoginView loginView;
-	private User user;
-
-    public LoginWindow(User user) {
-    		this.user = user;
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	
+	public LoginWindow(User user) {
+    		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Login | ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,7 +33,7 @@ public class LoginWindow extends JFrame {
                 
 		//Agregar panel
         LoginView loginview = new LoginView();
-        new LoginController(loginview,user);
+        new LoginController(loginview);
         background.add(createViewScroll(loginview), BorderLayout.CENTER);
                 
         this.setVisible(true);

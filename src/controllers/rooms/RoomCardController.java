@@ -24,6 +24,7 @@ public class RoomCardController {
         this.mainView = mainView;
         this.room = room;
         this.user = user;
+
         initController();
     }
 

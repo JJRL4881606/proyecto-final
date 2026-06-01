@@ -13,7 +13,10 @@ import java.awt.Image;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
+import models.RoomImage;
 import models.RoomType;
 import utils.FormUtils;
 import utils.Validator;
@@ -88,9 +91,9 @@ public class RoomTypeFormController {
 			    view.isFeatured(),
 
 			    view.getDescription(),
-			    RoomType.stringToImages(
-			        view.getTxtExtraImages().getText()
-			    )
+			    parseExtraImages(
+		    	    view.getTxtExtraImages().getText()
+		    	)
 			);
 		}else{
 			roomType.setName(view.getName());
@@ -101,9 +104,9 @@ public class RoomTypeFormController {
 			roomType.setAmenities(view.getSelectedAmenities());
 			roomType.setFeatured(view.isFeatured());	
 			roomType.setDescription(view.getDescription());
-			roomType.setExtraImages(RoomType.stringToImages(
-				view.getTxtExtraImages().getText()
-			));
+			roomType.setExtraImages(
+			    parseExtraImages(view.getTxtExtraImages().getText())
+			);
 		}
 
 		view.setSaved(true);
@@ -245,6 +248,31 @@ public class RoomTypeFormController {
 	    }catch(Exception ex){
 	        ex.printStackTrace();
 	    }
+	}
+	
+	private List<RoomImage> parseExtraImages(String text){
+
+	    List<RoomImage> images = new ArrayList<>();
+
+	    if(text == null || text.trim().isEmpty()){
+	        return images;
+	    }
+
+	    String[] parts = text.split("\\|");
+
+	    for(String path : parts){
+
+	        if(path == null || path.trim().isEmpty()){
+	            continue;
+	        }
+
+	        RoomImage image = new RoomImage();
+	        image.setImagePath(path.trim());
+
+	        images.add(image);
+	    }
+
+	    return images;
 	}
 	
 	private boolean validateForm(){

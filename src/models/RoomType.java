@@ -1,7 +1,5 @@
 package models;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class RoomType {
@@ -14,15 +12,21 @@ public class RoomType {
     private String imagePath;
     private List<Amenity> amenities;
     private boolean featured;
-    
     private String description;
-    private List<String> extraImages;
+    private List<RoomImage> extraImages;
+    
+    // Constructor vacío.
+    // usado en getById(int id) en RoomTypeRepository
     
     public RoomType() {}
 
+    // Constructor para crear un tipo de habitación con todos sus datos.
+    // usado en getRoomTypes() y getById(int id) en RoomTypeRepository, 
+    // y handleSave() en RoomTypeFormController
+    
     public RoomType(int typeId, String name, String bedType, int capacity,
         double price, String imagePath, List<Amenity> amenities,
-        boolean featured,String description, List<String> extraImages) {
+        boolean featured,String description, List<RoomImage> extraImages) {
 	        this.typeId = typeId;
 	        this.name = name;
 	        this.bedType = bedType;
@@ -34,45 +38,6 @@ public class RoomType {
 	        
 	        this.description = description;
 	        this.extraImages = extraImages;
-    }
-
-    
-    public static List<String> stringToFeatures(String text){
-        if(text == null || text.isEmpty()){
-            return List.of();
-        }
-
-        return Arrays.stream(text.split("\\|"))
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .toList();    
-    }
-    
-    public String extraImagesToString(){
-        if(extraImages == null){
-            return "";
-        }
-
-        return String.join("|", extraImages);
-    }
-    
-    public static List<String> stringToImages(String text) {
-
-        List<String> list = new ArrayList<>();
-
-        if (text == null || text.trim().isEmpty()) {
-            return list;
-        }
-
-        String[] parts = text.split("\\|");
-
-        for (String p : parts) {
-            if (p != null && !p.trim().isEmpty()) {
-                list.add(p.trim());
-            }
-        }
-
-        return list;
     }
     
     //getters y setters
@@ -111,8 +76,8 @@ public class RoomType {
     public String getDescription(){
         return description;
     }
-
-    public List<String> getExtraImages(){
+    
+    public List<RoomImage> getExtraImages(){
         return extraImages;
     }
     
@@ -120,7 +85,7 @@ public class RoomType {
         this.description = description;
     }
 
-    public void setExtraImages(List<String> extraImages){
+    public void setExtraImages(List<RoomImage> extraImages){
         this.extraImages = extraImages;
     }
     

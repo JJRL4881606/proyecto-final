@@ -34,7 +34,6 @@ import components.RoundedButton;
 import components.RoundedImageOverlayPanel;
 import components.RoundedPanel;
 import components.SearchBar;
-import controllers.auth.LoginController;
 import controllers.rooms.RoomCardController;
 import models.RoomType;
 import models.User;
@@ -42,7 +41,6 @@ import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.VisualUtils;
-import views.auth.LoginView;
 import views.main.MainView;
 import utils.UIColors;
 
@@ -247,11 +245,11 @@ public class HomeView extends JPanel{
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         content.setBorder(new EmptyBorder(40, 40, 40, 40));
 
-        JLabel title = new JLabel("10% OFF en verano");
+        JLabel title = new JLabel("Reserva ahora para estas vacaciones!");
         title.setFont(AppFont.title());
         title.setForeground(Color.WHITE);
 
-        JLabel subtitle = new JLabel("Reserva ahora para estas vacaciones!");
+        JLabel subtitle = new JLabel("Disfruta este próximo verano en Dubai!");
         subtitle.setFont(AppFont.normal());
         subtitle.setForeground(Color.WHITE);
 
@@ -404,13 +402,13 @@ public class HomeView extends JPanel{
         grid.add(createServiceCard("Piscina", "/assets/img/serv/pool-icon.png"));
         grid.add(createServiceCard("Gym", "/assets/img/serv/gym-icon.png"));
         grid.add(createServiceCard("Spa", "/assets/img/serv/spa-icon.png"));
-        grid.add(createServiceCard("Parking", "/assets/img/serv/parking-icon.png"));
+        grid.add(createServiceCard("Estacionamiento", "/assets/img/serv/parking-icon.png"));
 
         grid.add(createServiceCard("Restaurante", "/assets/img/serv/restaurant-icon.png"));
         grid.add(createServiceCard("Bar", "/assets/img/serv/bar-icon.png"));
         grid.add(createServiceCard("Room Service", "/assets/img/serv/service-icon.png"));
         grid.add(createServiceCard("Acceso a la playa", "/assets/img/serv/beach-icon.png"));
-        grid.add(createServiceCard("TV", "/assets/img/serv/tv-icon.png"));
+        grid.add(createServiceCard("Desayuno", "/assets/img/serv/breakfast-icon.png"));
 
         grid.add(createServiceCard("Lavandería", "/assets/img/serv/laundry-icon.png"));
         grid.add(createServiceCard("Seguridad", "/assets/img/serv/security-icon.png"));

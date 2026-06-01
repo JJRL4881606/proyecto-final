@@ -78,7 +78,7 @@ public class RoomCard extends RoundedPanel {
         infoPanel.add(guestsPanel);
         infoPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
-     // features
+        // features
         JPanel featuresPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         featuresPanel.setOpaque(false);
 
@@ -100,9 +100,9 @@ public class RoomCard extends RoundedPanel {
 
             String amenityName = amenities.get(i).getName();
 
-            if (amenityName.length() > 18) {
+            if (amenityName.length() > 15) {
                 amenityName =
-                    amenityName.substring(0, 15) + "...";
+                    amenityName.substring(0, 12) + "...";
             }
 
             JLabel text = new JLabel(amenityName);

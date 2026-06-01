@@ -29,10 +29,13 @@ public class BookingSearchView extends JPanel {
     private List<RoomCard> roomCards = new ArrayList<>();
     private MainView mainView;
     
-    public BookingSearchView(User user) {
-    		this.user = user;
+    public BookingSearchView(User user, MainView mainView) {
+        this.user = user;
+        this.mainView = mainView;
+
         setOpaque(false);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
         initializeComponents();
     }
 
@@ -58,9 +61,9 @@ public class BookingSearchView extends JPanel {
     }
     
     public void createRooms() {
-	    	roomsContainer = new JPanel(new WrapLayout(FlowLayout.CENTER, 20, 20));
-	    	roomsContainer.setMaximumSize(new Dimension(1200, Integer.MAX_VALUE));
-	    	roomsContainer.setOpaque(false);
+    	roomsContainer = new JPanel(new WrapLayout(FlowLayout.CENTER, 20, 20));
+    	roomsContainer.setMaximumSize(new Dimension(1200, Integer.MAX_VALUE));
+    	roomsContainer.setOpaque(false);
 
         add(roomsContainer);
         add(Box.createRigidArea(new Dimension(0, 20)));

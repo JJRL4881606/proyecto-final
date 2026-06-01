@@ -12,9 +12,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import exceptions.DuplicateEmailException;
+import models.Role;
 import models.User;
 import repository.UserRepository;
 import utils.FormUtils;
+import utils.Session;
 import utils.Validator;
 import views.auth.LoginWindow;
 import views.auth.RegistrationView;
@@ -24,44 +26,17 @@ public class RegistrationController {
 
 	private RegistrationView view;
 	private UserRepository repository;
-	private User user;
 	 
-	public RegistrationController(RegistrationView view,User user) {
-        this.view = view;
-        this.user = user;
-        this.repository = new UserRepository();
-        initListeners();
-        initInputRestrictions();
+	public RegistrationController(RegistrationView view) {
+	    this.view = view;
+	    this.repository = new UserRepository();
+	    initListeners();
+	    initInputRestrictions();
 	}
 	 
 	private void initListeners(){
 		//BOTONES
-        view.getBtnRegistration().addActionListener(e -> {
-
-            if(validateForm()){
-
-            	User user = new User(
-            	        view.getName(),
-            	        view.getSurname(),
-            	        view.getPassword(),
-            	        view.getEmail(),
-            	        view.getPhone(),
-            	        view.getCountry(),
-            	        view.getBirthDate(),
-            	        view.getGender(),
-            	        "Admin"
-            	);
-            	
-                if(handleRegisterUser(user)) {
-                    new MainWindow(user);
-                    Window w = SwingUtilities.getWindowAncestor(view);
-                    if (w != null) {
-                        w.dispose();
-                    }
-                }
-            }
-        });
-        
+        view.getBtnRegistration().addActionListener(e -> { handleBtnRegistration(); });
         view.getBtnReturn().addActionListener(e -> { handleReturn(); });
         
         view.getComboCountry().addActionListener(e -> validateCountry() );
@@ -124,6 +99,35 @@ public class RegistrationController {
 		FormUtils.onlyDateNumbers(view.getSpBirthDate());
 	}
 	
+	private void handleBtnRegistration(){
+        if(validateForm()){
+
+        	User user = new User(
+    		    view.getName(),
+    		    view.getSurname(),
+    		    view.getPassword(),
+    		    view.getEmail(),
+    		    view.getPhone(),
+    		    view.getCountry(),
+    		    view.getBirthDate(),
+    		    view.getGender(),
+    		    Role.CUSTOMER
+    		);
+    	
+        	if(handleRegisterUser(user)) {
+
+        	    Session.login(user);
+
+        	    new MainWindow(user);
+
+        	    Window w = SwingUtilities.getWindowAncestor(view);
+        	    if (w != null) {
+        	        w.dispose();
+        	    }
+        	}
+        }
+	}
+	
 	private boolean handleRegisterUser(User user) {
 	    try {
 	        repository.save(user);
@@ -151,8 +155,8 @@ public class RegistrationController {
         int option = view.confirmReturn();
 
         if (option == JOptionPane.YES_OPTION) {
-            new LoginWindow(user);
-	        Window window = SwingUtilities.getWindowAncestor(view);
+        	new LoginWindow(null);
+        	Window window = SwingUtilities.getWindowAncestor(view);
 
             if (window != null) {
                 window.dispose();

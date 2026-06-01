@@ -1,6 +1,5 @@
 package controllers.auth;
 
-import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -16,28 +15,23 @@ import views.auth.PasswordRecoveryDialog;
 import views.auth.RegistrationWindow;
 import views.main.MainWindow;
 
-import java.awt.Desktop;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.URI;
-
 import repository.LoginRepository;
 
 public class LoginController {
 
     private LoginView view;
 	private LoginRepository repository;
-	private User userAnterior;
 
-    public LoginController(LoginView view, User user) {
-    		this.userAnterior = user;
-		repository = new LoginRepository();
-		this.view = view;
-        initListeners();
-		initInputRestrictions();
-    }
-    
+	public LoginController(LoginView view) {
+	    repository = new LoginRepository();
+	    this.view = view;
+	    initListeners();
+	    initInputRestrictions();
+	}
+	
     private void initListeners() {
         view.getBtnLogin().addActionListener(e -> handleLogin());
 
@@ -100,10 +94,6 @@ public class LoginController {
     	String password = view.getPassword();
 
     	User user = repository.login(email, password);
-    	if(userAnterior != null && userAnterior.getEmail() == email) 
-    	{
-    		user = userAnterior;
-    	}
     	
         if (user == null) {
             view.setWrongError();
@@ -112,27 +102,17 @@ public class LoginController {
 
         Session.login(user);
 
-        if (Session.getRole().equals("Admin")) {
-        	
-            new MainWindow(user);
-            
-            Window window = SwingUtilities.getWindowAncestor(view);
-            if (window != null) {
-                window.dispose();
-            }
-        } else {
-            JOptionPane.showMessageDialog(
-                view,
-                "No tienes permisos"
-            );
+        new MainWindow(user);
 
-            Session.logout();
+        Window window = SwingUtilities.getWindowAncestor(view);
+        if (window != null) {
+            window.dispose();
         }
     }
 
     private void handleRegister() {
         RegistrationWindow reg = new RegistrationWindow();
-        new RegistrationController(reg.getRegistrationView(),userAnterior);
+        new RegistrationController(reg.getRegistrationView());
 
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) window.dispose();

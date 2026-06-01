@@ -17,10 +17,9 @@ import exceptions.DuplicateEmailException;
 
 public class UserRepository {
 
-	public void save(User user) {
-
+	public void save(User user) throws SQLException {
 		String sql = "INSERT INTO users "
-				+ "(name, surname, password, email, phone, country, birth_date, gender, role) "
+				+ "(name, surname, password, email, phone, country, birthDate, gender, role) "
 				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try (Connection connection = DatabaseConnection.getConnection();
@@ -37,8 +36,6 @@ public class UserRepository {
 			pst.setString(9, user.getRole());
 			pst.executeUpdate();
 
-		} catch (SQLException ex) {
-			ex.printStackTrace();
 		}
 	}
 
@@ -52,7 +49,7 @@ public class UserRepository {
 
 			while (rs.next()) {
 				User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("surname"),
-						rs.getString("email"), rs.getString("phone"), rs.getString("country"), rs.getDate("birth_date"),
+						rs.getString("email"), rs.getString("phone"), rs.getString("country"), rs.getDate("birthDate"),
 						rs.getString("gender").charAt(0), rs.getString("role"));
 				
 				user.setPassword(
@@ -93,7 +90,7 @@ public class UserRepository {
 	public boolean update(User updatedUser) throws IOException {
 		
 		String sql = "UPDATE users SET name = ?, surname = ?, email = ?, phone = ?, country = ?,"
-				+ " birth_date = ?, gender = ?, role = ? " + "WHERE id = ?";
+				+ " birthDate = ?, gender = ?, role = ? " + "WHERE id = ?";
 
 		try (Connection connection = DatabaseConnection.getConnection();
 				PreparedStatement pst = connection.prepareStatement(sql)) {
@@ -154,7 +151,7 @@ public class UserRepository {
         		    rs.getString("email"),
         		    rs.getString("phone"),
         		    rs.getString("country"),
-        		    rs.getDate("birth_date"),
+        		    rs.getDate("birthDate"),
         		    rs.getString("gender").charAt(0),
         		    rs.getString("role")
         		);
@@ -175,7 +172,7 @@ public class UserRepository {
 	
 	public void updatePassword(int id, String password){
 
-	    String sql = "UPDATE users SET password=? WHERE id=?";
+	    String sql = "UPDATE users SET password = ? WHERE id = ?";
 
 	    try(
 	        Connection conn = DatabaseConnection.getConnection();
@@ -194,7 +191,7 @@ public class UserRepository {
 	
 	public User findByEmail(String email){
 
-	    String sql = "SELECT * FROM users WHERE email=?";
+	    String sql = "SELECT * FROM users WHERE email = ?";
 
 	    try(Connection conn = DatabaseConnection.getConnection();
 	        PreparedStatement stmt = conn.prepareStatement(sql)){
@@ -212,7 +209,7 @@ public class UserRepository {
 	            user.setEmail(rs.getString("email"));
 	            user.setPhone(rs.getString("phone"));
 	            user.setCountry(rs.getString("country"));
-	            user.setBirthDate(rs.getDate("birth_date"));
+	            user.setBirthDate(rs.getDate("birthDate"));
 	            user.setGender(rs.getString("gender").charAt(0));
 	            user.setRole(rs.getString("role"));
 	            user.setPassword(rs.getString("password"));
@@ -229,18 +226,16 @@ public class UserRepository {
 	
 	public boolean hasReservationsByUser(int userId){
 
-	    String sql =
-	        "SELECT 1 FROM reservations " +
-	        "WHERE userId=? LIMIT 1";
+	    String sql = "SELECT 1 FROM reservations WHERE userId=? LIMIT 1";
 
 	    try(
-	        Connection conn=DatabaseConnection.getConnection();
-	        PreparedStatement ps=conn.prepareStatement(sql)
+	        Connection conn = DatabaseConnection.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql)
 	    ){
 
 	        ps.setInt(1,userId);
 
-	        ResultSet rs=ps.executeQuery();
+	        ResultSet rs = ps.executeQuery();
 
 	        return rs.next();
 

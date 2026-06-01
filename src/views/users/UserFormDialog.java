@@ -22,6 +22,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import components.RoundedButton;
+import models.Role;
 import models.User;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -171,7 +172,7 @@ public class UserFormDialog extends JDialog{
     	panel.add(FormUtils.createField("Género", genderPanel, lblGenderError, "", fieldWidth));
     	
     	//ROL
-        String[] roles = {"Seleccione un rol", "Cliente", "Admin"};
+        String[] roles = {"Seleccione un rol", Role.CUSTOMER, Role.ADMIN};
     	comboRole = FormUtils.createCombo(roles);
     	lblRoleError = FormUtils.createErrorLabel();
     	panel.add(FormUtils.createField("Rol", comboRole, lblRoleError, "", fieldWidth));

@@ -11,7 +11,7 @@ import models.ReservationStatus;
 public class ReservationRepository {
 
     public void save(Reservation reservation) {
-        String sql = "INSERT INTO reservations(userId, roomId, checkInDate, checkOutDate, guests, status, total, createdAt) VALUES(?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO reservations(userId, roomId, checkInDate, checkOutDate, guests, status, total, createdAt) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -59,7 +59,7 @@ public class ReservationRepository {
     }
 
     public boolean update(Reservation reservation) {
-        String sql = "UPDATE reservations SET userId=?, roomId=?, checkInDate=?, checkOutDate=?, guests=?, status=?, total=? WHERE reservationId=?";
+        String sql = "UPDATE reservations SET userId = ?, roomId = ?, checkInDate = ?, checkOutDate = ?, guests = ?, status = ?, total = ? WHERE reservationId = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -81,7 +81,7 @@ public class ReservationRepository {
     }
 
     public boolean delete(int id) {
-        String sql = "DELETE FROM reservations WHERE reservationId=?";
+        String sql = "DELETE FROM reservations WHERE reservationId = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -121,20 +121,20 @@ public class ReservationRepository {
 
         String sql =
             "SELECT 1 FROM reservations " +
-            "WHERE roomId=? " +
-            "AND status IN (?,?) " +
+            "WHERE roomId = ? " +
+            "AND status IN (?, ?) " +
             "LIMIT 1";
 
         try(
-            Connection conn=DatabaseConnection.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql)
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
         ){
 
             ps.setInt(1,roomId);
             ps.setString(2,ReservationStatus.PENDING);
             ps.setString(3,ReservationStatus.CONFIRMED);
 
-            ResultSet rs=ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
             return rs.next();
 
@@ -147,9 +147,7 @@ public class ReservationRepository {
     
     public boolean hasReservationsByUser(int userId){
 
-        String sql =
-            "SELECT 1 FROM reservations " +
-            "WHERE userId=? LIMIT 1";
+        String sql = "SELECT 1 FROM reservations WHERE userId = ? LIMIT 1";
 
         try(
             Connection conn = DatabaseConnection.getConnection();
@@ -158,8 +156,7 @@ public class ReservationRepository {
 
             ps.setInt(1,userId);
 
-            ResultSet rs=
-                ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
             return rs.next();
 
@@ -172,22 +169,15 @@ public class ReservationRepository {
     
     public boolean hasReservationsByRoom(int roomId){
 
-        String sql =
-            "SELECT 1 FROM reservations " +
-            "WHERE roomId=? LIMIT 1";
+        String sql = "SELECT 1 FROM reservations WHERE roomId = ? LIMIT 1";
 
         try(
-            Connection conn =
-                DatabaseConnection.getConnection();
-
-            PreparedStatement ps =
-                conn.prepareStatement(sql)
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
         ){
-
             ps.setInt(1, roomId);
 
-            ResultSet rs =
-                ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
             return rs.next();
 
@@ -198,5 +188,68 @@ public class ReservationRepository {
         return false;
     }
     
+    // Para ver las reservaciones del usuario
+    public List<Reservation> getReservationsByUser(int userId) {
+
+        List<Reservation> reservations = new ArrayList<>();
+
+        String sql =
+            "SELECT * FROM reservations " +
+            "WHERE userId = ? " +
+            "ORDER BY createdAt DESC";
+
+        try(
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ){
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()){
+
+                reservations.add(
+                    new Reservation(
+                        rs.getInt("reservationId"),
+                        rs.getInt("userId"),
+                        rs.getInt("roomId"),
+                        rs.getDate("checkInDate").toLocalDate(),
+                        rs.getDate("checkOutDate").toLocalDate(),
+                        rs.getInt("guests"),
+                        rs.getString("status"),
+                        rs.getDouble("total"),
+                        rs.getTimestamp("createdAt").toLocalDateTime()
+                    )
+                );
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return reservations;
+    }
     
+    //para cancelar reservación
+    public boolean cancelReservation(int reservationId){
+
+        String sql = "UPDATE reservations SET status=? WHERE reservationId=?";
+
+        try(
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ){
+
+            ps.setString(1,ReservationStatus.CANCELED);
+            ps.setInt(2,reservationId);
+
+            return ps.executeUpdate() > 0;
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }

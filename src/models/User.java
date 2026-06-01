@@ -1,6 +1,5 @@
 package models;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -18,30 +17,19 @@ public class User {
 	private char gender;
 	private String role;	
 	
+	// Constructor vacío
+	// usado en login en LoginRepository, y findByEmail en UserRepositry
 	public User() {}
 
+	// Constructor para iniciar sesión con id, correo y contraseña
 	public User(int id, String email, String password) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
 	}
-
-	public User(String email, String password) {
-		this.email = email;
-		this.password = password;
-	}
 	
-	public User(String name, String surname, String email, String phone,
-		String country, Date birthDate, char gender, String role) {
-			this.name = name;
-			this.surname = surname;
-			this.email = email;
-			this.phone = phone;
-			this.country = country;
-			this.birthDate = birthDate;
-			this.gender = gender;
-			this.role = role;
-	}
+	// Constructor para crear un usuario con id, sin contraseña
+	// usado en findById(int id) y getUsers() en UserRepository
 	
 	public User(int id, String name, String surname, String email, String phone,
 		String country, Date birthDate, char gender, String role) {
@@ -56,6 +44,10 @@ public class User {
 			this.role = role;
 	}
 	
+	// Constructor que incluye la contraseña, sin id
+	// usado parar crear un nuevo usuario, en handleSave() en UserFormController
+	// y en handleBtnRegistration() en RegistrationController
+
 	public User(String name, String surname, String password, String email,
 		String phone, String country, Date birthDate, char gender, String role){
 		    this.name = name;
@@ -69,17 +61,7 @@ public class User {
 		    this.role = role;
 		}
 	
-	public String toString() {
-	    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-	    return "Nombre: " + name +
-	           "\nApellido: " + surname +
-	           "\nEmail: " + email +
-	           "\nTeléfono: " + phone +
-	           "\nPaís: " + country +
-	           "\nFecha de nacimiento: " + sdf.format(birthDate) +
-	           "\nGénero: " + gender;
-	}	
+	//GETTERS Y SETTERS
 	
 	public int getId() {
 		return id;

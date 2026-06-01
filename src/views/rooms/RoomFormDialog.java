@@ -1,7 +1,6 @@
 package views.rooms;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
@@ -45,19 +44,18 @@ public class RoomFormDialog extends JDialog {
     private int fieldWidth = 300;
 
     public RoomFormDialog(JFrame parent, Room room) {
-
         super(parent,true);
         this.room = room;
 
         setTitle(room == null ? "Agregar habitación" : "Editar habitación");
-        setSize(450,450);
+        setSize(450,600);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
-        add(createTitlePanel(),BorderLayout.NORTH);
+        
+        add(createTitlePanel(), BorderLayout.NORTH);
         add(createFormPanel());
-        add(createButtonPanel(),BorderLayout.SOUTH);
+        add(createButtonPanel(), BorderLayout.SOUTH);
 
         loadData();
     }
@@ -70,11 +68,10 @@ public class RoomFormDialog extends JDialog {
     }
 
     private JScrollPane createFormPanel(){
-    	JPanel panel = new JPanel();
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel,BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(15,20,15,20));
         panel.setBackground(UIColors.CARD);
-        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
 		JScrollPane scroll = new JScrollPane(panel);
 		scroll.setBorder(null);

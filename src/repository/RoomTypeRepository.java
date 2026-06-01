@@ -12,19 +12,17 @@ import models.RoomType;
 
 public class RoomTypeRepository {
 
-    private AmenityRepository amenityRepo=new AmenityRepository();
+    private AmenityRepository amenityRepo = new AmenityRepository();
+    private RoomImageRepository imageRepo = new RoomImageRepository();
 
     public void save(RoomType roomType){
 
-        String sql = "INSERT INTO room_types(name, bedType, capacity, price, imagePath, featured, description, extraImages) "
-        + "VALUES(?,?,?,?,?,?,?,?)";
+    	String sql = "INSERT INTO room_types(name, bedType, capacity, price, imagePath, featured, description) "
+    			+ "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
         try(
-            Connection conn=DatabaseConnection.getConnection();
-            PreparedStatement pst=conn.prepareStatement(
-                sql,
-                Statement.RETURN_GENERATED_KEYS
-            )
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement pst = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ){
             pst.setString(1,roomType.getName());
             pst.setString(2,roomType.getBedType());
@@ -33,21 +31,25 @@ public class RoomTypeRepository {
             pst.setString(5,roomType.getImagePath());
             pst.setBoolean(6,roomType.isFeatured());
             pst.setString(7,roomType.getDescription());
-            pst.setString(8,roomType.extraImagesToString());
 
             pst.executeUpdate();
 
-            ResultSet rs=pst.getGeneratedKeys();
+            ResultSet rs = pst.getGeneratedKeys();
 
             if(rs.next()){
 
-                int typeId=rs.getInt(1);
+                int typeId = rs.getInt(1);
 
                 saveAmenities(
                     conn,
                     typeId,
                     roomType.getAmenities()
                 );
+                
+                imageRepo.saveImages(
+            	    typeId,
+            	    roomType.getExtraImages()
+            	);
             }
 
         } catch(Exception e){
@@ -57,12 +59,11 @@ public class RoomTypeRepository {
 
     private void saveAmenities(Connection conn, int typeId, List<Amenity> amenities)throws SQLException{
     	
-        String sql = "INSERT INTO roomtype_amenities(typeId,amenityId) VALUES(?,?)";
+        String sql = "INSERT INTO roomtype_amenities(typeId, amenityId) VALUES(?, ?)";
 
         for(Amenity a:amenities){
 
-            PreparedStatement ps=
-            conn.prepareStatement(sql);
+            PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1,typeId);
             ps.setInt(2,a.getAmenityId());
@@ -73,14 +74,14 @@ public class RoomTypeRepository {
 
     public List<RoomType> getRoomTypes(){
 
-        List<RoomType> roomTypes=new ArrayList<>();
+        List<RoomType> roomTypes = new ArrayList<>();
 
         String sql = "SELECT * FROM room_types";
 
         try(
-            Connection conn=DatabaseConnection.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql);
-            ResultSet rs=ps.executeQuery()
+            Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
         ){
 
             while(rs.next()){
@@ -96,9 +97,9 @@ public class RoomTypeRepository {
                         null,
                         rs.getBoolean("featured"),
                         rs.getString("description"),
-                        RoomType.stringToImages(
-                            rs.getString("extraImages")
-                        )
+                        imageRepo.getImagesByTypeId(
+                    	    rs.getInt("typeId")
+                    	)                    
                     )
                 );
             }
@@ -125,8 +126,8 @@ public class RoomTypeRepository {
 
         try(Connection conn = DatabaseConnection.getConnection();
             PreparedStatement pst = conn.prepareStatement(sql)){
-	            pst.setInt(1,id);
-	            return pst.executeUpdate()>0;
+	            pst.setInt(1, id);
+	            return pst.executeUpdate() > 0;
 
         }catch(Exception e){
             e.printStackTrace();
@@ -138,8 +139,8 @@ public class RoomTypeRepository {
     public boolean update(RoomType roomType){
 
         String sql = "UPDATE room_types " +
-        "SET name=?, bedType=?, capacity=?, price=?, imagePath=?, featured=?, description=?, extraImages=? " +
-        "WHERE typeId=?";
+        "SET name = ?, bedType = ?, capacity = ?, price = ?, imagePath = ?, featured = ?, description = ? " +
+        "WHERE typeId = ?";
 
         try(Connection conn = DatabaseConnection.getConnection()){
 
@@ -154,40 +155,37 @@ public class RoomTypeRepository {
             ps.setString(5,roomType.getImagePath());
             ps.setBoolean(6,roomType.isFeatured());
             ps.setString(7,roomType.getDescription());
-            ps.setString(8,roomType.extraImagesToString());
-            ps.setInt(9,roomType.getTypeId());
-
+            ps.setInt(8, roomType.getTypeId());
+            
             ps.executeUpdate();
 
             PreparedStatement delete =
                 conn.prepareStatement(
-                    "DELETE FROM roomtype_amenities WHERE typeId=?"
+                    "DELETE FROM roomtype_amenities WHERE typeId = ?"
                 );
 
-            delete.setInt(
-                1,
-                roomType.getTypeId()
-            );
-
+            delete.setInt(1, roomType.getTypeId());
             delete.executeUpdate();
+            
+            imageRepo.deleteByTypeId(
+        	    conn,
+        	    roomType.getTypeId()
+        	);
+
+            imageRepo.saveImages(
+        	    conn,
+        	    roomType.getTypeId(),
+        	    roomType.getExtraImages()
+        	);
 
             // insertar nuevas
             PreparedStatement insert = conn.prepareStatement(
-                "INSERT INTO roomtype_amenities(typeId,amenityId) VALUES(?,?)"
+                "INSERT INTO roomtype_amenities(typeId, amenityId) VALUES(?, ?)"
             );
 
             for(Amenity a : roomType.getAmenities()){
-
-                insert.setInt(
-                    1,
-                    roomType.getTypeId()
-                );
-
-                insert.setInt(
-                    2,
-                    a.getAmenityId()
-                );
-
+                insert.setInt(1, roomType.getTypeId());
+                insert.setInt(2, a.getAmenityId());
                 insert.addBatch();
             }
 
@@ -257,7 +255,7 @@ public class RoomTypeRepository {
     
     public RoomType getById(int id){
 
-        String sql = "SELECT * FROM room_types WHERE typeId=?";
+        String sql = "SELECT * FROM room_types WHERE typeId = ?";
 
         try(
             Connection conn = DatabaseConnection.getConnection();
@@ -280,9 +278,9 @@ public class RoomTypeRepository {
                     null,
                     rs.getBoolean("featured"),
                     rs.getString("description"),
-                    RoomType.stringToImages(
-                        rs.getString("extraImages")
-                    )
+                    imageRepo.getImagesByTypeId(
+                	    rs.getInt("typeId")
+                	)                
                 );
 
                 room.setAmenities(

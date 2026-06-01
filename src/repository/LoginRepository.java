@@ -11,7 +11,7 @@ import utils.PasswordUtils;
 public class LoginRepository {
 
     public User login(String email, String password) {
-        String sql = "SELECT * FROM users WHERE email=?";
+        String sql = "SELECT * FROM users WHERE email = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -33,7 +33,7 @@ public class LoginRepository {
                 user.setEmail(rs.getString("email"));
                 user.setPhone(rs.getString("phone"));
                 user.setCountry(rs.getString("country"));
-                user.setBirthDate(rs.getDate("birth_date"));
+                user.setBirthDate(rs.getDate("birthDate"));
                 user.setGender(rs.getString("gender").charAt(0));
                 user.setRole(rs.getString("role"));
 

@@ -91,9 +91,9 @@ public class RoomRepository {
     public boolean update(Room updatedRoom) throws IOException{
 
     	String sql = "UPDATE rooms "
-    		      + "SET roomNumber=?, floor=?, "
-    		      + "typeId=?, status=? "
-    		      + "WHERE roomId=?";
+    		      + "SET roomNumber = ?, floor = ?, "
+    		      + "typeId = ?, status = ? "
+    		      + "WHERE roomId = ?";
     	
 		try (Connection connection = DatabaseConnection.getConnection();
 				PreparedStatement pst = connection.prepareStatement(sql)) {
@@ -183,7 +183,7 @@ public class RoomRepository {
     
     public boolean existsRoomNumber(int roomNumber){
 
-        String sql = "SELECT 1 FROM rooms WHERE roomNumber=? LIMIT 1";
+        String sql = "SELECT 1 FROM rooms WHERE roomNumber = ? LIMIT 1";
 
         try(
             Connection conn = DatabaseConnection.getConnection();
@@ -230,7 +230,7 @@ public class RoomRepository {
 
         List<Room> rooms=new ArrayList<>();
 
-        String sql="SELECT * FROM rooms WHERE typeId=?";
+        String sql="SELECT * FROM rooms WHERE typeId = ?";
 
         try(
             Connection conn=DatabaseConnection.getConnection();
@@ -264,7 +264,7 @@ public class RoomRepository {
 
         String sql =
             "SELECT 1 FROM reservations " +
-            "WHERE roomId=? " +
+            "WHERE roomId = ? " +
             "AND status IN (?,?) " +
             "AND checkOutDate >= CURDATE() " +
             "LIMIT 1";

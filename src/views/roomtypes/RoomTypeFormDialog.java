@@ -23,6 +23,7 @@ import java.util.List;
 
 import components.RoundedButton;
 import models.Amenity;
+import models.RoomImage;
 import models.RoomType;
 import repository.AmenityRepository;
 import utils.ButtonFactory;
@@ -43,6 +44,7 @@ public class RoomTypeFormDialog extends JDialog {
     private JLabel lblPreview;
     private List<JCheckBox> amenitiesChecks = new ArrayList<>();
     private List<Amenity> amenities = new ArrayList<>();
+    
     
     private JTextArea txtDescription;
     private JTextField txtExtraImages;
@@ -85,28 +87,6 @@ public class RoomTypeFormDialog extends JDialog {
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
         panel.add(new JLabel("Formulario tipo de habitación"));
-        return panel;
-    }
-
-    private JPanel createButtonPanel(){
-        JPanel panel = new JPanel();
-        panel.setBackground(UIColors.CARD);
-
-        btnSave = ButtonFactory.createGoldButton(
-            "GUARDAR",
-            "/assets/img/btn-icons/button-save-icon.png",
-            "Haz clic para guardar"
-        );
-
-        btnCancel = ButtonFactory.createGoldButton(
-            "CANCELAR",
-            "/assets/img/btn-icons/button-cancel-icon.png",
-            "Haz clic para cancelar"
-        );
-
-        panel.add(btnSave);
-        panel.add(btnCancel);
-
         return panel;
     }
 
@@ -248,6 +228,28 @@ public class RoomTypeFormDialog extends JDialog {
         return scroll;
     }
 
+    private JPanel createButtonPanel(){
+        JPanel panel = new JPanel();
+        panel.setBackground(UIColors.CARD);
+
+        btnSave = ButtonFactory.createGoldButton(
+            "GUARDAR",
+            "/assets/img/btn-icons/button-save-icon.png",
+            "Haz clic para guardar"
+        );
+
+        btnCancel = ButtonFactory.createGoldButton(
+            "CANCELAR",
+            "/assets/img/btn-icons/button-cancel-icon.png",
+            "Haz clic para cancelar"
+        );
+
+        panel.add(btnSave);
+        panel.add(btnCancel);
+
+        return panel;
+    }
+
     private void loadData(){
         if(roomType != null){
             txtName.setText(roomType.getName());
@@ -264,10 +266,14 @@ public class RoomTypeFormDialog extends JDialog {
                 lblPreview.setVisible(true);
             }
             
-            txtExtraImages.setText(
-        	    roomType.extraImagesToString()
-        	);
-            
+            String images = roomType.getExtraImages()
+        	    .stream()
+        	    .map(RoomImage::getImagePath)
+        	    .reduce((a,b) -> a + "|" + b)
+        	    .orElse("");
+
+        	txtExtraImages.setText(images);
+            	
             for(JCheckBox chk:amenitiesChecks) {
                 for(Amenity a:roomType.getAmenities()) {
                     if(chk.getText().equals(a.getName())) {

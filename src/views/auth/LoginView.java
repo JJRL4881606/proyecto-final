@@ -24,7 +24,6 @@ import javax.swing.Box;
 import javax.swing.border.EmptyBorder;
 import components.RoundedButton;
 import components.RoundedPanel;
-import models.User;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
