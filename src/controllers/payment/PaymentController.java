@@ -14,6 +14,12 @@ import java.util.Date;
 import java.sql.Statement;
 
 import javax.swing.*;
+<<<<<<< HEAD
+=======
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
+>>>>>>> 3cc26ecfe5276e51100d44cb92cbe8a5d2f79f5c
 import config.DatabaseConnection;
 import models.User;
 import views.auth.LoginWindow;
