@@ -101,24 +101,7 @@ public class LoginController {
         }
 
         Session.login(user);
-<<<<<<< HEAD
-
         new MainWindow(user);
-=======
-        if (Session.getRole().equals("Admin")) {
-        	
-            new MainWindow(user);
-            
-            Window window = SwingUtilities.getWindowAncestor(view);
-            if (window != null) {
-                window.dispose();
-            }
-        } else {
-            JOptionPane.showMessageDialog(
-                view,
-                "No tienes permisos"
-            );
->>>>>>> 3cc26ecfe5276e51100d44cb92cbe8a5d2f79f5c
 
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) {

@@ -39,7 +39,6 @@ import javax.swing.border.EmptyBorder;
 import components.RoundedImageOverlayPanel;
 import components.RoundedPanel;
 import components.UnderlineMenu;
-import models.Room;
 import models.RoomType;
 import models.User;
 import utils.AppFont;
