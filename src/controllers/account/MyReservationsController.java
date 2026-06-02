@@ -76,11 +76,6 @@ public class MyReservationsController {
 			        card.getLblStatus().setForeground(new Color(46,125,50));
 			        break;
 		
-			    case ReservationStatus.PENDING:
-			        card.getLblStatus().setText("Pendiente");
-			        card.getLblStatus().setForeground(new Color(255,143,0));
-			        break;
-		
 			    case ReservationStatus.CANCELED:
 			        card.getLblStatus().setText("Cancelada");
 			        card.getLblStatus().setForeground(new Color(198,40,40));
@@ -92,7 +87,7 @@ public class MyReservationsController {
 			        break;
 			}    	    
     	    
-    	    boolean canCancel = status.equals(ReservationStatus.PENDING) || status.equals(ReservationStatus.CONFIRMED);
+    	    boolean canCancel = status.equals(ReservationStatus.CONFIRMED);
     	    card.getBtnCancel().setVisible(canCancel);
     	    
     	    if(canCancel){

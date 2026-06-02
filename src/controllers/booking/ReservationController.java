@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import javax.swing.JOptionPane;
 import models.Reservation;
+import models.ReservationStatus;
 import repository.ReservationRepository;
 import tablemodels.ReservationTableModel;
 import views.booking.ReservationFormDialog;
@@ -96,23 +97,34 @@ public class ReservationController {
     }
 
     private void handleDelete() {
+
         int row = view.getSelectedModelRow();
         if (row == -1) {
-            JOptionPane.showMessageDialog(null, "Selecciona una reservación", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Selecciona una reservación");
             return;
         }
 
-        Reservation reservation = model.getReservationAt(row);
-        String status = reservation.getStatus();
-        if (status.equalsIgnoreCase("Confirmada") || status.equalsIgnoreCase("Completada")) {
-            JOptionPane.showMessageDialog(null, "No puedes eliminar esta reservación", "Error", JOptionPane.ERROR_MESSAGE);
+        Reservation r = model.getReservationAt(row);
+
+        if (r.getStatus().equals(ReservationStatus.CONFIRMED) ||
+            r.getStatus().equals(ReservationStatus.COMPLETED)) {
+
+            JOptionPane.showMessageDialog(null,
+                "No puedes eliminar una reservación activa o completada"
+            );
             return;
         }
 
-        int confirm = JOptionPane.showConfirmDialog(null, "¿Eliminar reservación?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        int confirm = JOptionPane.showConfirmDialog(
+            null,
+            "¿Eliminar reservación?",
+            "Confirmar",
+            JOptionPane.YES_NO_OPTION
+        );
+
         if (confirm != JOptionPane.YES_OPTION) return;
 
-        if (repo.delete(reservation.getReservationId())) {
+        if (repo.delete(r.getReservationId())) {
             loadReservations();
         }
     }

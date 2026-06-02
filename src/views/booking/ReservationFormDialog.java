@@ -77,7 +77,7 @@ public class ReservationFormDialog extends JDialog {
 	        }
 
 	        return room.getStatus().equals(
-	            RoomStatus.AVAILABLE
+	            RoomStatus.ACTIVE
 	        );
 
 	    })
@@ -154,7 +154,7 @@ public class ReservationFormDialog extends JDialog {
         lblGuestsError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Huéspedes", spGuests, lblGuestsError, "", fieldWidth));
 
-        String[] status = {"Seleccione estado", ReservationStatus.PENDING, ReservationStatus.CONFIRMED, ReservationStatus.CANCELED, ReservationStatus.COMPLETED };
+        String[] status = {"Seleccione estado", ReservationStatus.CONFIRMED, ReservationStatus.CANCELED, ReservationStatus.COMPLETED };
         comboStatus = FormUtils.createCombo(status);
         lblStatusError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Estado", comboStatus, lblStatusError, "", fieldWidth));

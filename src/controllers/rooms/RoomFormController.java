@@ -4,9 +4,7 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 import models.Room;
-import models.RoomStatus;
 import models.RoomType;
-import repository.ReservationRepository;
 import repository.RoomRepository;
 import repository.RoomTypeRepository;
 import views.rooms.RoomFormDialog;
@@ -103,37 +101,24 @@ public class RoomFormController {
 
 	    Room room = view.getRoom();
 	    
-	    //
+	    /*
 	    ReservationRepository reservationRepo = new ReservationRepository();
 
-	    if(room != null){
-	        boolean activeReservation =
-	            reservationRepo.hasActiveReservation(
-	                room.getRoomId()
-	            );
+	    if (room != null) {
 
-	        String selectedStatus = view.getStatus();
+	        boolean hasActiveReservation =
+	            reservationRepo.hasActiveReservation(room.getRoomId());
 
-	        // Si tiene reservación activa
-	        boolean invalidStatus = selectedStatus.equals(RoomStatus.AVAILABLE) || selectedStatus.equals(RoomStatus.OUT_OF_SERVICE);
+	        String status = view.getStatus();
 
-	        if(activeReservation && invalidStatus){
+	        if (hasActiveReservation && status.equals(RoomStatus.OUT_OF_SERVICE)) {
 	            JOptionPane.showMessageDialog(
 	                null,
-	                "La habitación tiene una reservación activa y no puede cambiarse a ese estado"
+	                "No puedes poner fuera de servicio una habitación con reservas activas"
 	            );
 	            return;
 	        }
-	        
-	        // Si NO tiene reservación activa
-	        if(!activeReservation && selectedStatus.equals(RoomStatus.OCCUPIED)){
-	            JOptionPane.showMessageDialog(
-	                null,
-	                "No puedes marcar una habitación como ocupada si no tiene reservaciones activas"
-	            );
-	            return;
-	        }
-	    }
+	    }*/
 	    
 	    if(room == null){
 	        room = new Room(

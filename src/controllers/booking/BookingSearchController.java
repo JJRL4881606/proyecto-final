@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import components.RoomCard;
-import controllers.rooms.RoomCardController;
 import models.RoomType;
 import repository.RoomTypeRepository;
 import views.booking.BookingSearchView;
@@ -74,12 +72,8 @@ public class BookingSearchController {
             return;
         }
                 
-        List<RoomType> rooms = repository.getAvailableRoomTypes(
-        	    guests,
-        	    checkIn,
-        	    checkOut
-        	);
+        List<RoomType> rooms = repository.getAvailableRoomTypes(guests, checkIn, checkOut);
 
-        	view.setRooms(rooms);
+        view.setRooms(rooms);
     }
 }

@@ -216,40 +216,27 @@ public class RoomTypeRepository {
         RoomRepository roomRepo = new RoomRepository();
         ReservationRepository reservationRepo = new ReservationRepository();
 
-        for(RoomType type : getRoomTypes()){
+        for (RoomType type : getRoomTypes()) {
 
-            if(type.getCapacity() < guests){
-                continue;
-            }
+            if (type.getCapacity() < guests) continue;
 
             List<Room> rooms = roomRepo.findByTypeId(type.getTypeId());
 
-            if(rooms.isEmpty()){
-                continue;
-            }
-
             boolean found = false;
 
-            for(Room room : rooms){
+            for (Room room : rooms) {
 
-                boolean roomAvailable = reservationRepo.isRoomAvailable(
-                    room.getRoomId(),
-                    checkIn,
-                    checkOut,
-                    0
-                );
-
-                if(roomAvailable){
+                if (roomRepo.isRoomAvailable(room.getRoomId(), checkIn, checkOut)) {
                     found = true;
                     break;
                 }
             }
 
-            if(found){
+            if (found) {
                 available.add(type);
             }
         }
-
+        
         return available;
     }
     

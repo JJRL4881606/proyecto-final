@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -229,140 +228,48 @@ public class PaymentView extends JPanel {
         );
         
         // ===== HUÉSPEDES =====
-        int maxGuests =
-        		room.getCapacity();
-
-        SpinnerNumberModel guestsModel =
-                new SpinnerNumberModel(
-                        1,          // valor inicial
-                        1,          // mínimo
-                        maxGuests,  // máximo según habitación
-                        1           // incremento
-                );
-
-        spGuests = new JSpinner(
-                guestsModel
-        );
-
-        // Tamaño
-        spGuests.setPreferredSize(
-                new Dimension(
-                        fieldWidth,
-                        40
-                )
-        );
-
-        // Editor del spinner
-        JSpinner.NumberEditor guestEditor =
-                new JSpinner.NumberEditor(
-                        spGuests,
-                        "#"
-                );
-
-        spGuests.setEditor(
-                guestEditor
-        );
-
-        // Campo interno del spinner
-        JFormattedTextField guestField =
-                guestEditor.getTextField();
-
-        guestField.setEditable(false);
-        guestField.setHorizontalAlignment(
-                JTextField.CENTER
-        );
-
-        lblGuestsError =
-                FormUtils.createErrorLabel();
-
-        personalPanel.add(
-                FormUtils.createField(
-                        "Cantidad de huéspedes",
-                        spGuests,
-                        lblGuestsError,
-                        "",
-                        fieldWidth
-                )
-        );
-     // ===== MÉTODO DE PAGO =====
-        JLabel lblMetodoPago =
-                new JLabel("Método de pago");
-
-        lblMetodoPago.setFont(AppFont.big());
-
-        lblMetodoPago.setBorder(
-                BorderFactory.createEmptyBorder(
-                        0, 5, 10, 0
-                )
-        );
-
-        JPanel paymentPanel =
-                new JPanel(
-                        new BorderLayout(
-                                10,10
-                        )
-                );
-
-        paymentPanel.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(
-                                new Color(220,220,220),
-                                1,
-                                true
-                        ),
-                        BorderFactory.createEmptyBorder(
-                                15,15,15,15
-                        )
-                )
-        );
-
-        String[] paymentMethods = {
-                "Selecciona método",
-                "Efectivo",
-                "Tarjeta",
-                "Transferencia"
-        };
-
-        cmbPaymentMethod =
-                new JComboBox<>(
-                        paymentMethods
-                );
+        int maxGuests = room.getCapacity();
         
-        cmbPaymentMethod.setPreferredSize(
-                new Dimension(300, 45)
+		spGuests = FormUtils.createNumberField(maxGuests);
+		spGuests.setPreferredSize(new Dimension(fieldWidth, 40));
+
+	    lblGuestsError = FormUtils.createErrorLabel();
+
+        personalPanel.add(FormUtils.createField( "Cantidad de huéspedes", spGuests, lblGuestsError, "", fieldWidth));
+        
+     // ===== MÉTODO DE PAGO =====
+        JLabel lblMetodoPago = new JLabel("Método de pago");
+        lblMetodoPago.setFont(AppFont.big());
+        lblMetodoPago.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 0));
+
+        JPanel paymentPanel = new JPanel( new BorderLayout(10,10));
+        paymentPanel.setBorder(
+    		BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220,220,220), 1, true),
+                BorderFactory.createEmptyBorder(15,15,15,15)
+            )
         );
 
-        cmbPaymentMethod.setMaximumSize(
-                new Dimension(
-                        Integer.MAX_VALUE,
-                        45
-                )
-        );
+        String[] paymentMethods = {"Selecciona método", "Efectivo", "Tarjeta", "Transferencia"};
+        cmbPaymentMethod = new JComboBox<>(paymentMethods);
+        cmbPaymentMethod.setPreferredSize(new Dimension(300, 45));
+        cmbPaymentMethod.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        cmbPaymentMethod.setMinimumSize(new Dimension(100, 45));
 
-        cmbPaymentMethod.setMinimumSize(
-                new Dimension(100, 45)
-        );
-
-        paymentPanel.add(
-                new JLabel("Método:"),
-                BorderLayout.NORTH
-        );
-
-        paymentPanel.add(
-                cmbPaymentMethod,
-                BorderLayout.CENTER
-        );
+        paymentPanel.add(new JLabel("Método:"), BorderLayout.NORTH);
+        paymentPanel.add(cmbPaymentMethod, BorderLayout.CENTER);
+        
         // CHECKBOXES
 
         chkTerms = new JCheckBox("Acepto términos y condiciones");
-
         chkPolicies = new JCheckBox("Acepto políticas de cancelación");
 
         // BOTÓN
         btnPay = ButtonFactory.createGoldButton(
             "CONFIRMAR PAGO",
             "/assets/img/btn-icons/button-save-icon.png",
-            "Haz click para confirmar el pago");
+            "Haz click para confirmar el pago"
+        );
 
         btnPay.setBackground(new Color(112, 238, 156));
 
@@ -384,41 +291,27 @@ public class PaymentView extends JPanel {
         leftPanel.add(Box.createVerticalStrut(20));
         leftPanel.add(btnPay);
 
-     // ================= RIGHT PANEL =================
+        // ================= RIGHT PANEL =================
 
         RoundedPanel rightPanel = new RoundedPanel(35);
-        rightPanel.setLayout(new BoxLayout(
-                rightPanel,
-                BoxLayout.Y_AXIS
-        ));
-
+        rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
         rightPanel.setBackground(Color.WHITE);
-
         rightPanel.setBorder(
-                BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(
-                                new Color(220,220,220),
-                                1,
-                                true
-                        ),
-                        BorderFactory.createEmptyBorder(
-                                25,25,25,25
-                        )
-                )
+            BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(220,220,220), 1, true),
+                BorderFactory.createEmptyBorder(25,25,25,25)
+            )
         );
 
-        rightPanel.setPreferredSize(
-                new Dimension(320, 0)
-        );
+        rightPanel.setPreferredSize(new Dimension(320, 0));
 
         // ================= IMAGE =================
 
-        RoundedImageOverlayPanel bg =
-                new RoundedImageOverlayPanel(
-                		room.getImagePath(),
-                        30,
-                        new Color(0,0,0,0)
-                );
+        RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
+    		room.getImagePath(),
+            30,
+            new Color(0,0,0,0)
+        );
 
         bg.setPreferredSize(new Dimension(270, 230));
         bg.setMaximumSize(new Dimension(Integer.MAX_VALUE, 230));
@@ -427,77 +320,32 @@ public class PaymentView extends JPanel {
         // ================= HOTEL =================
 
         JLabel lblHotel = new JLabel("ATLANTIS THE PALM");
+        lblHotel.setFont(AppFont.subtitle());
 
-        lblHotel.setFont(new Font(
-                "SansSerif",
-                Font.BOLD,
-                20
-        ));
-
-        JLabel lblAddress =
-                new JLabel("DUBAI");
-
-        lblAddress.setForeground(
-                new Color(120,120,120)
-        );
-
-        lblAddress.setFont(new Font(
-                "SansSerif",
-                Font.PLAIN,
-                13
-        ));
+        JLabel lblAddress = new JLabel("DUBAI");
+        lblAddress.setForeground(new Color(120,120,120));
+        lblAddress.setFont(AppFont.small());
 
         // ================= PRICE =================
 
-        JLabel lblPrice =
-                new JLabel("$ " + room.getPrice() + " por noche");
-
-        lblPrice.setFont(new Font(
-                "SansSerif",
-                Font.BOLD,
-                22
-        ));
+        JLabel lblPrice = new JLabel("$ " + room.getPrice() + " por noche");
+        lblPrice.setFont(AppFont.subtitle());
 
         // ================= DATA =================
 
-        Font infoFont =
-                new Font("SansSerif",
-                        Font.BOLD,
-                        16);
+        lblRoom = new JLabel("Habitación: " + room.getName());
+        lblCheckIn = new JLabel("Entrada: " + new SimpleDateFormat("dd/MM/yyyy").format(spCheckIn.getValue()));
+        lblCheckOut = new JLabel("Salida: " + new SimpleDateFormat("dd/MM/yyyy").format(spCheckOut.getValue()));
 
-        lblRoom =
-                new JLabel(
-                        "Habitación: " + room.getName()
-                );
-
-        lblCheckIn =
-                new JLabel(
-                		
-                        "Entrada: " + new SimpleDateFormat("dd/MM/yyyy").format(spCheckIn.getValue())
-                );
-
-        lblCheckOut =
-                new JLabel(
-                        "Salida: " + new SimpleDateFormat("dd/MM/yyyy").format(spCheckOut.getValue())
-                );
-
-        JLabel lblCapacity =
-                new JLabel("Capacidad: " + room.getCapacity() + " huespedes");
+        JLabel lblCapacity = new JLabel("Capacidad: " + room.getCapacity() + " huespedes");
+        JLabel lblBedType = new JLabel("Tipo de cama: " + room.getBedType());
+        lblNights = new JLabel("Estancia: 1 noche");
         
-        JLabel lblBedType =
-                new JLabel("Tipo de cama: " + room.getBedType());
-
-        lblNights =
-                new JLabel("Estancia: 1 noche");
-        
-        StringBuilder featuresText =
-                new StringBuilder("Incluye: ");
+        StringBuilder featuresText = new StringBuilder("Incluye: ");
 
         if (room.getAmenities() != null) {
 
-            for (int i = 0;
-                 i < room.getAmenities().size();
-                 i++) {
+            for (int i = 0; i < room.getAmenities().size(); i++) {
 
                 featuresText.append(
                 		room.getAmenities()
@@ -505,48 +353,32 @@ public class PaymentView extends JPanel {
                         .getName()
                 );
 
-                if (i <
-                		room.getAmenities().size() - 1) {
-
+                if (i < room.getAmenities().size() - 1) {
                     featuresText.append(", ");
                 }
             }
         }
 
-        txtaFeatures =
-                new JTextArea(
-                    featuresText.toString()
-                );
+        txtaFeatures = new JTextArea(featuresText.toString());
         txtaFeatures.setLineWrap(true);
         txtaFeatures.setWrapStyleWord(true);
 
         // aplicar fuente
-        lblRoom.setFont(infoFont);
-        lblCheckIn.setFont(infoFont);
-        lblCheckOut.setFont(infoFont);
-        lblCapacity.setFont(infoFont);
-        lblNights.setFont(infoFont);
+        lblRoom.setFont(AppFont.big());
+        lblCheckIn.setFont(AppFont.big());
+        lblCheckOut.setFont(AppFont.big());
+        lblCapacity.setFont(AppFont.big());
+        lblNights.setFont(AppFont.big());
 
         // ================= TOTAL =================
 
-        lblTotal =
-                new JLabel(
-                        "Total: " + room.getPrice()
-                );
-
-        lblTotal.setFont(new Font(
-                "SansSerif",
-                Font.BOLD,
-                22
-        ));
+        lblTotal = new JLabel("Total: " + room.getPrice());
+        lblTotal.setFont(AppFont.subtitle());
 
         // ================= SEPARATORS =================
 
-        JSeparator topSeparator =
-                new JSeparator();
-
-        JSeparator bottomSeparator =
-                new JSeparator();
+        JSeparator topSeparator = new JSeparator();
+        JSeparator bottomSeparator = new JSeparator();
         
         lblHotel.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblAddress.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -620,13 +452,10 @@ public class PaymentView extends JPanel {
     // ================= HEADER =================
 
     public JPanel headerSection() {
-
         JPanel superiorPanel = new JPanel(new GridLayout(1, 3));
-
+        
         superiorPanel.setBackground(UIColors.HEADER);
-        superiorPanel.setBorder(
-                new EmptyBorder(30, 30, 35, 30));
-
+        superiorPanel.setBorder(new EmptyBorder(30, 30, 35, 30));
         superiorPanel.add(headerLeftSection());
         superiorPanel.add(headerCenterSection());
         superiorPanel.add(headerRightSection());
@@ -635,16 +464,12 @@ public class PaymentView extends JPanel {
     }
     
     public JPanel headerCenterSection() {
-
         JPanel panel = createTransparentPanel();
         panel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        ImageIcon icon = new ImageIcon(
-                getClass().getResource(
-                        "/assets/img/logos/hotel-logo.png"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("/assets/img/logos/hotel-logo.png"));
 
-        Image img = icon.getImage().getScaledInstance(
-                250, 80, Image.SCALE_SMOOTH);
+        Image img = icon.getImage().getScaledInstance(250, 80, Image.SCALE_SMOOTH);
 
         JLabel logo = new JLabel(new ImageIcon(img));
 
@@ -669,7 +494,6 @@ public class PaymentView extends JPanel {
     }
     
     private JPanel createTransparentPanel() {
-
         JPanel panel = new JPanel();
         panel.setOpaque(false);
 
@@ -681,10 +505,7 @@ public class PaymentView extends JPanel {
         JMenuBar mb = new JMenuBar();
         mb.setFont(AppFont.big());
         mb.setForeground(Color.WHITE);
-        mb.setBorder(
-                BorderFactory.createEmptyBorder(
-                        5, 10, 5, 10));
-
+        mb.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         mb.setOpaque(true);
         mb.setBackground(UIColors.HEADER);
 
@@ -705,10 +526,7 @@ public class PaymentView extends JPanel {
     }
     
     public int getGuests(){
-
-        return (Integer)
-                spGuests
-                        .getValue();
+        return (Integer) spGuests.getValue();
     }
 
     public JTextField getTxtFirstName() {

@@ -1,212 +1,137 @@
 package repository;
 
-import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import config.DatabaseConnection;
-import models.ReservationStatus;
 import models.Room;
+import models.RoomStatus;
+import models.ReservationStatus;
 
 public class RoomRepository {
 
-    public void save(Room room){
+    // CRUD básico
+    public void save(Room room) {
 
-        String sql = "INSERT INTO rooms "
-                + "(roomNumber, floor, typeId, status) "
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO rooms (roomNumber, floor, typeId, status) VALUES (?, ?, ?, ?)";
 
-        try(
-            Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement pst = connection.prepareStatement(sql)
-        ){
-            pst.setInt(1, room.getRoomNumber());
-            pst.setInt(2, room.getFloor());
-            pst.setInt(3, room.getTypeId());
-            pst.setString(4, room.getStatus());
-            
-            System.out.println(room.getStatus());
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            pst.executeUpdate();
+            ps.setInt(1, room.getRoomNumber());
+            ps.setInt(2, room.getFloor());
+            ps.setInt(3, room.getTypeId());
+            ps.setString(4, RoomStatus.ACTIVE);
 
-        }catch(SQLException ex){
-            ex.printStackTrace();
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        
     }
 
-    public List<Room> getRooms(){
+    public boolean update(Room room) {
 
-        List<Room> rooms = new ArrayList<>();
+        String sql = "UPDATE rooms SET roomNumber=?, floor=?, typeId=?, status=? WHERE roomId=?";
 
-        String sql = "SELECT * FROM rooms";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery()
-        ){
-            while(rs.next()){
+            ps.setInt(1, room.getRoomNumber());
+            ps.setInt(2, room.getFloor());
+            ps.setInt(3, room.getTypeId());
+            ps.setString(4, room.getStatus());
+            ps.setInt(5, room.getRoomId());
 
-                rooms.add(
-                    new Room(
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean delete(int id) {
+
+        String sql = "DELETE FROM rooms WHERE roomId=?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // READ
+    public Room findById(int id) {
+
+        String sql = "SELECT * FROM rooms WHERE roomId=?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return new Room(
                         rs.getInt("roomId"),
                         rs.getInt("roomNumber"),
                         rs.getInt("floor"),
                         rs.getInt("typeId"),
                         rs.getString("status")
-                    )
                 );
             }
 
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return rooms;
-    }
-
-    public boolean delete(int id){
-
-        String sql = "DELETE FROM rooms WHERE roomId = ?";
-
-		try (Connection connection = DatabaseConnection.getConnection();
-				PreparedStatement pst = connection.prepareStatement(sql)) {
-
-			pst.setInt(1, id);
-			int affectedRows = pst.executeUpdate();
-			if (affectedRows > 0) {
-				System.out.println("Se eliminó");
-				return true;
-			}
-
-		} catch (SQLException ex) {
-			ex.printStackTrace();
-		}
-
-        return false;
-    }
-
-    public boolean update(Room updatedRoom) throws IOException{
-
-    	String sql = "UPDATE rooms "
-    		      + "SET roomNumber = ?, floor = ?, "
-    		      + "typeId = ?, status = ? "
-    		      + "WHERE roomId = ?";
-    	
-		try (Connection connection = DatabaseConnection.getConnection();
-				PreparedStatement pst = connection.prepareStatement(sql)) {
-
-			pst.setInt(1,updatedRoom.getRoomNumber());
-            pst.setInt(2,updatedRoom.getFloor());
-            pst.setInt(3,updatedRoom.getTypeId());
-            pst.setString(4,updatedRoom.getStatus());
-            pst.setInt(5,updatedRoom.getRoomId());
-
-            int affectedRows = pst.executeUpdate();
-
-            if (affectedRows > 0) {
-                return true;
-            }
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return false;
-    }
-
-    public Room findById(int id){
-
-        String sql = "SELECT * FROM rooms WHERE roomId = ?";
-
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
-            ps.setInt(1,id);
-
-            ResultSet rs = ps.executeQuery();
-
-            if(rs.next()){
-
-                return new Room(
-                    rs.getInt("roomId"),
-                    rs.getInt("roomNumber"),
-                    rs.getInt("floor"),
-                    rs.getInt("typeId"),
-                    rs.getString("status")
-                );
-            }
-
-        }catch(Exception e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return null;
     }
 
-    public List<Room> findByTypeId(int typeId){
+    public List<Room> getRooms() {
 
-        List<Room> rooms = new ArrayList<>();
+        List<Room> list = new ArrayList<>();
 
-        String sql = "SELECT * FROM rooms WHERE typeId = ?";
+        String sql = "SELECT * FROM rooms";
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
-            ps.setInt(1,typeId);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
-            ResultSet rs = ps.executeQuery();
-
-            while(rs.next()){
-
-                rooms.add(
-                    new Room(
+            while (rs.next()) {
+                list.add(new Room(
                         rs.getInt("roomId"),
                         rs.getInt("roomNumber"),
                         rs.getInt("floor"),
                         rs.getInt("typeId"),
                         rs.getString("status")
-                    )
-                );
+                ));
             }
 
-        }catch(Exception e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return rooms;
+        return list;
     }
-    
-    public boolean existsRoomNumber(int roomNumber){
 
-        String sql = "SELECT 1 FROM rooms WHERE roomNumber = ? LIMIT 1";
+    public List<Room> findByTypeId(int typeId) {
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
+        List<Room> list = new ArrayList<>();
 
-            ps.setInt(1, roomNumber);
-
-            ResultSet rs = ps.executeQuery();
-
-            return rs.next();
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-    
-    //Checar si hay habitaciones que sean de este tipo de habitación
-    public boolean existsByTypeId(int typeId){
-
-        String sql = "SELECT COUNT(*) FROM rooms WHERE typeId = ?";
+        String sql = "SELECT * FROM rooms WHERE typeId=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -215,8 +140,72 @@ public class RoomRepository {
 
             ResultSet rs = ps.executeQuery();
 
-            if(rs.next()){
-                return rs.getInt(1) > 0;
+            while (rs.next()) {
+                list.add(new Room(
+                        rs.getInt("roomId"),
+                        rs.getInt("roomNumber"),
+                        rs.getInt("floor"),
+                        rs.getInt("typeId"),
+                        rs.getString("status")
+                ));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // VALIDATIONS
+    public boolean existsRoomNumber(int roomNumber) {
+
+        String sql = "SELECT 1 FROM rooms WHERE roomNumber=? LIMIT 1";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, roomNumber);
+            return ps.executeQuery().next();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public boolean existsByTypeId(int typeId) {
+
+        String sql = "SELECT 1 FROM rooms WHERE typeId=? LIMIT 1";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, typeId);
+            return ps.executeQuery().next();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // Lógica de negocios
+    public boolean isRoomOperational(int roomId) {
+
+        String sql = "SELECT status FROM rooms WHERE roomId=?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, roomId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return RoomStatus.ACTIVE.equals(rs.getString(1));
             }
 
         } catch (SQLException e) {
@@ -225,67 +214,35 @@ public class RoomRepository {
 
         return false;
     }
-    
-    public List<Room> getByType(int typeId){
 
-        List<Room> rooms=new ArrayList<>();
-
-        String sql="SELECT * FROM rooms WHERE typeId = ?";
-
-        try(
-            Connection conn=DatabaseConnection.getConnection();
-            PreparedStatement ps=conn.prepareStatement(sql)
-        ){
-
-            ps.setInt(1,typeId);
-
-            ResultSet rs=ps.executeQuery();
-
-            while(rs.next()){
-                rooms.add(
-                    new Room(
-                        rs.getInt("roomId"),
-                        rs.getInt("roomNumber"),
-                        rs.getInt("floor"),
-                        rs.getInt("typeId"),
-                        rs.getString("status")
-                    )
-                );
-            }
-
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-
-        return rooms;
-    }
-    
-    public boolean hasActiveReservation(int roomId){
+    public boolean isRoomAvailableByDates(int roomId, LocalDate checkIn, LocalDate checkOut) {
 
         String sql =
-            "SELECT 1 FROM reservations " +
-            "WHERE roomId = ? " +
-            "AND status IN (?,?) " +
-            "AND checkOutDate >= CURDATE() " +
-            "LIMIT 1";
+                "SELECT 1 FROM reservations " +
+                "WHERE roomId=? " +
+                "AND status=? " +
+                "AND (checkInDate < ? AND checkOutDate > ?) " +
+                "LIMIT 1";
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1,roomId);
-            ps.setString(2,ReservationStatus.PENDING);
-            ps.setString(3,ReservationStatus.CONFIRMED);
+            ps.setInt(1, roomId);
+            ps.setString(2, ReservationStatus.CONFIRMED);
+            ps.setDate(3, Date.valueOf(checkOut));
+            ps.setDate(4, Date.valueOf(checkIn));
 
-            ResultSet rs=ps.executeQuery();
+            return !ps.executeQuery().next();
 
-            return rs.next();
-
-        }catch(Exception e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return false;
+    }
+
+    public boolean isRoomAvailable(int roomId, LocalDate checkIn, LocalDate checkOut) {
+        return isRoomOperational(roomId)
+                && isRoomAvailableByDates(roomId, checkIn, checkOut);
     }
 }

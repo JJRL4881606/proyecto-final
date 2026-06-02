@@ -1,6 +1,6 @@
 package controllers.booking;
 
-import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -9,10 +9,11 @@ import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerNumberModel;
+
 import models.Reservation;
 import models.ReservationStatus;
 import models.Room;
-import models.RoomStatus;
 import models.RoomType;
 import repository.ReservationRepository;
 import repository.RoomRepository;
@@ -69,104 +70,79 @@ public class ReservationFormController {
     }
 
     private void handleSave() {
-        if (!validateForm()) {
-            return;
-        }
-        
-        ReservationRepository reservationRepo = new ReservationRepository();
 
-    	int reservationId = 0;
+        if(!validateForm()) return;
 
-    	if(view.getReservation()!=null){
-    	    reservationId = view.getReservation().getReservationId();
-    	}
+        ReservationRepository repo = new ReservationRepository();
 
-    	boolean available = reservationRepo.isRoomAvailable(
+        int reservationId = (view.getReservation() != null) ? view.getReservation().getReservationId() : 0;
 
-    	        view.getRoomId(),
+        LocalDate checkIn = ((Date)view.getSpCheckIn().getValue())
+            .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-    	        ((Date)view.getSpCheckIn().getValue())
-    	            .toInstant()
-    	            .atZone(ZoneId.systemDefault())
-    	            .toLocalDate(),
+        LocalDate checkOut = ((Date)view.getSpCheckOut().getValue())
+            .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-    	        ((Date)view.getSpCheckOut().getValue())
-    	            .toInstant()
-    	            .atZone(ZoneId.systemDefault())
-    	            .toLocalDate(),
+        String status = view.getStatus();
 
-    	        reservationId
-    	);
+        if(status.equals(ReservationStatus.CONFIRMED)) {
 
-    	if(!available){
-    	    JOptionPane.showMessageDialog(
-    	        null,
-    	        "La habitación ya está ocupada en esas fechas"
-    	    );
+            boolean available;
 
-    	    return;
-    	}
-        	
-        Reservation reservation = view.getReservation();
-        Date checkIn = (Date) view.getSpCheckIn().getValue();
-        Date checkOut = (Date) view.getSpCheckOut().getValue();
+            if(view.getReservation() == null) {
 
-        if (reservation == null) {
-            reservation = new Reservation(
-                0,
-                view.getUserId(),
-                view.getRoomId(),
-                checkIn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                checkOut.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                view.getGuests(),
-                view.getStatus(),
-                view.getTotal(),
-                LocalDateTime.now()
-            );
-        } else {
-            reservation.setUserId(view.getUserId());
-            reservation.setRoomId(view.getRoomId());
-            reservation.setCheckInDate(checkIn.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            reservation.setCheckOutDate(checkOut.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-            reservation.setGuests(view.getGuests());
-            reservation.setStatus(view.getStatus());
-            reservation.setTotal(view.getTotal());
+                available = repo.isRoomAvailableByDates(
+                    view.getRoomId(),
+                    checkIn,
+                    checkOut
+                );
+
+            } else {
+
+                available = repo.isRoomAvailableByDates(
+                    view.getRoomId(),
+                    checkIn,
+                    checkOut,
+                    view.getReservation().getReservationId()
+                );
+            }
+
+            if(!available){
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Habitación no disponible en esas fechas"
+                );
+                return;
+            }
         }
 
-        view.setSaved(true);
+        Reservation reservation = (view.getReservation() == null)
+            ? new Reservation(
+        	    0,
+        	    view.getUserId(),
+        	    view.getRoomId(),
+        	    checkIn,
+        	    checkOut,
+        	    view.getGuests(),
+        	    view.getStatus(),
+        	    view.getTotal(),
+        	    LocalDateTime.now()
+        	)
+            : view.getReservation();
+
+        reservation.setUserId(view.getUserId());
+        reservation.setRoomId(view.getRoomId());
+        reservation.setCheckInDate(checkIn);
+        reservation.setCheckOutDate(checkOut);
+        reservation.setGuests(view.getGuests());
+        reservation.setStatus(view.getStatus());
+        reservation.setTotal(view.getTotal());
+
         view.setReservation(reservation);
-        
-        //Poner la habitación como ocupada, para que no se pueda reserva 
-        RoomRepository roomRepo = new RoomRepository();
-
-        	Room room = roomRepo.findById(reservation.getRoomId());
-
-        	if(room != null){
-
-        	    if(
-        	        reservation.getStatus().equals(ReservationStatus.PENDING) ||
-        	        reservation.getStatus().equals(ReservationStatus.CONFIRMED)
-        	    ){
-        	        room.setStatus(RoomStatus.OCCUPIED);
-
-        	    }else if(
-        	        reservation.getStatus().equals(ReservationStatus.CANCELED) ||
-        	        reservation.getStatus().equals(ReservationStatus.COMPLETED)
-        	    ){
-        	        room.setStatus(RoomStatus.AVAILABLE);
-        	    }
-
-        	    try{
-        	        roomRepo.update(room);
-
-        	    }catch(IOException e){
-        	        e.printStackTrace();
-        	    }
-        	}
-        	
+        view.setSaved(true);
         view.dispose();
     }
-
+    
     private void initDateRestrictions(){
 
         FormUtils.onlyDateNumbers(view.getSpCheckIn());
@@ -224,7 +200,7 @@ public class ReservationFormController {
         }
 
         // Configura el spinner con el nuevo límite superior
-        view.getSpGuests().setModel(new javax.swing.SpinnerNumberModel(
+        view.getSpGuests().setModel(new SpinnerNumberModel(
             Math.min(current, maxGuests), 1, maxGuests, 1
         ));
     }

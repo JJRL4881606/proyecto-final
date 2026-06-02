@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import models.Room;
+import models.RoomStatus;
 import models.RoomType;
 import repository.ReservationRepository;
 import repository.RoomRepository;
@@ -59,9 +60,31 @@ public class RoomController {
 				}else{
 					int row = view.getSelectedModelRow();
 					Room originalRoom = model.getRoomAt(row);
+					
 					savedRoom.setRoomId(originalRoom.getRoomId());
 
+					ReservationRepository reservationRepo = new ReservationRepository();
+
+					if(
+					    savedRoom.getStatus().equals(RoomStatus.OUT_OF_SERVICE)
+					    &&
+					    reservationRepo.hasActiveReservation(
+					        savedRoom.getRoomId()
+					    )
+					){
+
+					    JOptionPane.showMessageDialog(
+					        null,
+					        "No puedes poner esta habitación fuera de servicio porque tiene reservas activas",
+					        "Error",
+					        JOptionPane.ERROR_MESSAGE
+					    );
+
+					    return;
+					}
+
 					boolean updated = repo.update(savedRoom);
+					
 					if(updated){
 						model.updateRow(row,savedRoom);
 					}
@@ -108,27 +131,25 @@ public class RoomController {
 	        return;
 	    }
 
-	    Room room=model.getRoomAt(row);
+	    Room room = model.getRoomAt(row);
 
-	    ReservationRepository reservationRepo =
-	        new ReservationRepository();
+	    ReservationRepository reservationRepo = new ReservationRepository();
 
-	    if(reservationRepo.hasActiveReservation(
-	        room.getRoomId()
-	    )){
+    	if(reservationRepo.hasReservationsByRoom(
+    	    room.getRoomId()
+    	)){
 
-	        JOptionPane.showMessageDialog(
-	            null,
-	            "No puedes eliminar esta habitación porque tiene reservas activas",
-	            "Error",
-	            JOptionPane.ERROR_MESSAGE
-	        );
+    	    JOptionPane.showMessageDialog(
+    	        null,
+    	        "No puedes eliminar esta habitación porque tiene reservaciones asociadas",
+    	        "Error",
+    	        JOptionPane.ERROR_MESSAGE
+    	    );
 
-	        return;
-	    }
+    	    return;
+    	}
 
-	    boolean deleted=
-	        repo.delete(room.getRoomId());
+	    boolean deleted = repo.delete(room.getRoomId());
 
 	    if(deleted){
 	        model.removeRow(row);

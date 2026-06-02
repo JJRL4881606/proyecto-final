@@ -207,6 +207,11 @@ public class UserFormDialog extends JDialog{
 	public void clearErrors() {
 		clearNameError();
 		clearSurnameError();
+		
+	    if(txtPassword != null) {
+	    	clearPasswordError();
+	    }
+
 		clearEmailError();
 		clearPhoneError();
 		clearCountryError();
@@ -223,6 +228,12 @@ public class UserFormDialog extends JDialog{
 		FormUtils.clearError(lblSurnameError, txtSurname);
 	}
 
+	public void clearPasswordError() {
+	    if(txtPassword != null) {
+	        FormUtils.clearError(lblPasswordError, txtPassword);
+	    }
+	}
+	
 	public void clearEmailError(){
 		FormUtils.clearError(lblEmailError, txtEmail);
 	}
@@ -401,6 +412,11 @@ public class UserFormDialog extends JDialog{
 	    txtEmail.setBorder(FormUtils.redBorder);
 	}
 
+	public void setPasswordError(String msg) {
+	    lblPasswordError.setText(msg);
+	    txtPassword.setBorder(FormUtils.redBorder);
+	}
+
 	public void setPhoneError(String msg) {
 	    lblPhoneError.setText(msg);
 	    txtPhone.setBorder(FormUtils.redBorder);
@@ -440,5 +456,9 @@ public class UserFormDialog extends JDialog{
 
 	public JLabel getLblPhoneError() {
 		return lblPhoneError;
+	}
+
+	public JLabel getLblPasswordError() {
+		return lblPasswordError;
 	}
 }

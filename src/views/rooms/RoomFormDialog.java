@@ -95,7 +95,7 @@ public class RoomFormDialog extends JDialog {
         panel.add(FormUtils.createField("Tipo habitación", comboRoomType, lblRoomTypeError, "Seleccione tipo", fieldWidth));
 
         //DISPONIBLE
-        String[] status = {"Seleccione estado", RoomStatus.AVAILABLE, RoomStatus.OCCUPIED, RoomStatus.OUT_OF_SERVICE};
+        String[] status = {"Seleccione estado", RoomStatus.ACTIVE, RoomStatus.OUT_OF_SERVICE};
         comboStatus = FormUtils.createCombo(status);
         lblStatusError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField( "Estado", comboStatus, lblStatusError, "Seleccione estado", fieldWidth));      

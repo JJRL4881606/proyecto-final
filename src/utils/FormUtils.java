@@ -151,6 +151,13 @@ public class FormUtils {
     	JSpinner number = new RoundedSpinner(new SpinnerNumberModel(1, 1, max, 1));
     	number.setBackground(UIColors.FIELD);
     	number.setBorder(normalBorder);
+    	
+        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(number, "#");
+        number.setEditor(editor);
+
+        JFormattedTextField field = editor.getTextField();
+        field.setHorizontalAlignment(JTextField.CENTER);
+
 		return number;
     }
     

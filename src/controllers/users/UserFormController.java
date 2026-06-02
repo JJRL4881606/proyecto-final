@@ -38,16 +38,6 @@ public class UserFormController {
         view.getRbtnFemale().addActionListener(e -> validateGender());
         view.getComboRole().addActionListener(e -> validateRole());
         
-        if(view.getChkShowPassword() != null) {
-            view.getChkShowPassword().addActionListener(e -> {
-                if(view.getChkShowPassword().isSelected()) {
-                    view.getTxtPassword().setEchoChar((char) 0);
-                } else {
-                    view.getTxtPassword().setEchoChar('•');
-                }
-            });
-        }
-        
         // DOCUMENT LISTENERs
         view.getTxtName().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateName(); }
@@ -67,11 +57,31 @@ public class UserFormController {
             public void changedUpdate(DocumentEvent e) { validateEmail(); }
         });
         
+        if(view.getTxtPassword() != null) {
+	        view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
+	            public void insertUpdate(DocumentEvent e) { validatePassword(); }
+	            public void removeUpdate(DocumentEvent e) { validatePassword(); }
+	            public void changedUpdate(DocumentEvent e) { validatePassword(); }
+	        });
+	        
+		    FormUtils.addFocusEffect(view.getTxtPassword(), view.getLblPasswordError());
+        }
+        
         view.getTxtPhone().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validatePhone(); }
             public void removeUpdate(DocumentEvent e) { validatePhone(); }
             public void changedUpdate(DocumentEvent e) { validatePhone(); }
         });
+        
+        if(view.getChkShowPassword() != null) {
+            view.getChkShowPassword().addActionListener(e -> {
+                if(view.getChkShowPassword().isSelected()) {
+                    view.getTxtPassword().setEchoChar((char) 0);
+                } else {
+                    view.getTxtPassword().setEchoChar('•');
+                }
+            });
+        }
         
 	    FormUtils.addFocusEffect(view.getTxtName(), view.getLblNameError());
 	    FormUtils.addFocusEffect(view.getTxtSurname(), view.getLblSurnameError());
@@ -136,6 +146,7 @@ public class UserFormController {
 
         if(!validateName()) valid=false;
         if(!validateSurname()) valid=false;
+        if(!validatePassword()) valid=false;
         if(!validateEmail()) valid=false;
         if(!validatePhone()) valid=false;
         if(!validateCountry()) valid=false;
@@ -174,6 +185,28 @@ public class UserFormController {
 	    
 	    view.clearSurnameError();
 		return true;
+	}
+	
+	public boolean validatePassword() {
+
+	    if(view.getTxtPassword() == null) {
+	        return true; // estamos editando
+	    }
+
+	    String password = view.getPassword();
+
+	    if(password.isEmpty()) {
+	        view.setPasswordError("La contraseña es obligatoria");
+	        return false;
+	    }
+
+	    if(password.length() < 8) {
+	        view.setPasswordError("Debe tener mínimo 8 caracteres");
+	        return false;
+	    }
+
+	    view.clearPasswordError();
+	    return true;
 	}
 	 
 	public boolean validateEmail() {
