@@ -16,13 +16,13 @@ public class RoomCardController {
 
     private RoomCard roomCard;
     private MainView mainView;
-    private RoomType room;
+    private RoomType roomType;
     private User user;
 
-    public RoomCardController(RoomCard roomCard, MainView mainView, RoomType room, User user) {
+    public RoomCardController(RoomCard roomCard, MainView mainView, RoomType roomType, User user) {
         this.roomCard = roomCard;
         this.mainView = mainView;
-        this.room = room;
+        this.roomType = roomType;
         this.user = user;
 
         initController();
@@ -31,33 +31,9 @@ public class RoomCardController {
     private void initController() {
     	// detalles
         roomCard.getBtnDetails().addActionListener(e -> {
-            mainView.roomDetailsPanel.setRoom(
-                roomCard.getRoom()
-            );
-
-            mainView.showView(
-                MainView.ROOM_DETAILS
-            );
+            mainView.roomDetailsPanel.setRoomType(roomCard.getRoomType());
+            mainView.showView(MainView.ROOM_DETAILS);
         });
-
-        // reservar
-        /*roomCard.getBtnReserve().addActionListener(e -> {
-
-            SearchBar bookingSearch =
-                mainView.bookingSearchPanel.getSearchBar();
-
-            bookingSearch.setGuests(
-                roomCard.getRoom().getCapacity()
-            );
-
-            mainView.bookingSearchPanel.setRooms(
-                List.of(roomCard.getRoom())
-            );
-
-            mainView.showView(
-                MainView.BOOKING_SEARCH
-            );
-        });*/
     	
         // Acción para reservar
         roomCard.getBtnReserve().addActionListener(new ActionListener() {
@@ -70,7 +46,7 @@ public class RoomCardController {
                 }
 
                 // Abrir nueva ventana de pago
-                PaymentWindow paymentWindow = new PaymentWindow(room,user);
+                PaymentWindow paymentWindow = new PaymentWindow(roomType,user);
                 paymentWindow.setVisible(true);
             }
         });

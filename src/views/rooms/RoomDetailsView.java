@@ -23,6 +23,7 @@ import components.RoundedPanel;
 import models.Amenity;
 import models.RoomImage;
 import models.RoomType;
+import repository.RoomRepository;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -41,7 +42,7 @@ public class RoomDetailsView extends JPanel {
     private JLabel lblCapacity;
     private JButton btnReserve;
     private JTextArea lblDescription;
-    private RoomType room;
+    private RoomType roomType;
     
     //para que el panel de descripcion crezca segun necesite
     private RoundedPanel bookingLeftPanel;
@@ -165,10 +166,10 @@ public class RoomDetailsView extends JPanel {
         btnReserve.setFont(AppFont.subtitle());
         btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        Dimension btn = new Dimension(220,55);
+        Dimension btn = new Dimension(230,55);
         btnReserve.setPreferredSize(btn);
         btnReserve.setMaximumSize(btn);
-
+        
         right.add(Box.createRigidArea(new Dimension(0,50)));
         right.add(info);
         right.add(Box.createRigidArea(new Dimension(0,30)));
@@ -327,20 +328,20 @@ public class RoomDetailsView extends JPanel {
         return panel;
     }
     
-    public void setRoom(RoomType room) {
-        this.room = room;
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
 
         imageContainer.removeAll();
         
-        imagePanel = new RoundedImagePanel(room.getImagePath(), 900, 500, 30);
+        imagePanel = new RoundedImagePanel(roomType.getImagePath(), 900, 500, 30);
         imageContainer.add(imagePanel);
 
-        lblName.setText(room.getName());
-        lblPrice.setText("$" + room.getPrice() + "/noche");
-        lblBed.setText(room.getBedType());
-        lblCapacity.setText(room.getCapacity() + " huéspedes");
+        lblName.setText(roomType.getName());
+        lblPrice.setText("$" + roomType.getPrice() + "/noche");
+        lblBed.setText(roomType.getBedType());
+        lblCapacity.setText(roomType.getCapacity() + " huéspedes");
 
-        lblDescription.setText(room.getDescription());
+        lblDescription.setText(roomType.getDescription());
         lblDescription.setSize(730, Short.MAX_VALUE);
 
         Dimension size = lblDescription.getPreferredSize();
@@ -349,6 +350,18 @@ public class RoomDetailsView extends JPanel {
         lblDescription.setPreferredSize(descSize);
         lblDescription.setMinimumSize(descSize);
         lblDescription.setMaximumSize(descSize);
+        
+        boolean available =
+            new RoomRepository().hasActiveRoomsByType(
+            	roomType.getTypeId()
+            );
+
+        if (!available) {
+            btnReserve.setEnabled(false);
+            btnReserve.setToolTipText("No hay habitaciones disponibles de este tipo");
+            btnReserve.setText("NO DISPONIBLE");
+            btnReserve.setBackground(UIColors.FIELD_BORDER);
+        }
 
         // altura total tarjeta
         int panelHeight = size.height + 110;
@@ -360,7 +373,7 @@ public class RoomDetailsView extends JPanel {
          
         featuresPanel.removeAll();
 
-        for(Amenity amenity : room.getAmenities()){
+        for(Amenity amenity : roomType.getAmenities()){
 
             RoundedPanel item = new RoundedPanel(25);
             item.setBackground(UIColors.CARD);
@@ -393,7 +406,7 @@ public class RoomDetailsView extends JPanel {
             featuresPanel.add(item);
         }
 
-        int rows = (int) Math.ceil(room.getAmenities().size() / 5.0);
+        int rows = (int) Math.ceil(roomType.getAmenities().size() / 5.0);
 
         featuresPanel.setPreferredSize(new Dimension(1200, rows * 170));
         featuresPanel.revalidate();
@@ -403,9 +416,9 @@ public class RoomDetailsView extends JPanel {
         carouselPanel.removeAll();
         carouselPanel.setSize(carouselPanel.getPreferredSize());
 
-        if(room.getExtraImages() != null && !room.getExtraImages().isEmpty()){
+        if(roomType.getExtraImages() != null && !roomType.getExtraImages().isEmpty()){
 
-        	for(RoomImage img : room.getExtraImages()){
+        	for(RoomImage img : roomType.getExtraImages()){
         		
                 if(img == null || img.getImagePath() == null ||
                     img.getImagePath().trim().isEmpty()){
@@ -422,7 +435,7 @@ public class RoomDetailsView extends JPanel {
             }
         }
 
-        int count = room.getExtraImages() != null ? room.getExtraImages().size() : 0;
+        int count = roomType.getExtraImages() != null ? roomType.getExtraImages().size() : 0;
 
         int width = (count * 320) + 20;
         
@@ -447,7 +460,7 @@ public class RoomDetailsView extends JPanel {
         return btnReserve;
     }
 
-    public RoomType getRoom() {
-        return room;
+    public RoomType getRoomType() {
+        return roomType;
     }
 }

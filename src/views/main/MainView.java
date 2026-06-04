@@ -72,6 +72,7 @@ public class MainView extends JPanel{
 	private JMenuItem btnShowRooms;
 	private JMenuItem btnAccount;
 	private JMenuItem btnMyReservations;
+	private UnderlineMenu system;
 	
 	private JMenuItem logOut;
 	
@@ -121,6 +122,7 @@ public class MainView extends JPanel{
         
     private void configurePermissions() {
         if(!Session.getRole().equals(Role.ADMIN)) {
+            system.setVisible(false);
             btnUsers.setVisible(false);
             btnRoomTypes.setVisible(false);
             btnRooms.setVisible(false);
@@ -160,7 +162,18 @@ public class MainView extends JPanel{
     }
     
     public JPanel headerRightSection(){
-        return createTransparentPanel();
+        JPanel panel = createTransparentPanel();
+    	panel.setLayout(new GridBagLayout());
+        
+        if(Session.getRole().equals(Role.ADMIN)) {
+        	JLabel lblCurrentView = new JLabel("VISTA DE ADMINISTRADOR");
+        	lblCurrentView.setFont(AppFont.big());
+        	lblCurrentView.setForeground(Color.WHITE);
+        	lblCurrentView.setAlignmentX(CENTER_ALIGNMENT);
+        	panel.add(lblCurrentView);
+        }
+
+        return panel;
     }
     
     public JPanel headerLeftSection(){
@@ -200,46 +213,46 @@ public class MainView extends JPanel{
         rooms.add(btnShowRooms);
         
         // SISTEMA
-    	JMenu sistema = new UnderlineMenu("Sistema");
-    	sistema.setMnemonic(KeyEvent.VK_S);
-        mb.add(sistema);
+    	system = new UnderlineMenu("Sistema");
+    	system.setMnemonic(KeyEvent.VK_S);
+        mb.add(system);
         
         btnUsers = new JMenuItem("Ver usuarios");
         btnUsers.setMnemonic(KeyEvent.VK_U);
-        sistema.add(btnUsers);
+        system.add(btnUsers);
         
         btnRoomTypes = new JMenuItem("Ver tipos de habitaciones");
         btnRoomTypes.setMnemonic(KeyEvent.VK_T);
-        sistema.add(btnRoomTypes);
+        system.add(btnRoomTypes);
         
         setBtnRooms(new JMenuItem("Ver habitaciones"));
         getBtnRooms().setMnemonic(KeyEvent.VK_H);
-        sistema.add(getBtnRooms());
+        system.add(getBtnRooms());
         
         btnAmenities = new JMenuItem("Ver amenidades");
         btnAmenities.setMnemonic(KeyEvent.VK_A);
-        sistema.add(btnAmenities);
+        system.add(btnAmenities);
         
         btnReservations = new JMenuItem("Ver reservaciones");
         btnReservations.setMnemonic(KeyEvent.VK_R);
-        sistema.add(btnReservations);
+        system.add(btnReservations);
         
         // USUARIO
-        JMenu usuario = new UnderlineMenu("Usuario");
-        usuario.setMnemonic(KeyEvent.VK_U);
-        mb.add(usuario);
+        JMenu user = new UnderlineMenu("Usuario");
+        user.setMnemonic(KeyEvent.VK_U);
+        mb.add(user);
 
         btnAccount = new JMenuItem("Mi cuenta");
         btnAccount.setMnemonic(KeyEvent.VK_C);
-        usuario.add(btnAccount);
+        user.add(btnAccount);
 
         btnMyReservations = new JMenuItem("Mis reservas");
-        usuario.add(btnMyReservations);        
-        usuario.addSeparator();
+        user.add(btnMyReservations);        
+        user.addSeparator();
 
         logOut = new JMenuItem("Cerrar sesión");
         logOut.setMnemonic(KeyEvent.VK_C);
-        usuario.add(logOut); 
+        user.add(logOut); 
 
         return mb;
     }
@@ -311,7 +324,7 @@ public class MainView extends JPanel{
         roomsPanel = new RoomsView();
         
         bookingSearchPanel = new BookingSearchView(user, this);
-        new BookingSearchController(bookingSearchPanel,this);
+        new BookingSearchController(bookingSearchPanel);
         
         amenitiesPanel = new AmenitiesView();
         reservationsPanel = new ReservationsView();
@@ -320,7 +333,7 @@ public class MainView extends JPanel{
         new ShowRoomsController(showRoomsPanel, this);
         
         roomDetailsPanel = new RoomDetailsView();
-        new RoomDetailsController(roomDetailsPanel, this);
+        new RoomDetailsController(roomDetailsPanel);
         
         accountPanel = new AccountView();
         new AccountController(accountPanel, user);

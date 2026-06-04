@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import models.Amenity;
 import models.RoomType;
+import repository.RoomRepository;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -25,12 +26,11 @@ public class RoomCard extends RoundedPanel {
 
 	private RoundedButton btnDetails;
 	private RoundedButton btnReserve;
-	private RoomType room;
+	private RoomType roomType;
 
 	public RoomCard(RoomType room) {
 	    super(25);
-	    this.room = room;
-	    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	    this.roomType = room;
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(UIColors.CARD);
         setPreferredSize(new Dimension(340, 610));
@@ -126,6 +126,18 @@ public class RoomCard extends RoundedPanel {
             "Reservar habitación"
         );
         
+        boolean available =
+    	    new RoomRepository().hasActiveRoomsByType(
+    	        room.getTypeId()
+    	    );
+
+    	if(!available) {
+    	    btnReserve.setEnabled(false);
+    	    btnReserve.setToolTipText("No hay habitaciones disponibles de este tipo");
+    	    btnReserve.setText("No disponible");
+    	    btnReserve.setBackground(UIColors.FIELD_BORDER);
+    	}
+        
         btnDetails = ButtonFactory.createGoldButton(
             "Ver detalles",
             "/assets/img/btn-icons/button-search-icon.png",
@@ -135,7 +147,7 @@ public class RoomCard extends RoundedPanel {
         btnReserve.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnDetails.setAlignmentX(Component.CENTER_ALIGNMENT);
         
-	    Dimension btn = new Dimension(170,40);
+	    Dimension btn = new Dimension(190,40);
 	    btnReserve.setPreferredSize(btn);
 	    btnReserve.setMinimumSize(btn);
 	    btnReserve.setMaximumSize(btn);
@@ -176,7 +188,7 @@ public class RoomCard extends RoundedPanel {
         return btnReserve;
     }
 
-    public RoomType getRoom() {
-        return room;
+    public RoomType getRoomType() {
+        return roomType;
     }
 }

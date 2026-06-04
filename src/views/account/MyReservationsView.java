@@ -21,6 +21,7 @@ public class MyReservationsView extends JPanel {
     
     private JLabel lblInfo;
     private JLabel lblPolicy;
+    private JLabel lblOrder;
 
     public MyReservationsView() {
 
@@ -39,6 +40,13 @@ public class MyReservationsView extends JPanel {
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setMaximumSize(title.getPreferredSize());
 
+        lblOrder = new JLabel("<html><center>En orden d más recientes a más antiguas.</center></html>");
+        lblOrder.setFont(AppFont.normal());
+    	lblOrder.setForeground(new Color(80,80,80));
+    	lblOrder.setAlignmentX(CENTER_ALIGNMENT);
+    	lblOrder.setHorizontalAlignment(JLabel.CENTER);
+    	lblOrder.setMaximumSize(lblOrder.getPreferredSize());
+    	
         lblInfo = new JLabel("<html><center>Para modificar fechas, huéspedes o detalles de una reservación,<br>comunícate con recepción al +52 612 123 4567.</center></html>");
     	lblInfo.setFont(AppFont.normal());
     	lblInfo.setForeground(new Color(80,80,80));
@@ -54,6 +62,8 @@ public class MyReservationsView extends JPanel {
     	lblPolicy.setMaximumSize(lblPolicy.getPreferredSize());
 
     	card.add(title);
+    	card.add(Box.createVerticalStrut(15));
+    	card.add(lblOrder);
     	card.add(Box.createVerticalStrut(15));
     	card.add(lblInfo);
     	card.add(Box.createVerticalStrut(10));

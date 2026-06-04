@@ -386,7 +386,7 @@ public class HomeView extends JPanel{
         section.setOpaque(false);
 
         // título
-        JLabel title = new JLabel("Servicios y amenidades");
+        JLabel title = new JLabel("Servicios");
         title.setFont(AppFont.title());
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 

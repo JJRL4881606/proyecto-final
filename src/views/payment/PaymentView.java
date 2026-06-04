@@ -3,6 +3,7 @@ package views.payment;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
@@ -19,7 +20,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -30,7 +30,6 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.ImageIcon;
 
 import javax.swing.border.EmptyBorder;
@@ -90,6 +89,10 @@ public class PaymentView extends JPanel {
     private RoomType room;
     
     private User user;
+	private JLabel lblLogo;
+    
+    //labels de error
+	private JLabel lblPaymentMethodError;
 
     public PaymentView(RoomType room,User user) {
 		this.room = room;
@@ -115,59 +118,47 @@ public class PaymentView extends JPanel {
         // ===== DATOS PERSONALES =====
         JLabel lblPersonal =new JLabel("Datos Personales");
         lblPersonal.setFont(AppFont.big());
-        lblPersonal.setBorder(BorderFactory.createEmptyBorder(0,5,10,0));
+        lblPersonal.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
+        lblPersonal.setAlignmentX(CENTER_ALIGNMENT);
+        lblPersonal.setHorizontalAlignment(JLabel.CENTER);
         
-        JPanel personalPanel = new JPanel(new GridLayout(4, 1, 10, 10));
+        JPanel personalPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         personalPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
         
         txtFirstName = FormUtils.createTextField();
         lblFirstNameError = FormUtils.createErrorLabel();
         txtFirstName.setText(user.getName());
         txtFirstName.setEditable(false);
-        
-        personalPanel.add(FormUtils.createField(
-                        "Nombres",
-                        txtFirstName,
-                        lblFirstNameError,
-                        "nombres",
-                        fieldWidth));
+        personalPanel.add(FormUtils.createField("Nombre", txtFirstName, lblFirstNameError, "No editable: Nombre del usuario", fieldWidth));
 
         txtLastName = FormUtils.createTextField();
         lblLastNameError = FormUtils.createErrorLabel();
         txtLastName.setText(user.getSurname());
         txtLastName.setEditable(false);
-
-        personalPanel.add(FormUtils.createField(
-                        "Apellidos",
-                        txtLastName,
-                        lblLastNameError,
-                        "apellidos",
-                        fieldWidth));
+        personalPanel.add(FormUtils.createField("Apellidos", txtLastName, lblLastNameError, "No editable: Apellidos del usuario", fieldWidth));
 
         txtEmail = FormUtils.createTextField();
         lblEmailError = FormUtils.createErrorLabel();
         txtEmail.setText(user.getEmail());
         txtEmail.setEditable(false);
-
-        personalPanel.add(FormUtils.createField(
-                        "Correo",
-                        txtEmail,
-                        lblEmailError,
-                        "Ingrese su correo",
-                        fieldWidth));
+        personalPanel.add(FormUtils.createField("Correo", txtEmail, lblEmailError, "No editable: Correo del usuario", fieldWidth));
 
         txtPhone = FormUtils.createTextField();
         lblPhoneError = FormUtils.createErrorLabel();
         txtPhone.setText(user.getPhone());
         txtPhone.setEditable(false);
-
-        personalPanel.add(FormUtils.createField(
-                        "Teléfono",
-                        txtPhone,
-                        lblPhoneError,
-                        "Ingrese su teléfono",
-                        fieldWidth));
+        personalPanel.add(FormUtils.createField("Teléfono", txtPhone, lblPhoneError, "No editable: Teléfono del usuario", fieldWidth));
         
+        // ===== DATOS DE LA RESERVA =====
+        JLabel lblDates =new JLabel("Datos de la reservación");
+        lblDates.setFont(AppFont.big());
+        lblDates.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
+        lblDates.setAlignmentX(CENTER_ALIGNMENT);
+        lblDates.setHorizontalAlignment(JLabel.CENTER);
+        
+        JPanel datesPanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        datesPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+
         // FECHA ACTUAL
         Calendar calendar = Calendar.getInstance();
 
@@ -178,119 +169,106 @@ public class PaymentView extends JPanel {
 
         Date today = calendar.getTime();
 
-
         // FECHA ENTRADA
         spCheckIn = FormUtils.createDateField();
-
         JSpinner.DateEditor editorIn = (JSpinner.DateEditor) spCheckIn.getEditor();
-
         editorIn.getTextField().setEditable(false);
-
         SpinnerDateModel checkInModel = (SpinnerDateModel) spCheckIn.getModel();
-
         checkInModel.setStart(today);
         spCheckIn.setValue(today);
-
         lblCheckInError = FormUtils.createErrorLabel();
-
-        personalPanel.add(FormUtils.createField(
-                        "Fecha de entrada",
-                        spCheckIn,
-                        lblCheckInError,
-                        "",
-                        fieldWidth
-                )
-        );
-
+        datesPanel.add(FormUtils.createField("Fecha de entrada", spCheckIn, lblCheckInError, "", fieldWidth));
 
         // FECHA SALIDA
         calendar.add(Calendar.DAY_OF_MONTH, 1);
-        
         Date tomorrow = calendar.getTime();
+        
         spCheckOut = FormUtils.createDateField();
-
         JSpinner.DateEditor editorOut = (JSpinner.DateEditor) spCheckOut.getEditor();
         editorOut.getTextField().setEditable(false);
-
         SpinnerDateModel checkOutModel = (SpinnerDateModel) spCheckOut.getModel();
         checkOutModel.setStart(tomorrow);
         spCheckOut.setValue(tomorrow);
-
         lblCheckOutError = FormUtils.createErrorLabel();
-
-        personalPanel.add(FormUtils.createField(
-                        "Fecha de salida",
-                        spCheckOut,
-                        lblCheckOutError,
-                        "",
-                        fieldWidth
-                )
-        );
+        datesPanel.add(FormUtils.createField("Fecha de salida", spCheckOut, lblCheckOutError, "", fieldWidth));
         
         // ===== HUÉSPEDES =====
         int maxGuests = room.getCapacity();
         
 		spGuests = FormUtils.createNumberField(maxGuests);
 		spGuests.setPreferredSize(new Dimension(fieldWidth, 40));
-
 	    lblGuestsError = FormUtils.createErrorLabel();
-
-        personalPanel.add(FormUtils.createField( "Cantidad de huéspedes", spGuests, lblGuestsError, "", fieldWidth));
+	    datesPanel.add(FormUtils.createField( "Cantidad de huéspedes", spGuests, lblGuestsError, "", fieldWidth));
         
-     // ===== MÉTODO DE PAGO =====
-        JLabel lblMetodoPago = new JLabel("Método de pago");
-        lblMetodoPago.setFont(AppFont.big());
-        lblMetodoPago.setBorder(BorderFactory.createEmptyBorder(0, 5, 10, 0));
+        // ===== SECCIÓN DE PAGO =====
+        JLabel lblPayment = new JLabel("Pago de la reservación");
+        lblPayment.setFont(AppFont.big());
+        lblPayment.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        lblPayment.setAlignmentX(CENTER_ALIGNMENT);
+        lblPayment.setHorizontalAlignment(JLabel.CENTER);
 
-        JPanel paymentPanel = new JPanel( new BorderLayout(10,10));
-        paymentPanel.setBorder(
-    		BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(220,220,220), 1, true),
-                BorderFactory.createEmptyBorder(15,15,15,15)
-            )
-        );
+        JPanel paymentPanel = new JPanel(new GridLayout(1, 1, 10, 10));
+        paymentPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
-        String[] paymentMethods = {"Selecciona método", "Efectivo", "Tarjeta", "Transferencia"};
-        cmbPaymentMethod = new JComboBox<>(paymentMethods);
-        cmbPaymentMethod.setPreferredSize(new Dimension(300, 45));
-        cmbPaymentMethod.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
-        cmbPaymentMethod.setMinimumSize(new Dimension(100, 45));
-
-        paymentPanel.add(new JLabel("Método:"), BorderLayout.NORTH);
-        paymentPanel.add(cmbPaymentMethod, BorderLayout.CENTER);
+        String[] paymentMethods = {"Selecciona un método de pago", "Tarjeta de crédito", "Tarjeta de débito", "Efectivo", "Transferencia", "PayPal"};
+        cmbPaymentMethod = FormUtils.createCombo(paymentMethods);
+    	lblPaymentMethodError = FormUtils.createErrorLabel();
+    	paymentPanel.add(FormUtils.createField("Método de pago:", cmbPaymentMethod, lblPaymentMethodError, "", 350));
         
-        // CHECKBOXES
+    	// CHECKBOXES
+    	chkTerms = new JCheckBox("Acepto términos y condiciones");
+    	chkPolicies = new JCheckBox("Acepto políticas de cancelación");
 
-        chkTerms = new JCheckBox("Acepto términos y condiciones");
-        chkPolicies = new JCheckBox("Acepto políticas de cancelación");
+    	chkTerms.setOpaque(false);
+    	chkPolicies.setOpaque(false);
 
+    	JPanel checksPanel = new JPanel();
+    	checksPanel.setOpaque(false);
+    	checksPanel.setLayout(new BoxLayout(checksPanel, BoxLayout.Y_AXIS));
+
+    	chkTerms.setAlignmentX(Component.CENTER_ALIGNMENT);
+    	chkPolicies.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    	checksPanel.add(chkTerms);
+    	checksPanel.add(Box.createVerticalStrut(8));
+    	checksPanel.add(chkPolicies);
+    	
         // BOTÓN
-        btnPay = ButtonFactory.createGoldButton(
+        btnPay = ButtonFactory.createBlueButton(
             "CONFIRMAR PAGO",
-            "/assets/img/btn-icons/button-save-icon.png",
+            "/assets/img/btn-icons/button-save-white-icon.png",
             "Haz click para confirmar el pago"
         );
+        btnPay.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnPay.setPreferredSize(new Dimension(150,55));
 
-        btnPay.setBackground(new Color(112, 238, 156));
 
         // ALIGNMENTS
-        personalPanel.setAlignmentX(LEFT_ALIGNMENT);
-        chkTerms.setAlignmentX(LEFT_ALIGNMENT);
-        chkPolicies.setAlignmentX(LEFT_ALIGNMENT);
-        btnPay.setAlignmentX(LEFT_ALIGNMENT);
+        personalPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        datesPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        paymentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        chkTerms.setAlignmentX(Component.CENTER_ALIGNMENT);
+        chkPolicies.setAlignmentX(Component.CENTER_ALIGNMENT);
+        btnPay.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // AGREGAR A LEFT PANEL
+        leftPanel.add(lblPersonal);
         leftPanel.add(personalPanel);
-        leftPanel.add(Box.createVerticalStrut(20));
-        leftPanel.add(lblMetodoPago);
+        leftPanel.add(new JSeparator());
+        leftPanel.add(Box.createVerticalStrut(30));
+        leftPanel.add(lblDates);
+        leftPanel.add(datesPanel);
+        leftPanel.add(new JSeparator());
+        leftPanel.add(Box.createVerticalStrut(30));
+        leftPanel.add(lblPayment);
         leftPanel.add(paymentPanel);
-        leftPanel.add(Box.createVerticalStrut(20));
-        leftPanel.add(chkTerms);
-        leftPanel.add(Box.createVerticalStrut(8));
-        leftPanel.add(chkPolicies);
+        leftPanel.add(new JSeparator());
+        leftPanel.add(Box.createVerticalStrut(30));
+        leftPanel.add(checksPanel);
         leftPanel.add(Box.createVerticalStrut(20));
         leftPanel.add(btnPay);
-
+        
         // ================= RIGHT PANEL =================
 
         RoundedPanel rightPanel = new RoundedPanel(35);
@@ -358,6 +336,8 @@ public class PaymentView extends JPanel {
                 }
             }
         }
+        
+        featuresText.append(" + servicios del hotel en general");
 
         txtaFeatures = new JTextArea(featuresText.toString());
         txtaFeatures.setLineWrap(true);
@@ -367,12 +347,13 @@ public class PaymentView extends JPanel {
         lblRoom.setFont(AppFont.big());
         lblCheckIn.setFont(AppFont.big());
         lblCheckOut.setFont(AppFont.big());
+        lblBedType.setFont(AppFont.big());
         lblCapacity.setFont(AppFont.big());
         lblNights.setFont(AppFont.big());
 
         // ================= TOTAL =================
 
-        lblTotal = new JLabel("Total: " + room.getPrice());
+        lblTotal = new JLabel("Total: $" + room.getPrice());
         lblTotal.setFont(AppFont.subtitle());
 
         // ================= SEPARATORS =================
@@ -394,7 +375,7 @@ public class PaymentView extends JPanel {
         lblNights.setAlignmentX(Component.LEFT_ALIGNMENT);
         lblTotal.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // ================= ADD COMPONENTS =================
+        // ================= AGREGAR COMPONENTES =================
 
         // HOTEL INFO
         rightPanel.add(lblHotel);
@@ -409,7 +390,7 @@ public class PaymentView extends JPanel {
         rightPanel.add(topSeparator);
         rightPanel.add(Box.createVerticalStrut(25));
 
-        // IMAGE
+        // IMAGEN
         rightPanel.add(bg);
         rightPanel.add(Box.createVerticalStrut(25));
         
@@ -419,7 +400,7 @@ public class PaymentView extends JPanel {
         rightPanel.add(bottomSeparator);
         rightPanel.add(Box.createVerticalStrut(25));
 
-        // DETAILS
+        // DETALLES
         rightPanel.add(lblRoom);
         rightPanel.add(Box.createVerticalStrut(12));
 
@@ -443,7 +424,7 @@ public class PaymentView extends JPanel {
 
         rightPanel.add(lblTotal);
 
-        // ================= ADD PANELS =================
+        // ================= AGREGAR PANELES =================
 
         add(leftPanel, BorderLayout.CENTER);
         add(rightPanel, BorderLayout.EAST);
@@ -468,22 +449,30 @@ public class PaymentView extends JPanel {
         panel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         ImageIcon icon = new ImageIcon(getClass().getResource("/assets/img/logos/hotel-logo.png"));
+    	Image img = icon.getImage().getScaledInstance(250, 80, Image.SCALE_SMOOTH);
 
-        Image img = icon.getImage().getScaledInstance(250, 80, Image.SCALE_SMOOTH);
+    	lblLogo = new JLabel(new ImageIcon(img));
+    	lblLogo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    	
+    	panel.add(lblLogo);
+    	
+        return panel;
+    }
 
-        JLabel logo = new JLabel(new ImageIcon(img));
-
-        panel.add(logo);
+    public JPanel headerRightSection(){
+        JPanel panel = createTransparentPanel();
+    	panel.setLayout(new GridBagLayout());
+        
+    	JLabel lblReserve = new JLabel("RESERVAR Y PAGAR");
+    	lblReserve.setFont(AppFont.big());
+    	lblReserve.setForeground(Color.WHITE);
+    	lblReserve.setAlignmentX(CENTER_ALIGNMENT);
+    	panel.add(lblReserve);
 
         return panel;
     }
 
-    public JPanel headerRightSection() {
-        return createTransparentPanel();
-    }
-
     public JPanel headerLeftSection() {
-
         JPanel panel = createTransparentPanel();
         panel.setLayout(new GridBagLayout());
 
@@ -501,7 +490,6 @@ public class PaymentView extends JPanel {
     }
     
     public JMenuBar createMenu() {
-
         JMenuBar mb = new JMenuBar();
         mb.setFont(AppFont.big());
         mb.setForeground(Color.WHITE);
@@ -509,13 +497,13 @@ public class PaymentView extends JPanel {
         mb.setOpaque(true);
         mb.setBackground(UIColors.HEADER);
 
-        JMenu sistema = new UnderlineMenu("Sistema");
-        sistema.setMnemonic(KeyEvent.VK_S);
-        mb.add(sistema);
+        JMenu home = new UnderlineMenu("Inicio");
+        home.setMnemonic(KeyEvent.VK_S);
+        mb.add(home);
 
-        btnHome = new JMenuItem("Inicio");
+        btnHome = new JMenuItem("Regresar a inicio");
         btnHome.setMnemonic(KeyEvent.VK_I);
-        sistema.add(btnHome);
+        home.add(btnHome);
 
         return mb;
     }
@@ -586,6 +574,10 @@ public class PaymentView extends JPanel {
     }
     
     public RoomType getRoom() {
-    		return room;
+    	return room;
     }
+	
+	public JLabel getLblLogo() {
+	    return lblLogo;
+	}
 }

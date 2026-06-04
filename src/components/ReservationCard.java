@@ -30,7 +30,7 @@ public class ReservationCard extends RoundedPanel {
         lblGuests = createInfoLabel("/assets/img/icons/guest-icon.png");
 
         lblDates = createInfoLabel("/assets/img/icons/calendar-icon.png");
-        lblTotal = createInfoLabel("/assets/img/icons/payment-icon.png");
+        lblTotal = createInfoLabel("/assets/img/icons/payment-icon-2.png");
 
         lblStatus = createInfoLabel("/assets/img/icons/status-icon.png");
 
@@ -45,6 +45,8 @@ public class ReservationCard extends RoundedPanel {
         );
 
         btnCancel.setPreferredSize(new Dimension(150,45));
+        btnCancel.setBackground(UIColors.DELETE);
+
         btnPanel.add(btnCancel);
 
         //agregar elementos

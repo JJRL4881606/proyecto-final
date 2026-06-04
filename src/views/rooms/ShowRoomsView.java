@@ -49,6 +49,7 @@ public class ShowRoomsView extends JPanel {
 
     public void setRooms(List<RoomType> rooms){
         roomsContainer.removeAll();
+        roomCards.clear();
 
         if(rooms.isEmpty()){
         	

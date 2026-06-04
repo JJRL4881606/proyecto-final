@@ -120,9 +120,9 @@ public class MyReservationsController {
     	    }
     	    
     	    card.getLblTotal().setText("$" + String.format("%,.2f", reservation.getTotal()));
-    	    card.setMaximumSize(new Dimension(950, 190));
-    	    card.setMaximumSize(new Dimension(950, 190));
-    	    card.setMaximumSize(new Dimension(950, 190));
+    	    card.setPreferredSize(new Dimension(950, 210));
+    	    card.setMinimumSize(new Dimension(950, 210));
+    	    card.setMaximumSize(new Dimension(950, 210));
 
     	    view.getCardsContainer().add(card);
     	    view.getCardsContainer().add(Box.createVerticalStrut(15));

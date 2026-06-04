@@ -15,6 +15,7 @@ public class UIColors {
     public static final Color BUTTON_TEXT_BLUE = Color.WHITE;
     public static final Color FIELD = new Color(248, 249, 250); //GRIS CLARO
     public static final Color FIELD_BORDER = new Color(214, 214, 214); //GRIS
+    public static final Color DELETE = new Color(179, 0, 0); //ROJO
     
     //Colores solo del home
     public static final Color HEADER = BACKGROUND;

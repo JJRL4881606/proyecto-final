@@ -10,24 +10,18 @@ import javax.swing.JOptionPane;
 import models.RoomType;
 import repository.RoomTypeRepository;
 import views.booking.BookingSearchView;
-import views.main.MainView;
 
 public class BookingSearchController {
 
     private BookingSearchView view;
     private RoomTypeRepository repository;
-    private MainView mainView;
 
-    public BookingSearchController(BookingSearchView view, MainView mainView){
-
+    public BookingSearchController(BookingSearchView view){
         this.view = view;
-        this.mainView = mainView;
-
         repository = new RoomTypeRepository();
-
         initListeners();
     }
-
+    
     private void initListeners(){
         view.getSearchBar().getBtnSearch().addActionListener(e->handleSearch());
     }

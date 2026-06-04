@@ -242,7 +242,31 @@ public class RoomRepository {
     }
 
     public boolean isRoomAvailable(int roomId, LocalDate checkIn, LocalDate checkOut) {
-        return isRoomOperational(roomId)
-                && isRoomAvailableByDates(roomId, checkIn, checkOut);
+        return isRoomOperational(roomId) && isRoomAvailableByDates(roomId, checkIn, checkOut);
+    }
+    
+    //para desabilitar botón de reservar cuando no hayan habitaciones de ese tipo
+    public boolean hasActiveRoomsByType(int typeId) {
+
+        String sql =
+            "SELECT 1 " +
+            "FROM rooms " +
+            "WHERE typeId=? " +
+            "AND status=? " +
+            "LIMIT 1";
+
+        try(Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, typeId);
+            ps.setString(2, RoomStatus.ACTIVE);
+
+            return ps.executeQuery().next();
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

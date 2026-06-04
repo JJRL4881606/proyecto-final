@@ -30,7 +30,6 @@ public class MainController {
 	private AmenityController amenityController;
 	private ReservationController reservationController;
 	private MainWindow frame;
-	//private User user;
 
 	public MainController(MainView view, MainWindow frame) {
 	    this.view = view;
@@ -79,9 +78,7 @@ public class MainController {
 		    	
 		        @Override
 		        public void mouseClicked(MouseEvent e) {
-		        	
 		            view.showView(MainView.HOME);
-
 		            updateMenuState(MainView.HOME);
 
 		            frame.revalidate();
@@ -95,7 +92,6 @@ public class MainController {
 	
 	private void handleAccount() {
 	    view.showView(MainView.ACCOUNT);
-
 	    updateMenuState(MainView.ACCOUNT);
 
 	    frame.revalidate();
@@ -106,7 +102,6 @@ public class MainController {
 	
 	private void handleMyReservations() {
 	    view.showView(MainView.MY_RESERVATIONS);
-
 	    updateMenuState(MainView.MY_RESERVATIONS);
 
 	    frame.revalidate();
