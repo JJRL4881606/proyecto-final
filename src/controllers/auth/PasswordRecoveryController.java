@@ -40,11 +40,19 @@ public class PasswordRecoveryController {
         view.getComboCountry().addActionListener(e -> validateCountry());
 
         addDocumentListener(view.getTxtEmail(), this::validateEmail);
-        addDocumentListener(view.getTxtNewPassword(), this::validateNewPassword);
+        addDocumentListener(
+    	    view.getTxtNewPassword(),
+    	    () -> {
+    	        validateNewPassword();
+    	        validateConfirmPassword();
+    	    }
+    	);
         addDocumentListener(view.getTxtConfirmPassword(), this::validateConfirmPassword);
 
         FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
         FormUtils.addFocusEffect(view.getTxtNewPassword(), view.getLblNewError());
+        
+        
         FormUtils.addFocusEffect(view.getTxtConfirmPassword(), view.getLblConfirmError());
     }
 

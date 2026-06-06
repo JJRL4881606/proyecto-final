@@ -1,4 +1,4 @@
-package controllers.rooms;
+package controllers.roomtypes;
 
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -11,7 +11,7 @@ import repository.RoomTypeRepository;
 import utils.Session;
 import views.main.MainView;
 import views.payment.PaymentWindow;
-import views.rooms.ShowRoomsView;
+import views.roomtypes.ShowRoomsView;
 
 public class ShowRoomsController {
 
@@ -26,18 +26,14 @@ public class ShowRoomsController {
 
         repository = new RoomTypeRepository();
 
-        loadRooms();
-    }
-    
-    private void loadRooms(){
-        view.setRooms(repository.getRoomTypes());
+        reloadRooms();
         loadRoomEvents();
-    }
+   }
     
     private void loadRoomEvents(){
         for(RoomCard card : view.getRoomCards()){
             card.getBtnDetails().addActionListener(e -> {
-                mainView.roomDetailsPanel.setRoomType(card.getRoomType());
+                mainView.getRoomDetailsPanel().setRoomType(card.getRoomType());
                 mainView.showView(MainView.ROOM_DETAILS);
             });
             
@@ -56,5 +52,11 @@ public class ShowRoomsController {
                 }
             });
         }
+    }
+    
+    public void reloadRooms(){
+        view.setRooms(
+            repository.getVisibleRoomTypes()
+        );
     }
 }

@@ -8,15 +8,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import controllers.auth.LoginController;
-import models.User;
 
 @SuppressWarnings("serial")
 public class LoginWindow extends JFrame {
 	
 	private LoginView loginView;
 	
-	public LoginWindow(User user) {
-    		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	public LoginWindow() {
+    	this.setExtendedState(JFrame.MAXIMIZED_BOTH);
         this.setTitle("Login | ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,10 +31,10 @@ public class LoginWindow extends JFrame {
         setIconImage(icon);
                 
 		//Agregar panel
-        LoginView loginview = new LoginView();
-        new LoginController(loginview);
-        background.add(createViewScroll(loginview), BorderLayout.CENTER);
-                
+        loginView = new LoginView();
+        new LoginController(loginView);
+        background.add(createViewScroll(loginView), BorderLayout.CENTER);
+        
         this.setVisible(true);
     }
     
@@ -55,5 +54,4 @@ public class LoginWindow extends JFrame {
 	public LoginView getLoginView() {
 		return loginView;
 	}
-
 }

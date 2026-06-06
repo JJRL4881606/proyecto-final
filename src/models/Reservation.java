@@ -15,8 +15,10 @@ public class Reservation {
     private double total;
     private LocalDateTime createdAt;
 
-    public Reservation() {}
-
+    // Constructor para crear una reservación con todos sus datos
+    // usado en getReservations() y getReservationsByUser() en ReservationRepository,
+    // y en handleSave() en ReservationFormController
+    
     public Reservation(int reservationId, int userId, int roomId, LocalDate checkInDate,
         LocalDate checkOutDate, int guests, String status, double total, LocalDateTime createdAt) {
 

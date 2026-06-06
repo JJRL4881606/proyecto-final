@@ -10,7 +10,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import components.RoundedPanel;
 import utils.AppFont;
 
 @SuppressWarnings("serial")
@@ -29,7 +28,7 @@ public class MyReservationsView extends JPanel {
         setLayout(new GridBagLayout());
         setBorder(new EmptyBorder(60, 40, 60, 40));
         
-        JPanel card = new RoundedPanel(50);
+        JPanel card = new JPanel();
         card.setBackground(Color.WHITE);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(new EmptyBorder(35, 45, 35, 45));
@@ -40,14 +39,14 @@ public class MyReservationsView extends JPanel {
         title.setHorizontalAlignment(JLabel.CENTER);
         title.setMaximumSize(title.getPreferredSize());
 
-        lblOrder = new JLabel("<html><center>En orden d más recientes a más antiguas.</center></html>");
+        lblOrder = new JLabel("<html><center>En orden de más recientes a más antiguas.</center></html>");
         lblOrder.setFont(AppFont.normal());
     	lblOrder.setForeground(new Color(80,80,80));
     	lblOrder.setAlignmentX(CENTER_ALIGNMENT);
     	lblOrder.setHorizontalAlignment(JLabel.CENTER);
     	lblOrder.setMaximumSize(lblOrder.getPreferredSize());
     	
-        lblInfo = new JLabel("<html><center>Para modificar fechas, huéspedes o detalles de una reservación,<br>comunícate con recepción al +52 612 123 4567.</center></html>");
+        lblInfo = new JLabel("<html><center>Para modificar fechas, huéspedes o detalles de una reservación,<br>comunícate con recepción al +971 4 426 0000.</center></html>");
     	lblInfo.setFont(AppFont.normal());
     	lblInfo.setForeground(new Color(80,80,80));
     	lblInfo.setAlignmentX(CENTER_ALIGNMENT);

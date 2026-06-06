@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 @SuppressWarnings("serial")
 public class RegistrationWindow extends JFrame {
 	
-	private RegistrationView RegistrationView;
+	private RegistrationView registrationView;
 	
     public RegistrationWindow() {
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -33,7 +33,7 @@ public class RegistrationWindow extends JFrame {
         setIconImage(icon);
                 
         //Agregar el panel
-        add(createViewScroll(RegistrationView = new RegistrationView(this)), BorderLayout.CENTER);        
+        add(createViewScroll(registrationView = new RegistrationView()), BorderLayout.CENTER);        
         
         this.setVisible(true);
         
@@ -46,7 +46,7 @@ public class RegistrationWindow extends JFrame {
     }
     
     private void handleClose() {
-		int option = JOptionPane.showConfirmDialog(null, "¿Seguro que deseas salir? Se perderán todos los datos");
+		int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas salir? Se perderán todos los datos");
 		
 		if(option == JOptionPane.YES_OPTION) {
 			System.exit(0);
@@ -62,6 +62,6 @@ public class RegistrationWindow extends JFrame {
     }
     
     public RegistrationView getRegistrationView() {
-		return RegistrationView;
+		return registrationView;
 	}
 }

@@ -10,6 +10,8 @@ import utils.PasswordUtils;
 
 public class LoginRepository {
 
+	// Método para iniciar sesión, utiliza el email y la contraseña del usuario
+	
     public User login(String email, String password) {
         String sql = "SELECT * FROM users WHERE email = ?";
 
@@ -20,11 +22,14 @@ public class LoginRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+            	
+            	//Validar contraseña correcta, compara con la contraseña hasheada
                 String hashedPassword = rs.getString("password");
                 boolean correctPassword = PasswordUtils.checkPassword(password, hashedPassword);
 
                 if (!correctPassword) return null;
 
+                //Si los datos son correctos, inicia sesión
                 User user = new User();
 
                 user.setId(rs.getInt("id"));

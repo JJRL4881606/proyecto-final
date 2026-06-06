@@ -11,6 +11,8 @@ import models.RoomImage;
 
 public class RoomImageRepository {
 
+	// Método para guardar imágenes extra asociadas a un RoomType
+	
     public void saveImages(int typeId, List<RoomImage> images) {
 
         String sql = "INSERT INTO room_images(typeId, imagePath) VALUES(?, ?)";
@@ -35,6 +37,9 @@ public class RoomImageRepository {
         }
     }
 
+    // Método para obtener la extra imágenes de un RoomType
+    // Utiliza el id del RoomType
+    
     public List<RoomImage> getImagesByTypeId(int typeId){
 
         List<RoomImage> images = new ArrayList<>();

@@ -4,7 +4,8 @@ import javax.swing.SwingUtilities;
 
 import config.Config;
 import controllers.amenities.AmenityController;
-import controllers.booking.ReservationController;
+import controllers.reservations.PaymentAdminController;
+import controllers.reservations.ReservationController;
 import controllers.rooms.RoomController;
 import controllers.roomtypes.RoomTypeController;
 import controllers.users.UserController;
@@ -29,6 +30,7 @@ public class MainController {
 	private RoomController roomController;
 	private AmenityController amenityController;
 	private ReservationController reservationController;
+	private PaymentAdminController paymentAdminController;
 	private MainWindow frame;
 
 	public MainController(MainView view, MainWindow frame) {
@@ -58,6 +60,8 @@ public class MainController {
 		view.getBtnRooms().addActionListener(e -> { handleTableRooms(); });
 		view.getBtnAmenities().addActionListener(e -> { handleTableAmenities(); });
 		view.getBtnReservations().addActionListener(e -> { handleTableReservations(); });
+		view.getBtnPayments().addActionListener(e -> handleTablePayments());
+		
 		view.getBtnAccount().addActionListener(e -> { handleAccount(); });
 		view.getBtnMyReservations().addActionListener(e -> handleMyReservations());
 		
@@ -91,126 +95,106 @@ public class MainController {
 	}
 	
 	private void handleAccount() {
-	    view.showView(MainView.ACCOUNT);
-	    updateMenuState(MainView.ACCOUNT);
-
-	    frame.revalidate();
-	    frame.repaint();
-
-	    resetScroll();
+	    showView(MainView.ACCOUNT);
 	}
 	
 	private void handleMyReservations() {
-	    view.showView(MainView.MY_RESERVATIONS);
-	    updateMenuState(MainView.MY_RESERVATIONS);
-
-	    frame.revalidate();
-	    frame.repaint();
-
-	    resetScroll();
+	    showView(MainView.MY_RESERVATIONS);
+	}	
+	
+	private void handleShowRooms() {
+	    showView(MainView.SHOW_ROOMS);
 	}
 	
 	private void handleTableUsers() {
 		if(userController == null) {
-			userController = new UserController(view.usersPanel);
+			userController = new UserController(view.getUsersPanel());
 		}
 			
 		userController.loadUsers();
 		
-		view.showView(MainView.ADMIN_USERS);
-		updateMenuState(MainView.ADMIN_USERS);
-		
-	    frame.revalidate();
-	    frame.repaint();
-
-	    resetScroll();
+	    showView(MainView.ADMIN_USERS);
 	}
 	
 	private void handleTableRoomTypes() {
 		if(roomTypeController == null) {
-			roomTypeController = new RoomTypeController(view.roomTypesPanel);
+			roomTypeController = new RoomTypeController(view.getRoomTypesPanel(), view);
 		}
 			
 		roomTypeController.loadRoomTypes();
 		
-		view.showView(MainView.ADMIN_ROOMTYPES);
-		updateMenuState(MainView.ADMIN_ROOMTYPES);
-		
-	    frame.revalidate();
-	    frame.repaint();
-
-	    resetScroll();
+	    showView(MainView.ADMIN_ROOMTYPES);
 	}	
 	
 	private void handleTableRooms() {
 		if(roomController == null) {
-			roomController = new RoomController(view.roomsPanel);
+			roomController = new RoomController(view.getRoomsPanel(), view);
 		}
 			
 		roomController.loadRooms();
 		
-		view.showView(MainView.ADMIN_ROOMS);
-		updateMenuState(MainView.ADMIN_ROOMS);
-		
-	    frame.revalidate();
-	    frame.repaint();
-
-	    resetScroll();
+	    showView(MainView.ADMIN_ROOMS);
 	}
 	
 	private void handleTableAmenities() {
 		if(amenityController == null) {
-			amenityController = new AmenityController(view.amenitiesPanel);
+			amenityController = new AmenityController(view.getAmenitiesPanel());
 		}
 			
 		amenityController.loadAmenities();
 		
-		view.showView(MainView.ADMIN_AMENITIES);
-		updateMenuState(MainView.ADMIN_AMENITIES);
-		
-	    frame.revalidate();
-	    frame.repaint();
-
-	    resetScroll();
+	    showView(MainView.ADMIN_AMENITIES);
 	}	
+	
 	private void handleTableReservations() {
 		if(reservationController == null) {
-			reservationController = new ReservationController(view.reservationsPanel);
+			reservationController = new ReservationController(view.getReservationsPanel());
 		}
 			
 		reservationController.loadReservations();
-		
-		view.showView(MainView.ADMIN_RESERVATIONS);
-		updateMenuState(MainView.ADMIN_RESERVATIONS);
-		
-	    frame.revalidate();
-	    frame.repaint();
-
-	    resetScroll();
+	    
+	    showView(MainView.ADMIN_RESERVATIONS);
 	}
 	
-	private void handleShowRooms() {
-	    view.showView(MainView.SHOW_ROOMS);
+	private void handleTablePayments() {
+	    if(paymentAdminController == null) {
+	        paymentAdminController = new PaymentAdminController(view.getPaymentsPanel());
+	    }
+	    paymentAdminController.loadPayments();
+	    showView(MainView.ADMIN_PAYMENTS);
 	}
 	
     private void handleClose() {
         Session.logout();
 
-        new LoginWindow(null);
+        new LoginWindow();
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) window.dispose();
     }
     
 	private void updateMenuState(String viewName) {
 		view.getBtnHome().setEnabled(!viewName.equals(MainView.HOME));
+		
 		view.getBtnUsers().setEnabled(!viewName.equals(MainView.ADMIN_USERS));
 		view.getBtnRoomTypes().setEnabled(!viewName.equals(MainView.ADMIN_ROOMTYPES));
 		view.getBtnRooms().setEnabled(!viewName.equals(MainView.ADMIN_ROOMS));
 		view.getBtnAmenities().setEnabled(!viewName.equals(MainView.ADMIN_AMENITIES));
 		view.getBtnReservations().setEnabled(!viewName.equals(MainView.ADMIN_RESERVATIONS));
+		view.getBtnPayments().setEnabled(!viewName.equals(MainView.ADMIN_PAYMENTS));
+		
 		view.getBtnShowRooms().setEnabled(!viewName.equals(MainView.SHOW_ROOMS));
 		view.getBtnAccount().setEnabled(!viewName.equals(MainView.ACCOUNT));
 		view.getBtnMyReservations().setEnabled(!viewName.equals(MainView.MY_RESERVATIONS));
+	}
+	
+	private void showView(String viewName) {
+	    view.showView(viewName);
+	    updateMenuState(viewName);
+
+	    frame.revalidate();
+	    frame.repaint();
+
+	    resetScroll();
 	}
 	
 	private void saveWindowPreferences() {
@@ -231,25 +215,29 @@ public class MainController {
 	}
 	
 	private void loadWindowPreferences() {
-		int width = Integer.parseInt(
-		        Config.get("main.window.width", "500"));
+	    try {
+			int width = Integer.parseInt(Config.get("main.window.width", "500"));
 
-		int height = Integer.parseInt(
-		        Config.get("main.window.height", "500"));
+			int height = Integer.parseInt(Config.get("main.window.height", "500"));
 
-		String xValue = Config.get("main.window.x", "");
-		String yValue = Config.get("main.window.y", "");
-		
-	    if (!xValue.isBlank() && !yValue.isBlank()) {
-	        frame.setLocation(
-	            Integer.parseInt(xValue),
-	            Integer.parseInt(yValue)
-	        );
-	    } else {
+			String xValue = Config.get("main.window.x", "");
+			String yValue = Config.get("main.window.y", "");
+			
+		    if (!xValue.isBlank() && !yValue.isBlank()) {
+		        frame.setLocation(
+		            Integer.parseInt(xValue),
+		            Integer.parseInt(yValue)
+		        );
+		    } else {
+		        frame.setLocationRelativeTo(null);
+		    }
+
+		    frame.setSize(width, height);
+	    }
+	    catch(Exception e) {
+	        frame.setSize(1200,700);
 	        frame.setLocationRelativeTo(null);
 	    }
-
-	    frame.setSize(width, height);
 	}
 	
 	private void resetScroll() {

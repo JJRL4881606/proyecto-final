@@ -9,6 +9,7 @@ import javax.swing.table.JTableHeader;
 import components.RoundedButton;
 import tablemodels.AmenityTableModel;
 import utils.AppFont;
+import utils.ButtonFactory;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
@@ -43,21 +44,24 @@ public class AmenitiesView extends JPanel {
         JPanel buttons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttons.setBorder(new EmptyBorder(10,0,0,0));
 
-        btnAdd = new RoundedButton(
+	    btnAdd = ButtonFactory.createGoldButton(
             "Agregar",
-            new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-add-icon.png"))
+            "/assets/img/btn-icons/button-add-icon.png",
+            "Agregar una amenidad"
         );
 
-        btnEdit = new RoundedButton(
+	    btnEdit = ButtonFactory.createGoldButton(
             "Editar",
-            new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-edit-icon.png"))
+            "/assets/img/btn-icons/button-edit-icon.png",
+            "Editar una amenidad"
         );
 
-        btnDelete = new RoundedButton(
+	    btnDelete = ButtonFactory.createGoldButton(
             "Eliminar",
-            new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-delete-icon.png"))
+            "/assets/img/btn-icons/button-delete-icon.png",
+            "Eliminar una amenidad"
         );
-
+	    
         buttons.add(btnAdd);
         buttons.add(btnEdit);
         buttons.add(btnDelete);
@@ -71,7 +75,7 @@ public class AmenitiesView extends JPanel {
         JLabel lbl = new JLabel("Panel de administración de amenidades");
 
         lbl.setBorder(new EmptyBorder(20,20,0,20));
-        lbl.setFont(AppFont.subtitle());
+        lbl.setFont(AppFont.title());
         lbl.setForeground(Color.BLACK);
         lbl.setHorizontalAlignment(JLabel.CENTER);
 

@@ -1,4 +1,4 @@
-package views.rooms;
+package views.roomtypes;
 
 import java.awt.Component;
 import java.awt.Cursor;
@@ -183,7 +183,7 @@ public class RoomDetailsView extends JPanel {
     }
     
     private JPanel createInfoItem(String iconPath, JLabel label){
-        RoundedPanel card = new RoundedPanel(30);
+        JPanel card = new JPanel();
 
         card.setBackground(UIColors.CARD);
         card.setLayout(new GridBagLayout());

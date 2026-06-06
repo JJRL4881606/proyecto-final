@@ -6,13 +6,17 @@ public class Amenity {
     private String name;
     private String icon;
 
-    public Amenity() {}
+    // Constructor para crear una amenidad con todos sus datos
+    // Usado en getAmenities() y getAmenitiesByRoomType() en AmenityRepository
+    // y en handleSave() en AmenityFormController
 
     public Amenity(int amenityId, String name, String icon) {
         this.amenityId = amenityId;
         this.name = name;
         this.icon = icon;
     }
+    
+    // getters y setters
 
     public int getAmenityId() {
         return amenityId;

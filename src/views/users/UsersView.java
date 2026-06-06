@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.io.File;
 
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,6 +23,7 @@ import components.RoundedButton;
 import config.Config;
 import tablemodels.UserTableModel;
 import utils.AppFont;
+import utils.ButtonFactory;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
@@ -62,15 +62,30 @@ public class UsersView extends JPanel{
 
 	    JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	    panelButtons.setBorder(new EmptyBorder(10, 0, 0, 0));
-	    
-	    btnAdd = new RoundedButton("Agregar", 
-	        new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-add-icon.png")));
-	    btnEdit = new RoundedButton("Editar", 
-	        new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-edit-icon.png")));
-	    btnDelete = new RoundedButton("Eliminar", 
-		    new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-delete-icon.png")));	    
-	    btnPdf = new RoundedButton("Exportar a PDF", 
-	    	new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-pdf-icon.png")));
+	    	    
+	    btnAdd = ButtonFactory.createGoldButton(
+            "Agregar",
+            "/assets/img/btn-icons/button-add-icon.png",
+            "Agregar un usuario"
+        );
+
+	    btnEdit = ButtonFactory.createGoldButton(
+            "Editar",
+            "/assets/img/btn-icons/button-edit-icon.png",
+            "Editar un usuario"
+        );
+
+	    btnDelete = ButtonFactory.createGoldButton(
+            "Eliminar",
+            "/assets/img/btn-icons/button-delete-icon.png",
+            "Eliminar un usuario"
+        );
+
+	    btnPdf = ButtonFactory.createGoldButton(
+            "Exportar a PDF",
+            "/assets/img/btn-icons/button-pdf-icon.png",
+            "Exportar usuarios a PDF"
+        );
 	    
 	    panelButtons.add(btnAdd);
 	    panelButtons.add(btnEdit);
@@ -85,7 +100,7 @@ public class UsersView extends JPanel{
 	public JLabel createTitle() {
 	    JLabel lblTitle = new JLabel("Panel de administración de usuarios");
 	    lblTitle.setBorder(new EmptyBorder(20, 20, 0, 20));
-	    lblTitle.setFont(AppFont.subtitle());
+	    lblTitle.setFont(AppFont.title());
 	    lblTitle.setForeground(Color.BLACK);
 	    lblTitle.setHorizontalAlignment(JLabel.CENTER);
 

@@ -32,7 +32,7 @@ import utils.UIColors;
 @SuppressWarnings("serial")
 public class LoginView extends JPanel
 {	
-	private LoginWindow window;
+	//private LoginWindow window;
 	
 	private JTextField txtEmail;
 	private JPasswordField txtPassword;
@@ -46,7 +46,7 @@ public class LoginView extends JPanel
 	private RoundedButton btnLogin;
 	private RoundedButton btnRegistration;
 	
-	private int fieldWidth = 300;
+	private static final int FIELD_WIDTH = 300;
 	
 	public LoginView() {
 		this.setBackground(UIColors.BACKGROUND);
@@ -114,18 +114,18 @@ public class LoginView extends JPanel
 	    // EMAIL
 	    txtEmail = FormUtils.createTextField();
 	    lblEmailError = FormUtils.createErrorLabel();
-	    mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico", fieldWidth));
+	    mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su correo electrónico", FIELD_WIDTH));
 	    
 	    // PASSWORD
 	    txtPassword = FormUtils.createPasswordField();
 	    lblPasswordError = FormUtils.createErrorLabel();
-	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña", fieldWidth));
+	    mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Ingrese su contraseña", FIELD_WIDTH));
 
 	    // MOSTRAR CONTRASEÑA
 	    chkShowPassword = FormUtils.createCheckBox();
 	    mainPanel.add(chkShowPassword);
-        add(Box.createRigidArea(new Dimension(5, 5)));
-        
+	    mainPanel.add(Box.createRigidArea(new Dimension(5, 5)));
+	    
         // OLVIDASTE CONTRASEÑA
         lblForgotPassword = new JLabel("<html><u>¿Olvidaste tu contraseña?</u></html>");
         lblForgotPassword.setBorder(BorderFactory.createEmptyBorder(8,10,8,10));
@@ -260,11 +260,11 @@ public class LoginView extends JPanel
 	    return lblForgotPassword;
 	}
 
-	public LoginWindow getWindow() {
+	/*public LoginWindow getWindow() {
 		return window;
 	}
 
 	public void setWindow(LoginWindow window) {
 		this.window = window;
-	}
+	}*/
 }

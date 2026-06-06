@@ -3,9 +3,13 @@ package views.account;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -31,9 +35,19 @@ public class AccountView extends JPanel {
 	
 	private JLabel lblNoSession;
 	private RoundedButton btnLogin;
+	
+	private Image backgroundImage;
 
 	public AccountView() {
-		setBackground(Color.white);
+		
+		try {
+		    backgroundImage = new javax.swing.ImageIcon(
+		        getClass().getResource("/assets/img/backgrounds/account-bg.png")
+		    ).getImage();
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+		
 		setLayout(new GridBagLayout());
 		setBorder(new EmptyBorder(40, 0, 40, 0));
 		
@@ -113,6 +127,33 @@ public class AccountView extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		add(card, gbc);
+	}
+	
+	
+	//para pintar el fondo
+	@Override
+	protected void paintComponent(Graphics g) {
+	    super.paintComponent(g);
+
+	    if (backgroundImage == null) return;
+
+	    Graphics2D g2 = (Graphics2D) g.create();
+
+	    // Dibujar imagen escalada
+	    g2.drawImage(
+	        backgroundImage,
+	        0,
+	        0,
+	        getWidth(),
+	        getHeight(),
+	        this
+	    );
+
+	    // Capa blanca semitransparente para que quede tenue
+	    g2.setColor(new Color(255,255,255,200));
+	    g2.fillRect(0, 0, getWidth(), getHeight());
+
+	    g2.dispose();
 	}
 
 	private JLabel createLabel() {

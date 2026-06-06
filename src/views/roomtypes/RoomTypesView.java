@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -19,6 +18,7 @@ import javax.swing.table.JTableHeader;
 import components.RoundedButton;
 import tablemodels.RoomTypeTableModel;
 import utils.AppFont;
+import utils.ButtonFactory;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
@@ -60,20 +60,23 @@ public class RoomTypesView extends JPanel {
 		JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		panelButtons.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-		btnAdd = new RoundedButton(
-			"Agregar",
-			new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-add-icon.png"))
-		);
+	    btnAdd = ButtonFactory.createGoldButton(
+            "Agregar",
+            "/assets/img/btn-icons/button-add-icon.png",
+            "Agregar un tipo de habitación"
+        );
 
-		btnEdit = new RoundedButton(
-			"Editar",
-			new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-edit-icon.png"))
-		);
+	    btnEdit = ButtonFactory.createGoldButton(
+            "Editar",
+            "/assets/img/btn-icons/button-edit-icon.png",
+            "Editar un tipo de habitación"
+        );
 
-		btnDelete = new RoundedButton(
-			"Eliminar",
-			new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-delete-icon.png"))
-		);
+	    btnDelete = ButtonFactory.createGoldButton(
+            "Eliminar",
+            "/assets/img/btn-icons/button-delete-icon.png",
+            "Eliminar un tipo de habitación"
+        );
 
 		panelButtons.add(btnAdd);
 		panelButtons.add(btnEdit);
@@ -87,7 +90,7 @@ public class RoomTypesView extends JPanel {
 	public JLabel createTitle() {
 		JLabel lblTitle = new JLabel("Panel de administración de tipos de habitaciones");
 		lblTitle.setBorder(new EmptyBorder(20, 20, 0, 20));
-		lblTitle.setFont(AppFont.subtitle());
+		lblTitle.setFont(AppFont.title());
 		lblTitle.setForeground(Color.BLACK);
 		lblTitle.setHorizontalAlignment(JLabel.CENTER);
 

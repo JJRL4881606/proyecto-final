@@ -1,20 +1,21 @@
-package views.booking;
+package views.payment;
 
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import components.RoomCard;
 import components.SearchBar;
 import components.WrapLayout;
-import controllers.rooms.RoomCardController;
 import models.RoomType;
 import models.User;
 import utils.AppFont;
@@ -49,7 +50,7 @@ public class BookingSearchView extends JPanel {
     	createRooms();
     }
     
-    public void createTitle() {
+    private void createTitle() {
         add(Box.createRigidArea(new Dimension(0, 20)));
 
         JLabel title = new JLabel("Resultados de búsqueda");
@@ -60,7 +61,7 @@ public class BookingSearchView extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 20)));
     }
     
-    public void createRooms() {
+    private void createRooms() {
     	roomsContainer = new JPanel(new WrapLayout(FlowLayout.CENTER, 20, 20));
     	roomsContainer.setMaximumSize(new Dimension(1200, Integer.MAX_VALUE));
     	roomsContainer.setOpaque(false);
@@ -70,28 +71,51 @@ public class BookingSearchView extends JPanel {
     }
 
     public void setRooms(List<RoomType> rooms) {
+
         roomsContainer.removeAll();
+        roomCards.clear();
         
+        roomsContainer.setLayout(new WrapLayout( FlowLayout.CENTER, 20, 20));
+
         if (rooms.isEmpty()) {
-        	
-        	roomCards.clear();
-        	
+
             JLabel lblNoResults = new JLabel("Sin resultados");
             lblNoResults.setFont(AppFont.subtitle());
             lblNoResults.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             roomsContainer.setLayout(new FlowLayout(FlowLayout.CENTER));
             roomsContainer.add(lblNoResults);
+
         } else {
+
             for (RoomType room : rooms) {
-            		RoomCard card = new RoomCard(room);
+
+                RoomCard card = new RoomCard(room);
+
+                roomCards.add(card);
+
                 roomsContainer.add(card);
-                new RoomCardController( card, mainView, room, user);
             }
         }
 
         roomsContainer.revalidate();
         roomsContainer.repaint();
+    }
+    
+    public void loadSearchData(Date checkIn, Date checkOut, int guests, List<RoomType> rooms){
+    	
+        searchBar.setCheckInDate(checkIn);
+        searchBar.setCheckOutDate(checkOut);
+        searchBar.setGuests(guests);
+
+        setRooms(rooms);
+    }
+    
+    public void showError(String message){
+        JOptionPane.showMessageDialog(
+            null,
+            message
+        );
     }
     
     public SearchBar getSearchBar() {
@@ -100,5 +124,13 @@ public class BookingSearchView extends JPanel {
     
     public List<RoomCard> getRoomCards(){
         return roomCards;
+    }
+    
+    public User getUser() {
+        return user;
+    }
+    
+    public MainView getMainView() {
+        return mainView;
     }
 }

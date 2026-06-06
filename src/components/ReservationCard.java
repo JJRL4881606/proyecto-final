@@ -1,10 +1,20 @@
 package components;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridLayout;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
+
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -13,7 +23,14 @@ import utils.UIColors;
 @SuppressWarnings("serial")
 public class ReservationCard extends RoundedPanel {
 
-    private JLabel lblRoom,lblDates,lblGuests,lblStatus,lblTotal;
+    private JLabel lblRoom;
+    private JLabel lblGuests;
+    private JLabel lblCheckIn;
+    private JLabel lblCheckOut;
+    private JLabel lblStatus;
+    private JLabel lblTotal;
+    private JLabel lblCreatedAt;
+    
     private RoundedButton btnCancel;
 
     public ReservationCard() {
@@ -21,22 +38,26 @@ public class ReservationCard extends RoundedPanel {
         super(50);
 
         setBackground(UIColors.CARD);
-        setBorder(BorderFactory.createEmptyBorder(35,45,35,45));
-
-        JPanel content = new JPanel(new GridLayout(2,3,40,25));
-        content.setOpaque(false);
-
+        setBorder(BorderFactory.createEmptyBorder(22,35,22,35));
+        
+        // Labels
         lblRoom = createInfoLabel("/assets/img/icons/room-icon.png");
         lblGuests = createInfoLabel("/assets/img/icons/guest-icon.png");
 
-        lblDates = createInfoLabel("/assets/img/icons/calendar-icon.png");
+        lblCheckIn = createInfoLabel("/assets/img/icons/calendar-icon.png");
+        lblCheckOut = createInfoLabel("/assets/img/icons/calendar-icon.png");
+
         lblTotal = createInfoLabel("/assets/img/icons/payment-icon-2.png");
-
+        
         lblStatus = createInfoLabel("/assets/img/icons/status-icon.png");
+        lblStatus.setHorizontalAlignment(JLabel.CENTER);
 
-        //boton cancelar
+        lblCreatedAt = createInfoLabel("/assets/img/icons/calendar-icon.png");
+
+        // Botón cancelar
         JPanel btnPanel = new JPanel();
         btnPanel.setOpaque(false);
+        btnPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         btnCancel = ButtonFactory.createBlueButton(
             "Cancelar",
@@ -49,16 +70,77 @@ public class ReservationCard extends RoundedPanel {
 
         btnPanel.add(btnCancel);
 
-        //agregar elementos
-        content.add(lblRoom);
-        content.add(lblDates);
-        content.add(lblStatus);
+        // Panel izquierdo (2 filas x 3 columnas)
+        JPanel leftPanel = new JPanel(new GridBagLayout());
+        leftPanel.setOpaque(false);
 
-        content.add(lblGuests);
-        content.add(lblTotal);
-        content.add(btnPanel);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 25, 25);
 
-        add(content);
+        // fila 1
+        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.25;
+        leftPanel.add(lblRoom, gbc);
+
+        gbc.gridx = 1; gbc.weightx = 0.25;
+        leftPanel.add(lblCheckIn, gbc);
+
+        gbc.gridx = 2; gbc.weightx = 0.50;
+        leftPanel.add(lblCreatedAt, gbc);
+
+        // fila 2
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0.25;
+        leftPanel.add(lblGuests, gbc);
+
+        gbc.gridx = 1;
+        gbc.weightx = 0.25;
+        leftPanel.add(lblCheckOut, gbc);
+
+        gbc.gridx = 2;
+        gbc.weightx = 0.50;
+        leftPanel.add(lblTotal, gbc);
+
+        // Separador vertical
+        JSeparator separator = new JSeparator(JSeparator.VERTICAL);
+        separator.setForeground(new Color(180,180,180));
+        
+        JPanel separatorPanel = new JPanel(new BorderLayout());
+        separatorPanel.setOpaque(false);
+        separatorPanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,25));
+        separatorPanel.add(separator, BorderLayout.CENTER);
+
+        // Panel derecho
+        JPanel rightPanel = new JPanel();
+        rightPanel.setOpaque(false);
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+
+        lblStatus.setAlignmentX(CENTER_ALIGNMENT);
+        btnPanel.setAlignmentX(CENTER_ALIGNMENT);
+
+        rightPanel.add(Box.createVerticalGlue());
+        rightPanel.add(lblStatus);
+        rightPanel.add(Box.createVerticalStrut(8));
+        rightPanel.add(btnPanel);
+        rightPanel.add(Box.createVerticalGlue());
+
+        // Contenedor derecho
+        JPanel rightContainer = new JPanel(new BorderLayout());
+        rightContainer.setOpaque(false);
+        rightContainer.setPreferredSize(new Dimension(180, 80));
+        
+        rightContainer.add(separatorPanel, BorderLayout.WEST);
+        rightContainer.add(rightPanel, BorderLayout.CENTER);
+
+        // Contenedor principal
+        JPanel content = new JPanel(new BorderLayout(15,0));
+        content.setOpaque(false);
+
+        content.add(leftPanel, BorderLayout.CENTER);
+        content.add(rightContainer, BorderLayout.EAST);
+
+        setLayout(new BorderLayout());
+        add(content, BorderLayout.CENTER);
     }
 
     private JLabel createInfoLabel(String iconPath){
@@ -68,9 +150,11 @@ public class ReservationCard extends RoundedPanel {
     }
 
     public JLabel getLblRoom(){ return lblRoom; }
-    public JLabel getLblDates(){ return lblDates; }
+    public JLabel getLblCheckIn(){ return lblCheckIn; }
+    public JLabel getLblCheckOut(){ return lblCheckOut; }
     public JLabel getLblGuests(){ return lblGuests; }
     public JLabel getLblStatus(){ return lblStatus; }
     public JLabel getLblTotal(){ return lblTotal; }
+    public JLabel getLblCreatedAt(){ return lblCreatedAt; }
     public RoundedButton getBtnCancel(){ return btnCancel; }
 }

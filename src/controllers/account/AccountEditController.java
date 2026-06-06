@@ -130,8 +130,6 @@ public class AccountEditController {
         } catch (DuplicateEmailException e) {
             view.setEmailError(e.getMessage());
             return false;
-        } catch (IOException e) {
-            return false;
         }
         view.clearEmailError();
         return true;

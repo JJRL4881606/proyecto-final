@@ -2,9 +2,8 @@ package controllers.home;
 
 import java.util.List;
 
-import components.RoomCard;
 import components.SearchBar;
-import controllers.rooms.RoomCardController;
+import controllers.roomtypes.RoomCardController;
 import models.RoomType;
 import repository.RoomTypeRepository;
 import views.home.HomeView;
@@ -28,38 +27,62 @@ public class HomeController {
     private void initListeners() {
     	view.getSearchBar().getBtnSearch().addActionListener(e -> { handleSearch(); });
     	view.getBtnShowRooms().addActionListener(e -> { handleShowRooms(); });
+    	view.getBtnReserve().addActionListener(e -> { handleSearch(); });
     }
     
-    private void loadRooms() {
-        List<RoomType> rooms =
-            repository.getFeaturedRoomTypes();
+    public void loadRooms() {
+        List<RoomType> rooms = repository.getFeaturedRoomTypes();
 
         view.setRooms(rooms);
+        
+        //crear los controllers de las roomcards
+        for(int i = 0; i < rooms.size(); i++){
+
+            new RoomCardController(
+                view.getRoomCards().get(i),
+                mainView,
+                rooms.get(i),
+                view.getUser()
+            );
+        }
     }
     
     private void handleSearch() {
-        try {
-            SearchBar homeSearch = view.getSearchBar();
-            int guests = homeSearch.getGuests();
 
-            List<RoomType> rooms = repository.getAvailableRoomTypes(guests, homeSearch.getCheckIn(), homeSearch.getCheckOut());
+        SearchBar homeSearch = view.getSearchBar();
 
-            // pasar datos al booking searchbar
-            SearchBar bookingSearch = mainView.bookingSearchPanel.getSearchBar();
-            bookingSearch.setCheckInDate(homeSearch.getCheckInDate());
-            bookingSearch.setCheckOutDate(homeSearch.getCheckOutDate());
-            bookingSearch.setGuests(homeSearch.getGuests());
+        int guests = homeSearch.getGuests();
 
-            mainView.bookingSearchPanel.setRooms(rooms);
-            mainView.showView(MainView.BOOKING_SEARCH);
-            mainView.getBtnHome().setEnabled(true);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<RoomType> rooms =
+            repository.getAvailableRoomTypes(
+                guests,
+                homeSearch.getCheckIn(),
+                homeSearch.getCheckOut()
+            );
+
+        mainView.getBookingSearchPanel().loadSearchData(
+            homeSearch.getCheckInDate(),
+            homeSearch.getCheckOutDate(),
+            homeSearch.getGuests(),
+            rooms
+        );
+
+        for(int i = 0; i < rooms.size(); i++) {
+
+            new RoomCardController(
+                mainView.getBookingSearchPanel().getRoomCards().get(i),
+                mainView,
+                rooms.get(i),
+                view.getUser()
+            );
         }
+
+        mainView.showView(MainView.BOOKING_SEARCH);
+        mainView.getBtnHome().setEnabled(true);
     }
     
     private void handleShowRooms() {
         mainView.showView(MainView.SHOW_ROOMS);
-    }
+    }    
+
 }

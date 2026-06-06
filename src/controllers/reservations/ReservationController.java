@@ -1,14 +1,13 @@
-package controllers.booking;
+package controllers.reservations;
 
-import java.time.LocalDate;
 import java.util.List;
 import javax.swing.JOptionPane;
 import models.Reservation;
 import models.ReservationStatus;
 import repository.ReservationRepository;
 import tablemodels.ReservationTableModel;
-import views.booking.ReservationFormDialog;
-import views.booking.ReservationsView;
+import views.reservations.ReservationFormDialog;
+import views.reservations.ReservationsView;
 
 public class ReservationController {
 
@@ -45,48 +44,12 @@ public class ReservationController {
         dialog.setVisible(true);
 
         if (dialog.isSaved()) {
-            Reservation savedReservation = dialog.getReservation();
-            try {
-                if (!validateReservation(savedReservation)) return;
-
-                if (reservation == null) {
-                    repo.save(savedReservation);
-                    loadReservations();
-                } else {
-                    int row = view.getSelectedModelRow();
-                    Reservation original = model.getReservationAt(row);
-                    savedReservation.setReservationId(original.getReservationId());
-
-                    if (repo.update(savedReservation)) loadReservations();
-                }
-                view.revalidate();
-                view.repaint();
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(view, e.getMessage());
-            }
+            loadReservations();
+            view.revalidate();
+            view.repaint();
         }
     }
-
-    private boolean validateReservation(Reservation reservation) {
-        LocalDate checkIn = reservation.getCheckInDate();
-        LocalDate checkOut = reservation.getCheckOutDate();
-
-        if (checkOut.isBefore(checkIn) || checkOut.equals(checkIn)) {
-            JOptionPane.showMessageDialog(null, "La fecha de salida debe ser después de la entrada", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (reservation.getGuests() <= 0) {
-            JOptionPane.showMessageDialog(null, "Debe haber al menos un huésped", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        if (reservation.getTotal() < 0) {
-            JOptionPane.showMessageDialog(null, "El total es inválido", "Error", JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-        return true;
-    }
-
+    
     private void handleEdit() {
         int row = view.getSelectedModelRow();
         if (row == -1) {

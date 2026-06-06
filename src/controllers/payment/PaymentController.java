@@ -1,29 +1,19 @@
 package controllers.payment;
 
-import java.awt.Point;
-import java.awt.Window;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
 
 import javax.swing.*;
-import config.DatabaseConnection;
-import models.ReservationStatus;
-import models.Room;
-import models.RoomStatus;
-import models.User;
+
+import models.*;
+import repository.PaymentRepository;
 import repository.ReservationRepository;
 import repository.RoomRepository;
 import views.main.MainWindow;
@@ -34,374 +24,169 @@ public class PaymentController {
 
     private PaymentWindow paymentWindow;
     private PaymentView paymentView;
-    private long nights;
     private User user;
 
-    public PaymentController(PaymentWindow paymentWindow, PaymentView paymentView, User user) {
-	    this.paymentWindow = paymentWindow;
-	    this.paymentView = paymentView;
-	    this.user = user;
+    private ReservationRepository reservationRepo = new ReservationRepository();
+    private PaymentRepository paymentRepo = new PaymentRepository();
+    private RoomRepository roomRepo = new RoomRepository();
 
-	    nights = ( ((Date) paymentView.getSpCheckOut().getValue()).getTime() 
-	            - ((Date) paymentView.getSpCheckIn().getValue()).getTime() )
-	            / (1000 * 60 * 60 * 24);
-	    
+    public PaymentController(PaymentWindow paymentWindow, PaymentView paymentView, User user) {
+
+        this.paymentWindow = paymentWindow;
+        this.paymentView = paymentView;
+        this.user = user;
+
+        calculateNights();
         initListeners();
         setupDateValidation();
     }
-    
-	public void initListeners( ) {
-		paymentView.getBtnPay().addActionListener(e -> processPayment());
-				
-		paymentWindow.addWindowListener(new WindowAdapter() {
-		    @Override
-		    public void windowClosing(WindowEvent e) {
-		        handleClose();
-		    }
-		    
-		    public void windowOpened(WindowEvent e) {
-		        resetScroll();
-		    }
-		});
-			
-		paymentView.getBtnHome().addActionListener(e -> {
-			new MainWindow(user);
-            
-            Window window = SwingUtilities.getWindowAncestor(paymentView);
-            if (window != null) {
-                window.dispose();
+
+    private long calculateNights() {
+        Date in = (Date) paymentView.getSpCheckIn().getValue();
+        Date out = (Date) paymentView.getSpCheckOut().getValue();
+
+        return (out.getTime() - in.getTime()) / (1000 * 60 * 60 * 24);
+    }
+
+    private void initListeners() {
+
+        paymentView.getBtnPay().addActionListener(e -> processPayment());
+
+        paymentWindow.addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                goHome();
             }
-		});	
-		
-		paymentView.getSpCheckIn().addChangeListener(e -> updateLabelCheckIn() );
-		paymentView.getSpCheckOut().addChangeListener(e -> updateLabelCheckOut() );
-		
-		paymentView.getLblLogo().addMouseListener(
-		    new MouseAdapter() {
-		    	
-		        @Override
-		        public void mouseClicked(MouseEvent e) {
-		        	
-					new MainWindow(user);
-		            
-		            Window window = SwingUtilities.getWindowAncestor(paymentView);
-		            if (window != null) {
-		                window.dispose();
-		            }
+        });
 
-		            resetScroll();
-		        }
-		    }
-		);
+        paymentView.getBtnHome().addActionListener(e -> goHome());
 
-	}
-	
-	protected void updateLabelCheckIn() {
-		paymentView.getLblCheckIn().setText("Entrada: " + new SimpleDateFormat("dd/MM/yyyy").format(paymentView.getSpCheckIn().getValue()));
-		nights = ( ((Date) paymentView.getSpCheckOut().getValue()).getTime() 
-	            - ((Date) paymentView.getSpCheckIn().getValue()).getTime() )
-	            / (1000 * 60 * 60 * 24);
-		paymentView.getLblNights().setText("Estancia: " + nights + " noche/s");
-		paymentView.getLblTotal().setText("$ " + (nights * paymentView.getRoom().getPrice()));
-	}
-	
-	protected void updateLabelCheckOut() {
-		paymentView.getLblCheckOut().setText("Salida: " + new SimpleDateFormat("dd/MM/yyyy").format(paymentView.getSpCheckOut().getValue()));
-		nights = ( ((Date) paymentView.getSpCheckOut().getValue()).getTime() 
-	            - ((Date) paymentView.getSpCheckIn().getValue()).getTime() )
-	            / (1000 * 60 * 60 * 24);
-		paymentView.getLblNights().setText("Estancia: " + nights + " noche/s");
-		paymentView.getLblTotal().setText("Total: $ " + (nights * paymentView.getRoom().getPrice()));
-	}
+        paymentView.getSpCheckIn().addChangeListener(e -> updateUI());
+        paymentView.getSpCheckOut().addChangeListener(e -> updateUI());
 
-	private void handleClose() {
-		new MainWindow(user);
+        paymentView.getLblLogo().addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                goHome();
+            }
+        });
+    }
+
+    private void goHome() {
+
+        new MainWindow(user);
+
         Window window = SwingUtilities.getWindowAncestor(paymentView);
         if (window != null) window.dispose();
     }
-	
-	private void resetScroll() {
-	    SwingUtilities.invokeLater(() -> {
-	    	paymentWindow.getScroll().getViewport().setViewPosition(new Point(0, 0));
-	    });
-	}
+
+    private void updateUI() {
+
+        Date in = (Date) paymentView.getSpCheckIn().getValue();
+        Date out = (Date) paymentView.getSpCheckOut().getValue();
+
+        long nights = calculateNights();
+
+        double total = nights * paymentView.getRoom().getPrice();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+
+        paymentView.getLblCheckIn().setText("Entrada: " + df.format(in));
+        paymentView.getLblCheckOut().setText("Salida: " + df.format(out));
+        paymentView.getLblNights().setText("Estancia: " + nights + " noche/s");
+        paymentView.getLblTotal().setText("Total: $" + total);
+    }
 
     private void processPayment() {
 
         String name = paymentView.getTxtFirstName().getText().trim();
-        String lastName = paymentView.getTxtLastName().getText().trim();
+        String last = paymentView.getTxtLastName().getText().trim();
         String email = paymentView.getTxtEmail().getText().trim();
         String phone = paymentView.getTxtPhone().getText().trim();
-        int cmbPaymentMethodSelected = paymentView.getCmbPaymentMethod().getSelectedIndex();
 
-        boolean termsAccepted = paymentView.getChkTerms().isSelected();
-        boolean policiesAccepted = paymentView.getChkPolicies().isSelected();
-
-        // Validación básica
-        if (name.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty() || cmbPaymentMethodSelected == 0) {
-        	
-            JOptionPane.showMessageDialog(
-                null,
-                "Completa todos los campos",
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-            );
+        if (name.isEmpty() || last.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Completa todos los campos");
             return;
         }
 
-        if (!termsAccepted || !policiesAccepted) {
+        if (!paymentView.getChkTerms().isSelected() ||
+            !paymentView.getChkPolicies().isSelected()) {
 
-            JOptionPane.showMessageDialog(
-                null,
-                "Debes aceptar los términos y políticas",
-                "Advertencia",
-                JOptionPane.WARNING_MESSAGE
-            );
+            JOptionPane.showMessageDialog(null, "Acepta términos y políticas");
             return;
         }
-        
+
         finishPayment();
     }
-    
-    public void finishPayment() {
 
-        Connection conn = null;
+    private void finishPayment() {
 
-        try {
+        int userId = user.getId();
+        int typeId = paymentView.getRoom().getTypeId();
 
-            conn = DatabaseConnection.getConnection();
-            conn.setAutoCommit(false);
+        LocalDate checkIn = ((Date) paymentView.getSpCheckIn().getValue())
+                .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            // ========= VALIDAR MÉTODO DE PAGO =========
-            if (paymentView.getCmbPaymentMethod().getSelectedIndex() == 0) {
+        LocalDate checkOut = ((Date) paymentView.getSpCheckOut().getValue())
+                .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-                JOptionPane.showMessageDialog(
-                    null,
-                    "Seleccione un método de pago"
-                );
+        int roomId = -1;
 
-                return;
-            }
+        List<Room> rooms = roomRepo.findByTypeId(typeId);
 
-            // ========= OBTENER DATOS =========
-            int userId = user.getId();
+        for (Room r : rooms) {
 
-            int selectedTypeId = paymentView.getRoom().getTypeId();
+            if (!RoomStatus.ACTIVE.equals(r.getStatus())) continue;
 
-            double total = nights * paymentView.getRoom().getPrice();
-            
-            // ========= BUSCAR HABITACIÓN DISPONIBLE =========
-            int roomId = -1;
+            boolean available = reservationRepo.isRoomAvailableByDates(r.getRoomId(), checkIn, checkOut);
 
-            LocalDate checkIn =
-                    ((Date) paymentView.getSpCheckIn().getValue())
-                            .toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate();
-
-            LocalDate checkOut =
-                    ((Date) paymentView.getSpCheckOut().getValue())
-                            .toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate();
-
-            RoomRepository roomRepo = new RoomRepository();
-            ReservationRepository reservationRepo = new ReservationRepository();
-
-            List<Room> rooms = roomRepo.findByTypeId(selectedTypeId);
-
-            for (Room room : rooms) {
-
-                if (!RoomStatus.ACTIVE.equals(room.getStatus())) {
-                    continue;
-                }
-
-                boolean available =
-                        reservationRepo.isRoomAvailableByDates(
-                                room.getRoomId(),
-                                checkIn,
-                                checkOut
-                        );
-
-                if (available) {
-                    roomId = room.getRoomId();
-                    break;
-                }
-            }
-
-            if (roomId == -1) {
-
-                JOptionPane.showMessageDialog(
-                        null,
-                        "No hay habitaciones disponibles para esas fechas"
-                );
-
-                conn.rollback();
-                return;
-            }
-
-            // ========= GUARDAR RESERVACIÓN =========
-            String reservationSql =
-                    "INSERT INTO reservations "
-                  + "(userId, roomId, "
-                  + "checkInDate, "
-                  + "checkOutDate, "
-                  + "guests, total, status) "
-                  + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-            PreparedStatement reservationStmt =
-                    conn.prepareStatement(
-                            reservationSql,
-                            Statement.RETURN_GENERATED_KEYS
-                    );
-
-            reservationStmt.setInt(
-                    1,
-                    userId
-            );
-
-            reservationStmt.setInt(
-                    2,
-                    roomId
-            );
-
-            reservationStmt.setDate(
-                    3,
-                    new java.sql.Date(((Date)paymentView.getSpCheckIn().getValue()).getTime())
-            );
-
-            reservationStmt.setDate(
-                    4,
-                    new java.sql.Date(((Date)paymentView.getSpCheckOut().getValue()).getTime())
-            );
-
-            reservationStmt.setInt(
-                    5,
-                    paymentView.getGuests()
-            );
-
-            reservationStmt.setDouble(
-                    6,
-                    total
-            );
-
-            reservationStmt.setString(
-                    7,
-                    ReservationStatus.CONFIRMED
-            );
-
-            reservationStmt.executeUpdate();
-
-            // ========= OBTENER reservationId =========
-            ResultSet generatedKeys = reservationStmt.getGeneratedKeys();
-
-            int reservationId = -1;
-
-            if (generatedKeys.next()) {
-                reservationId = generatedKeys.getInt(1);
-            }
-
-            if (reservationId == -1) {
-                throw new SQLException(
-                	"No se pudo generar reservationId"
-                );
-            }
-
-            // ========= GUARDAR PAYMENT =========
-            String paymentSql =
-                    "INSERT INTO payments "
-                  + "(reservationId, amount, method, paymentDate) "
-                  + "VALUES (?, ?, ?, ?)";
-
-            PreparedStatement paymentStmt =
-                    conn.prepareStatement(
-                            paymentSql
-                    );
-
-            paymentStmt.setInt(
-                    1,
-                    reservationId
-            );
-
-            paymentStmt.setDouble(
-                    2,
-                    total
-            );
-
-            paymentStmt.setString(
-                    3,
-                    String.valueOf(paymentView.getCmbPaymentMethod().getSelectedItem())
-            );
-
-            paymentStmt.setDate(
-                    4,
-                    java.sql.Date.valueOf(LocalDate.now())
-            );
-
-            paymentStmt.executeUpdate();
-
-            // ========= ACTUALIZAR HABITACIÓN =========
-            /*String updateRoomSql =
-                    "UPDATE rooms "
-                  + "SET status = ? "
-                  + "WHERE roomId = ?";
-
-            PreparedStatement updateRoomStmt =
-                    conn.prepareStatement(
-                            updateRoomSql
-                    );
-
-            updateRoomStmt.setString(
-                    1,
-                    "Ocupado"
-            );
-
-            updateRoomStmt.setInt(
-                    2,
-                    roomId
-            );
-
-            updateRoomStmt.executeUpdate();*/
-
-            // ========= CONFIRMAR TRANSACCIÓN =========
-            conn.commit();
-
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Pago realizado correctamente"
-            );
-            handleClose();
-
-        } catch (Exception ex) {
-
-            try {
-
-                if (conn != null) {
-                    conn.rollback();
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-            ex.printStackTrace();
-
-            JOptionPane.showMessageDialog(
-                null,
-                "Error al finalizar pago"
-            );
-
-        } finally {
-
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (available) {
+                roomId = r.getRoomId();
+                break;
             }
         }
+
+        if (roomId == -1) {
+            JOptionPane.showMessageDialog(null, "No hay habitaciones disponibles");
+            return;
+        }
+
+        long nights = calculateNights();
+        double total = nights * paymentView.getRoom().getPrice();
+        
+        Reservation reservation = new Reservation(
+            0,
+            userId,
+            roomId,
+            checkIn,
+            checkOut,
+            paymentView.getGuests(),
+            ReservationStatus.CONFIRMED,
+            total,
+            LocalDateTime.now()
+        );
+
+        int reservationId = reservationRepo.saveAndReturnId(reservation);
+
+        if (reservationId == -1) {
+            JOptionPane.showMessageDialog(null, "Error creando reservación");
+            return;
+        }
+
+        Payment payment = new Payment(
+            reservationId,
+            total,
+            paymentView.getCmbPaymentMethod().getSelectedItem().toString(),
+            LocalDate.now()
+        );
+
+        paymentRepo.save(payment);
+
+        JOptionPane.showMessageDialog(null, "Pago realizado correctamente");
+
+        goHome();
     }
 
 	private void setupDateValidation() {

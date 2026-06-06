@@ -1,4 +1,4 @@
-package controllers.rooms;
+package controllers.roomtypes;
 
 import components.RoomCard;
 import views.main.MainView;
@@ -31,7 +31,7 @@ public class RoomCardController {
     private void initController() {
     	// detalles
         roomCard.getBtnDetails().addActionListener(e -> {
-            mainView.roomDetailsPanel.setRoomType(roomCard.getRoomType());
+            mainView.getRoomDetailsPanel().setRoomType(roomCard.getRoomType());
             mainView.showView(MainView.ROOM_DETAILS);
         });
     	

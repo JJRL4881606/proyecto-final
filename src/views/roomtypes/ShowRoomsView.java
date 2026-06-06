@@ -1,4 +1,4 @@
-package views.rooms;
+package views.roomtypes;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -52,20 +52,19 @@ public class ShowRoomsView extends JPanel {
         roomCards.clear();
 
         if(rooms.isEmpty()){
-        	
+
             JLabel lblNoRooms = new JLabel("No hay habitaciones disponibles");
             lblNoRooms.setFont(AppFont.subtitle());
             lblNoRooms.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             roomsContainer.add(lblNoRooms);
-            
+
         }else{
             for(RoomType room : rooms){
-            	RoomCard card = new RoomCard(room);
+                RoomCard card = new RoomCard(room);
 
-            	roomCards.add(card);
-
-            	roomsContainer.add(card);
+                roomCards.add(card);
+                roomsContainer.add(card);
             }
         }
 

@@ -9,6 +9,8 @@ import models.Amenity;
 
 public class AmenityRepository {
 
+	//Método para crear una amenidad
+	
     public void save(Amenity amenity) {
 
         String sql = "INSERT INTO amenities(name,icon) VALUES(?,?)";
@@ -27,6 +29,8 @@ public class AmenityRepository {
         }
     }
 
+    // Método para obtener todas las amenidades en un arreglo
+    
     public List<Amenity> getAmenities() {
 
         List<Amenity> amenities = new ArrayList<>();
@@ -37,7 +41,6 @@ public class AmenityRepository {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery()
         ){
-
             while(rs.next()){
                 amenities.add(new Amenity(
                     rs.getInt("amenityId"),
@@ -53,6 +56,9 @@ public class AmenityRepository {
         return amenities;
     }
 
+    // Método para borrar una amenidad
+    // Necesita el id de la amenidad
+    
     public boolean delete(int id) {
 
         String sql = "DELETE FROM amenities WHERE amenityId = ?";
@@ -72,6 +78,9 @@ public class AmenityRepository {
 
         return false;
     }
+    
+    // Método para listar las amenidades que tiene un RoomType
+    // Necesita el id del RoomType
 
     public List<Amenity> getAmenitiesByRoomType(int typeId) {
 

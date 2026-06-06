@@ -1,4 +1,4 @@
-package controllers.booking;
+package controllers.reservations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,24 +11,29 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 
+import models.Payment;
 import models.Reservation;
 import models.ReservationStatus;
 import models.Room;
 import models.RoomType;
+import repository.PaymentRepository;
 import repository.ReservationRepository;
 import repository.RoomRepository;
 import repository.RoomTypeRepository;
 import utils.DateUtils;
 import utils.FormUtils;
-import views.booking.ReservationFormDialog;
+import views.reservations.ReservationFormDialog;
 
 public class ReservationFormController {
 
     private ReservationFormDialog view;
+    private PaymentRepository paymentRepo = new PaymentRepository();
+    
+    private boolean saving = false;
 
     public ReservationFormController(ReservationFormDialog view) {
         this.view = view;
-        
+
         initDateRestrictions();
         initListeners();
     }
@@ -39,7 +44,27 @@ public class ReservationFormController {
 
         view.getSpGuests().addChangeListener(e -> validateGuests());
         view.getComboStatus().addActionListener(e -> validateStatus());
-
+        
+        if(view.getComboPaymentMethod() != null) {
+            view.getComboPaymentMethod().addActionListener(e -> validatePaymentMethod());
+        }
+        
+        if(view.getChkTerms() != null) {
+	        view.getChkTerms().addActionListener(e -> {
+	        	if(view.getChkTerms().isSelected()) {
+	        		view.clearTermsError(); 
+	        	}
+	        });
+        }
+        
+        if(view.getChkPolicies() != null) {
+	        view.getChkPolicies().addActionListener(e -> {
+	        	if(view.getChkPolicies().isSelected()) {
+	        		view.clearPoliciesError(); 
+	        	}
+	        });
+        }
+        
         // fechas
         view.getSpCheckIn().addChangeListener(e -> {
             validateDates();
@@ -59,88 +84,93 @@ public class ReservationFormController {
             calculateTotal();
         });
         
-        view.getComboUser().addActionListener(e -> {
-            validateUser();
-        });
+        view.getComboUser().addActionListener(e -> validateUser());
 
-        FormUtils.addFocusEffect(
-            view.getTxtTotal(),
-            view.getLblTotalError()
-        );
+        FormUtils.addFocusEffect(view.getTxtTotal(), view.getLblTotalError());
     }
 
     private void handleSave() {
 
-        if(!validateForm()) return;
+        if (saving) return;
+        saving = true;
 
-        ReservationRepository repo = new ReservationRepository();
+        try {
 
-        int reservationId = (view.getReservation() != null) ? view.getReservation().getReservationId() : 0;
+            if(!validateForm()) return;
 
-        LocalDate checkIn = ((Date)view.getSpCheckIn().getValue())
-            .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            ReservationRepository repo = new ReservationRepository();
 
-        LocalDate checkOut = ((Date)view.getSpCheckOut().getValue())
-            .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate checkIn = ((Date)view.getSpCheckIn().getValue())
+                .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        String status = view.getStatus();
+            LocalDate checkOut = ((Date)view.getSpCheckOut().getValue())
+                .toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        if(status.equals(ReservationStatus.CONFIRMED)) {
+            String status = view.getStatus();
 
-            boolean available;
+            if(status.equals(ReservationStatus.CONFIRMED)) {
 
-            if(view.getReservation() == null) {
+                boolean available = (view.getReservation() == null)
+                    ? repo.isRoomAvailableByDates(view.getRoomId(), checkIn, checkOut)
+                    : repo.isRoomAvailableByDates(view.getRoomId(), checkIn, checkOut, view.getReservation().getReservationId());
 
-                available = repo.isRoomAvailableByDates(
-                    view.getRoomId(),
-                    checkIn,
-                    checkOut
-                );
+                if(!available){
+                    JOptionPane.showMessageDialog(null, "Habitación no disponible en esas fechas");
+                    return;
+                }
+            }
 
-            } else {
-
-                available = repo.isRoomAvailableByDates(
+            Reservation reservation = (view.getReservation() == null)
+                ? new Reservation(
+                    0,
+                    view.getUserId(),
                     view.getRoomId(),
                     checkIn,
                     checkOut,
-                    view.getReservation().getReservationId()
-                );
+                    view.getGuests(),
+                    view.getStatus(),
+                    view.getTotal(),
+                    LocalDateTime.now()
+                )
+                : view.getReservation();
+
+            reservation.setUserId(view.getUserId());
+            reservation.setRoomId(view.getRoomId());
+            reservation.setCheckInDate(checkIn);
+            reservation.setCheckOutDate(checkOut);
+            reservation.setGuests(view.getGuests());
+            reservation.setStatus(view.getStatus());
+            reservation.setTotal(view.getTotal());
+
+            int reservationId;
+
+            if(reservation.getReservationId() == 0){
+                reservationId = repo.saveAndReturnId(reservation);
+                reservation.setReservationId(reservationId);
+            } else {
+                repo.update(reservation);
+                reservationId = reservation.getReservationId();
             }
 
-            if(!available){
-                JOptionPane.showMessageDialog(
-                    null,
-                    "Habitación no disponible en esas fechas"
+            // SOLO 1 PAYMENT
+            if(view.getReservation() == null){
+                Payment payment = new Payment(
+                    reservationId,
+                    view.getTotal(),
+                    view.getComboPaymentMethod().getSelectedItem().toString(),
+                    LocalDate.now()
                 );
-                return;
+
+                paymentRepo.save(payment);
             }
+
+            view.setReservation(reservation);
+            view.setSaved(true);
+            view.dispose();
+
+        } finally {
+            saving = false;
         }
-
-        Reservation reservation = (view.getReservation() == null)
-            ? new Reservation(
-        	    0,
-        	    view.getUserId(),
-        	    view.getRoomId(),
-        	    checkIn,
-        	    checkOut,
-        	    view.getGuests(),
-        	    view.getStatus(),
-        	    view.getTotal(),
-        	    LocalDateTime.now()
-        	)
-            : view.getReservation();
-
-        reservation.setUserId(view.getUserId());
-        reservation.setRoomId(view.getRoomId());
-        reservation.setCheckInDate(checkIn);
-        reservation.setCheckOutDate(checkOut);
-        reservation.setGuests(view.getGuests());
-        reservation.setStatus(view.getStatus());
-        reservation.setTotal(view.getTotal());
-
-        view.setReservation(reservation);
-        view.setSaved(true);
-        view.dispose();
     }
     
     private void initDateRestrictions(){
@@ -213,13 +243,18 @@ public class ReservationFormController {
     }
 
     private boolean validateForm() {
+        view.clearErrors();
         boolean valid = true;
+        
         if (!validateUser()) valid = false;
-        if( !validateRoom()) valid = false;
+        if (!validateRoom()) valid = false;
         if (!validateGuests()) valid = false;
         if (!validateStatus()) valid = false;
         if (!validateTotal()) valid = false;
         if (!validateDates()) valid = false;
+        if (!validateTerms()) valid = false;
+        if (!validatePolicies()) valid = false;
+        if (!validatePaymentMethod()) valid = false;
         return valid;
     }
     
@@ -279,8 +314,54 @@ public class ReservationFormController {
         return true;
     }
     
+    private boolean validatePaymentMethod() {
+    	
+	    if(view.getComboPaymentMethod() == null) {
+	        return true; // estamos editando
+	    }
+
+        if (view.getComboPaymentMethod().getSelectedIndex() == 0) {
+            view.setPaymentMethodError("Seleccione un método de pago");
+            return false;
+        }
+
+        view.clearPaymentMethodError();
+        return true;
+    }
+    
+    private boolean validateTerms() {
+    	
+	    if(view.getChkTerms() == null) {
+	        return true; // estamos editando
+	    }
+
+        if (!view.getChkTerms().isSelected()) {
+            view.setTermsError("Debe aceptar los términos y condiciones");
+            return false;
+        }
+
+        view.clearTermsError();
+        return true;
+    } 
+    
+    private boolean validatePolicies() {
+    	
+	    if(view.getChkPolicies() == null) {
+	        return true; // estamos editando
+	    }
+
+        if (!view.getChkPolicies().isSelected()) {
+            view.setPoliciesError("Debe aceptar las políticas de reservación");
+            return false;
+        }
+
+        view.clearPoliciesError();
+        
+        return true;
+    }
+    
     private boolean validateTotal(){
-        return !view.getTxtTotal().getText().isBlank();
+        return true;
     }
 
     private boolean validateDates(){

@@ -1,9 +1,9 @@
 package controllers.auth;
 
 import java.awt.Window;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
@@ -24,9 +24,9 @@ import views.main.MainWindow;
 
 public class RegistrationController {
 
-	private RegistrationView view;
-	private UserRepository repository;
-	 
+	private final RegistrationView view;
+	private final UserRepository repository;
+	
 	public RegistrationController(RegistrationView view) {
 	    this.view = view;
 	    this.repository = new UserRepository();
@@ -155,7 +155,7 @@ public class RegistrationController {
         int option = view.confirmReturn();
 
         if (option == JOptionPane.YES_OPTION) {
-        	new LoginWindow(null);
+        	new LoginWindow();
         	Window window = SwingUtilities.getWindowAncestor(view);
 
             if (window != null) {
@@ -245,14 +245,6 @@ public class RegistrationController {
 	    } catch (DuplicateEmailException e) {
 	        view.setEmailError(e.getMessage());
 	        return false;
-	    } catch (IOException e) {
-	    	JOptionPane.showMessageDialog(
-    		    null,
-    		    e.getMessage(),
-    		    "Error",
-    		    JOptionPane.ERROR_MESSAGE
-    		);
-	        return false;
 	    }
 	    view.clearEmailError();
 	    return true;
@@ -275,7 +267,7 @@ public class RegistrationController {
 	public boolean validateBirthDate() {		 
 	    Date date = view.getBirthDate();
 	    LocalDate birthDate = date.toInstant()
-	            .atZone(java.time.ZoneId.systemDefault())
+	            .atZone(ZoneId.systemDefault())
 	            .toLocalDate();
 
 	    LocalDate today = LocalDate.now();

@@ -1,4 +1,4 @@
-package views.booking;
+package views.reservations;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -26,6 +27,7 @@ import models.User;
 import repository.RoomRepository;
 import repository.RoomTypeRepository;
 import repository.UserRepository;
+import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
 import utils.UIColors;
@@ -48,6 +50,14 @@ public class ReservationFormDialog extends JDialog {
     private JLabel lblGuestsError;
     private JLabel lblTotalError;
     private JLabel lblStatusError;
+    
+    //pago
+    private JLabel lblPaymentMethodError;
+    private JComboBox<String> comboPaymentMethod;
+    private JLabel lblTermsError;
+    private JLabel lblPoliciesError;
+    private JCheckBox chkTerms;
+    private JCheckBox chkPolicies;
 
     private RoundedButton btnSave;
     private RoundedButton btnCancel;
@@ -56,23 +66,26 @@ public class ReservationFormDialog extends JDialog {
     private List<Room> rooms;
 
     private Reservation reservation;
+    
+    private JLabel lblPayment;
+    
     private boolean saved = false;
-    private int fieldWidth = 300;
-
+    
+    private final int FIELD_WIDTH = 300;
+    
     public ReservationFormDialog(JFrame parent, Reservation reservation) {
         super(parent, true);
         this.reservation = reservation;
 
         try{
-            users=new UserRepository().getUsers();
+            users = new UserRepository().getUsers();
 
         }catch(Exception e){
             e.printStackTrace();
         }
         
         rooms = new RoomRepository().getRooms().stream().filter(room -> {
-	        if(reservation != null &&
-	           room.getRoomId() == reservation.getRoomId()){
+	        if(reservation != null && room.getRoomId() == reservation.getRoomId()){
 	            return true;
 	        }
 
@@ -124,7 +137,7 @@ public class ReservationFormDialog extends JDialog {
         
         comboUser = FormUtils.createCombo(userNames);
         lblUserError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Usuario", comboUser, lblUserError, "", fieldWidth));
+        panel.add(FormUtils.createField("Usuario", comboUser, lblUserError, "", FIELD_WIDTH));
 
         String[] roomNames = new String[rooms.size()+1];
         roomNames[0]="Seleccione una habitación";
@@ -140,30 +153,56 @@ public class ReservationFormDialog extends JDialog {
         
         comboRoom = FormUtils.createCombo(roomNames);
         lblRoomError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Habitación", comboRoom, lblRoomError, "", fieldWidth));
+        panel.add(FormUtils.createField("Habitación", comboRoom, lblRoomError, "", FIELD_WIDTH));
 
         spCheckIn = FormUtils.createDateField();
         lblCheckInError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Fecha entrada", spCheckIn, lblCheckInError, "", fieldWidth));
+        panel.add(FormUtils.createField("Fecha entrada", spCheckIn, lblCheckInError, "", FIELD_WIDTH));
 
         spCheckOut = FormUtils.createDateField();
         lblCheckOutError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Fecha salida", spCheckOut, lblCheckOutError, "", fieldWidth));
+        panel.add(FormUtils.createField("Fecha salida", spCheckOut, lblCheckOutError, "", FIELD_WIDTH));
 
         spGuests = FormUtils.createNumberField(10);
         lblGuestsError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Huéspedes", spGuests, lblGuestsError, "", fieldWidth));
+        panel.add(FormUtils.createField("Huéspedes", spGuests, lblGuestsError, "", FIELD_WIDTH));
 
         String[] status = {"Seleccione estado", ReservationStatus.CONFIRMED, ReservationStatus.CANCELED, ReservationStatus.COMPLETED };
         comboStatus = FormUtils.createCombo(status);
         lblStatusError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Estado", comboStatus, lblStatusError, "", fieldWidth));
+        panel.add(FormUtils.createField("Estado", comboStatus, lblStatusError, "", FIELD_WIDTH));
         		
         txtTotal = FormUtils.createTextField();
         txtTotal.setEditable(false);
         txtTotal.setBackground(new Color(245,245,245));
         lblTotalError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Total", txtTotal, lblTotalError, "Ingrese el total", fieldWidth));
+        panel.add(FormUtils.createField("Total", txtTotal, lblTotalError, "Ingrese el total", FIELD_WIDTH));
+        
+        if(reservation == null) {
+            lblPayment = new JLabel("Pago de la reservación");
+            lblPayment.setFont(AppFont.big());
+            lblPayment.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+            lblPayment.setAlignmentX(CENTER_ALIGNMENT);
+            lblPayment.setHorizontalAlignment(JLabel.CENTER);
+            panel.add(lblPayment);
+
+            String[] paymentMethods = {"Selecciona un método de pago", "Tarjeta de crédito", "Tarjeta de débito", "Efectivo", "Transferencia", "PayPal"};
+            comboPaymentMethod = FormUtils.createCombo(paymentMethods);
+            lblPaymentMethodError = FormUtils.createErrorLabel();
+        	panel.add(FormUtils.createField("Método de pago:", comboPaymentMethod, lblPaymentMethodError, "", FIELD_WIDTH));
+
+            chkTerms = new JCheckBox("Acepto los términos y condiciones");
+        	chkTerms.setOpaque(false);
+            chkTerms.setAlignmentX(Component.CENTER_ALIGNMENT);
+            lblTermsError = FormUtils.createErrorLabel();
+            panel.add(FormUtils.createField(null, chkTerms, lblTermsError, "", FIELD_WIDTH));
+
+        	chkPolicies = new JCheckBox("Acepto políticas de cancelación");
+        	chkPolicies.setOpaque(false);
+        	lblPoliciesError = FormUtils.createErrorLabel();
+        	chkPolicies.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(FormUtils.createField(null, chkPolicies, lblPoliciesError, "", FIELD_WIDTH));
+        }
 
         return scroll;
     }
@@ -224,6 +263,10 @@ public class ReservationFormDialog extends JDialog {
     public JTextField getTxtTotal() { return txtTotal; }
 
     public JComboBox<String> getComboStatus() { return comboStatus; }
+    
+    public JComboBox<String> getComboPaymentMethod() { return comboPaymentMethod; }
+    public JCheckBox getChkTerms() { return chkTerms; }
+    public JCheckBox getChkPolicies() { return chkPolicies; }
 
     public RoundedButton getBtnSave() { return btnSave; }
     public RoundedButton getBtnCancel() { return btnCancel; }
@@ -245,8 +288,22 @@ public class ReservationFormDialog extends JDialog {
     public double getTotal(){
         return Double.parseDouble(txtTotal.getText());
     }
-
-    //errores
+    
+	//LABELS ERROR
+	public void clearErrors() {
+		clearUserError();
+		clearRoomError();
+		clearGuestsError();
+		clearStatusError();
+		clearTotalError();
+		clearCheckOutError();
+		clearCheckInError();
+		
+		if(chkTerms != null) { clearTermsError(); }
+		if(chkPolicies != null) { clearPoliciesError(); }
+		if(comboPaymentMethod != null) { clearPaymentMethodError(); }
+	}
+	
     public JLabel getLblTotalError(){
         return lblTotalError;
     }
@@ -260,14 +317,9 @@ public class ReservationFormDialog extends JDialog {
         FormUtils.clearError(lblGuestsError,spGuests);
     }
 
-    public void setTotalError(String msg){
-        lblTotalError.setText(msg);
-        txtTotal.setBorder(FormUtils.redBorder);
-    }
+    public void setTotalError(String msg){ }
 
-    public void clearTotalError(){
-        FormUtils.clearError(lblTotalError,txtTotal);
-    }
+    public void clearTotalError(){ }
 
     public void setCheckOutError(String msg){
         lblCheckOutError.setText(msg);
@@ -314,7 +366,31 @@ public class ReservationFormDialog extends JDialog {
         FormUtils.clearError(lblStatusError,comboStatus);
     }
     
+    public void setPaymentMethodError(String msg){
+        lblPaymentMethodError.setText(msg);
+        comboPaymentMethod.setBorder(FormUtils.redBorder);
+    }
+
+    public void clearPaymentMethodError(){
+        FormUtils.clearError(lblPaymentMethodError,comboPaymentMethod);
+    }
     
+	public void setTermsError(String msg) {
+	    lblTermsError.setText(msg);
+	}
+	
+	public void setPoliciesError(String msg) {
+	    lblPoliciesError.setText(msg);
+	}
+
+	public void clearTermsError(){
+	    lblTermsError.setText("");
+	}
+
+	public void clearPoliciesError(){
+	    lblPoliciesError.setText("");
+	}
+	
     public int confirmCancel(){
         return JOptionPane.showConfirmDialog(
             null,
@@ -332,6 +408,7 @@ public class ReservationFormDialog extends JDialog {
     public JComboBox<String> getComboRoom(){
         return comboRoom;
     }
+
     
     
 }

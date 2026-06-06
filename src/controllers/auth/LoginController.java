@@ -22,9 +22,9 @@ import repository.LoginRepository;
 
 public class LoginController {
 
-    private LoginView view;
-	private LoginRepository repository;
-
+    private final LoginView view;
+    private final LoginRepository repository;
+    
 	public LoginController(LoginView view) {
 	    repository = new LoginRepository();
 	    this.view = view;
@@ -59,13 +59,9 @@ public class LoginController {
         
         view.getLblForgotPassword().addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-
-                PasswordRecoveryDialog dialog = new PasswordRecoveryDialog(
-                    view.getWindow()
-                );
-
+            	
+                PasswordRecoveryDialog dialog = new PasswordRecoveryDialog(null);
                 new PasswordRecoveryController(dialog);
-
                 dialog.setVisible(true);
             }
         });

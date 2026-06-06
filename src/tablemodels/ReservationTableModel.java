@@ -15,8 +15,8 @@ public class ReservationTableModel extends AbstractTableModel {
     private List<Reservation> reservations;
     private UserRepository userRepo = new UserRepository();
     private RoomRepository roomRepo = new RoomRepository();
-    private final String[] columns = {"Usuario", "Habitación", "Entrada", "Salida", "Huéspedes", "Estado", "Total", "Creada"};
-
+    private final String[] columns = {"ID", "Usuario", "Habitación", "Entrada", "Salida", "Huéspedes", "Estado", "Total", "Creada"};
+    
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -38,27 +38,21 @@ public class ReservationTableModel extends AbstractTableModel {
         Reservation reservation = reservations.get(rowIndex);
 
         switch (columnIndex) {
-	        case 0:
-	            User user = userRepo.findById(
-	                reservation.getUserId()
-	            );
-	
-	            return user != null ? user.getName() + " " + user.getSurname() : "-";     
-	            
-            case 1:
-                Room room = roomRepo.findById(
-                    reservation.getRoomId()
-                );
-                return room != null  ? room.getRoomNumber(): "-";         
-                
-            case 2: return reservation.getCheckInDate().format(DATE_FORMAT);
-            case 3: return reservation.getCheckOutDate().format(DATE_FORMAT);
-            case 4: return reservation.getGuests();
-            case 5: return reservation.getStatus();
-            case 6: return "$" + reservation.getTotal();
-            case 7: return reservation.getCreatedAt().format(DATE_TIME_FORMAT);
-            default: return null;
-        }
+	        case 0: return reservation.getReservationId();
+	        case 1:
+	            User user = userRepo.findById(reservation.getUserId());
+	            return user != null ? user.getName() + " " + user.getSurname() : "-";
+	        case 2:
+	            Room room = roomRepo.findById(reservation.getRoomId());
+	            return room != null ? room.getRoomNumber() : "-";
+	        case 3: return reservation.getCheckInDate().format(DATE_FORMAT);
+	        case 4: return reservation.getCheckOutDate().format(DATE_FORMAT);
+	        case 5: return reservation.getGuests();
+	        case 6: return reservation.getStatus();
+	        case 7: return "$" + reservation.getTotal();
+	        case 8: return reservation.getCreatedAt().format(DATE_TIME_FORMAT);
+	        default: return null;
+	    }
     }
 
     public Reservation getReservationAt(int row) { return reservations.get(row); }

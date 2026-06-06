@@ -11,6 +11,7 @@ import repository.ReservationRepository;
 import repository.RoomRepository;
 import repository.RoomTypeRepository;
 import tablemodels.RoomTableModel;
+import views.main.MainView;
 import views.rooms.RoomFormDialog;
 import views.rooms.RoomsView;
 
@@ -19,9 +20,11 @@ public class RoomController {
 	private RoomsView view;
 	private RoomRepository repo;
 	private RoomTableModel model;
+	private MainView mainView; //para actualizar visualmente cambios en las vistas (showRooms)
 
-	public RoomController(RoomsView view){
+	public RoomController(RoomsView view, MainView mainView){
 		this.view = view;
+		this.mainView = mainView;
 		repo = new RoomRepository();
 
 		initListeners();
@@ -55,8 +58,11 @@ public class RoomController {
 
 			try{
 				if(room == null){
+					
 					repo.save(savedRoom);
 					model.addRow(savedRoom);
+					mainView.refreshRoomViews();
+					
 				}else{
 					int row = view.getSelectedModelRow();
 					Room originalRoom = model.getRoomAt(row);
@@ -65,14 +71,7 @@ public class RoomController {
 
 					ReservationRepository reservationRepo = new ReservationRepository();
 
-					if(
-					    savedRoom.getStatus().equals(RoomStatus.OUT_OF_SERVICE)
-					    &&
-					    reservationRepo.hasActiveReservation(
-					        savedRoom.getRoomId()
-					    )
-					){
-
+					if(savedRoom.getStatus().equals(RoomStatus.OUT_OF_SERVICE) && reservationRepo.hasActiveReservation(savedRoom.getRoomId())){
 					    JOptionPane.showMessageDialog(
 					        null,
 					        "No puedes poner esta habitación fuera de servicio porque tiene reservas activas",
@@ -86,15 +85,16 @@ public class RoomController {
 					boolean updated = repo.update(savedRoom);
 					
 					if(updated){
-						model.updateRow(row,savedRoom);
+					    model.updateRow(row,savedRoom);
+					    mainView.refreshRoomViews();
 					}
 				}
 			}catch(Exception e){
 				e.printStackTrace();
 
 				JOptionPane.showMessageDialog(
-						null,
-						e.getMessage()
+					null,
+					e.getMessage()
 				);
 			}
 		}
@@ -135,10 +135,7 @@ public class RoomController {
 
 	    ReservationRepository reservationRepo = new ReservationRepository();
 
-    	if(reservationRepo.hasReservationsByRoom(
-    	    room.getRoomId()
-    	)){
-
+    	if(reservationRepo.hasReservationsByRoom(room.getRoomId())){
     	    JOptionPane.showMessageDialog(
     	        null,
     	        "No puedes eliminar esta habitación porque tiene reservaciones asociadas",
@@ -153,6 +150,7 @@ public class RoomController {
 
 	    if(deleted){
 	        model.removeRow(row);
+	        mainView.refreshRoomViews();
 	    }
 	}
 }

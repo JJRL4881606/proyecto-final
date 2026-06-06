@@ -20,7 +20,7 @@ public class RoomType {
     
     public RoomType() {}
 
-    // Constructor para crear un tipo de habitación con todos sus datos.
+    // Constructor para crear un tipo de habitación con todos sus datos
     // usado en getRoomTypes() y getById(int id) en RoomTypeRepository, 
     // y handleSave() en RoomTypeFormController
     
@@ -41,6 +41,7 @@ public class RoomType {
     }
     
     //getters y setters
+    
     public int getTypeId() {
         return typeId;
     }

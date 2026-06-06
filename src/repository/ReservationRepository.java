@@ -11,6 +11,8 @@ import models.ReservationStatus;
 
 public class ReservationRepository {
 
+	// Método para crear una reservación
+	
     public void save(Reservation reservation) {
         String sql = "INSERT INTO reservations(userId, roomId, checkInDate, checkOutDate, guests, status, total, createdAt) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -32,8 +34,11 @@ public class ReservationRepository {
             e.printStackTrace();
         }
     }
+    
+    // Método para obtener todas las reservaciones en un arreglo
 
     public List<Reservation> getReservations() {
+    	
         List<Reservation> list = new ArrayList<>();
         String sql = "SELECT * FROM reservations";
 
@@ -62,20 +67,20 @@ public class ReservationRepository {
         return list;
     }
 
-    public boolean update(Reservation r) {
+    public boolean update(Reservation reservation) {
         String sql = "UPDATE reservations SET userId=?, roomId=?, checkInDate=?, checkOutDate=?, guests=?, status=?, total=? WHERE reservationId=?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setInt(1, r.getUserId());
-            ps.setInt(2, r.getRoomId());
-            ps.setDate(3, Date.valueOf(r.getCheckInDate()));
-            ps.setDate(4, Date.valueOf(r.getCheckOutDate()));
-            ps.setInt(5, r.getGuests());
-            ps.setString(6, r.getStatus());
-            ps.setDouble(7, r.getTotal());
-            ps.setInt(8, r.getReservationId());
+            ps.setInt(1, reservation.getUserId());
+            ps.setInt(2, reservation.getRoomId());
+            ps.setDate(3, Date.valueOf(reservation.getCheckInDate()));
+            ps.setDate(4, Date.valueOf(reservation.getCheckOutDate()));
+            ps.setInt(5, reservation.getGuests());
+            ps.setString(6, reservation.getStatus());
+            ps.setDouble(7, reservation.getTotal());
+            ps.setInt(8, reservation.getReservationId());
 
             return ps.executeUpdate() > 0;
 
@@ -85,17 +90,33 @@ public class ReservationRepository {
 
         return false;
     }
+    
+    // Método para borrar una reservación
+    // Necesita el id de la reservación
 
     public boolean delete(int id) {
-        String sql = "DELETE FROM reservations WHERE reservationId=?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try(Connection conn = DatabaseConnection.getConnection()) {
 
-            ps.setInt(1, id);
-            return ps.executeUpdate() > 0;
+            // borrar pagos relacionados
+            String deletePayments =
+                "DELETE FROM payments WHERE reservationId=?";
 
-        } catch (Exception e) {
+            try(PreparedStatement ps = conn.prepareStatement(deletePayments)) {
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            }
+
+            // borrar reservación
+            String deleteReservation =
+                "DELETE FROM reservations WHERE reservationId=?";
+
+            try(PreparedStatement ps = conn.prepareStatement(deleteReservation)) {
+                ps.setInt(1, id);
+                return ps.executeUpdate() > 0;
+            }
+
+        } catch(Exception e) {
             e.printStackTrace();
         }
 
@@ -139,7 +160,7 @@ public class ReservationRepository {
         String sql =
             "SELECT 1 FROM reservations " +
             "WHERE roomId=? " +
-            "AND status=? " +
+            "AND status <> ? " +
             "AND (checkInDate < ? AND checkOutDate > ?) " +
             "LIMIT 1";
 
@@ -147,7 +168,7 @@ public class ReservationRepository {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, roomId);
-            ps.setString(2, ReservationStatus.CONFIRMED);
+            ps.setString(2, ReservationStatus.CANCELED);
             ps.setDate(3, Date.valueOf(checkOut));
             ps.setDate(4, Date.valueOf(checkIn));
 
@@ -170,7 +191,7 @@ public class ReservationRepository {
         String sql =
             "SELECT 1 FROM reservations " +
             "WHERE roomId=? " +
-            "AND status=? " +
+            "AND status <> ? " +
             "AND reservationId<>? " +
             "AND (checkInDate < ? AND checkOutDate > ?) " +
             "LIMIT 1";
@@ -179,7 +200,7 @@ public class ReservationRepository {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, roomId);
-            ps.setString(2, ReservationStatus.CONFIRMED);
+            ps.setString(2, ReservationStatus.CANCELED);
             ps.setInt(3, reservationIdToIgnore);
             ps.setDate(4, Date.valueOf(checkOut));
             ps.setDate(5, Date.valueOf(checkIn));
@@ -192,7 +213,10 @@ public class ReservationRepository {
 
         return false;
     }
-
+    
+    // Obtener las reservaciones asociadas a un usuario, en orden de creación
+    // Utiliza el id del usuario
+    
     public List<Reservation> getReservationsByUser(int userId) {
 
         List<Reservation> list = new ArrayList<>();
@@ -226,6 +250,9 @@ public class ReservationRepository {
 
         return list;
     }
+    
+    // Método para cancelar una reservación
+    // Utiliza el id de la reservación
 
     public boolean cancelReservation(int reservationId) {
 
@@ -245,6 +272,9 @@ public class ReservationRepository {
 
         return false;
     }
+    
+    // Método para obtener el id de una habitación de una reservación
+    // Utiliza el id de la reservación
 
     public int getRoomIdByReservation(int reservationId) {
 
@@ -288,5 +318,38 @@ public class ReservationRepository {
         }
 
         return false;
+    }
+    
+    public int saveAndReturnId(Reservation reservation) {
+
+        String sql =
+            "INSERT INTO reservations " +
+            "(userId, roomId, checkInDate, checkOutDate, guests, total, status) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setInt(1, reservation.getUserId());
+            ps.setInt(2, reservation.getRoomId());
+            ps.setDate(3, java.sql.Date.valueOf(reservation.getCheckInDate()));
+            ps.setDate(4, java.sql.Date.valueOf(reservation.getCheckOutDate()));
+            ps.setInt(5, reservation.getGuests());
+            ps.setDouble(6, reservation.getTotal());
+            ps.setString(7, reservation.getStatus());
+
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return -1;
     }
 }

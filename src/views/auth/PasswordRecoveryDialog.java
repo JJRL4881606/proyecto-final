@@ -27,8 +27,8 @@ public class PasswordRecoveryDialog extends JDialog {
     private RoundedButton btnSave;
     private RoundedButton btnCancel;
 
-    int fieldWidth = 300;
-
+    private static final int FIELD_WIDTH = 300;
+    
     public PasswordRecoveryDialog(JFrame parent){
         super(parent, true);
 
@@ -46,7 +46,7 @@ public class PasswordRecoveryDialog extends JDialog {
     private JPanel createTitlePanel() {
         JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
-        panel.add(new JLabel("Formulario recuperación de contraseña"));
+        panel.add(new JLabel("Recuperación de contraseña"));
         return panel;
     }
 
@@ -64,19 +64,19 @@ public class PasswordRecoveryDialog extends JDialog {
 
 		txtEmail = FormUtils.createTextField();
 		lblEmailError = FormUtils.createErrorLabel();
-		panel.add(FormUtils.createField("Correo", txtEmail, lblEmailError, "Ingrese el correo", fieldWidth));
+		panel.add(FormUtils.createField("Correo", txtEmail, lblEmailError, "Ingrese el correo", FIELD_WIDTH));
 
 		comboCountry = FormUtils.createComboCountry();
 		lblCountryError = FormUtils.createErrorLabel();
-		panel.add(FormUtils.createField("País", comboCountry, lblCountryError, "Ingrese el país", fieldWidth));
+		panel.add(FormUtils.createField("País", comboCountry, lblCountryError, "Ingrese el país", FIELD_WIDTH));
 
         txtNewPassword = FormUtils.createPasswordField();
         lblNewError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Nueva contraseña", txtNewPassword, lblNewError, "Ingrese la nueva contraseña", fieldWidth));
+        panel.add(FormUtils.createField("Nueva contraseña", txtNewPassword, lblNewError, "Ingrese la nueva contraseña", FIELD_WIDTH));
 
         txtConfirmPassword = FormUtils.createPasswordField();
         lblConfirmError = FormUtils.createErrorLabel();
-        panel.add(FormUtils.createField("Confirmar contraseña", txtConfirmPassword, lblConfirmError, "Confirme la nueva contraseña", fieldWidth));
+        panel.add(FormUtils.createField("Confirmar contraseña", txtConfirmPassword, lblConfirmError, "Confirme la nueva contraseña", FIELD_WIDTH));
 
         chkShowPassword = FormUtils.createCheckBox();
         panel.add(chkShowPassword);

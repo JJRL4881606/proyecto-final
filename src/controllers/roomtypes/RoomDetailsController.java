@@ -1,7 +1,7 @@
-package controllers.rooms;
+package controllers.roomtypes;
 
 import views.payment.PaymentWindow;
-import views.rooms.RoomDetailsView;
+import views.roomtypes.RoomDetailsView;
 
 import java.awt.Window;
 

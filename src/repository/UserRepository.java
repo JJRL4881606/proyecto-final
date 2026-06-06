@@ -76,7 +76,6 @@ public class UserRepository {
 			pst.setInt(1, id);
 			int affectedRows = pst.executeUpdate();
 			if (affectedRows > 0) {
-				System.out.println("Se eliminó");
 				return true;
 			}
 
@@ -118,15 +117,29 @@ public class UserRepository {
 		return false;
 	}
 
-	public void validateDuplicateEmail(String email) throws IOException, DuplicateEmailException {
+	public void validateDuplicateEmail(String email)
+	        throws DuplicateEmailException {
 
-		List<User> users = getUsers();
+	    String sql = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
 
-		for (User u : users) {
-			if (u.getEmail().equalsIgnoreCase(email)) {
-				throw new DuplicateEmailException("Este correo es usado por otra cuenta");
-			}
-		}
+	    try (
+	        Connection conn = DatabaseConnection.getConnection();
+	        PreparedStatement ps = conn.prepareStatement(sql)
+	    ) {
+
+	        ps.setString(1, email);
+
+	        ResultSet rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            throw new DuplicateEmailException(
+	                "Este correo es usado por otra cuenta"
+	            );
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
 	}
 	
 	public User findById(int id){

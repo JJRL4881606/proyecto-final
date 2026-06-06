@@ -34,7 +34,6 @@ import components.RoundedButton;
 import components.RoundedImageOverlayPanel;
 import components.RoundedPanel;
 import components.SearchBar;
-import controllers.rooms.RoomCardController;
 import models.RoomType;
 import models.User;
 import utils.AppFont;
@@ -49,11 +48,13 @@ public class HomeView extends JPanel{
 	
 	private SearchBar searchBar;
 	private RoundedButton btnShowRooms;
+	private RoundedButton btnReserve;
 	
 	private JPanel roomsContainer;
 	private List<RoomCard> roomCards = new ArrayList<>();
 	
-	private int sectionWidth = 1100; 
+	private final int sectionWidth = 1100; 
+	private Timer carouselTimer;
 	
 	private User user;
 	private MainView mainView;
@@ -76,7 +77,7 @@ public class HomeView extends JPanel{
 	    add(VisualUtils.createDivider()); 
 	    add(Box.createRigidArea(new Dimension(0, 20)));
 	    
-	    add(wrapSection(createPromosSection()));
+	    add(wrapSection(createInfoSection()));
 	    
 	    add(Box.createRigidArea(new Dimension(0, 30)));
 	    add(VisualUtils.createDivider()); 
@@ -105,7 +106,7 @@ public class HomeView extends JPanel{
 	    container.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
 
 	    RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
-	            "/assets/img/search/search-bg.png",
+	            "/assets/img/backgrounds/search-bg.png",
 	            0,
 	            new Color(0, 0, 0, 120)
 	    );
@@ -181,58 +182,51 @@ public class HomeView extends JPanel{
         roomsContainer.removeAll();
         roomCards.clear();
 
-        for (RoomType room : rooms) {
+        for(RoomType room : rooms){
 
             RoomCard card = new RoomCard(room);
 
             roomCards.add(card);
             roomsContainer.add(card);
-
-            new RoomCardController(
-                card,
-                mainView,
-                room,
-                user
-            );
         }
 
         roomsContainer.revalidate();
         roomsContainer.repaint();
     }
     
-    public JPanel createPromosSection() {
+    public JPanel createInfoSection() {
     	JPanel section = new JPanel();
     	section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
     	section.setOpaque(false);
 
     	// título
-    	JLabel title = new JLabel("Promociones");
+    	JLabel title = new JLabel("Descubre");
     	title.setFont(AppFont.title());
     	title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     	section.add(title);
     	section.add(Box.createRigidArea(new Dimension(0, 20)));
 
-    	// promo grande
-    	section.add(createMainPromo());
+    	// info grande
+    	section.add(createMainInfo());
     	section.add(Box.createRigidArea(new Dimension(0, 30)));
 
     	//carrusel
-    	section.add(createPromoCarousel());
+    	section.add(createInfoCarousel());
     	
     	return section;
     }
     
-    private JPanel createMainPromo() {
-        RoundedPanel promo = new RoundedPanel(30);
-        promo.setLayout(new BorderLayout());
-        promo.setPreferredSize(new Dimension(sectionWidth, 350));
-        promo.setMaximumSize(new Dimension(sectionWidth, 350));
-        promo.setOpaque(false);
+    private JPanel createMainInfo() {
+        RoundedPanel info = new RoundedPanel(30);
+        info.setLayout(new BorderLayout());
+        info.setPreferredSize(new Dimension(sectionWidth, 350));
+        info.setMaximumSize(new Dimension(sectionWidth, 350));
+        info.setOpaque(false);
 
         // BACKGROUND
         RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
-                "/assets/img/promos/promo1.png",
+                "/assets/img/backgrounds/info-bg.png",
                 30,
                 new Color(0, 0, 0, 100)
         );
@@ -253,29 +247,29 @@ public class HomeView extends JPanel{
         subtitle.setFont(AppFont.normal());
         subtitle.setForeground(Color.WHITE);
 
-        RoundedButton reserveBtn = ButtonFactory.createGoldButton(
-                "Reservar ahora",
-                "/assets/img/btn-icons/button-reserve-black-icon.png",
-                "Ir a reservar"
+        btnReserve = ButtonFactory.createGoldButton(
+            "Reservar ahora",
+            "/assets/img/btn-icons/button-reserve-black-icon.png",
+            "Ir a reservar"
         );
 
         content.add(title);
         content.add(Box.createRigidArea(new Dimension(0, 10)));
         content.add(subtitle);
         content.add(Box.createRigidArea(new Dimension(0, 15)));
-        content.add(reserveBtn);
+        content.add(btnReserve);
 
         bg.add(content, BorderLayout.WEST);
 
-        promo.add(bg, BorderLayout.CENTER);
+        info.add(bg, BorderLayout.CENTER);
 
-        return promo;
+        return info;
     }
     
-    private JPanel createPromoCarousel() {
+    private JPanel createInfoCarousel() {
         JPanel container = new JPanel(new BorderLayout());
         container.setOpaque(false);
-        container.setMaximumSize(new Dimension(sectionWidth, 220));
+        container.setMaximumSize(new Dimension(sectionWidth, 320));
 
         // panel interno
         JPanel content = new JPanel();
@@ -292,19 +286,19 @@ public class HomeView extends JPanel{
         scroll.setBorder(null);
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
-        scroll.setPreferredSize(new Dimension(sectionWidth, 200));
-        scroll.setMaximumSize(new Dimension(sectionWidth, 200));
+        scroll.setPreferredSize(new Dimension(sectionWidth, 300));
+        scroll.setMaximumSize(new Dimension(sectionWidth, 300));
 
-        // agregar las promos, doble para que sea infinito
-        addPromos(content);
-        addPromos(content);
+        // agregar los paneles info, doble para que sea infinito
+        addInfoPanels(content);
+        addInfoPanels(content);
 
         container.add(scroll, BorderLayout.CENTER);
 
         // animacion
-        Timer timer = new Timer(20, null);
-
-        timer.addActionListener(e -> {
+        carouselTimer = new Timer(20, null);
+        
+        carouselTimer.addActionListener(e -> {
             JScrollBar bar = scroll.getHorizontalScrollBar();
             bar.setValue(bar.getValue() + 1);
 
@@ -314,33 +308,33 @@ public class HomeView extends JPanel{
             }
         });
 
-        timer.start();
+        carouselTimer.start();
         
         return container;
     }
     
-    private void addPromos(JPanel content) {
-        content.add(createSmallPromo("Tour privado por la ciudad", "/assets/img/promos/promo5.png"));
+    private void addInfoPanels(JPanel content) {
+        content.add(createInfoPanel("Ossiano Dubai Restaurant", "/assets/img/info/restaurant-1.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
-        content.add(createSmallPromo("5 noches, paga 4", "/assets/img/promos/promo6.png"));
+        content.add(createInfoPanel("Pisco Brunch La Mar", "/assets/img/info/bar.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
-        content.add(createSmallPromo("Aquaventure World", "/assets/img/promos/promo3.png"));
+        content.add(createInfoPanel("Aquaventure World", "/assets/img/info/park.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
-        content.add(createSmallPromo("Acuario Lost Chambers", "/assets/img/promos/promo2.png"));
+        content.add(createInfoPanel("Acuario Lost Chambers", "/assets/img/info/aquarium.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
-        content.add(createSmallPromo("Spa & Wellness Retreat", "/assets/img/promos/promo4.png"));
+        content.add(createInfoPanel("Awaken Spa", "/assets/img/info/spa.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
-        content.add(createSmallPromo("Experiencia playa VIP", "/assets/img/promos/promo8.png"));
+        content.add(createInfoPanel("Experiencia playa VIP", "/assets/img/info/beach.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
-        content.add(createSmallPromo("Vuelo en helicóptero sobre Dubai", "/assets/img/promos/promo9.png"));
+        content.add(createInfoPanel("Hakkasan Restaurant", "/assets/img/info/restaurant-2.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
-        content.add(createSmallPromo("Yate privado de lujo", "/assets/img/promos/promo10.png"));
+        content.add(createInfoPanel("Street Pizza", "/assets/img/info/restaurant-3.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
-        content.add(createSmallPromo("Sky Pool infinity privada", "/assets/img/promos/promo7.png"));
+        content.add(createInfoPanel("Sky Pool Infinity", "/assets/img/info/sky-pool.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
     }    
     
-    private JPanel createSmallPromo(String titleText, String imgPath) {
+    private JPanel createInfoPanel(String titleText, String imgPath) {
         RoundedPanel card = new RoundedPanel(20) {
 
             private Image image = new ImageIcon(
@@ -361,8 +355,8 @@ public class HomeView extends JPanel{
         };
 
         card.setLayout(new BorderLayout());
-        card.setPreferredSize(new Dimension(200, 180));
-        card.setMaximumSize(new Dimension(200, 180));
+        card.setPreferredSize(new Dimension(300, 300));
+        card.setMaximumSize(new Dimension(300, 300));
         card.setOpaque(false);
 
         // TEXTO ENCIMA
@@ -462,7 +456,7 @@ public class HomeView extends JPanel{
 
         // BACKGROUND + OVERLAY
         RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
-                "/assets/img/about/about1.png",
+                "/assets/img/backgrounds/about-bg.png",
                 30,
                 new Color(0, 0, 0, 140)
         );
@@ -542,5 +536,13 @@ public class HomeView extends JPanel{
 
     public List<RoomCard> getRoomCards() {
         return roomCards;
+    }
+    
+    public RoundedButton getBtnReserve() {
+    	return btnReserve;
+    }
+    
+    public User getUser() {
+        return user;
     }
 }

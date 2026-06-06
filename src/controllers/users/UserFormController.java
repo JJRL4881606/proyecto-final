@@ -1,6 +1,5 @@
 package controllers.users;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Date;
@@ -228,14 +227,6 @@ public class UserFormController {
 	    } catch (DuplicateEmailException e) {
 	        view.setEmailError(e.getMessage());
 	        return false;
-	    } catch (IOException e) {
-	    	JOptionPane.showMessageDialog(
-    		    null,
-    		    e.getMessage(),
-    		    "Error",
-    		    JOptionPane.ERROR_MESSAGE
-    		);	        
-	    	return false;
 	    }
 
 	    view.clearEmailError();

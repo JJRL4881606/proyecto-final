@@ -16,11 +16,10 @@ public class MainWindow extends JFrame {
 	
 	private MainView mainView;
 	private JScrollPane scroll;
-	private User user;
+	//private User user;
 
     public MainWindow(User user) {
-    	this.user = user;
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    	//this.user = user;
         this.setTitle("ATLANTIS THE PALM, DUBAI");
         this.setResizable(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,14 +55,6 @@ public class MainWindow extends JFrame {
         return mainView;
     }
     
-	public void setWindowSize(int width, int height) {
-		setSize(width, height);
-	}
-	
-	public void setWindowLocation(int x, int y) {
-		setLocation(x, y);
-	}
-	
 	public JScrollPane getScroll() {
 	    return scroll;
 	}

@@ -1,5 +1,7 @@
 package models;
 
+// Estados posibles de una reservación
+
 public class ReservationStatus {
 
     public static final String CONFIRMED = "Confirmada";

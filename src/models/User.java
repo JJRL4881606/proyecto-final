@@ -19,6 +19,7 @@ public class User {
 	
 	// Constructor vacío
 	// usado en login en LoginRepository, y findByEmail en UserRepositry
+	
 	public User() {}
 
 	// Constructor para iniciar sesión con id, correo y contraseña

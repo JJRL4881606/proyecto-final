@@ -34,7 +34,7 @@ public class AccountController {
 
         view.getBtnLogout().addActionListener(e -> {
             Session.logout();
-            new LoginWindow(user);
+            new LoginWindow();
             Window window = SwingUtilities.getWindowAncestor(view);
             if (window != null) {
                 window.dispose();
@@ -43,7 +43,7 @@ public class AccountController {
         
         view.getBtnLogin().addActionListener(e -> {
         	
-            new LoginWindow(user);
+            new LoginWindow();
             Window window = SwingUtilities.getWindowAncestor(view);
 
             if(window != null){

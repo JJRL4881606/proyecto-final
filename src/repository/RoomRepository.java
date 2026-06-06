@@ -12,7 +12,8 @@ import models.ReservationStatus;
 
 public class RoomRepository {
 
-    // CRUD básico
+    // Método para crear una habitación
+	
     public void save(Room room) {
 
         String sql = "INSERT INTO rooms (roomNumber, floor, typeId, status) VALUES (?, ?, ?, ?)";
@@ -54,6 +55,9 @@ public class RoomRepository {
         return false;
     }
 
+    // Método para borrar una habitación
+    // Utiliza el id de la habitación
+    
     public boolean delete(int id) {
 
         String sql = "DELETE FROM rooms WHERE roomId=?";
@@ -71,7 +75,8 @@ public class RoomRepository {
         return false;
     }
 
-    // READ
+    // Método para obtener una habitación utilizando su id
+    
     public Room findById(int id) {
 
         String sql = "SELECT * FROM rooms WHERE roomId=?";
@@ -100,6 +105,8 @@ public class RoomRepository {
         return null;
     }
 
+    // Método para obtener todas las habitaciones
+    
     public List<Room> getRooms() {
 
         List<Room> list = new ArrayList<>();
@@ -126,6 +133,9 @@ public class RoomRepository {
 
         return list;
     }
+    
+    // Método para obtener todas las habitaciones que son de un tipo de habitación 
+    // Utiliza el id del RoomType
 
     public List<Room> findByTypeId(int typeId) {
 
@@ -193,6 +203,8 @@ public class RoomRepository {
     }
 
     // Lógica de negocios
+    // Método para verificar que una habitación está activa (significa si la habitación funciona o no)
+    
     public boolean isRoomOperational(int roomId) {
 
         String sql = "SELECT status FROM rooms WHERE roomId=?";
@@ -214,6 +226,9 @@ public class RoomRepository {
 
         return false;
     }
+    
+    // Método que checa si una habitación está disponible entre ciertas fechas
+    // Utiliza el id de la habitación, la fecha de entrada y la fecha de salida
 
     public boolean isRoomAvailableByDates(int roomId, LocalDate checkIn, LocalDate checkOut) {
 
@@ -241,11 +256,14 @@ public class RoomRepository {
         return false;
     }
 
+    // Método que checa si una habitación está disponible para reservar
+    
     public boolean isRoomAvailable(int roomId, LocalDate checkIn, LocalDate checkOut) {
         return isRoomOperational(roomId) && isRoomAvailableByDates(roomId, checkIn, checkOut);
     }
     
-    //para desabilitar botón de reservar cuando no hayan habitaciones de ese tipo
+    // Método para desabilitar botón de reservar cuando no hayan habitaciones de ese tipo
+    
     public boolean hasActiveRoomsByType(int typeId) {
 
         String sql =
@@ -260,9 +278,9 @@ public class RoomRepository {
 
             ps.setInt(1, typeId);
             ps.setString(2, RoomStatus.ACTIVE);
-
+            
             return ps.executeQuery().next();
-
+            
         } catch(Exception e) {
             e.printStackTrace();
         }

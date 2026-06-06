@@ -5,7 +5,7 @@ import java.awt.Font;
 public class AppFont {
 
 	private static Font roboto;
-	private static Font firasans;
+	private static Font nexa;
 	
 	static {
 		try {
@@ -15,18 +15,18 @@ public class AppFont {
                     AppFont.class.getResourceAsStream("/assets/fonts/Roboto.ttf"));
 
             // Fuente para títulos
-            firasans = Font.createFont(
+            nexa = Font.createFont(
                     Font.TRUETYPE_FONT,
-                    AppFont.class.getResourceAsStream("/assets/fonts/FiraSans-Black.ttf"));
+                    AppFont.class.getResourceAsStream("/assets/fonts/Nexa.ttf"));
 			
 		} catch(Exception e) {
             roboto = new Font("SansSerif", Font.PLAIN, 14);
-            firasans = new Font("Serif", Font.BOLD, 30);
+            nexa = new Font("Serif", Font.BOLD, 30);
 		}
 	}
 	
     public static Font title() {
-        return firasans.deriveFont(Font.BOLD, 34f);
+        return nexa.deriveFont(Font.BOLD, 34f);
     }
     
 	public static Font subtitle2() {

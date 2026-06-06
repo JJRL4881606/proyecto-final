@@ -8,9 +8,10 @@ public class Room {
     private int typeId;
     private String status;
 
-    // Constructor para crear una habitación con todos sus datos.
+    // Constructor para crear una habitación con todos sus datos
     // usado en getRooms(), findById(int id), findByTypeId(int typeId), getByType(int typeId) en RoomRepository
     // y handleSave() en RoomFormController
+    
     public Room(int roomId, int roomNumber, int floor, int typeId, String status){
         this.roomId = roomId;
         this.roomNumber = roomNumber;
@@ -18,6 +19,8 @@ public class Room {
         this.typeId = typeId;
         this.status = status;
     }
+    
+    // getters y setters
 
     public int getRoomId() {
         return roomId;

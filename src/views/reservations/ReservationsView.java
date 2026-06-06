@@ -1,4 +1,4 @@
-package views.booking;
+package views.reservations;
 
 import java.awt.*;
 import javax.swing.*;
@@ -7,6 +7,7 @@ import javax.swing.table.*;
 import components.RoundedButton;
 import tablemodels.ReservationTableModel;
 import utils.AppFont;
+import utils.ButtonFactory;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
@@ -38,10 +39,24 @@ public class ReservationsView extends JPanel {
         JPanel panelButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelButtons.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-        btnAdd = new RoundedButton("Agregar", new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-add-icon.png")));
-        btnEdit = new RoundedButton("Editar", new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-edit-icon.png")));
-        btnDelete = new RoundedButton("Eliminar", new ImageIcon(getClass().getResource("/assets/img/btn-icons/button-delete-icon.png")));
+	    btnAdd = ButtonFactory.createGoldButton(
+            "Agregar",
+            "/assets/img/btn-icons/button-add-icon.png",
+            "Agregar una reservación"
+        );
 
+	    btnEdit = ButtonFactory.createGoldButton(
+            "Editar",
+            "/assets/img/btn-icons/button-edit-icon.png",
+            "Editar una reservación"
+        );
+
+	    btnDelete = ButtonFactory.createGoldButton(
+            "Eliminar",
+            "/assets/img/btn-icons/button-delete-icon.png",
+            "Eliminar una reservación"
+        );
+		    
         panelButtons.add(btnAdd);
         panelButtons.add(btnEdit);
         panelButtons.add(btnDelete);
@@ -53,7 +68,7 @@ public class ReservationsView extends JPanel {
     public JLabel createTitle() {
         JLabel lblTitle = new JLabel("Panel de administración de reservaciones");
         lblTitle.setBorder(new EmptyBorder(20, 20, 0, 20));
-        lblTitle.setFont(AppFont.subtitle());
+        lblTitle.setFont(AppFont.title());
         lblTitle.setForeground(Color.BLACK);
         lblTitle.setHorizontalAlignment(JLabel.CENTER);
         return lblTitle;
@@ -94,15 +109,16 @@ public class ReservationsView extends JPanel {
     public void setTableModel(ReservationTableModel model) {
         table.setModel(model);
 
-        int[] widths = {80, 80, 120, 120, 90, 130, 100, 150};
+        int[] widths = {50, 80, 80, 120, 120, 90, 130, 100, 150};
         for (int i = 0; i < widths.length; i++) {
             table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
         }
 
         DefaultTableCellRenderer center = new DefaultTableCellRenderer();
         center.setHorizontalAlignment(SwingConstants.CENTER);
-        
-        int[] centeredColumns = {0, 1, 4, 5, 6};
+
+        // índices actualizados
+        int[] centeredColumns = {0, 2, 3, 4, 5, 7};
         for (int col : centeredColumns) {
             table.getColumnModel().getColumn(col).setCellRenderer(center);
         }

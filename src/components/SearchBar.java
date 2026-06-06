@@ -237,14 +237,6 @@ public class SearchBar extends RoundedPanel {
     public Date getCheckOutDate() {
         return (Date) spCheckOutDate.getValue();
     }
-
-    public int getNights() {
-        return Integer.parseInt(txtNights.getText());
-    }
-
-    public void setNights(String nights) {
-        txtNights.setText(nights);
-    }
     
     public void setCheckInDate(Date date) {
         spCheckInDate.setValue(date);

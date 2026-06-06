@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 
 import models.Amenity;
 import models.RoomType;
-import repository.RoomRepository;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -125,7 +124,7 @@ public class RoomCard extends RoundedPanel {
             "/assets/img/btn-icons/button-reserve-icon.png",
             "Reservar habitación"
         );
-        
+        /*
         boolean available =
     	    new RoomRepository().hasActiveRoomsByType(
     	        room.getTypeId()
@@ -136,7 +135,7 @@ public class RoomCard extends RoundedPanel {
     	    btnReserve.setToolTipText("No hay habitaciones disponibles de este tipo");
     	    btnReserve.setText("No disponible");
     	    btnReserve.setBackground(UIColors.FIELD_BORDER);
-    	}
+    	}*/
         
         btnDetails = ButtonFactory.createGoldButton(
             "Ver detalles",

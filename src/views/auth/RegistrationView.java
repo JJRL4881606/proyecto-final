@@ -40,6 +40,7 @@ public class RegistrationView extends JPanel
 	private JTextField txtEmail;
 	private JTextField txtPhone;
 	private JSpinner spBirthDate;
+	@SuppressWarnings("unused")
 	private ButtonGroup genderGroup;
 	private JPasswordField txtPassword;
 	private JCheckBox chkShowPassword;
@@ -61,9 +62,9 @@ public class RegistrationView extends JPanel
 	private JLabel lblGenderError;
 	private JLabel lblTermsError;	
 	
-	private int fieldWidth = 300;
-	    
-    public RegistrationView(RegistrationWindow window) 
+	private static final int FIELD_WIDTH = 300;
+	
+    public RegistrationView() 
     {
 		this.setBackground(UIColors.BACKGROUND); 
 	    setLayout(new GridBagLayout());
@@ -134,58 +135,58 @@ public class RegistrationView extends JPanel
         //NOMBRE
         txtName = FormUtils.createTextField();
         lblNameError = FormUtils.createErrorLabel();
-        mainPanel.add(FormUtils.createField("Nombre(s)", txtName, lblNameError, "Ingrese su(s) nombre(s)", fieldWidth));
+        mainPanel.add(FormUtils.createField("Nombre(s)", txtName, lblNameError, "Ingrese su(s) nombre(s)", FIELD_WIDTH));
         
         //APELLIDOS
         txtSurname = FormUtils.createTextField();
         lblSurnameError = FormUtils.createErrorLabel();
-        mainPanel.add(FormUtils.createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)", fieldWidth));
+        mainPanel.add(FormUtils.createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)", FIELD_WIDTH));
         
         //EMAIL
 	    txtEmail = FormUtils.createTextField();
         lblEmailError = FormUtils.createErrorLabel();
-        mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su email", fieldWidth));
+        mainPanel.add(FormUtils.createField("Correo electrónico", txtEmail, lblEmailError, "Ingrese su email", FIELD_WIDTH));
         
         //TELÉFONO
 	    txtPhone = FormUtils.createTextField();
         lblPhoneError = FormUtils.createErrorLabel();
-        mainPanel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono", fieldWidth));
+        mainPanel.add(FormUtils.createField("Número de teléfono", txtPhone, lblPhoneError, "Ingrese su número de teléfono", FIELD_WIDTH));
         
         //FECHA NACIMIENTO
         spBirthDate = FormUtils.createDateField();
         lblBirthDateError = FormUtils.createErrorLabel();
-        mainPanel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, "", fieldWidth));
+        mainPanel.add(FormUtils.createField("Fecha de nacimiento", spBirthDate, lblBirthDateError, "", FIELD_WIDTH));
         
         //PAÍS
         comboCountry = FormUtils.createComboCountry();
     	lblCountryError = FormUtils.createErrorLabel();
-    	mainPanel.add(FormUtils.createField("País", comboCountry, lblCountryError, "", fieldWidth));
+    	mainPanel.add(FormUtils.createField("País", comboCountry, lblCountryError, "", FIELD_WIDTH));
         
     	//GÉNERO
     	rbtnMale = FormUtils.createRadioButton("Hombre");
     	rbtnFemale = FormUtils.createRadioButton("Mujer");
-    	
-    	setGenderGroup(FormUtils.createRadioGroup(rbtnMale, rbtnFemale));
+
+    	genderGroup = FormUtils.createRadioGroup(rbtnMale, rbtnFemale);
     	JPanel genderPanel = FormUtils.createRadioPanel(rbtnMale, rbtnFemale);
-    	
+
     	lblGenderError = FormUtils.createErrorLabel();
-    	mainPanel.add(FormUtils.createField("Género", genderPanel, lblGenderError, "", fieldWidth));
-        
-        //CONTRASEÑA
+    	mainPanel.add(FormUtils.createField("Género", genderPanel, lblGenderError, "", FIELD_WIDTH));
+    	
+    	//CONTRASEÑA
         txtPassword = FormUtils.createPasswordField();
         lblPasswordError = FormUtils.createErrorLabel();
-        mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Cree una contraseña", fieldWidth));
+        mainPanel.add(FormUtils.createField("Contraseña", txtPassword, lblPasswordError, "Cree una contraseña", FIELD_WIDTH));
         
 	    // MOSTRAR CONTRASEÑA
 	    chkShowPassword = FormUtils.createCheckBox();
 	    mainPanel.add(chkShowPassword);
-        add(Box.createRigidArea(new Dimension(5, 5)));
-
+	    mainPanel.add(Box.createRigidArea(new Dimension(5, 5)));
+	    
         //ACEPTAR TÉRMINOS
         chkTerms = new JCheckBox("Acepto los términos y condiciones");
         chkTerms.setAlignmentX(Component.CENTER_ALIGNMENT);
         lblTermsError = FormUtils.createErrorLabel();
-        mainPanel.add(FormUtils.createField(null, chkTerms, lblTermsError, "", fieldWidth));
+        mainPanel.add(FormUtils.createField(null, chkTerms, lblTermsError, "", FIELD_WIDTH));
         
         //REGRESAR EL PANEL
         return mainPanel;
@@ -362,7 +363,6 @@ public class RegistrationView extends JPanel
 
 	public void setTermsError(String msg) {
 	    lblTermsError.setText(msg);
-	    chkTerms.setBorder(FormUtils.redBorder);
 	}
 	
 	// TEXTFIELDS
@@ -431,14 +431,6 @@ public class RegistrationView extends JPanel
 	        "¿Seguro?",
 	        JOptionPane.YES_NO_OPTION
 	    );
-	}
-
-	public ButtonGroup getGenderGroup() {
-		return genderGroup;
-	}
-
-	public void setGenderGroup(ButtonGroup genderGroup) {
-		this.genderGroup = genderGroup;
 	}
 
 	public JLabel getLblNameError() {

@@ -10,7 +10,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -85,11 +84,10 @@ public class PaymentView extends JPanel {
     private JLabel lblCheckOut;
     private JLabel lblTotal;
 
-    private int fieldWidth = 500;
-    private RoomType room;
+    private final RoomType room;
+    private final User user;
     
-    private User user;
-	private JLabel lblLogo;
+    private JLabel lblLogo;
     
     //labels de error
 	private JLabel lblPaymentMethodError;
@@ -101,6 +99,8 @@ public class PaymentView extends JPanel {
     }
 
     private void initComponents() {
+
+    	int fieldWidth = 500;
 
         setLayout(new BorderLayout(20, 20));
         setBackground(Color.WHITE);
@@ -312,12 +312,12 @@ public class PaymentView extends JPanel {
         // ================= DATA =================
 
         lblRoom = new JLabel("Habitación: " + room.getName());
-        lblCheckIn = new JLabel("Entrada: " + new SimpleDateFormat("dd/MM/yyyy").format(spCheckIn.getValue()));
-        lblCheckOut = new JLabel("Salida: " + new SimpleDateFormat("dd/MM/yyyy").format(spCheckOut.getValue()));
-
+        lblCheckIn = new JLabel("Entrada:");
+        lblCheckOut = new JLabel("Salida:");
+        
         JLabel lblCapacity = new JLabel("Capacidad: " + room.getCapacity() + " huespedes");
         JLabel lblBedType = new JLabel("Tipo de cama: " + room.getBedType());
-        lblNights = new JLabel("Estancia: 1 noche");
+        lblNights = new JLabel("Estancia: 0 noche/s");
         
         StringBuilder featuresText = new StringBuilder("Incluye: ");
 
@@ -353,7 +353,7 @@ public class PaymentView extends JPanel {
 
         // ================= TOTAL =================
 
-        lblTotal = new JLabel("Total: $" + room.getPrice());
+        lblTotal = new JLabel("Total: $0");
         lblTotal.setFont(AppFont.subtitle());
 
         // ================= SEPARATORS =================

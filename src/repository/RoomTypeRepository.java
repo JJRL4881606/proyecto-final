@@ -15,6 +15,8 @@ public class RoomTypeRepository {
     private AmenityRepository amenityRepo = new AmenityRepository();
     private RoomImageRepository imageRepo = new RoomImageRepository();
 
+    //Método para crear un tipo de habitación 
+    
     public void save(RoomType roomType){
 
     	String sql = "INSERT INTO room_types(name, bedType, capacity, price, imagePath, featured, description) "
@@ -56,6 +58,9 @@ public class RoomTypeRepository {
             e.printStackTrace();
         }
     }
+    
+    // Método para guardar las amenidades de un roomType
+    // Hay una tabla intermedia entre RoomType y Amenity
 
     private void saveAmenities(Connection conn, int typeId, List<Amenity> amenities)throws SQLException{
     	
@@ -122,20 +127,40 @@ public class RoomTypeRepository {
     
     public boolean delete(int id){
 
-        String sql = "DELETE FROM room_types WHERE typeId = ?";
+        try(Connection conn = DatabaseConnection.getConnection()){
 
-        try(Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement pst = conn.prepareStatement(sql)){
-	            pst.setInt(1, id);
-	            return pst.executeUpdate() > 0;
+            conn.setAutoCommit(false);
+
+            PreparedStatement deleteAmenities =
+                conn.prepareStatement(
+                    "DELETE FROM roomtype_amenities WHERE typeId = ?"
+                );
+
+            deleteAmenities.setInt(1, id);
+            deleteAmenities.executeUpdate();
+
+            imageRepo.deleteByTypeId(conn, id);
+
+            PreparedStatement deleteType =
+                conn.prepareStatement(
+                    "DELETE FROM room_types WHERE typeId = ?"
+                );
+
+            deleteType.setInt(1, id);
+
+            boolean deleted = deleteType.executeUpdate() > 0;
+
+            conn.commit();
+
+            return deleted;
 
         }catch(Exception e){
             e.printStackTrace();
         }
 
         return false;
-    }
-
+    }    
+    
     public boolean update(RoomType roomType){
 
         String sql = "UPDATE room_types " +
@@ -284,5 +309,19 @@ public class RoomTypeRepository {
         }
 
         return new RoomType();
+    }
+    
+    public List<RoomType> getVisibleRoomTypes(){
+
+        RoomRepository roomRepo = new RoomRepository();
+
+        return getRoomTypes()
+            .stream()
+            .filter(room ->
+                roomRepo.hasActiveRoomsByType(
+                    room.getTypeId()
+                )
+            )
+            .toList();
     }
 }

@@ -8,6 +8,7 @@ import models.RoomType;
 import repository.RoomRepository;
 import repository.RoomTypeRepository;
 import tablemodels.RoomTypeTableModel;
+import views.main.MainView;
 import views.roomtypes.RoomTypeFormDialog;
 import views.roomtypes.RoomTypesView;
 
@@ -16,12 +17,14 @@ public class RoomTypeController {
 	private RoomTypesView view;
 	private RoomTypeRepository repo;
 	private RoomTypeTableModel model;
+	private MainView mainView;
 
-	public RoomTypeController(RoomTypesView view) {
-		this.view = view;
-		this.repo = new RoomTypeRepository();
+	public RoomTypeController(RoomTypesView view, MainView mainView) {
+	    this.view = view;
+	    this.mainView = mainView;
+	    this.repo = new RoomTypeRepository();
 
-		initListeners();
+	    initListeners();
 	}
 
 	public void initListeners() {
@@ -56,7 +59,8 @@ public class RoomTypeController {
 
 				    repo.save(savedRoomType);
 				    loadRoomTypes();
-
+				    mainView.refreshRoomViews();
+				    
 				}else{
 
 				    int row=view.getSelectedModelRow();
@@ -67,11 +71,11 @@ public class RoomTypeController {
 				        original.getTypeId()
 				    );
 
-				    boolean updated=
-				        repo.update(savedRoomType);
+				    boolean updated = repo.update(savedRoomType);
 
 				    if(updated){
 				        loadRoomTypes();
+				        mainView.refreshRoomViews();
 				    }
 				}
 
@@ -132,6 +136,7 @@ public class RoomTypeController {
 
 	    if(deleted){
 	        loadRoomTypes();
+	        mainView.refreshRoomViews();
 	    }
 	}
 }
