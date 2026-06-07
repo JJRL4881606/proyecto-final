@@ -71,7 +71,7 @@ public class HomeView extends JPanel{
 	}
 	
 	public void initializeComponents() {
-		add(createSearchHero());
+		add(createSearchBanner());
 		
 	    add(Box.createRigidArea(new Dimension(0, 60)));
 	    add(VisualUtils.createDivider()); 
@@ -100,11 +100,13 @@ public class HomeView extends JPanel{
 	    add(Box.createRigidArea(new Dimension(0, 30)));
 	}
 	
-	public JPanel createSearchHero() {
+	//sección de barra de busqueda
+	public JPanel createSearchBanner() {
 	    JPanel container = new JPanel(new BorderLayout());
 	    container.setPreferredSize(new Dimension(0, 300));
 	    container.setMaximumSize(new Dimension(Integer.MAX_VALUE, 300));
 
+	    //imagen oscurecida donde va el searchbar
 	    RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
 	            "/assets/img/backgrounds/search-bg.png",
 	            0,
@@ -115,6 +117,7 @@ public class HomeView extends JPanel{
 
 	    searchBar = new SearchBar();
 	    
+	    //centrar la barra de búsqueda sobre la imagen
 	    JPanel centerWrapper = new JPanel(new GridBagLayout());
 	    centerWrapper.setOpaque(false);
 	    centerWrapper.add(searchBar);
@@ -124,7 +127,9 @@ public class HomeView extends JPanel{
 
 	    return container;
 	}
-    public JPanel createRooms() {
+
+	//crear la sección de habitaciones destacadas
+	public JPanel createRooms() {
         JPanel roomsPanel = new JPanel();
         roomsPanel.setLayout(new BoxLayout(roomsPanel, BoxLayout.Y_AXIS));
         roomsPanel.setOpaque(false);
@@ -146,12 +151,12 @@ public class HomeView extends JPanel{
         headerPanel.add(Box.createRigidArea(new Dimension(0, 8)));
         headerPanel.add(subtitleLabel);
 
-        // contenedor horizontal de habitaciones
+        // contenedor de las habitaciones
         roomsContainer = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
         roomsContainer.setOpaque(false);
         roomsContainer.setPreferredSize(new Dimension(sectionWidth, 650));
 
-        // botón ver más
+        // botón ver más tipos de habitaciones
         JPanel showRooms = new JPanel();
         showRooms.setOpaque(false);
 
@@ -177,11 +182,14 @@ public class HomeView extends JPanel{
         return roomsPanel;
     }
     
-    public void setRooms(List<RoomType> rooms) {
+	//actualizar las habitaciones destacadas mostradas en pantalla
+	public void setRooms(List<RoomType> rooms) {
 
-        roomsContainer.removeAll();
-        roomCards.clear();
+		//limpiar habitaciones cargadas anteriormente
+		roomsContainer.removeAll();
+		roomCards.clear();
 
+		//crear una card para cada roomtype
         for(RoomType room : rooms){
 
             RoomCard card = new RoomCard(room);
@@ -190,10 +198,12 @@ public class HomeView extends JPanel{
             roomsContainer.add(card);
         }
 
+        //refrescar interfaz 
         roomsContainer.revalidate();
         roomsContainer.repaint();
     }
     
+	//crear seccion de información destacada
     public JPanel createInfoSection() {
     	JPanel section = new JPanel();
     	section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
@@ -217,6 +227,7 @@ public class HomeView extends JPanel{
     	return section;
     }
     
+    //banner principal de info
     private JPanel createMainInfo() {
         RoundedPanel info = new RoundedPanel(30);
         info.setLayout(new BorderLayout());
@@ -233,7 +244,7 @@ public class HomeView extends JPanel{
 
         bg.setLayout(new BorderLayout());
 
-        // CONTENIDO
+        //contenido mostrado sobre la imagen de fondo
         JPanel content = new JPanel();
         content.setOpaque(false);
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
@@ -266,12 +277,13 @@ public class HomeView extends JPanel{
         return info;
     }
     
+    //crear el carrusel de experiencias, actividades etc
     private JPanel createInfoCarousel() {
-        JPanel container = new JPanel(new BorderLayout());
+    	JPanel container = new JPanel(new BorderLayout());
         container.setOpaque(false);
         container.setMaximumSize(new Dimension(sectionWidth, 320));
 
-        // panel interno
+        // contenedr que tiene las cards del carrusel
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.X_AXIS));
         content.setOpaque(false);
@@ -289,20 +301,20 @@ public class HomeView extends JPanel{
         scroll.setPreferredSize(new Dimension(sectionWidth, 300));
         scroll.setMaximumSize(new Dimension(sectionWidth, 300));
 
-        // agregar los paneles info, doble para que sea infinito
+        // agregar los paneles de info, doble para que sea infinito
         addInfoPanels(content);
         addInfoPanels(content);
 
         container.add(scroll, BorderLayout.CENTER);
 
-        // animacion
+        //mover automaticamente el carrusel
         carouselTimer = new Timer(20, null);
         
         carouselTimer.addActionListener(e -> {
             JScrollBar bar = scroll.getHorizontalScrollBar();
             bar.setValue(bar.getValue() + 1);
 
-            // cuando llega a la mitad, vuelve al inicio
+            // cuando llega a la mitad, reinicia la posición
             if (bar.getValue() >= bar.getMaximum() / 2) {
                 bar.setValue(0);
             }
@@ -313,8 +325,9 @@ public class HomeView extends JPanel{
         return container;
     }
     
+    //agregar todas las cards de info mostradas en el carrusel
     private void addInfoPanels(JPanel content) {
-        content.add(createInfoPanel("Ossiano Dubai Restaurant", "/assets/img/info/restaurant-1.png"));
+    	content.add(createInfoPanel("Ossiano Dubai Restaurant", "/assets/img/info/restaurant-1.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
         content.add(createInfoPanel("Pisco Brunch La Mar", "/assets/img/info/bar.png"));
         content.add(Box.createRigidArea(new Dimension(15, 0)));
@@ -334,9 +347,12 @@ public class HomeView extends JPanel{
         content.add(Box.createRigidArea(new Dimension(15, 0)));
     }    
     
+    //crear una card info
     private JPanel createInfoPanel(String titleText, String imgPath) {
-        RoundedPanel card = new RoundedPanel(20) {
+    	
+    	RoundedPanel card = new RoundedPanel(20) {
 
+    		//imagen del fondo
             private Image image = new ImageIcon(
                 getClass().getResource(imgPath)
             ).getImage();
@@ -359,7 +375,7 @@ public class HomeView extends JPanel{
         card.setMaximumSize(new Dimension(300, 300));
         card.setOpaque(false);
 
-        // TEXTO ENCIMA
+        // TEXTO ENCIMA DE LA IMAGEN
         JLabel title = new JLabel(titleText);
         title.setForeground(Color.WHITE);
         title.setFont(AppFont.normal());
@@ -374,6 +390,7 @@ public class HomeView extends JPanel{
         return card;
     }
         
+    //crear la sección de servicios disponibles en el hotel
     public JPanel createServicesSection() {
         JPanel section = new JPanel();
         section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
@@ -387,7 +404,7 @@ public class HomeView extends JPanel{
         section.add(title);
         section.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        // grid 5x3
+        // grid 5x3 donde van los srvicios
         JPanel grid = new JPanel(new GridLayout(3, 5, 20, 20));
         grid.setOpaque(false);
 
@@ -415,8 +432,10 @@ public class HomeView extends JPanel{
         return section;
     }
     
+    //crear una card de un servicio
     private JPanel createServiceCard(String name, String iconPath) {
-        RoundedPanel card = new RoundedPanel(25);
+    	
+    	RoundedPanel card = new RoundedPanel(25);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBackground(UIColors.CARD);
         card.setPreferredSize(new Dimension(200, 120));
@@ -439,20 +458,22 @@ public class HomeView extends JPanel{
         return card;
     }
         
+    //crear la sección de about
     public JPanel createAboutSection() {
-        JPanel section = new JPanel();
+    	JPanel section = new JPanel();
         section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
         section.setOpaque(false);
-        section.add(createAboutHero());
+        section.add(createAboutBanner());
         return section;
     }
     
-    private JPanel createAboutHero() {
-        RoundedPanel hero = new RoundedPanel(30);
-        hero.setLayout(new BorderLayout());
-        hero.setPreferredSize(new Dimension(sectionWidth, 250));
-        hero.setMaximumSize(new Dimension(sectionWidth, 250));
-        hero.setOpaque(false);
+    //crear el banner de about 
+    private JPanel createAboutBanner() {
+        RoundedPanel banner = new RoundedPanel(30);
+        banner.setLayout(new BorderLayout());
+        banner.setPreferredSize(new Dimension(sectionWidth, 250));
+        banner.setMaximumSize(new Dimension(sectionWidth, 250));
+        banner.setOpaque(false);
 
         // BACKGROUND + OVERLAY
         RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
@@ -463,7 +484,7 @@ public class HomeView extends JPanel{
 
         bg.setLayout(new BorderLayout());
 
-        // CONTENIDO
+        //centrar el texto sobre la imagen
         JPanel content = new JPanel(new GridBagLayout());
         content.setOpaque(false);
 
@@ -493,6 +514,7 @@ public class HomeView extends JPanel{
         text.setFont(AppFont.big());
         text.setForeground(Color.WHITE);
 
+        //centrar los párrafos dentro del textpane
         StyledDocument doc = text.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
@@ -506,12 +528,12 @@ public class HomeView extends JPanel{
         content.setBorder(new EmptyBorder(20, 80, 20, 80));
         
         bg.add(content, BorderLayout.CENTER);
-        hero.add(bg, BorderLayout.CENTER);
+        banner.add(bg, BorderLayout.CENTER);
 
-        return hero;
+        return banner;
     }
     
-	//para envolver las secciones con un margen respecto al contentPanel
+    // centrar una sección y aplicar margenes uniformes respecto al contentPanel
     private JPanel wrapSection(JPanel section) {
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 30));
 
@@ -521,7 +543,7 @@ public class HomeView extends JPanel{
         return wrapper;
     }
     
- // GETTERS Y SETTERS
+    // GETTERS Y SETTERS
     public SearchBar getSearchBar() {
         return searchBar;
     }

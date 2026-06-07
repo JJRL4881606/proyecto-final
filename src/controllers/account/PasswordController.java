@@ -11,6 +11,7 @@ import utils.PasswordUtils;
 import utils.Session;
 import views.account.PasswordDialog;
 
+//controlador que maneja el cambio de contraesña
 public class PasswordController {
 
     private final PasswordDialog view;
@@ -28,6 +29,7 @@ public class PasswordController {
 
         view.getChkShowPassword().addActionListener(e -> {
 
+            // Si está marcado muestra la contraseña, si no la oculta con puntos
             char passwordChar = view.getChkShowPassword().isSelected() ? (char)0 : '•';
 
             view.getTxtCurrentPassword().setEchoChar(passwordChar);
@@ -35,6 +37,7 @@ public class PasswordController {
             view.getTxtConfirmPassword().setEchoChar(passwordChar);
         });
         
+        //DOCUMENT LISTENERS
         view.getTxtCurrentPassword().getDocument().addDocumentListener(
     	    new DocumentListener() {
     	    public void insertUpdate(DocumentEvent e){validateCurrentPassword();}
@@ -61,8 +64,9 @@ public class PasswordController {
 		FormUtils.addFocusEffect(view.getTxtConfirmPassword(), view.getLblConfirmError());
     }
     
+    //VALIDACIONES DE FORMULARIO
     private boolean validateForm(){
-
+    	view.clearErrors();
         boolean valid = true;
 
         if(!validateCurrentPassword()) valid = false;
@@ -72,6 +76,7 @@ public class PasswordController {
         return valid;
     }
 
+    //GUARDAR NUEVA CONTRASEÑA
     private void save() {
 
     	view.clearErrors();
@@ -80,10 +85,12 @@ public class PasswordController {
     	    return;
     	}
     	
+    	// Obtener datos ingresados
         String current = view.getCurrentPassword();
         String newPassword = view.getNewPassword();
         String confirm = view.getConfirmPassword();
 
+        // Usuario actual
         User user = Session.getCurrentUser();
 
         if(current.isBlank()){
@@ -100,17 +107,20 @@ public class PasswordController {
             view.setConfirmError("Las contraseñas no coinciden");
             return;
         }
-
+        
+        // checar que la contraseña actual sea correcta
         boolean correct = PasswordUtils.checkPassword(
             current,
             user.getPassword()
         );
 
+        //si no lo es, da error
         if(!correct){
             view.setCurrentError("Contraseña incorrecta");
             return;
         }
 
+        // actualizar contraseña en la bd
         repository.updatePassword(
             user.getId(),
             newPassword
@@ -118,8 +128,10 @@ public class PasswordController {
 
         user.setPassword(PasswordUtils.hashPassword(newPassword));
 
+        // actualizar la contraseña guardada en la sesión
         Session.login(user);
 
+        // Confirmar cambio de contraseña
         JOptionPane.showMessageDialog(
             null,
             "Contraseña actualizada"
@@ -128,6 +140,7 @@ public class PasswordController {
         view.dispose();
     }
     
+    // Valida la contraseña actual
     public boolean validateCurrentPassword(){
 
         String current = view.getCurrentPassword();
@@ -139,6 +152,7 @@ public class PasswordController {
 
         User user = Session.getCurrentUser();
 
+        // Verificar contraseña contra la almacenada
         boolean correct = PasswordUtils.checkPassword(
             current,
             user.getPassword()
@@ -154,6 +168,7 @@ public class PasswordController {
         return true;
     }
     
+    // Valida la nueva contraseña
     public boolean validateNewPassword(){
     	
         String password = view.getNewPassword();
@@ -173,8 +188,8 @@ public class PasswordController {
         return true;
     }
     
+    // Validar que las dos contraseñas coincidan
     public boolean validateConfirmPassword(){
-
         String confirm = view.getConfirmPassword();
 
         if(confirm.isBlank()){

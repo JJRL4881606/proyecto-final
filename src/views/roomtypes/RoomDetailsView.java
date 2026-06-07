@@ -23,7 +23,6 @@ import components.RoundedPanel;
 import models.Amenity;
 import models.RoomImage;
 import models.RoomType;
-import repository.RoomRepository;
 import utils.AppFont;
 import utils.ButtonFactory;
 import utils.FormUtils;
@@ -350,18 +349,6 @@ public class RoomDetailsView extends JPanel {
         lblDescription.setPreferredSize(descSize);
         lblDescription.setMinimumSize(descSize);
         lblDescription.setMaximumSize(descSize);
-        
-        boolean available =
-            new RoomRepository().hasActiveRoomsByType(
-            	roomType.getTypeId()
-            );
-
-        if (!available) {
-            btnReserve.setEnabled(false);
-            btnReserve.setToolTipText("No hay habitaciones disponibles de este tipo");
-            btnReserve.setText("NO DISPONIBLE");
-            btnReserve.setBackground(UIColors.FIELD_BORDER);
-        }
 
         // altura total tarjeta
         int panelHeight = size.height + 110;

@@ -12,6 +12,7 @@ import java.awt.Image;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -40,8 +41,9 @@ public class AccountView extends JPanel {
 
 	public AccountView() {
 		
+		// CARGAR IMAGEN DE FONDO
 		try {
-		    backgroundImage = new javax.swing.ImageIcon(
+		    backgroundImage = new ImageIcon(
 		        getClass().getResource("/assets/img/backgrounds/account-bg.png")
 		    ).getImage();
 		} catch (Exception e) {
@@ -51,6 +53,7 @@ public class AccountView extends JPanel {
 		setLayout(new GridBagLayout());
 		setBorder(new EmptyBorder(40, 0, 40, 0));
 		
+		// TARJETA PRINCIPAL
 		JPanel card = new RoundedPanel(50);
 		card.setBackground(UIColors.CARD);
 		card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -130,7 +133,7 @@ public class AccountView extends JPanel {
 	}
 	
 	
-	//para pintar el fondo
+	//para dibujar el fondo
 	@Override
 	protected void paintComponent(Graphics g) {
 	    super.paintComponent(g);
@@ -139,7 +142,7 @@ public class AccountView extends JPanel {
 
 	    Graphics2D g2 = (Graphics2D) g.create();
 
-	    // Dibujar imagen escalada
+	    // Dibujar la imagen ocupando todo el panel
 	    g2.drawImage(
 	        backgroundImage,
 	        0,
@@ -149,7 +152,7 @@ public class AccountView extends JPanel {
 	        this
 	    );
 
-	    // Capa blanca semitransparente para que quede tenue
+	    // capa blanca semitransparente para suavizar el fondo
 	    g2.setColor(new Color(255,255,255,200));
 	    g2.fillRect(0, 0, getWidth(), getHeight());
 
@@ -164,6 +167,8 @@ public class AccountView extends JPanel {
 		return lbl;
 	}
 
+	//getters
+	
 	public JLabel getLblName() { return lblName; }
 	public JLabel getLblEmail() { return lblEmail; }
 	public JLabel getLblPhone() { return lblPhone; }

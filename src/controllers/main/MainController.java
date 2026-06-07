@@ -1,5 +1,6 @@
 package controllers.main;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import config.Config;
@@ -9,6 +10,7 @@ import controllers.reservations.ReservationController;
 import controllers.rooms.RoomController;
 import controllers.roomtypes.RoomTypeController;
 import controllers.users.UserController;
+import models.Role;
 import utils.Session;
 import views.auth.LoginWindow;
 import views.main.MainView;
@@ -33,14 +35,18 @@ public class MainController {
 	private PaymentAdminController paymentAdminController;
 	private MainWindow frame;
 
+	// Controlador principal que maneja la navegación del programa
+	// y administracion de la ventana
 	public MainController(MainView view, MainWindow frame) {
-	    this.view = view;
+		this.view = view;
 	    this.frame = frame;
 	    loadWindowPreferences();
 	    initListeners();
 	}
 	
+	//registra eventos de navegacion, cierre de sesion,. cambios de vistas, y adminsitracion de la ventana
 	public void initListeners( ) {
+		
 		view.getLogOut().addActionListener(e -> handleClose());
 		
 		frame.addWindowListener(new WindowAdapter() {
@@ -55,6 +61,7 @@ public class MainController {
 		    }
 		});
 		
+		//secciones de admin
 		view.getBtnUsers().addActionListener(e -> { handleTableUsers(); });
 		view.getBtnRoomTypes().addActionListener(e -> { handleTableRoomTypes(); });
 		view.getBtnRooms().addActionListener(e -> { handleTableRooms(); });
@@ -62,9 +69,11 @@ public class MainController {
 		view.getBtnReservations().addActionListener(e -> { handleTableReservations(); });
 		view.getBtnPayments().addActionListener(e -> handleTablePayments());
 		
+		//secciones de usuario
 		view.getBtnAccount().addActionListener(e -> { handleAccount(); });
 		view.getBtnMyReservations().addActionListener(e -> handleMyReservations());
 		
+		//ir al inicio
 		view.getBtnHome().addActionListener(e -> {
 			view.showView(MainView.HOME);
 			updateMenuState(MainView.HOME);
@@ -75,8 +84,10 @@ public class MainController {
 		    resetScroll();
 		});		
 		
+		//ir a ver tipos habitaciones
 		view.getBtnShowRooms().addActionListener(e -> { handleShowRooms(); });
 		
+		//clic en el logo lleva a home
 		view.getLblLogo().addMouseListener(
 		    new MouseAdapter() {
 		    	
@@ -94,76 +105,130 @@ public class MainController {
 		);
 	}
 	
+	//muestra la vista de info de la cuenta
 	private void handleAccount() {
 	    showView(MainView.ACCOUNT);
 	}
 	
+	//muestra la vista de reservaciones del usuario
 	private void handleMyReservations() {
 	    showView(MainView.MY_RESERVATIONS);
 	}	
 	
+	//muestra vista de todas las roomtypes
 	private void handleShowRooms() {
 	    showView(MainView.SHOW_ROOMS);
 	}
 	
+	//modulo de usuarios
 	private void handleTableUsers() {
-		if(userController == null) {
-			userController = new UserController(view.getUsersPanel());
-		}
-			
-		userController.loadUsers();
-		
-	    showView(MainView.ADMIN_USERS);
-	}
-	
-	private void handleTableRoomTypes() {
-		if(roomTypeController == null) {
-			roomTypeController = new RoomTypeController(view.getRoomTypesPanel(), view);
-		}
-			
-		roomTypeController.loadRoomTypes();
-		
-	    showView(MainView.ADMIN_ROOMTYPES);
-	}	
-	
-	private void handleTableRooms() {
-		if(roomController == null) {
-			roomController = new RoomController(view.getRoomsPanel(), view);
-		}
-			
-		roomController.loadRooms();
-		
-	    showView(MainView.ADMIN_ROOMS);
-	}
-	
-	private void handleTableAmenities() {
-		if(amenityController == null) {
-			amenityController = new AmenityController(view.getAmenitiesPanel());
-		}
-			
-		amenityController.loadAmenities();
-		
-	    showView(MainView.ADMIN_AMENITIES);
-	}	
-	
-	private void handleTableReservations() {
-		if(reservationController == null) {
-			reservationController = new ReservationController(view.getReservationsPanel());
-		}
-			
-		reservationController.loadReservations();
-	    
-	    showView(MainView.ADMIN_RESERVATIONS);
-	}
-	
-	private void handleTablePayments() {
-	    if(paymentAdminController == null) {
-	        paymentAdminController = new PaymentAdminController(view.getPaymentsPanel());
+	    // Controlar el acceso
+	    if (Role.ADMIN.equals(Session.getRole())) {
+	        // iniciar el controlador si es la primera vez
+	        if (userController == null) {
+	            userController = new UserController(view.getUsersPanel());
+	        }
+	        
+	        // Cargar datos y mostrar la vista
+	        userController.loadUsers();
+	        showView(MainView.ADMIN_USERS);
+	        
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No tienes permisos para realizar esta acción", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
 	    }
-	    paymentAdminController.loadPayments();
-	    showView(MainView.ADMIN_PAYMENTS);
 	}
 	
+	//modulo de tipos de habitaciones
+	private void handleTableRoomTypes() {
+	    // Controlar el acceso
+	    if (Role.ADMIN.equals(Session.getRole())) { 
+	        // iniciar el controlador si es la primera vez
+	        if (roomTypeController == null) {
+	            roomTypeController = new RoomTypeController(view.getRoomTypesPanel(), view);
+	        }
+	        
+	        // Cargar datos y mostrar la vista
+	        roomTypeController.loadRoomTypes();
+	        showView(MainView.ADMIN_ROOMTYPES);
+	        
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No tienes permisos para realizar esta acción", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+	    }
+	}	
+	
+	//modulo de habitaciones
+	private void handleTableRooms() {
+	    // Controlar el acceso
+	    if (Role.ADMIN.equals(Session.getRole())) {
+	        // iniciar el controlador si es la primera vez
+	        if (roomController == null) {
+	            roomController = new RoomController(view.getRoomsPanel(), view);
+	        }
+	        
+	        // Cargar datos y mostrar la vista
+	        roomController.loadRooms();
+	        showView(MainView.ADMIN_ROOMS);
+	        
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No tienes permisos para realizar esta acción", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	
+	//modulo de amenidads
+	private void handleTableAmenities() {
+	    // Controlar el acceso
+	    if (Role.ADMIN.equals(Session.getRole())) { 
+	        // iniciar el controlador si es la primera vez
+	        if (amenityController == null) {
+	            amenityController = new AmenityController(view.getAmenitiesPanel());
+	        }
+	        
+	        // Cargar datos y mostrar la vista
+	        amenityController.loadAmenities();
+	        showView(MainView.ADMIN_AMENITIES);
+	        
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No tienes permisos para realizar esta acción", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+	    }
+	}	
+	
+	//modulo de resrvaciones
+	private void handleTableReservations() {
+	    // Controlar el acceso
+	    if (Role.ADMIN.equals(Session.getRole())) {
+	        // iniciar el controlador si es la primera vez
+	        if (reservationController == null) {
+	            reservationController = new ReservationController(view.getReservationsPanel());
+	        }
+	        
+	        // Cargar datos y mostrar la vista
+	        reservationController.loadReservations();
+	        showView(MainView.ADMIN_RESERVATIONS);
+	        
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No tienes permisos para realizar esta acción", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+	
+	//modulo de pagos
+	private void handleTablePayments() {
+	    // Controlar el acceso
+	    if (Role.ADMIN.equals(Session.getRole())) {
+	        // iniciar el controlador si es la primera vez
+	        if (paymentAdminController == null) {
+	            paymentAdminController = new PaymentAdminController(view.getPaymentsPanel());
+	        }
+	        
+	        // Cargar datos y mostrar la vista
+	        paymentAdminController.loadPayments();
+	        showView(MainView.ADMIN_PAYMENTS);
+	        
+	    } else {
+	        JOptionPane.showMessageDialog(null, "No tienes permisos para realizar esta acción", "Acceso Denegado", JOptionPane.ERROR_MESSAGE);
+	    }
+	}
+		
+	// Cierra la sesión actual y regresa al login
     private void handleClose() {
         Session.logout();
 
@@ -172,6 +237,7 @@ public class MainController {
         if (window != null) window.dispose();
     }
     
+    // Deshabilita la opción de la vista actual
 	private void updateMenuState(String viewName) {
 		view.getBtnHome().setEnabled(!viewName.equals(MainView.HOME));
 		
@@ -187,6 +253,7 @@ public class MainController {
 		view.getBtnMyReservations().setEnabled(!viewName.equals(MainView.MY_RESERVATIONS));
 	}
 	
+	// Cambio de vistas, actualizar el deshabilitar boton del menu, y reinicio del scroll
 	private void showView(String viewName) {
 	    view.showView(viewName);
 	    updateMenuState(viewName);
@@ -197,16 +264,19 @@ public class MainController {
 	    resetScroll();
 	}
 	
+	// Guarda el tamaño y posición actuales de la ventana para la siguiente vez que se abra el programa
 	private void saveWindowPreferences() {
 		Dimension size = frame.getSize();
 		Point point = frame.getLocation();
 		
+		//guardar dimensiones
 		Config.set("main.window.width", 
 				String.valueOf(size.width));
 
 		Config.set("main.window.height", 
 				String.valueOf(size.height));
 
+		//guardar posición
 		Config.set("main.window.x", 
 				String.valueOf(point.x));
 
@@ -214,6 +284,7 @@ public class MainController {
 				String.valueOf(point.y));
 	}
 	
+	//recupera las preferencias de ventana (tamano y posicion)
 	private void loadWindowPreferences() {
 	    try {
 			int width = Integer.parseInt(Config.get("main.window.width", "500"));
@@ -234,14 +305,17 @@ public class MainController {
 
 		    frame.setSize(width, height);
 	    }
+	    // usa configuracion por defecto si pasa un error
 	    catch(Exception e) {
 	        frame.setSize(1200,700);
 	        frame.setLocationRelativeTo(null);
 	    }
 	}
 	
+	//coloca el scroll al inicio de la pagina
 	private void resetScroll() {
 	    SwingUtilities.invokeLater(() -> {
+	    	//ejecuta despues de que termina d actualizar la interfaz
 	        frame.getScroll().getViewport().setViewPosition(new Point(0, 0));
 	    });
 	}

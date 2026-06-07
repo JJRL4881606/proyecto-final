@@ -10,6 +10,9 @@ public class Payment {
     private String method;
     private LocalDate paymentDate;
 
+    // Constructor para crear un pago (con el id)
+    // Usado en getAll() en PaymentRepository
+    
     public Payment(int paymentId, int reservationId, double amount, String method, LocalDate paymentDate) {
         this.paymentId = paymentId;
         this.reservationId = reservationId;
@@ -18,6 +21,10 @@ public class Payment {
         this.paymentDate = paymentDate;
     }
 
+    // Constructor para crear un pago (sin el id)
+    // usado en handleSave() en ReservationFormController,
+    // y en finishPayment() en PaymentController
+    
     public Payment(int reservationId, double amount, String method, LocalDate paymentDate) {
         this.reservationId = reservationId;
         this.amount = amount;
@@ -25,6 +32,7 @@ public class Payment {
         this.paymentDate = paymentDate;
     }
 
+    //getters y setters
     public int getPaymentId() {
         return paymentId;
     }

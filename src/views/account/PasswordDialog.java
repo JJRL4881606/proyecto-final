@@ -36,7 +36,7 @@ public class PasswordDialog extends JDialog {
     int fieldWidth = 300;
 
     public PasswordDialog(JFrame parent){
-        super(parent,true);
+    	super(parent,true);
 
         setTitle("Cambiar contraseña");
 		setSize(450, 600);
@@ -68,18 +68,22 @@ public class PasswordDialog extends JDialog {
 		scroll.setHorizontalScrollBar(null);
 		scroll.getVerticalScrollBar().setUnitIncrement(14);
 
+		// Contraseña actual
         txtCurrentPassword = FormUtils.createPasswordField();
         lblCurrentError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Contraseña actual", txtCurrentPassword, lblCurrentError, "", fieldWidth));
 
+        // nueva contra
         txtNewPassword = FormUtils.createPasswordField();
         lblNewError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Nueva contraseña", txtNewPassword, lblNewError, "", fieldWidth));
 
+        //confirmar contra
         txtConfirmPassword = FormUtils.createPasswordField();
         lblConfirmError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Confirmar contraseña", txtConfirmPassword, lblConfirmError, "", fieldWidth));
 
+        //mostrar contra
         chkShowPassword = FormUtils.createCheckBox();
         panel.add(chkShowPassword);
 
@@ -94,6 +98,8 @@ public class PasswordDialog extends JDialog {
 		panel.add(btnCancel);
 		return panel;
 	}
+	
+	//getters
 
     public String getCurrentPassword(){
         return new String(
@@ -132,6 +138,8 @@ public class PasswordDialog extends JDialog {
         return txtConfirmPassword;
     }
     
+    //getters de labels de error
+    
     public JLabel getLblCurrentError(){
         return lblCurrentError;
     }
@@ -143,6 +151,8 @@ public class PasswordDialog extends JDialog {
     public JLabel getLblConfirmError(){
         return lblConfirmError;
     }
+    
+    //setters de error
 
     public void setCurrentError(String msg){
         lblCurrentError.setText(msg);
@@ -158,6 +168,8 @@ public class PasswordDialog extends JDialog {
         lblConfirmError.setText(msg);
         txtConfirmPassword.setBorder(FormUtils.redBorder);
     }
+    
+    //limpiar errores
     
     public void clearErrors(){
     	clearCurrentError();

@@ -28,18 +28,23 @@ public class AmenityController {
         view.getBtnDelete().addActionListener(e->handleDelete());
     }
 
+    //cargar amenities desde la bd
     public void loadAmenities(){
 
         List<Amenity> amenities=repo.getAmenities();
 
         if(model == null){
+            // Crear el modelo y asignarlo a la tabla
             model = new AmenityTableModel(amenities);
             view.setTableModel(model);
+
         }else{
+            // Actualizar los datos existentes sin recrear tabla
             model.setAmenities(amenities);
         }
     }
 
+    // ABRIR FORMULARIO PARA AGREGAR O EDITAR
     private void openForm(Amenity amenity){
         AmenitiesFormDialog dialog = new AmenitiesFormDialog(null,amenity);
         new AmenityFormController(dialog);
@@ -49,12 +54,16 @@ public class AmenityController {
             Amenity saved = dialog.getAmenity();
 
             if(amenity == null){
+                // Nueva amenidad
                 repo.save(saved);
                 model.addRow(saved);
                 
             }else{
+            	// Actualizar amenidad existente
+            	
                 int row = view.getSelectedModelRow();
 
+                // Mantener el id original para actualizar
                 saved.setAmenityId(
                     model.getAmenityAt(row)
                     .getAmenityId()
@@ -63,15 +72,13 @@ public class AmenityController {
                 boolean updated = repo.update(saved);
 
                 if(updated){
-                    model.updateRow(
-                        row,
-                        saved
-                    );
+                    model.updateRow(row, saved);
                 }
             }
         }
     }
 
+    // EDITAR LA AMENIDAD SELECCIONADA
     private void handleEdit(){
 
         int row = view.getSelectedModelRow();
@@ -88,6 +95,7 @@ public class AmenityController {
         openForm(model.getAmenityAt(row));
     }
 
+    // ELIMINAR LA AMENIDAD SELECCIONADA
     private void handleDelete(){
 
         int row = view.getSelectedModelRow();
@@ -103,6 +111,7 @@ public class AmenityController {
         
         Amenity amenity = model.getAmenityAt(row);
 
+        // no permitir eliminar amenidades que estan asociadas a tipos de habitacion
     	if(repo.isUsed(amenity.getAmenityId())){
     	    JOptionPane.showMessageDialog(
     	        null,
@@ -116,6 +125,7 @@ public class AmenityController {
 
         boolean deleted = repo.delete(model.getAmenityAt(row).getAmenityId());
 
+        // Eliminar de la base de datos y de la tabla
         if(deleted){
             model.removeRow(row);
         }

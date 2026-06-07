@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -32,9 +31,10 @@ public class AccountEditDialog extends JDialog {
 	private JComboBox<String> comboCountry;
 	private JRadioButton rbtnMale;
 	private JRadioButton rbtnFemale;
-	private ButtonGroup genderGroup;
+	
 	private RoundedButton btnSave;
 	private RoundedButton btnCancel;
+	
 	private JLabel lblNameError;
 	private JLabel lblSurnameError;
 	private JLabel lblEmailError;
@@ -42,7 +42,9 @@ public class AccountEditDialog extends JDialog {
 	private JLabel lblCountryError;
 	private JLabel lblBirthDateError;
 	private JLabel lblGenderError;
+	
 	private User user;
+	
 	int fieldWidth = 300;
 
 	public AccountEditDialog(JFrame parent, User user) {
@@ -107,7 +109,7 @@ public class AccountEditDialog extends JDialog {
 
 		rbtnMale = FormUtils.createRadioButton("Hombre");
 		rbtnFemale = FormUtils.createRadioButton("Mujer");
-		genderGroup = FormUtils.createRadioGroup(rbtnMale, rbtnFemale);
+		FormUtils.createRadioGroup(rbtnMale, rbtnFemale);
 		JPanel genderPanel = FormUtils.createRadioPanel(rbtnMale, rbtnFemale);
 		lblGenderError = FormUtils.createErrorLabel();
 		panel.add(FormUtils.createField("Género", genderPanel, lblGenderError, "", fieldWidth));
@@ -124,6 +126,7 @@ public class AccountEditDialog extends JDialog {
 		return panel;
 	}
 
+	// cargar datos actuales del usuario
 	private void loadData() {
 		txtName.setText(user.getName());
 		txtSurname.setText(user.getSurname());
@@ -135,6 +138,7 @@ public class AccountEditDialog extends JDialog {
 		rbtnFemale.setSelected(user.getGender() == 'F');
 	}
 
+	//getters
 	public User getUser() { return user; }
 	public String getName() { return txtName.getText(); }
 	public String getSurname() { return txtSurname.getText(); }
@@ -151,6 +155,19 @@ public class AccountEditDialog extends JDialog {
 
 	public RoundedButton getBtnSave() { return btnSave; }
 	public RoundedButton getBtnCancel() { return btnCancel; }
+	
+	public JTextField getTxtName(){ return txtName; }
+	public JTextField getTxtSurname(){ return txtSurname; }
+	public JTextField getTxtEmail(){ return txtEmail; }
+	public JTextField getTxtPhone(){ return txtPhone; }
+	public JComboBox<String> getComboCountry(){ return comboCountry; }
+	public JSpinner getSpBirthDate(){ return spBirthDate; }
+	public JRadioButton getRbtnMale(){ return rbtnMale; }
+	public JRadioButton getRbtnFemale(){ return rbtnFemale; }
+
+	public boolean isMaleSelected(){ return rbtnMale.isSelected(); }
+	public boolean isFemaleSelected(){ return rbtnFemale.isSelected(); }
+	public int getCountryIndex(){ return comboCountry.getSelectedIndex(); }
 	
 	// LIMPIAR TODOS LOS ERRORES
 	public void clearErrors(){
@@ -170,7 +187,8 @@ public class AccountEditDialog extends JDialog {
 	public void clearCountryError(){ FormUtils.clearError(lblCountryError, comboCountry); }
 	public void clearBirthDateError(){ FormUtils.clearError(lblBirthDateError, spBirthDate); }
 	public void clearGenderError(){ FormUtils.clearLabel(lblGenderError); }
-
+	
+	//setters de errores
 	public void setNameError(String msg){ lblNameError.setText(msg); txtName.setBorder(FormUtils.redBorder); }
 	public void setSurnameError(String msg){ lblSurnameError.setText(msg); txtSurname.setBorder(FormUtils.redBorder); }
 	public void setEmailError(String msg){ lblEmailError.setText(msg); txtEmail.setBorder(FormUtils.redBorder); }
@@ -179,21 +197,9 @@ public class AccountEditDialog extends JDialog {
 	public void setBirthDateError(String msg){ lblBirthDateError.setText(msg); spBirthDate.setBorder(FormUtils.redBorder); }
 	public void setGenderError(String msg){ lblGenderError.setText(msg); }
 
+	//getters de labels de error
 	public JLabel getLblNameError(){ return lblNameError; }
 	public JLabel getLblSurnameError(){ return lblSurnameError; }
 	public JLabel getLblEmailError(){ return lblEmailError; }
 	public JLabel getLblPhoneError(){ return lblPhoneError; }
-
-	public JTextField getTxtName(){ return txtName; }
-	public JTextField getTxtSurname(){ return txtSurname; }
-	public JTextField getTxtEmail(){ return txtEmail; }
-	public JTextField getTxtPhone(){ return txtPhone; }
-	public JComboBox<String> getComboCountry(){ return comboCountry; }
-	public JSpinner getSpBirthDate(){ return spBirthDate; }
-	public JRadioButton getRbtnMale(){ return rbtnMale; }
-	public JRadioButton getRbtnFemale(){ return rbtnFemale; }
-
-	public boolean isMaleSelected(){ return rbtnMale.isSelected(); }
-	public boolean isFemaleSelected(){ return rbtnFemale.isSelected(); }
-	public int getCountryIndex(){ return comboCountry.getSelectedIndex(); }
 }

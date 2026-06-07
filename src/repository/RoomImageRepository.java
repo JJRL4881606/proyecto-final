@@ -11,7 +11,7 @@ import models.RoomImage;
 
 public class RoomImageRepository {
 
-	// Método para guardar imágenes extra asociadas a un RoomType
+	// Método para guardar las imágenes extra de un tipo de habitación
 	
     public void saveImages(int typeId, List<RoomImage> images) {
 
@@ -37,8 +37,8 @@ public class RoomImageRepository {
         }
     }
 
-    // Método para obtener la extra imágenes de un RoomType
-    // Utiliza el id del RoomType
+	// Método para obtener las imágenes extra de un tipo de habitación
+	// Utiliza el id del RoomType
     
     public List<RoomImage> getImagesByTypeId(int typeId){
 
@@ -72,6 +72,8 @@ public class RoomImageRepository {
 
         return images;
     }
+    
+    // Elimina todas las imágenes asociadas a un tipo de habitación
 
     public void deleteByTypeId(Connection conn, int typeId)throws Exception{
 
@@ -83,6 +85,8 @@ public class RoomImageRepository {
 
         ps.executeUpdate();
     }
+    
+    // Guarda las imágenes de un tipo de habitación usando una conexión existente
     
     public void saveImages(Connection conn, int typeId, List<RoomImage> images)throws Exception{
 

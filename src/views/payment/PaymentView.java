@@ -44,6 +44,9 @@ import utils.FormUtils;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+//Pantalla de pago donde el usuario llena sus datos, elige fechas y método de pago
+// A la derecha muestra un resumen con la información de la habitación y el total a pagar
 public class PaymentView extends JPanel {
 
     // Campos datos personales
@@ -98,6 +101,7 @@ public class PaymentView extends JPanel {
         initComponents();
     }
 
+    // header arriba, formulario a la izquierda, y resumen a la derecha
     private void initComponents() {
 
     	int fieldWidth = 500;
@@ -110,12 +114,13 @@ public class PaymentView extends JPanel {
         // HEADER
         this.add(headerSection(), BorderLayout.NORTH);
 
-        // ================= LEFT PANEL =================
+        // ================= PANEL IZQUIERDO =================
         RoundedPanel leftPanel = new RoundedPanel(50);
         leftPanel.setLayout(new BoxLayout(leftPanel,BoxLayout.Y_AXIS));
         leftPanel.setBorder(BorderFactory.createEmptyBorder(30,30,30,30));
 
         // ===== DATOS PERSONALES =====
+        // Los campos están bloqueados porque se llenan automáticamente con los datos del usuario logueado
         JLabel lblPersonal =new JLabel("Datos Personales");
         lblPersonal.setFont(AppFont.big());
         lblPersonal.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
@@ -160,6 +165,7 @@ public class PaymentView extends JPanel {
         datesPanel.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
         // FECHA ACTUAL
+        // Se usa Calendar para construir hoy sin hora, para que el spinner de fechas arranque desde hoy
         Calendar calendar = Calendar.getInstance();
 
         calendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -170,6 +176,7 @@ public class PaymentView extends JPanel {
         Date today = calendar.getTime();
 
         // FECHA ENTRADA
+        //minmo hoy
         spCheckIn = FormUtils.createDateField();
         JSpinner.DateEditor editorIn = (JSpinner.DateEditor) spCheckIn.getEditor();
         editorIn.getTextField().setEditable(false);
@@ -180,6 +187,7 @@ public class PaymentView extends JPanel {
         datesPanel.add(FormUtils.createField("Fecha de entrada", spCheckIn, lblCheckInError, "", fieldWidth));
 
         // FECHA SALIDA
+        //  mínimo mañana (un día después del checkin por defecto)
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         Date tomorrow = calendar.getTime();
         
@@ -193,6 +201,8 @@ public class PaymentView extends JPanel {
         datesPanel.add(FormUtils.createField("Fecha de salida", spCheckOut, lblCheckOutError, "", fieldWidth));
         
         // ===== HUÉSPEDES =====
+        // El máximo de huéspedes lo define la capacidad de l tipo de habitación
+
         int maxGuests = room.getCapacity();
         
 		spGuests = FormUtils.createNumberField(maxGuests);
@@ -216,6 +226,7 @@ public class PaymentView extends JPanel {
     	paymentPanel.add(FormUtils.createField("Método de pago:", cmbPaymentMethod, lblPaymentMethodError, "", 350));
         
     	// CHECKBOXES
+    	// tienes que aceptarlos para pagar
     	chkTerms = new JCheckBox("Acepto términos y condiciones");
     	chkPolicies = new JCheckBox("Acepto políticas de cancelación");
 
@@ -269,8 +280,7 @@ public class PaymentView extends JPanel {
         leftPanel.add(Box.createVerticalStrut(20));
         leftPanel.add(btnPay);
         
-        // ================= RIGHT PANEL =================
-
+        // ================= PANEL DERECHO =================
         RoundedPanel rightPanel = new RoundedPanel(35);
         rightPanel.setLayout(new BoxLayout(rightPanel,BoxLayout.Y_AXIS));
         rightPanel.setBackground(Color.WHITE);
@@ -283,8 +293,7 @@ public class PaymentView extends JPanel {
 
         rightPanel.setPreferredSize(new Dimension(320, 0));
 
-        // ================= IMAGE =================
-
+        // ================= IMAGEN =================
         RoundedImageOverlayPanel bg = new RoundedImageOverlayPanel(
     		room.getImagePath(),
             30,
@@ -295,8 +304,7 @@ public class PaymentView extends JPanel {
         bg.setMaximumSize(new Dimension(Integer.MAX_VALUE, 230));
         bg.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // ================= HOTEL =================
-
+        // ================= DATOS DEL HOTEL =================
         JLabel lblHotel = new JLabel("ATLANTIS THE PALM");
         lblHotel.setFont(AppFont.subtitle());
 
@@ -305,12 +313,10 @@ public class PaymentView extends JPanel {
         lblAddress.setFont(AppFont.small());
 
         // ================= PRICE =================
-
         JLabel lblPrice = new JLabel("$ " + room.getPrice() + " por noche");
         lblPrice.setFont(AppFont.subtitle());
 
         // ================= DATA =================
-
         lblRoom = new JLabel("Habitación: " + room.getName());
         lblCheckIn = new JLabel("Entrada:");
         lblCheckOut = new JLabel("Salida:");
@@ -319,6 +325,7 @@ public class PaymentView extends JPanel {
         JLabel lblBedType = new JLabel("Tipo de cama: " + room.getBedType());
         lblNights = new JLabel("Estancia: 0 noche/s");
         
+        // Construye la lista de amenidades separadas por coma para mostrarlas en el resumen
         StringBuilder featuresText = new StringBuilder("Incluye: ");
 
         if (room.getAmenities() != null) {
@@ -339,6 +346,7 @@ public class PaymentView extends JPanel {
         
         featuresText.append(" + servicios del hotel en general");
 
+        // TEXTAREA para que el texto de amenidades haga salto de línea automático
         txtaFeatures = new JTextArea(featuresText.toString());
         txtaFeatures.setLineWrap(true);
         txtaFeatures.setWrapStyleWord(true);
@@ -352,12 +360,10 @@ public class PaymentView extends JPanel {
         lblNights.setFont(AppFont.big());
 
         // ================= TOTAL =================
-
         lblTotal = new JLabel("Total: $0");
         lblTotal.setFont(AppFont.subtitle());
 
-        // ================= SEPARATORS =================
-
+        // ================= SEPARADORES =================
         JSeparator topSeparator = new JSeparator();
         JSeparator bottomSeparator = new JSeparator();
         
@@ -376,7 +382,6 @@ public class PaymentView extends JPanel {
         lblTotal.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         // ================= AGREGAR COMPONENTES =================
-
         // HOTEL INFO
         rightPanel.add(lblHotel);
         rightPanel.add(Box.createVerticalStrut(5));
@@ -489,6 +494,7 @@ public class PaymentView extends JPanel {
         return panel;
     }
     
+    // Crea la barra de menú con la opción de regresar al inicio
     public JMenuBar createMenu() {
         JMenuBar mb = new JMenuBar();
         mb.setFont(AppFont.big());

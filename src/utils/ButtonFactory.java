@@ -5,8 +5,10 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import components.RoundedButton;
 
+//Clase para crear botones
 public class ButtonFactory {
 
+	//botones dorados
     public static RoundedButton createGoldButton(String text, String iconPath, String tooltip){
         RoundedButton btn = new RoundedButton(
             text,
@@ -22,6 +24,7 @@ public class ButtonFactory {
         return btn;
     }
     
+    //botones azules
     public static RoundedButton createBlueButton(String text, String iconPath, String tooltip){
         RoundedButton btn = new RoundedButton(
             text,

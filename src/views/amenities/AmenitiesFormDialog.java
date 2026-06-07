@@ -119,6 +119,7 @@ public class AmenitiesFormDialog extends JDialog{
         return panel;
     }
 
+    // CARGAR DATOS CUANDO SE EDITA UNA AMENIDAD
     private void loadData(){
 
         if(amenity == null) {
@@ -134,12 +135,22 @@ public class AmenitiesFormDialog extends JDialog{
         );
     }
 
+    // CONFIRMAR CANCELACIÓN DEL FORMULARIO
     public int confirmCancel(){
         return JOptionPane.showConfirmDialog(
             null,
             "¿Cancelar?"
         );
     }
+    
+    public void clearErrors(){
+    	clearNameError();
+    	clearIconError();
+    }
+    
+    //getters
+    public Amenity getAmenity(){return amenity;}
+    public void setAmenity(Amenity a){amenity=a;}
 
     public String getName(){
         return txtName.getText().trim();
@@ -148,23 +159,23 @@ public class AmenitiesFormDialog extends JDialog{
     public String getIcon(){
         return txtIcon.getText();
     }
+    
+    public JLabel getPreview(){return preview;}
 
     public JTextField getTxtName(){return txtName;}
     public JTextField getTxtIcon(){return txtIcon;}
-
-    public JLabel getLblNameError(){return lblNameError;}
 
     public RoundedButton getBtnSave(){return btnSave;}
     public RoundedButton getBtnCancel(){return btnCancel;}
     public RoundedButton getBtnSelectIcon(){return btnSelectIcon;}
 
-    public JLabel getPreview(){return preview;}
-
-    public void setSaved(boolean b){saved=b;}
+    // ESTADO DEL FORMULARIO
+    public void setSaved(boolean b){saved = b;}
     public boolean isSaved(){return saved;}
 
-    public Amenity getAmenity(){return amenity;}
-    public void setAmenity(Amenity a){amenity=a;}
+    //getters, setters y clear errores
+    
+    public JLabel getLblNameError(){return lblNameError;}
 
     public void setNameError(String s){
         lblNameError.setText(s);

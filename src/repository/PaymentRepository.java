@@ -12,7 +12,7 @@ import models.Payment;
 
 public class PaymentRepository {
 
-	//Método para crear un pago
+    // Método para registrar un pago
 	
     public void save(Payment payment) {
 
@@ -35,7 +35,7 @@ public class PaymentRepository {
         }
     }
     
-    //Método para obtener todos los pagos, en orden ascendente
+    // Método para obtener todos los pagos registrados    
     
     public List<Payment> getAll() {
         List<Payment> list = new ArrayList<>();

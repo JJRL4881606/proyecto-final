@@ -59,9 +59,9 @@ public class RoomTypeRepository {
         }
     }
     
-    // Método para guardar las amenidades de un roomType
-    // Hay una tabla intermedia entre RoomType y Amenity
-
+    // Método para guardar las amenidades asociadas a un tipo de habitación
+    // Utiliza la tabla intermedia roomtype_amenities
+    
     private void saveAmenities(Connection conn, int typeId, List<Amenity> amenities)throws SQLException{
     	
         String sql = "INSERT INTO roomtype_amenities(typeId, amenityId) VALUES(?, ?)";
@@ -77,6 +77,8 @@ public class RoomTypeRepository {
         }
     }
 
+    // Método para obtener todos los tipos de habitación
+    
     public List<RoomType> getRoomTypes(){
 
         List<RoomType> roomTypes = new ArrayList<>();
@@ -113,8 +115,9 @@ public class RoomTypeRepository {
             e.printStackTrace();
         }
 
+        // Cargar las amenidades correspondientes de cada tipo de habitación
+        
         for(RoomType room:roomTypes){
-
             room.setAmenities(
                 amenityRepo.getAmenitiesByRoomType(
                     room.getTypeId()
@@ -125,12 +128,17 @@ public class RoomTypeRepository {
         return roomTypes;
     }
     
+    // Método para eliminar un tipo de habitación
+    // También elimina sus amenidades e imágenes asociadas
+    
     public boolean delete(int id){
 
         try(Connection conn = DatabaseConnection.getConnection()){
 
             conn.setAutoCommit(false);
 
+            // Eliminar relaciones con las amenidades
+            
             PreparedStatement deleteAmenities =
                 conn.prepareStatement(
                     "DELETE FROM roomtype_amenities WHERE typeId = ?"
@@ -139,8 +147,12 @@ public class RoomTypeRepository {
             deleteAmenities.setInt(1, id);
             deleteAmenities.executeUpdate();
 
+            // Eliminar imágenes asociadas al tipo de habitación
+            
             imageRepo.deleteByTypeId(conn, id);
 
+            // Eliminar el tipo de habitación
+            
             PreparedStatement deleteType =
                 conn.prepareStatement(
                     "DELETE FROM room_types WHERE typeId = ?"
@@ -160,6 +172,9 @@ public class RoomTypeRepository {
 
         return false;
     }    
+    
+    // Método para actualizar un tipo de habitación
+    // Incluye sus amenidades e imágenes asociadas
     
     public boolean update(RoomType roomType){
 
@@ -184,6 +199,8 @@ public class RoomTypeRepository {
             
             ps.executeUpdate();
 
+            // Eliminar las amenidades actuales
+            
             PreparedStatement delete =
                 conn.prepareStatement(
                     "DELETE FROM roomtype_amenities WHERE typeId = ?"
@@ -191,6 +208,8 @@ public class RoomTypeRepository {
 
             delete.setInt(1, roomType.getTypeId());
             delete.executeUpdate();
+            
+            // Reemplazar las imágenes existentes
             
             imageRepo.deleteByTypeId(
         	    conn,
@@ -203,7 +222,7 @@ public class RoomTypeRepository {
         	    roomType.getExtraImages()
         	);
 
-            // insertar nuevas
+            // Guardar/insertar las nuevas amenidades seleccionadas
             PreparedStatement insert = conn.prepareStatement(
                 "INSERT INTO roomtype_amenities(typeId, amenityId) VALUES(?, ?)"
             );
@@ -226,6 +245,10 @@ public class RoomTypeRepository {
 
         return false;
     }
+    
+    // Método para obtener los tipos de habitación destacados
+    // Se muestran en la página principal
+    
     public List<RoomType> getFeaturedRoomTypes(){
         return getRoomTypes()
             .stream()
@@ -233,22 +256,28 @@ public class RoomTypeRepository {
             .limit(3)
             .toList();
     }
+    
+    // Método para obtener los tipos de habitación disponibles
+    // según la cantidad de huéspedes y las fechas seleccionadas
 
     public List<RoomType> getAvailableRoomTypes(int guests, LocalDate checkIn, LocalDate checkOut){
 
         List<RoomType> available = new ArrayList<>();
 
         RoomRepository roomRepo = new RoomRepository();
-        ReservationRepository reservationRepo = new ReservationRepository();
 
         for (RoomType type : getRoomTypes()) {
 
+        	// Ignorar tipos de habitación que no tienen capacidad suficiente
+        	
             if (type.getCapacity() < guests) continue;
 
             List<Room> rooms = roomRepo.findByTypeId(type.getTypeId());
 
             boolean found = false;
 
+            // Buscar al menos una habitación disponible de este tipo
+            
             for (Room room : rooms) {
 
                 if (roomRepo.isRoomAvailable(room.getRoomId(), checkIn, checkOut)) {
@@ -257,6 +286,8 @@ public class RoomTypeRepository {
                 }
             }
 
+            // Si existe una habitación disponible, agregar el tipo a la lista
+            
             if (found) {
                 available.add(type);
             }
@@ -264,6 +295,8 @@ public class RoomTypeRepository {
         
         return available;
     }
+    
+    // Método para obtener un tipo de habitación utilizando su id
     
     public RoomType getById(int id){
 
@@ -295,6 +328,8 @@ public class RoomTypeRepository {
                 	)                
                 );
 
+                // Cargar las amenidades asociadas
+                
                 room.setAmenities(
                     amenityRepo.getAmenitiesByRoomType(
                         room.getTypeId()
@@ -310,6 +345,9 @@ public class RoomTypeRepository {
 
         return new RoomType();
     }
+    
+    // Método para obtener los tipos de habitación visibles
+    // Solo muestra aquellos que tienen habitaciones activas
     
     public List<RoomType> getVisibleRoomTypes(){
 

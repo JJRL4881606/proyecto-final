@@ -10,7 +10,7 @@ import utils.PasswordUtils;
 
 public class LoginRepository {
 
-	// Método para iniciar sesión, utiliza el email y la contraseña del usuario
+	// Método para iniciar sesión utilizando el correo y la contraseña
 	
     public User login(String email, String password) {
         String sql = "SELECT * FROM users WHERE email = ?";
@@ -23,13 +23,14 @@ public class LoginRepository {
 
             if (rs.next()) {
             	
-            	//Validar contraseña correcta, compara con la contraseña hasheada
-                String hashedPassword = rs.getString("password");
+            	// Verifica que la contraseña ingresada coincida con la almacenada
+            	String hashedPassword = rs.getString("password");
                 boolean correctPassword = PasswordUtils.checkPassword(password, hashedPassword);
 
                 if (!correctPassword) return null;
 
-                //Si los datos son correctos, inicia sesión
+                // Si las credenciales son correctas, crea el objeto User
+                
                 User user = new User();
 
                 user.setId(rs.getInt("id"));

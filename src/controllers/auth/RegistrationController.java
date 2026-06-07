@@ -22,6 +22,7 @@ import views.auth.LoginWindow;
 import views.auth.RegistrationView;
 import views.main.MainWindow;
 
+//Controlador encargado de la lógica del registro de usuarios
 public class RegistrationController {
 
 	private final RegistrationView view;
@@ -35,8 +36,10 @@ public class RegistrationController {
 	}
 	 
 	private void initListeners(){
-		//BOTONES
+		// Evento para registrar un usuario
         view.getBtnRegistration().addActionListener(e -> { handleBtnRegistration(); });
+        
+        // Evento para regresar al loginn
         view.getBtnReturn().addActionListener(e -> { handleReturn(); });
         
         view.getComboCountry().addActionListener(e -> validateCountry() );
@@ -44,6 +47,14 @@ public class RegistrationController {
         view.getSpBirthDate().addChangeListener(e -> validateBirthDate() );
         view.getRbtnMale().addActionListener(e -> validateGender() );
         view.getRbtnFemale().addActionListener(e -> validateGender() );
+        
+        view.getChkShowPassword().addActionListener(e -> {
+            if (view.getChkShowPassword().isSelected()) {
+                view.getTxtPassword().setEchoChar((char) 0);
+            } else {
+                view.getTxtPassword().setEchoChar('•');
+            }
+        });
 
         // DOCUMENT LISTENERS
         view.getTxtName().getDocument().addDocumentListener(new DocumentListener() {
@@ -76,14 +87,7 @@ public class RegistrationController {
             public void changedUpdate(DocumentEvent e) { validatePhone(); }
         });
         
-        view.getChkShowPassword().addActionListener(e -> {
-            if (view.getChkShowPassword().isSelected()) {
-                view.getTxtPassword().setEchoChar((char) 0);
-            } else {
-                view.getTxtPassword().setEchoChar('•');
-            }
-        });
-        
+        // Efectos visuales al seleccionar campos
 	    FormUtils.addFocusEffect(view.getTxtName(), view.getLblNameError());
 	    FormUtils.addFocusEffect(view.getTxtSurname(), view.getLblSurnameError());
 	    FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
@@ -91,6 +95,7 @@ public class RegistrationController {
 	    FormUtils.addFocusEffect(view.getTxtPassword(), view.getLblPasswordError());
 	}
 	
+	// Restringe la entrada de caracteres inválidos en campos
 	private void initInputRestrictions() {
 		Validator.onlyLetters(view.getTxtName());
 		Validator.onlyLetters(view.getTxtSurname());
@@ -99,9 +104,13 @@ public class RegistrationController {
 		FormUtils.onlyDateNumbers(view.getSpBirthDate());
 	}
 	
+	// Procesa el registro
 	private void handleBtnRegistration(){
+		
+		// Verificar que los datos sean válidos
         if(validateForm()){
-
+        	
+        	// Crear el objeto usuario
         	User user = new User(
     		    view.getName(),
     		    view.getSurname(),
@@ -116,6 +125,7 @@ public class RegistrationController {
     	
         	if(handleRegisterUser(user)) {
 
+        		// Iniciar sesión después del registro
         	    Session.login(user);
 
         	    new MainWindow(user);
@@ -128,6 +138,7 @@ public class RegistrationController {
         }
 	}
 	
+	// Guarda el usuario en la bd y muestra el resultado
 	private boolean handleRegisterUser(User user) {
 	    try {
 	        repository.save(user);
@@ -151,6 +162,7 @@ public class RegistrationController {
 	    }
 	}
 	
+	// Regresa al login
 	private void handleReturn() {
         int option = view.confirmReturn();
 
@@ -164,6 +176,7 @@ public class RegistrationController {
         }
 	}
 	
+	// Hacer las validaciones del formulario
 	private boolean validateForm(){
         view.clearErrors();
         boolean valid=true;
@@ -239,6 +252,7 @@ public class RegistrationController {
 	        return false;
 	    }
 
+	    // Verificar que el correo no pertenezca a otra cuenta
 	    try {
 	        repository.validateDuplicateEmail(email);
 
@@ -266,12 +280,15 @@ public class RegistrationController {
 	 
 	public boolean validateBirthDate() {		 
 	    Date date = view.getBirthDate();
+	    
+	    // Convertir la fecha seleccionada para calcular la edad
 	    LocalDate birthDate = date.toInstant()
 	            .atZone(ZoneId.systemDefault())
 	            .toLocalDate();
 
 	    LocalDate today = LocalDate.now();
 
+	    // Calcular edad del usuario
 	    int age = Period.between(birthDate, today).getYears();
 	    
 	    if (birthDate.isAfter(today)) {

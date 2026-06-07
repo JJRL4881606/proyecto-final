@@ -30,9 +30,9 @@ import utils.FormUtils;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
-public class LoginView extends JPanel
-{	
-	//private LoginWindow window;
+
+//Constructor de la vista de inicio de sesión
+public class LoginView extends JPanel{
 	
 	private JTextField txtEmail;
 	private JPasswordField txtPassword;
@@ -186,6 +186,8 @@ public class LoginView extends JPanel
 		return panelButtons;
 	}
 			
+	// getters y setters
+	
 	public RoundedButton getBtnLogin() {
 	    return btnLogin;
 	}	
@@ -209,6 +211,8 @@ public class LoginView extends JPanel
 	public JPasswordField getTxtPassword() {
 	    return txtPassword;
 	}
+	
+	// Manejo de mensajes de error
 	
 	public void setEmailError(String msg) {
 	    lblEmailError.setText(msg);
@@ -259,12 +263,4 @@ public class LoginView extends JPanel
 	public JLabel getLblForgotPassword() {
 	    return lblForgotPassword;
 	}
-
-	/*public LoginWindow getWindow() {
-		return window;
-	}
-
-	public void setWindow(LoginWindow window) {
-		this.window = window;
-	}*/
 }

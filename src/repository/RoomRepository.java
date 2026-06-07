@@ -33,6 +33,8 @@ public class RoomRepository {
         }
     }
 
+    // Método para actualizar los datos de una habitación
+    
     public boolean update(Room room) {
 
         String sql = "UPDATE rooms SET roomNumber=?, floor=?, typeId=?, status=? WHERE roomId=?";
@@ -134,9 +136,9 @@ public class RoomRepository {
         return list;
     }
     
-    // Método para obtener todas las habitaciones que son de un tipo de habitación 
-    // Utiliza el id del RoomType
-
+	 // Método para obtener las habitaciones asociadas a un tipo de habitación
+	 // Utiliza el id del RoomType
+    
     public List<Room> findByTypeId(int typeId) {
 
         List<Room> list = new ArrayList<>();
@@ -167,7 +169,8 @@ public class RoomRepository {
         return list;
     }
 
-    // VALIDATIONS
+    // Verifica si ya existe una habitación con ese número
+    
     public boolean existsRoomNumber(int roomNumber) {
 
         String sql = "SELECT 1 FROM rooms WHERE roomNumber=? LIMIT 1";
@@ -184,6 +187,8 @@ public class RoomRepository {
 
         return false;
     }
+    
+    // Verifica si un tipo de habitación tiene habitaciones registradas
 
     public boolean existsByTypeId(int typeId) {
 
@@ -202,8 +207,8 @@ public class RoomRepository {
         return false;
     }
 
-    // Lógica de negocios
-    // Método para verificar que una habitación está activa (significa si la habitación funciona o no)
+	// Método para verificar si una habitación se encuentra activa
+	// Las habitaciones fuera de servicio no pueden reservarse
     
     public boolean isRoomOperational(int roomId) {
 
@@ -256,13 +261,15 @@ public class RoomRepository {
         return false;
     }
 
-    // Método que checa si una habitación está disponible para reservar
+    // Método para verificar si una habitación puede reservarse
+    // Considera tanto el estado de la habitación como las fechas
     
     public boolean isRoomAvailable(int roomId, LocalDate checkIn, LocalDate checkOut) {
         return isRoomOperational(roomId) && isRoomAvailableByDates(roomId, checkIn, checkOut);
     }
     
-    // Método para desabilitar botón de reservar cuando no hayan habitaciones de ese tipo
+	 // Método para verificar si existe al menos una habitación activa
+	 // asociada a un tipo de habitación
     
     public boolean hasActiveRoomsByType(int typeId) {
 

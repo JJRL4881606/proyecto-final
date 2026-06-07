@@ -9,6 +9,8 @@ import utils.ButtonFactory;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+// Dialog para recuperar contrasena de la cuenta
 public class PasswordRecoveryDialog extends JDialog {
 
     private JTextField txtEmail;
@@ -30,7 +32,7 @@ public class PasswordRecoveryDialog extends JDialog {
     private static final int FIELD_WIDTH = 300;
     
     public PasswordRecoveryDialog(JFrame parent){
-        super(parent, true);
+        super(parent, true); //para bloquear la ventana principal cuando estas en el dialog
 
         setTitle("Recuperar contraseña");
 		setSize(450, 600);
@@ -50,6 +52,7 @@ public class PasswordRecoveryDialog extends JDialog {
         return panel;
     }
 
+    //en el formulario se pide email y país como forma de control
     private JScrollPane createFormPanel(){
     	JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
@@ -92,9 +95,21 @@ public class PasswordRecoveryDialog extends JDialog {
 		panel.add(btnCancel);
 		return panel;
 	}
+	
+	//limpiar errores
+    public void clearErrors(){
+	    clearEmailError(); 
+	    clearCountryError(); 
+	    clearNewError(); 
+	    clearConfirmError(); 
+    }
 
     // GETTERS
+	
+	//campos
 	public JTextField getTxtEmail(){ return txtEmail; }
+
+	public JComboBox<String> getComboCountry(){ return comboCountry; }
 
     public JPasswordField getTxtNewPassword(){
         return txtNewPassword;
@@ -103,9 +118,8 @@ public class PasswordRecoveryDialog extends JDialog {
     public JPasswordField getTxtConfirmPassword(){
         return txtConfirmPassword;
     }
-    
-	public JComboBox<String> getComboCountry(){ return comboCountry; }
 
+	//datos
     public String getEmail(){ return txtEmail.getText().trim(); }
 	public String getCountry() { return String.valueOf(comboCountry.getSelectedItem()); }
 	
@@ -126,7 +140,7 @@ public class PasswordRecoveryDialog extends JDialog {
 
     public JCheckBox getChkShowPassword(){ return chkShowPassword; }
 
-    // ERRORES
+    // SETTERS DE ERRORES
 	public void setEmailError(String msg){ lblEmailError.setText(msg); txtEmail.setBorder(FormUtils.redBorder); }
 	public void setCountryError(String msg){ lblCountryError.setText(msg); comboCountry.setBorder(FormUtils.redBorder); }
 
@@ -140,13 +154,7 @@ public class PasswordRecoveryDialog extends JDialog {
         txtConfirmPassword.setBorder(FormUtils.redBorder);
     }
     
-    public void clearErrors(){
-	    clearEmailError(); 
-	    clearCountryError(); 
-	    clearNewError(); 
-	    clearConfirmError(); 
-    }
-    
+    // limpiar errores
     public void clearEmailError(){
         FormUtils.clearError(lblEmailError, txtEmail);
     }
@@ -163,6 +171,7 @@ public class PasswordRecoveryDialog extends JDialog {
         FormUtils.clearError(lblConfirmError, txtConfirmPassword);
     }
     
+    //getters de labels de error
 	public JLabel getLblEmailError(){
 		return lblEmailError; 
 	}

@@ -15,7 +15,7 @@ import utils.AppFont;
 @SuppressWarnings("serial")
 public class MyReservationsView extends JPanel {
 
-    private JPanel cardsContainer;
+    private JPanel cardsContainer; // Contenedor donde se agregan las tarjetas de reservaciones
     private JLabel lblNoReservations;
     
     private JLabel lblInfo;
@@ -75,6 +75,7 @@ public class MyReservationsView extends JPanel {
         lblNoReservations.setVisible(false);
         lblNoReservations.setHorizontalAlignment(JLabel.CENTER);
 
+        // contenedor donde se ponen las reservaciones
         cardsContainer = new JPanel();
         cardsContainer.setOpaque(false);
         cardsContainer.setLayout(new BoxLayout(cardsContainer, BoxLayout.Y_AXIS));
@@ -91,6 +92,7 @@ public class MyReservationsView extends JPanel {
         add(card, gbc);
     }
 
+    //getters
     public JPanel getCardsContainer() {
         return cardsContainer;
     }

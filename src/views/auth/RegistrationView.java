@@ -33,6 +33,8 @@ import utils.FormUtils;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+//Vista encargada de mostrar el formulario de registro
 public class RegistrationView extends JPanel
 {		
 	private JTextField txtName;
@@ -82,7 +84,7 @@ public class RegistrationView extends JPanel
 	    card.setAlignmentX(CENTER_ALIGNMENT);
 	    card.putClientProperty("FlatLaf.style", "arc:20");
 	    
-	    //AGREGAR LAS COSAS A LA CARD
+	    // Agregar las partes a la card
 	    card.add(createTitle());
 	    card.add(Box.createRigidArea(new Dimension(0, 10)));
 	    card.add(createForm());
@@ -188,11 +190,11 @@ public class RegistrationView extends JPanel
         lblTermsError = FormUtils.createErrorLabel();
         mainPanel.add(FormUtils.createField(null, chkTerms, lblTermsError, "", FIELD_WIDTH));
         
-        //REGRESAR EL PANEL
+        // Devolver el formulario completo
         return mainPanel;
     }
 	
-	//CREAR EL BOTÓN
+	//Crear los botones
 	private JPanel createButton() {
 		JPanel panelButtons = new JPanel(new GridLayout(2, 1, 0, 10));
 		panelButtons.setOpaque(false);
@@ -220,7 +222,7 @@ public class RegistrationView extends JPanel
         return panelButtons;
 	}	
 	
-	//LABELS ERROR
+	//Limpia los errores
 	public void clearErrors() {
 		clearNameError();
 		clearSurnameError();
@@ -232,41 +234,15 @@ public class RegistrationView extends JPanel
 		clearGenderError();
 		clearTermsError();
 	}
-
-	public void clearNameError(){
-	    FormUtils.clearError(lblNameError, txtName);
-	}
-
-	public void clearSurnameError(){
-		FormUtils.clearError(lblSurnameError, txtSurname);
-	}
-
-	public void clearEmailError(){
-		FormUtils.clearError(lblEmailError, txtEmail);
-	}
-
-	public void clearPasswordError(){
-		FormUtils.clearError(lblPasswordError, txtPassword);
-	}
-
-	public void clearPhoneError(){
-		FormUtils.clearError(lblPhoneError, txtPhone);
-	}
-
-	public void clearCountryError(){
-		FormUtils.clearError(lblCountryError, comboCountry);
-	}
-
-	public void clearBirthDateError(){
-		FormUtils.clearError(lblBirthDateError, spBirthDate);
-	}
-
-	public void clearGenderError(){
-		FormUtils.clearLabel(lblGenderError);
-	}
-
-	public void clearTermsError(){
-		FormUtils.clearLabel(lblTermsError);
+	
+	// confirmación de regresar
+	public int confirmReturn() {
+	    return JOptionPane.showConfirmDialog(
+	        null,
+	        "¿Seguro que deseas regresar? Se perderán todos los datos",
+	        "¿Seguro?",
+	        JOptionPane.YES_NO_OPTION
+	    );
 	}
 	
 	//GETTERS
@@ -318,51 +294,6 @@ public class RegistrationView extends JPanel
 
 	public boolean isTermsAccepted() {
 	    return chkTerms.isSelected();
-	}
-	
-	//SETTERS ERROR
-	
-	public void setNameError(String msg) {
-	    lblNameError.setText(msg);
-	    txtName.setBorder(FormUtils.redBorder);
-	}
-
-	public void setSurnameError(String msg) {
-	    lblSurnameError.setText(msg);
-	    txtSurname.setBorder(FormUtils.redBorder);
-	}
-
-	public void setEmailError(String msg) {
-	    lblEmailError.setText(msg);
-	    txtEmail.setBorder(FormUtils.redBorder);
-	}
-
-	public void setPasswordError(String msg) {
-	    lblPasswordError.setText(msg);
-	    txtPassword.setBorder(FormUtils.redBorder);
-	}
-
-	public void setPhoneError(String msg) {
-	    lblPhoneError.setText(msg);
-	    txtPhone.setBorder(FormUtils.redBorder);
-	}
-
-	public void setCountryError(String msg) {
-	    lblCountryError.setText(msg);
-	    comboCountry.setBorder(FormUtils.redBorder);
-	}
-
-	public void setBirthDateError(String msg) {
-	    lblBirthDateError.setText(msg);
-	    spBirthDate.setBorder(FormUtils.redBorder);
-	}
-
-	public void setGenderError(String msg) {
-	    lblGenderError.setText(msg);
-	}
-
-	public void setTermsError(String msg) {
-	    lblTermsError.setText(msg);
 	}
 	
 	// TEXTFIELDS
@@ -424,14 +355,52 @@ public class RegistrationView extends JPanel
 	    return btnReturn;
 	}
 	
-	public int confirmReturn() {
-	    return JOptionPane.showConfirmDialog(
-	        null,
-	        "¿Seguro que deseas regresar? Se perderán todos los datos",
-	        "¿Seguro?",
-	        JOptionPane.YES_NO_OPTION
-	    );
+	//SETTERS ERRORES
+	
+	public void setNameError(String msg) {
+	    lblNameError.setText(msg);
+	    txtName.setBorder(FormUtils.redBorder);
 	}
+
+	public void setSurnameError(String msg) {
+	    lblSurnameError.setText(msg);
+	    txtSurname.setBorder(FormUtils.redBorder);
+	}
+
+	public void setEmailError(String msg) {
+	    lblEmailError.setText(msg);
+	    txtEmail.setBorder(FormUtils.redBorder);
+	}
+
+	public void setPasswordError(String msg) {
+	    lblPasswordError.setText(msg);
+	    txtPassword.setBorder(FormUtils.redBorder);
+	}
+
+	public void setPhoneError(String msg) {
+	    lblPhoneError.setText(msg);
+	    txtPhone.setBorder(FormUtils.redBorder);
+	}
+
+	public void setCountryError(String msg) {
+	    lblCountryError.setText(msg);
+	    comboCountry.setBorder(FormUtils.redBorder);
+	}
+
+	public void setBirthDateError(String msg) {
+	    lblBirthDateError.setText(msg);
+	    spBirthDate.setBorder(FormUtils.redBorder);
+	}
+
+	public void setGenderError(String msg) {
+	    lblGenderError.setText(msg);
+	}
+
+	public void setTermsError(String msg) {
+	    lblTermsError.setText(msg);
+	}
+	
+	// getters de labels de error
 
 	public JLabel getLblNameError() {
 		return lblNameError;
@@ -451,5 +420,43 @@ public class RegistrationView extends JPanel
 
 	public JLabel getLblPasswordError() {
 		return lblPasswordError;
+	}
+	
+	// limpiar mensajes de errores
+	
+	public void clearNameError(){
+	    FormUtils.clearError(lblNameError, txtName);
+	}
+
+	public void clearSurnameError(){
+		FormUtils.clearError(lblSurnameError, txtSurname);
+	}
+
+	public void clearEmailError(){
+		FormUtils.clearError(lblEmailError, txtEmail);
+	}
+
+	public void clearPasswordError(){
+		FormUtils.clearError(lblPasswordError, txtPassword);
+	}
+
+	public void clearPhoneError(){
+		FormUtils.clearError(lblPhoneError, txtPhone);
+	}
+
+	public void clearCountryError(){
+		FormUtils.clearError(lblCountryError, comboCountry);
+	}
+
+	public void clearBirthDateError(){
+		FormUtils.clearError(lblBirthDateError, spBirthDate);
+	}
+
+	public void clearGenderError(){
+		FormUtils.clearLabel(lblGenderError);
+	}
+
+	public void clearTermsError(){
+		FormUtils.clearLabel(lblTermsError);
 	}
 }

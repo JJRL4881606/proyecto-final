@@ -41,8 +41,11 @@ public class SearchBar extends RoundedPanel {
 
         initializeComponents();
 
+        // configurar restricciones, validaciones y valores iniciales
         initInputRestrictions();
         initListeners();
+
+        // Mostrar la cantidad de noches segun las fechas iniciales cargadas
         calculateNights();
     }
     
@@ -112,13 +115,21 @@ public class SearchBar extends RoundedPanel {
         addManualValidation();
     }
     
+    //configura las restricciones de los campos de fecha y establece los valores minimos permitidos
+    
 	private void initInputRestrictions() {
+		
+		// Permitir unicamente la captura de números en los editores de fecha para evitar formatos inválidos
 		FormUtils.onlyDateNumbers(spCheckInDate);
 		FormUtils.onlyDateNumbers(spCheckOutDate);
 		
-        Date today = DateUtils.normalize(new Date());
-        Date tomorrow = DateUtils.addDays(today, 1);
+		// La fecha minimaa de entrada es hoy
+		Date today = DateUtils.normalize(new Date());
 
+		// La salida inicia por default un dia después
+		Date tomorrow = DateUtils.addDays(today, 1);
+		
+		// configurar los modelos para impedir seleccionar fechas antsriores a las permitidas
         SpinnerDateModel checkInModel = new SpinnerDateModel(
             today,
             today,
@@ -137,75 +148,109 @@ public class SearchBar extends RoundedPanel {
         spCheckOutDate.setModel(checkOutModel);
         spCheckInDate.setValue(today);
         spCheckOutDate.setValue(tomorrow);
-        ((JSpinner.DefaultEditor) spCheckOutDate.getEditor()).getTextField().setValue(tomorrow);
+        //obtiene el editor, accede al txtfield y le pone el valor de tomorrow
+        ((JSpinner.DefaultEditor) spCheckOutDate.getEditor()).getTextField().setValue(tomorrow); 
 	}
 	
-	//	FECHAS
+	// Valida la coherencia entre las fechas seleccionadas
+	// y corrige automaticamente valores inválidos
+	
     private void validateDates() {
-        Date today = DateUtils.normalize(new Date());
+    	
+    	// Obtener las fechas normalizadas sin horas para hacer comparaciones solo con el diia
+    	Date today = DateUtils.normalize(new Date());
 
-        Date checkIn = DateUtils.normalize((Date) spCheckInDate.getValue());
-        Date checkOut = DateUtils.normalize((Date) spCheckOutDate.getValue());
-        
-        //checar fechas nulas
+    	Date checkIn = DateUtils.normalize(
+    	    (Date) spCheckInDate.getValue()
+    	);
+
+    	Date checkOut = DateUtils.normalize(
+    	    (Date) spCheckOutDate.getValue()
+    	);
+    	
+        //checar fechas nulas mientras el usuario aun modifica el valr
         if (checkIn == null || checkOut == null) return;
 
-        // evitar fechas pasadas
+        // evitar fechas pasadas a hoy
         if (checkIn.before(today)) {
         	spCheckInDate.setValue(today);
             checkIn = today;
         }
         
-        //no permitir periodo demasiado largo
+        // limitar las estancias a un max de 30 noches
         long days = ChronoUnit.DAYS.between(getCheckIn(), getCheckOut());
 
-    	if (days > 030) {
+    	if (days > 30) {
     	    spCheckOutDate.setValue(DateUtils.addDays(checkIn,30));
     	}
+        
+	    // La salida siempre debe ser minimo un día mas a la fecha de entrada
+	    Date minCheckOut = DateUtils.addDays(checkIn, 1);
 
-        // actualizar mínimo checkout = checkIn + 1 día
-        Date minCheckOut = DateUtils.addDays(checkIn, 1);
-
+	    // Actualizar los limites de los spinners para impedir selecciones invalidas
         SpinnerDateModel modelOut = (SpinnerDateModel) spCheckOutDate.getModel();
         modelOut.setStart(minCheckOut);
         
         SpinnerDateModel modelIn = (SpinnerDateModel) spCheckInDate.getModel();
         modelIn.setStart(today);
 
-        // evitar salida < entrada
+        // corregir auomatico cuando la salida sea igual o antes de la entrada
         if(!checkOut.after(checkIn) && !checkOut.equals(minCheckOut)){
         	    spCheckOutDate.setValue(minCheckOut);
-        }        
+        }       
         
-        // calcular noches
+        //refrescar la cantidad de noches mostrada
         calculateNights();
     }
     
+    // Agrega mas validacion cuando el usuario escribe manualmente una fecha en vez de usar los controles del spinner
     private void addManualValidation() {
         addSpinnerEditorListener(spCheckInDate);
         addSpinnerEditorListener(spCheckOutDate);
     }
 
+    // Escucha cambios hechos directo sobre el editor de texto interno del spinner
     private void addSpinnerEditorListener(JSpinner spinner) {
+    	//obtiene el editor del listener
         JSpinner.DateEditor editor = (JSpinner.DateEditor) spinner.getEditor();
+        
+        // Revalidar las fechas cuando el valor del editor cambie manualmente
         editor.getTextField().addPropertyChangeListener("value", e -> {
             validateDates();
         });
-    }
-        
+    }    
+   
+    // Calcula la cantidad de noches entre la fecha
+    // de entrada y salida y la muestra en su campo
     private void calculateNights(){
 
-        long nights = ChronoUnit.DAYS.between(
-            getCheckIn(),
-            getCheckOut()
-        );
-
-        txtNights.setText(
-            String.valueOf(Math.max(1, nights))
-        );
+    	// Obtener la diferencia de dias entre las dos fechas
+    	long nights = ChronoUnit.DAYS.between(
+    	    getCheckIn(),
+    	    getCheckOut()
+    	);
+    	
+    	// para que siempre se muestre al menos una noche
+    	txtNights.setText(
+    	    String.valueOf(Math.max(1, nights))
+    	);
     }
     
-    // GETTERS
+    // GETTERS Y SETTERS
+    public LocalDate getCheckIn(){
+        return getCheckInDate()
+            .toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
+    }
+
+    public LocalDate getCheckOut(){
+        return getCheckOutDate()
+            .toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate();
+    }
+    
     public JSpinner getSpCheckInDate() {
         return spCheckInDate;
     }
@@ -248,19 +293,5 @@ public class SearchBar extends RoundedPanel {
 
     public void setGuests(int guests) {
         spGuests.setValue(guests);
-    }
-    
-    public LocalDate getCheckIn(){
-        return getCheckInDate()
-            .toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate();
-    }
-
-    public LocalDate getCheckOut(){
-        return getCheckOutDate()
-            .toInstant()
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate();
     }
 }

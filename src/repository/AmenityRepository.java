@@ -15,10 +15,9 @@ public class AmenityRepository {
 
         String sql = "INSERT INTO amenities(name,icon) VALUES(?,?)";
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, amenity.getName());
             ps.setString(2, amenity.getIcon());
 
@@ -63,10 +62,8 @@ public class AmenityRepository {
 
         String sql = "DELETE FROM amenities WHERE amenityId = ?";
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1,id);
 
@@ -79,7 +76,7 @@ public class AmenityRepository {
         return false;
     }
     
-    // Método para listar las amenidades que tiene un RoomType
+    // Método para obtener las amenidades de un tipo de habitación
     // Necesita el id del RoomType
 
     public List<Amenity> getAmenitiesByRoomType(int typeId) {
@@ -87,15 +84,14 @@ public class AmenityRepository {
         List<Amenity> amenities = new ArrayList<>();
 
         String sql =
-            "SELECT a.* FROM amenities a " +
-            "INNER JOIN roomtype_amenities rta " +
-            "ON a.amenityId=rta.amenityId " +
-            "WHERE rta.typeId=?";
-
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql);
-        ){
+        	    "SELECT amenities.* " +
+        	    "FROM amenities " +
+        	    "INNER JOIN roomtype_amenities " +
+        	    "ON amenities.amenityId = roomtype_amenities.amenityId " +
+        	    "WHERE roomtype_amenities.typeId = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, typeId);
 
@@ -116,15 +112,16 @@ public class AmenityRepository {
         return amenities;
     }
 
+    // Método para actualizar una amenidad existente
+
     public boolean update(Amenity amenity) {
 
         String sql = "UPDATE amenities SET name = ?, icon = ? WHERE amenityId = ?";
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
-            ps.setString(1, amenity.getName());
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        	ps.setString(1, amenity.getName());
             ps.setString(2, amenity.getIcon());
             ps.setInt(3, amenity.getAmenityId());
 
@@ -137,15 +134,17 @@ public class AmenityRepository {
         return false;
     }
     
+	 // Método para verificar si una amenidad está siendo utilizada
+	 // por algún tipo de habitación
+
     public boolean isUsed(int amenityId){
 
         String sql = "SELECT 1 FROM roomtype_amenities WHERE amenityId = ? LIMIT 1";
 
-        try(
-            Connection conn = DatabaseConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
-        ){
-            ps.setInt(1,amenityId);
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        	ps.setInt(1,amenityId);
             
             ResultSet rs = ps.executeQuery();
 

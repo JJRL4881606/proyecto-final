@@ -66,6 +66,8 @@ public class ReservationRepository {
 
         return list;
     }
+    
+    // Método para actualizar una reservación
 
     public boolean update(Reservation reservation) {
         String sql = "UPDATE reservations SET userId=?, roomId=?, checkInDate=?, checkOutDate=?, guests=?, status=?, total=? WHERE reservationId=?";
@@ -99,8 +101,7 @@ public class ReservationRepository {
         try(Connection conn = DatabaseConnection.getConnection()) {
 
             // borrar pagos relacionados
-            String deletePayments =
-                "DELETE FROM payments WHERE reservationId=?";
+            String deletePayments = "DELETE FROM payments WHERE reservationId=?";
 
             try(PreparedStatement ps = conn.prepareStatement(deletePayments)) {
                 ps.setInt(1, id);
@@ -108,8 +109,7 @@ public class ReservationRepository {
             }
 
             // borrar reservación
-            String deleteReservation =
-                "DELETE FROM reservations WHERE reservationId=?";
+            String deleteReservation = "DELETE FROM reservations WHERE reservationId=?";
 
             try(PreparedStatement ps = conn.prepareStatement(deleteReservation)) {
                 ps.setInt(1, id);
@@ -123,6 +123,8 @@ public class ReservationRepository {
         return false;
     }
 
+    // Verifica si un usuario tiene reservaciones registradas
+    
     public boolean hasReservationsByUser(int userId) {
         String sql = "SELECT 1 FROM reservations WHERE userId=? LIMIT 1";
 
@@ -138,6 +140,8 @@ public class ReservationRepository {
 
         return false;
     }
+    
+    // Verifica si una habitación tiene reservaciones registradas
 
     public boolean hasReservationsByRoom(int roomId) {
         String sql = "SELECT 1 FROM reservations WHERE roomId=? LIMIT 1";
@@ -154,6 +158,8 @@ public class ReservationRepository {
 
         return false;
     }
+    
+    // Verifica si una habitación está disponible en las fechas indicadas
 
     public boolean isRoomAvailableByDates(int roomId, LocalDate checkIn, LocalDate checkOut) {
 
@@ -181,12 +187,9 @@ public class ReservationRepository {
         return false;
     }
     
-    //ignora la reservación propia que se está editando
-    public boolean isRoomAvailableByDates(
-            int roomId,
-            LocalDate checkIn,
-            LocalDate checkOut,
-            int reservationIdToIgnore) {
+    // Verifica disponibilidad ignorando la reservación actual
+    
+    public boolean isRoomAvailableByDates(int roomId, LocalDate checkIn, LocalDate checkOut, int reservationIdToIgnore) {
 
         String sql =
             "SELECT 1 FROM reservations " +
@@ -214,8 +217,8 @@ public class ReservationRepository {
         return false;
     }
     
-    // Obtener las reservaciones asociadas a un usuario, en orden de creación
-    // Utiliza el id del usuario
+	// Método para obtener las reservaciones de un usuario
+	// Utiliza el id del usuario
     
     public List<Reservation> getReservationsByUser(int userId) {
 
@@ -295,6 +298,8 @@ public class ReservationRepository {
         return -1;
     }
     
+    // Verifica si la habitación tiene una reservación activa
+    
     public boolean hasActiveReservation(int roomId) {
 
         String sql =
@@ -320,6 +325,8 @@ public class ReservationRepository {
         return false;
     }
     
+    // Guarda una reservación y devuelve el id generado
+    
     public int saveAndReturnId(Reservation reservation) {
 
         String sql =
@@ -332,8 +339,8 @@ public class ReservationRepository {
 
             ps.setInt(1, reservation.getUserId());
             ps.setInt(2, reservation.getRoomId());
-            ps.setDate(3, java.sql.Date.valueOf(reservation.getCheckInDate()));
-            ps.setDate(4, java.sql.Date.valueOf(reservation.getCheckOutDate()));
+            ps.setDate(3, Date.valueOf(reservation.getCheckInDate()));
+            ps.setDate(4, Date.valueOf(reservation.getCheckOutDate()));
             ps.setInt(5, reservation.getGuests());
             ps.setDouble(6, reservation.getTotal());
             ps.setString(7, reservation.getStatus());

@@ -29,26 +29,45 @@ public class RoomCardController {
     }
 
     private void initController() {
-    	// detalles
+    	
+        // Mostrar la info completa del tipo de habitacion
         roomCard.getBtnDetails().addActionListener(e -> {
-            mainView.getRoomDetailsPanel().setRoomType(roomCard.getRoomType());
+
+            // mandar el RoomType seleccionado al panel de detalles
+            mainView.getRoomDetailsPanel().setRoomType(
+                roomCard.getRoomType()
+            );
+
+            // mostrar la vista de detalles
             mainView.showView(MainView.ROOM_DETAILS);
         });
-    	
-        // Acción para reservar
-        roomCard.getBtnReserve().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Cerrar ventana actual
-                Window window = SwingUtilities.getWindowAncestor(roomCard);
-                if (window != null) {
-                    window.dispose();
-                }
+        
+        // mandar al proceso de reservación de esta habitación
+        roomCard.getBtnReserve().addActionListener(
+            new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
 
-                // Abrir nueva ventana de pago
-                PaymentWindow paymentWindow = new PaymentWindow(roomType,user);
-                paymentWindow.setVisible(true);
+                    // Obtener la ventana que contiene esta tarjeta
+                    Window window = SwingUtilities.getWindowAncestor(roomCard);
+
+                    // cerrar la ventana actual antes de abrir paymnent
+                    if(window != null){
+                        window.dispose();
+                    }
+
+                    // Crear la ventana de pago utilizando el tipo de
+                    // habitación seleccionado y el usuario actual
+                    PaymentWindow paymentWindow =
+                        new PaymentWindow(
+                            roomType,
+                            user
+                        );
+
+                    // Mostrar la ventana de pago
+                    paymentWindow.setVisible(true);
+                }
             }
-        });
+        );
     }
 }

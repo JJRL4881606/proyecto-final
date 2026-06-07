@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-//validaciones de caracteres permitidos en campos
+// para validar datos y restringir caracteres en formularios
 
 public class Validator {
 
@@ -25,12 +25,14 @@ public class Validator {
         return phone.matches("\\d{10}");
     }
     
-    //impedir caracteres que no sean letras
+    //permitir solo letras y espacios
     public static void onlyLetters(JTextField field) {
         field.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
+            	
                 char c = e.getKeyChar();
 
+                // Bloquear cualquier caracter que no sea letra o espacio
                 if (!Character.isLetter(c) && c != ' ') {
                     e.consume();
                 }
@@ -38,15 +40,17 @@ public class Validator {
         });
     }
 
-    //validar que sean 10 numeros en campos de telefono
+    //permitir solo numeros para telefonos
     public static void onlyPhoneNumbers(JTextField field) {
         field.addKeyListener(new KeyAdapter() {
             public void keyTyped(KeyEvent e) {
 
+            	// Bloquear caracteres que no sean números
                 if (!Character.isDigit(e.getKeyChar())) {
                     e.consume();
                 }
 
+                // Limitar el telefono a 10 dígitos
                 if (field.getText().length() >= 10) {
                     e.consume();
                 }
@@ -54,12 +58,13 @@ public class Validator {
         });
     }
     
-    //impedir caracteres que no sean numeros
+    //permitir solo numeros
     public static void onlyNumbers(JTextField field){
     	field.addKeyListener(new KeyAdapter(){
 
     		public void keyTyped(KeyEvent e){
 
+    			// Bloquear cualquier carácter que no sea numero
     			if(!Character.isDigit(e.getKeyChar())){
     				e.consume();
     			}
@@ -67,7 +72,7 @@ public class Validator {
     	});
     }
     
-    //impedir caracteres que no sean numeros, si permite decimales
+    // permitir números decimales
     public static void onlyDecimalNumbers(JTextField field) {
         field.addKeyListener(new KeyAdapter() {
 
@@ -76,10 +81,12 @@ public class Validator {
 
                 char c=e.getKeyChar();
 
+                // Solo se permiten números y un punto decimal
                 if(!Character.isDigit(c) && c!='.'){
                     e.consume();
                 }
 
+                // Evitar que hayan varios puntos decimales
                 if(c=='.' && field.getText().contains(".")){
                     e.consume();
                 }
@@ -87,10 +94,13 @@ public class Validator {
         });
     }
     
-    //impedir ingresar espacios
+    // bloquaer espacios en blanco
     public static void noSpaces(JTextField field) {
         field.addKeyListener(new KeyAdapter() {
+        	
             public void keyTyped(KeyEvent e) {
+            	
+            	// Evitar espacios al escribir
                 if (Character.isWhitespace(e.getKeyChar())) {
                     e.consume();
                 }
@@ -98,13 +108,17 @@ public class Validator {
         });
     }    
     
-    //impedir caracteres no permitidos en campos de contraseña
+    // bloquear caracteres no permitidos en campos de contraseña
     public static void restrictedPassword(JPasswordField field) {
         field.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
+                
+                // lista de caracteres restringidos
                 String forbidden = "<>\"'; }{¿?¡!|´°¬~^`,¨[]";
+
+                // Cancelar la entrada si el caracter está restringido
                 if (forbidden.indexOf(c) != -1) {
                     e.consume();
                 }

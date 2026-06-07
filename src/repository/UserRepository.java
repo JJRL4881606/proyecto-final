@@ -17,6 +17,8 @@ import exceptions.DuplicateEmailException;
 
 public class UserRepository {
 
+	// Método para registrar un usuario en el sistema
+	
 	public void save(User user) throws SQLException {
 		String sql = "INSERT INTO users "
 				+ "(name, surname, password, email, phone, country, birthDate, gender, role) "
@@ -24,9 +26,13 @@ public class UserRepository {
 
 		try (Connection connection = DatabaseConnection.getConnection();
 				PreparedStatement pst = connection.prepareStatement(sql)) {
+			
 			pst.setString(1, user.getName());
 			pst.setString(2, user.getSurname());
+			
+			// Encriptar la contraseña antes de guardarla
 			String hashedPassword = PasswordUtils.hashPassword(user.getPassword());
+			
 			pst.setString(3, hashedPassword);
 			pst.setString(4, user.getEmail());
 			pst.setString(5, user.getPhone());
@@ -38,6 +44,8 @@ public class UserRepository {
 
 		}
 	}
+	
+	// Método para obtener todos los usuarios registrados
 
 	public List<User> getUsers() throws IOException {
 
@@ -48,6 +56,9 @@ public class UserRepository {
 				ResultSet rs = st.executeQuery("SELECT * FROM users");) {
 
 			while (rs.next()) {
+				
+				// Crear el objeto User con los datos obtenidos de la base de datos
+				
 				User user = new User(rs.getInt("id"), rs.getString("name"), rs.getString("surname"),
 						rs.getString("email"), rs.getString("phone"), rs.getString("country"), rs.getDate("birthDate"),
 						rs.getString("gender").charAt(0), rs.getString("role"));
@@ -65,6 +76,8 @@ public class UserRepository {
 
 		return users;
 	}
+	
+	// Método para eliminar un usuario utilizando su id
 
 	public boolean delete(int id) {
 		
@@ -86,6 +99,8 @@ public class UserRepository {
 		return false;
 	}
 
+	// Método para actualizar la información de un usuario
+	
 	public boolean update(User updatedUser) throws IOException {
 		
 		String sql = "UPDATE users SET name = ?, surname = ?, email = ?, phone = ?, country = ?,"
@@ -116,21 +131,23 @@ public class UserRepository {
 
 		return false;
 	}
+		
+	// Verifica que el correo no esté registrado previamente
+	// Lanza una excepción si ya existe otra cuenta con ese correo
 
-	public void validateDuplicateEmail(String email)
-	        throws DuplicateEmailException {
+	public void validateDuplicateEmail(String email) throws DuplicateEmailException {
 
 	    String sql = "SELECT 1 FROM users WHERE email = ? LIMIT 1";
-
-	    try (
-	        Connection conn = DatabaseConnection.getConnection();
-	        PreparedStatement ps = conn.prepareStatement(sql)
-	    ) {
+	    	
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
 	        ps.setString(1, email);
 
 	        ResultSet rs = ps.executeQuery();
 
+	        // Si existe un registro, el correo ya está en uso
+	        
 	        if (rs.next()) {
 	            throw new DuplicateEmailException(
 	                "Este correo es usado por otra cuenta"
@@ -141,6 +158,8 @@ public class UserRepository {
 	        e.printStackTrace();
 	    }
 	}
+	
+	// Método para obtener un usuario utilizando su id
 	
 	public User findById(int id){
 
@@ -157,6 +176,8 @@ public class UserRepository {
 
 	        if(rs.next()){
 
+	        	// Crear el objeto user con la información encontrada
+	        	
 	        	User user = new User(
         		    rs.getInt("id"),
         		    rs.getString("name"),
@@ -183,6 +204,8 @@ public class UserRepository {
 	    return null;
 	}
 	
+	// Método para actualizar la contraseña de un usuario
+	
 	public void updatePassword(int id, String password){
 
 	    String sql = "UPDATE users SET password = ? WHERE id = ?";
@@ -191,6 +214,8 @@ public class UserRepository {
 	        Connection conn = DatabaseConnection.getConnection();
 	        PreparedStatement stmt = conn.prepareStatement(sql)){
 
+	    	// Encriptar la nueva contraseña antes de guardarla
+	    	
 	        String hash = PasswordUtils.hashPassword(password);
 
 	        stmt.setString(1, hash);
@@ -201,6 +226,8 @@ public class UserRepository {
 	        e.printStackTrace();
 	    }
 	}
+	
+	// Método para buscar un usuario mediante su correo electrónico
 	
 	public User findByEmail(String email){
 
@@ -213,6 +240,8 @@ public class UserRepository {
 
 	        ResultSet rs = stmt.executeQuery();
 
+	        // Crear el usuario con los datos encontrados
+	        
 	        if(rs.next()){
 
 	            User user = new User();
@@ -236,6 +265,8 @@ public class UserRepository {
 
 	    return null;
 	}
+	
+	// Verifica si un usuario tiene reservaciones registradas
 	
 	public boolean hasReservationsByUser(int userId){
 

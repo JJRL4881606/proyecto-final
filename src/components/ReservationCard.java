@@ -70,7 +70,7 @@ public class ReservationCard extends RoundedPanel {
 
         btnPanel.add(btnCancel);
 
-        // Panel izquierdo (2 filas x 3 columnas)
+        // panel izquierdo 2x 3
         JPanel leftPanel = new JPanel(new GridBagLayout());
         leftPanel.setOpaque(false);
 
@@ -101,7 +101,7 @@ public class ReservationCard extends RoundedPanel {
         gbc.weightx = 0.50;
         leftPanel.add(lblTotal, gbc);
 
-        // Separador vertical
+        // separador vertical
         JSeparator separator = new JSeparator(JSeparator.VERTICAL);
         separator.setForeground(new Color(180,180,180));
         
@@ -110,7 +110,7 @@ public class ReservationCard extends RoundedPanel {
         separatorPanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,25));
         separatorPanel.add(separator, BorderLayout.CENTER);
 
-        // Panel derecho
+        // panel derecho
         JPanel rightPanel = new JPanel();
         rightPanel.setOpaque(false);
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
@@ -124,7 +124,7 @@ public class ReservationCard extends RoundedPanel {
         rightPanel.add(btnPanel);
         rightPanel.add(Box.createVerticalGlue());
 
-        // Contenedor derecho
+        // contenedor derecho
         JPanel rightContainer = new JPanel(new BorderLayout());
         rightContainer.setOpaque(false);
         rightContainer.setPreferredSize(new Dimension(180, 80));
@@ -132,7 +132,7 @@ public class ReservationCard extends RoundedPanel {
         rightContainer.add(separatorPanel, BorderLayout.WEST);
         rightContainer.add(rightPanel, BorderLayout.CENTER);
 
-        // Contenedor principal
+        // contenedor principal
         JPanel content = new JPanel(new BorderLayout(15,0));
         content.setOpaque(false);
 
@@ -143,12 +143,14 @@ public class ReservationCard extends RoundedPanel {
         add(content, BorderLayout.CENTER);
     }
 
+    //crear una label de informacion
     private JLabel createInfoLabel(String iconPath){
         JLabel lbl = new JLabel(FormUtils.loadIcon(iconPath,30));
         lbl.setFont(AppFont.subtitle());
         return lbl;
     }
 
+    //getters
     public JLabel getLblRoom(){ return lblRoom; }
     public JLabel getLblCheckIn(){ return lblCheckIn; }
     public JLabel getLblCheckOut(){ return lblCheckOut; }
@@ -156,5 +158,6 @@ public class ReservationCard extends RoundedPanel {
     public JLabel getLblStatus(){ return lblStatus; }
     public JLabel getLblTotal(){ return lblTotal; }
     public JLabel getLblCreatedAt(){ return lblCreatedAt; }
+    
     public RoundedButton getBtnCancel(){ return btnCancel; }
 }

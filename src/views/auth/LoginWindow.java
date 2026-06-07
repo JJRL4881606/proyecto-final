@@ -10,6 +10,8 @@ import javax.swing.JScrollPane;
 import controllers.auth.LoginController;
 
 @SuppressWarnings("serial")
+
+//Ventana principal del inicio de sesión
 public class LoginWindow extends JFrame {
 	
 	private LoginView loginView;
@@ -24,13 +26,13 @@ public class LoginWindow extends JFrame {
         background.setLayout(new BorderLayout());
         setContentPane(background);    
 
-        //Agregar icono
+        //Configurar el icono de la ventana
         Image icon = Toolkit.getDefaultToolkit().getImage(
     	    getClass().getResource("/assets/img/icons/registration-icon.png")
     	);
         setIconImage(icon);
                 
-		//Agregar panel
+        // Crear la vista y su controlador
         loginView = new LoginView();
         new LoginController(loginView);
         background.add(createViewScroll(loginView), BorderLayout.CENTER);
@@ -38,6 +40,8 @@ public class LoginWindow extends JFrame {
         this.setVisible(true);
     }
     
+	// Agrega scroll
+	
     private JScrollPane createViewScroll(JPanel panel) {
         JScrollPane scroll = new JScrollPane(panel);
         

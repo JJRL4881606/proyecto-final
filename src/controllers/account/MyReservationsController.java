@@ -33,9 +33,10 @@ public class MyReservationsController {
         loadReservations();
     }
 
+    //cargar y mostrar todas las reservaciones del usuario actual
     public void loadReservations() {
 
-        User user = Session.getCurrentUser();
+        User user = Session.getCurrentUser(); //usuario actual
 
         if(user == null){
             return;
@@ -43,40 +44,45 @@ public class MyReservationsController {
 
         List<Reservation> reservations = repository.getReservationsByUser(user.getId());
 
+        //limpiar las tarjetas actuales antes de volver a cargarlas
         view.getCardsContainer().removeAll();
 
         RoomRepository roomRepository = new RoomRepository();
 
-    	for(Reservation reservation : reservations){
+        for(Reservation reservation : reservations){
 
-    	    Room room = roomRepository.findById(reservation.getRoomId());
+            //obtener la habitación asociada a la reservación
+            Room room = roomRepository.findById(reservation.getRoomId());
 
-    	    ReservationCard card = new ReservationCard();
+            //crear la tarjeta que mostrará la info
+            ReservationCard card = new ReservationCard();
 
-    	    card.getLblRoom().setText(
-	    	    "Habitación #" + room.getRoomNumber()
-	    	);
-    	    
-    	    card.getLblCheckIn().setText(
-	    	    "Check-in: " + reservation.getCheckInDate().format(DATE_FORMAT)
-	    	);
+            //mostrar la información principal de la reservación
+            card.getLblRoom().setText(
+                "Habitación #" + room.getRoomNumber()
+            );
 
-	    	card.getLblCheckOut().setText(
-	    	    "Check-out: " + reservation.getCheckOutDate().format(DATE_FORMAT)
-	    	);
+            card.getLblCheckIn().setText(
+                "Check-in: " + reservation.getCheckInDate().format(DATE_FORMAT)
+            );
 
-	    	card.getLblCreatedAt().setText(
-	    		"Reservada el: " + reservation.getCreatedAt().format(DATE_TIME_FORMAT)
-	    	);
+            card.getLblCheckOut().setText(
+                "Check-out: " + reservation.getCheckOutDate().format(DATE_FORMAT)
+            );
 
-	    	card.getLblGuests().setText(
-	    	    reservation.getGuests() + " huésped(es)"
-	    	);
+            card.getLblCreatedAt().setText(
+                "Reservada el: " + reservation.getCreatedAt().format(DATE_TIME_FORMAT)
+            );
 
-    	    String status = reservation.getStatus();
+            card.getLblGuests().setText(
+                reservation.getGuests() + " huésped(es)"
+            );
+
+	    	String status = reservation.getStatus();
 
     	    card.getLblStatus().setText(status);
 
+    	    //mostrar nombre y color según el estado de la reservación
     	    switch(status){
 	    	    case ReservationStatus.CONFIRMED:
 	    	        card.getLblStatus().setText("Confirmada");
@@ -94,11 +100,14 @@ public class MyReservationsController {
 	    	        break;
     	    }    	    
     	    
+            //solo las reservaciones confirmadas pueden cancelarse
     	    boolean canCancel = status.equals(ReservationStatus.CONFIRMED);
     	    card.getBtnCancel().setVisible(canCancel);
     	    
     	    if(canCancel){
 
+    	    	//cancelar la reservación y actualizar la vista
+    	    	
     	        card.getBtnCancel().addActionListener(e->{
 
     	            int option = JOptionPane.showConfirmDialog(
@@ -126,9 +135,10 @@ public class MyReservationsController {
     	        });
     	    }
     	    
+    	    //mostrar el monto total pagado por la reservación
     	    card.getLblTotal().setText(
-	    	    "Total: $" + String.format("%,.2f", reservation.getTotal())
-	    	);
+    	        "Total: $" + String.format("%,.2f", reservation.getTotal())
+    	    );
     	    
     	    card.setPreferredSize(new Dimension(1300, 160));
     	    card.setMinimumSize(new Dimension(1300, 160));
@@ -137,9 +147,12 @@ public class MyReservationsController {
     	    view.getCardsContainer().add(card);
     	    view.getCardsContainer().add(Box.createVerticalStrut(15));
     	}        	
+        
+        //actualizar interfaz después de reconstruir la lista
     	view.getCardsContainer().revalidate();
     	view.getCardsContainer().repaint();
         
+    	//mostrar mensaje cuando no existan reservaciones
         view.getLblNoReservations().setVisible(reservations.isEmpty());
     }
 }

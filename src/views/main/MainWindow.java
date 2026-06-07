@@ -12,6 +12,9 @@ import controllers.main.MainController;
 import models.User;
 
 @SuppressWarnings("serial")
+
+// ventana principal donde se muestra la mayor parte del programa
+// contiene el MainView dentro de un JScrollPane
 public class MainWindow extends JFrame {
 	
 	private MainView mainView;
@@ -35,14 +38,17 @@ public class MainWindow extends JFrame {
     	);
         setIconImage(icon);
          
-        // Agregar el panel con scroll
+        // Crear vista principal y su controlador
         mainView = new MainView(user);
         new MainController(mainView, this);
+        
+        //agregar scroll
         add(createViewScroll(mainView), BorderLayout.CENTER);
         
         this.setVisible(true);
     }
     
+    //envuelve la vista principal en un scrollpane
     private JScrollPane createViewScroll(JPanel panel) {
         scroll = new JScrollPane(panel);
         scroll.setBorder(null);

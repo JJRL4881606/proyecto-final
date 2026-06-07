@@ -22,6 +22,7 @@ public class AmenitiesView extends JPanel {
 
         setLayout(new BorderLayout());
 
+        // TABLA DE AMENIDADES
         table = new JTable();
         styleTable();
 
@@ -113,10 +114,9 @@ public class AmenitiesView extends JPanel {
                 int row, int col
             ) {
 
-                Component c = super.getTableCellRendererComponent(
-                    table, value, selected, focus, row, col
-                );
+                Component c = super.getTableCellRendererComponent(table, value, selected, focus, row, col);
 
+                //alterna color de filas
                 if(!selected){
                     c.setBackground(
                         row % 2 == 0
@@ -146,6 +146,8 @@ public class AmenitiesView extends JPanel {
         table.getColumnModel().getColumn(1).setCellRenderer(center);
     }
 
+    //getters
+    
     public int getSelectedModelRow() {
         int row = table.getSelectedRow();
         return row == -1 ? -1 : table.convertRowIndexToModel(row);

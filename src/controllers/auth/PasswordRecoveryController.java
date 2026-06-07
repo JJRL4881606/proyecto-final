@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.JTextComponent;
 
 import models.User;
 import repository.UserRepository;
@@ -13,6 +12,7 @@ import utils.FormUtils;
 import utils.Validator;
 import views.auth.PasswordRecoveryDialog;
 
+//Controlador para manejar la recuperación de contraseña
 public class PasswordRecoveryController {
 
     private final PasswordRecoveryDialog view;
@@ -31,43 +31,57 @@ public class PasswordRecoveryController {
         view.getBtnSave().addActionListener(e -> recoverPassword());
 
         view.getChkShowPassword().addActionListener(e -> {
-            char passwordChar = view.getChkShowPassword().isSelected() ? (char)0 : '•';
+
+            // Si está marcado muestra la contraseña, si no la oculta con puntos
+            char passwordChar = view.getChkShowPassword().isSelected() ? (char) 0 : '•';
 
             view.getTxtNewPassword().setEchoChar(passwordChar);
             view.getTxtConfirmPassword().setEchoChar(passwordChar);
         });
-        
+
         view.getComboCountry().addActionListener(e -> validateCountry());
 
-        addDocumentListener(view.getTxtEmail(), this::validateEmail);
-        addDocumentListener(
-    	    view.getTxtNewPassword(),
-    	    () -> {
-    	        validateNewPassword();
-    	        validateConfirmPassword();
-    	    }
-    	);
-        addDocumentListener(view.getTxtConfirmPassword(), this::validateConfirmPassword);
+        // DOCUMENT LISTENERS
+        view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { validateEmail(); }
+            public void removeUpdate(DocumentEvent e) { validateEmail(); }
+            public void changedUpdate(DocumentEvent e) { validateEmail(); }
+        });
+
+        view.getTxtNewPassword().getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                validateNewPassword();
+                validateConfirmPassword();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                validateNewPassword();
+                validateConfirmPassword();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+                validateNewPassword();
+                validateConfirmPassword();
+            }
+        });
+
+        view.getTxtConfirmPassword().getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) { validateConfirmPassword(); }
+            public void removeUpdate(DocumentEvent e) { validateConfirmPassword(); }
+            public void changedUpdate(DocumentEvent e) { validateConfirmPassword(); }
+        });
 
         FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
         FormUtils.addFocusEffect(view.getTxtNewPassword(), view.getLblNewError());
-        
-        
         FormUtils.addFocusEffect(view.getTxtConfirmPassword(), view.getLblConfirmError());
     }
-
-    private void addDocumentListener(JTextComponent textComponent, Runnable validationMethod) {
-        textComponent.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) { validationMethod.run(); }
-            public void removeUpdate(DocumentEvent e) { validationMethod.run(); }
-            public void changedUpdate(DocumentEvent e) { validationMethod.run(); }
-        });
-    }
     
+    // Restringir datos inválidos en los campos
     private void initInputRestrictions() {
         Validator.noSpaces(view.getTxtEmail());
     }
 
+    // Método para recuperar la contraseña de un usuario
     private void recoverPassword() {
 
         view.clearErrors();
@@ -78,6 +92,7 @@ public class PasswordRecoveryController {
         String country = view.getCountry();
         String newPassword = view.getNewPassword();
 
+        // Buscar el usuario
         User user = findUser(email, country);
 
         if(user == null){
@@ -87,6 +102,7 @@ public class PasswordRecoveryController {
             return;
         }
 
+        // Actualizar la contraseña
         repository.updatePassword(
             user.getId(),
             newPassword
@@ -100,8 +116,11 @@ public class PasswordRecoveryController {
         view.dispose();
     }
     
+    // Buscar un usuario por correo y país
     private User findUser(String email, String country) {
         try {
+        	
+        	// Revisar todos los usuarios registrados
             for (User u : repository.getUsers()) {
                 if (u.getEmail().equalsIgnoreCase(email) && u.getCountry().equalsIgnoreCase(country)) {
                     return u;
@@ -114,8 +133,9 @@ public class PasswordRecoveryController {
         return null;
     }
 
+    // Validar todos los campos del formulario
     private boolean validateForm() {
-
+        view.clearErrors();
         boolean valid = true;
 
         if (!validateEmail()) valid = false;
@@ -172,6 +192,7 @@ public class PasswordRecoveryController {
         return true;
     }
 
+    // Checar que ambas contraseñas coincidan
     private boolean validateConfirmPassword(){
         String confirm = view.getConfirmPassword();
 

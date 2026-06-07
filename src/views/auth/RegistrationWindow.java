@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 @SuppressWarnings("serial")
+
+//Ventana principal para el registro de nuevos usuarios
 public class RegistrationWindow extends JFrame {
 	
 	private RegistrationView registrationView;
@@ -26,17 +28,18 @@ public class RegistrationWindow extends JFrame {
         background.setLayout(new BorderLayout());
         setContentPane(background);    
 
-        //Agregar icono
+        // Configurar el icono de la ventana
         Image icon = Toolkit.getDefaultToolkit().getImage(
     	    getClass().getResource("/assets/img/icons/registration-icon.png")
     	);
         setIconImage(icon);
                 
-        //Agregar el panel
+        // Crear y mostrar la vista de registro
         add(createViewScroll(registrationView = new RegistrationView()), BorderLayout.CENTER);        
         
         this.setVisible(true);
         
+        // Confirmar antes de cerrar la ventana para no perder info
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -45,6 +48,7 @@ public class RegistrationWindow extends JFrame {
         });
     }
     
+    // Muestra confirmación antes de salir
     private void handleClose() {
 		int option = JOptionPane.showConfirmDialog(this, "¿Seguro que deseas salir? Se perderán todos los datos");
 		
@@ -53,11 +57,17 @@ public class RegistrationWindow extends JFrame {
 		}
 	}
     
+	// Agrega scroll
     private JScrollPane createViewScroll(JPanel panel) {
         JScrollPane scroll = new JScrollPane(panel);
+        
         scroll.setBorder(null);
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
+
         scroll.getVerticalScrollBar().setUnitIncrement(12);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
         return scroll;
     }
     

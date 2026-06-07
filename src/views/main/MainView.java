@@ -10,7 +10,6 @@ import java.awt.FlowLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -20,7 +19,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -138,16 +136,28 @@ public class MainView extends JPanel{
         add(inferiorSection(), BorderLayout.SOUTH);
     }
         
+    //para ocultar las secciones de admin a los usuarios de rol cliente
     private void configurePermissions() {
-        if(!Session.getRole().equals(Role.ADMIN)) {
-            system.setVisible(false);
-            btnUsers.setVisible(false);
-            btnRoomTypes.setVisible(false);
-            btnRooms.setVisible(false);
-            btnAmenities.setVisible(false);
-            btnReservations.setVisible(false);
-            btnPayments.setVisible(false);
+        String currentRole = Session.getRole();
+
+        // Por defecto todo está oculto
+        setAdminComponentsVisible(false);
+
+        // si el usuario es admin, muestra las vistas restringidas
+        if (Role.ADMIN.equals(currentRole)) { 
+            setAdminComponentsVisible(true);
         }
+    }
+
+    //para ponerlos como visibles
+    private void setAdminComponentsVisible(boolean visible) {
+        system.setVisible(visible);
+        btnUsers.setVisible(visible);
+        btnRoomTypes.setVisible(visible);
+        btnRooms.setVisible(visible);
+        btnAmenities.setVisible(visible);
+        btnReservations.setVisible(visible);
+        btnPayments.setVisible(visible);
     }
     
     //HEADER
@@ -184,8 +194,8 @@ public class MainView extends JPanel{
         JPanel panel = createTransparentPanel();
     	panel.setLayout(new GridBagLayout());
         
-        if(Session.getRole().equals(Role.ADMIN)) {
-        	JLabel lblCurrentView = new JLabel("VISTA DE ADMINISTRADOR");
+    	if(Role.ADMIN.equals(Session.getRole())) {
+    		JLabel lblCurrentView = new JLabel("VISTA DE ADMINISTRADOR");
         	lblCurrentView.setFont(AppFont.big());
         	lblCurrentView.setForeground(Color.WHITE);
         	lblCurrentView.setAlignmentX(CENTER_ALIGNMENT);
@@ -231,7 +241,7 @@ public class MainView extends JPanel{
         btnShowRooms.setMnemonic(KeyEvent.VK_V);
         rooms.add(btnShowRooms);
         
-        // SISTEMA
+        // SISTEMA, EXCLUSIVAS DE ADMIN
     	system = new UnderlineMenu("Sistema");
     	system.setMnemonic(KeyEvent.VK_S);
         mb.add(system);
@@ -280,7 +290,7 @@ public class MainView extends JPanel{
         return mb;
     }
     
-    //CONTENT
+    //DONDE SE PONEN LAS VISTAS DEL PROGRAMA
     public JPanel content(){
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(Color.WHITE);
@@ -291,7 +301,7 @@ public class MainView extends JPanel{
         return contentPanel;
     }
     
-    //INFERIOR
+    //INFERIOR, INFO DEL HOTEL
     public JPanel inferiorSection() {
 
         JPanel inferiorPanel = new JPanel(new BorderLayout());
@@ -407,7 +417,11 @@ public class MainView extends JPanel{
         return inferiorPanel;
     }
     
+    //Inicializa todas las vistas principales del programa,
+    // crea sus controladores y las registra dentro del cardlayoutt
+    
     private void createViews() {
+    	//usaod para cambiar entre vistas
         cardLayout = new CardLayout();
 
         container = new JPanel(cardLayout) {
@@ -421,33 +435,40 @@ public class MainView extends JPanel{
                 return super.getPreferredSize();
             }
         };
+
+        // Vista principal mostrada tras hacer login o registro
         homePanel = new HomeView(this, user);
         homeController = new HomeController(homePanel, this);
         
-        setUsersPanel(new UsersView());
-        setRoomTypesPanel(new RoomTypesView());
-        setRoomsPanel(new RoomsView());
-        
+        //vista para mostrar resultados de busqueda
         setBookingSearchPanel(new BookingSearchView(user, this));
         bookingSearchController = new BookingSearchController(getBookingSearchPanel());
         
-        setAmenitiesPanel(new AmenitiesView());
-        
-        setReservationsPanel(new ReservationsView());
-        
-        paymentsPanel = new PaymentsAdminView();
-        
-        showRoomsPanel = new ShowRoomsView();
-        showRoomsController = new ShowRoomsController(showRoomsPanel, this);
-        
-        setRoomDetailsPanel(new RoomDetailsView());
-        new RoomDetailsController(getRoomDetailsPanel());
-        
+        // Vista de la info personal del usuario
         accountPanel = new AccountView();
         new AccountController(accountPanel, user);
         
+        // vista de las resevas del usuario
         myReservationsPanel = new MyReservationsView();
         new MyReservationsController(myReservationsPanel);
+        
+        //vista donde salen todas las roomtypes
+        showRoomsPanel = new ShowRoomsView();
+        showRoomsController = new ShowRoomsController(showRoomsPanel, this);
+
+        //vista de detalles de la roomtype
+        setRoomDetailsPanel(new RoomDetailsView());
+        new RoomDetailsController(getRoomDetailsPanel());
+
+        //paneles de administrador
+        setUsersPanel(new UsersView());
+        setRoomTypesPanel(new RoomTypesView());
+        setRoomsPanel(new RoomsView());
+        setAmenitiesPanel(new AmenitiesView());
+        setReservationsPanel(new ReservationsView());
+        paymentsPanel = new PaymentsAdminView();
+        
+        // Registrar todas las vistas dentro del card layout
         
         container.add(homePanel, HOME);
         
@@ -472,36 +493,36 @@ public class MainView extends JPanel{
         return panel;
     }
     
+    // Muestra una vista del card layout y reinicia el scroll al inicio de la pagina
     public void showView(String view) {
-        cardLayout.show(container, view);
+    	
+    	//cambiar a la vista solicitada
+    	cardLayout.show(container, view);
 
-        // refrescar
+        // refrescar interfaz
         container.revalidate();
         container.repaint();
 
         revalidate();
         repaint();
-
-        // reiniciar scroll
-        MainWindow frame = (MainWindow)SwingUtilities.getWindowAncestor(this);
-
-        if(frame != null){
-            SwingUtilities.invokeLater(() -> {
-                frame.getScroll().getViewport().setViewPosition(new Point(0,0));
-            });
-        }
     }	
-    
-    public void refreshRoomViews(){
 
+    // Recarga todas las vistas que muestran tipos de habitación
+    // para reflejar cambios recientes en los datos
+    
+    public void refreshRoomViews() {
+    	
+    	// Actualizar habitaciones destacadas del inicio
         if(homeController != null){
             homeController.loadRooms();
         }
 
+        // Actualizar la vista todas los tipos de habitaciones
         if(showRoomsController != null){
             showRoomsController.reloadRooms();
         }
 
+        // actualizar la vista de busqueda
         if(bookingSearchController != null){
             bookingSearchController.reloadRooms();
         }

@@ -20,6 +20,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import repository.LoginRepository;
 
+//Controlador encargado de la lógica del inicio de sesión
 public class LoginController {
 
     private final LoginView view;
@@ -33,22 +34,28 @@ public class LoginController {
 	}
 	
     private void initListeners() {
+    	
+    	// Evento para iniciar sesión
         view.getBtnLogin().addActionListener(e -> handleLogin());
 
+        // Evento para abrir el formulario de registro
         view.getBtnRegistration().addActionListener(e -> handleRegister());
 
+        // Validación en tiempo real del correo
         view.getTxtEmail().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateEmail(); }
             public void removeUpdate(DocumentEvent e) { validateEmail(); }
             public void changedUpdate(DocumentEvent e) { validateEmail(); }
         });
 
+        // Validación en tiempo real de la contraseña
         view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validatePassword(); }
             public void removeUpdate(DocumentEvent e) { validatePassword(); }
             public void changedUpdate(DocumentEvent e) { validatePassword(); }
         });
         
+        // Mostrar / ocultar la contrasena
         view.getChkShowPassword().addActionListener(e -> {
             if (view.getChkShowPassword().isSelected()) {
                 view.getTxtPassword().setEchoChar((char) 0);
@@ -57,6 +64,7 @@ public class LoginController {
             }
         });
         
+        // Abrir dialog de recuperación de contraseña
         view.getLblForgotPassword().addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
             	
@@ -66,19 +74,23 @@ public class LoginController {
             }
         });
 
+        // Efectos visuales al seleccionar los campos
         FormUtils.addFocusEffect(view.getTxtEmail(), view.getLblEmailError());
         FormUtils.addFocusEffect(view.getTxtPassword(), view.getLblPasswordError());
     }
     
+    // restricciones de entrada para los campos
 	private void initInputRestrictions() {
 		Validator.noSpaces(view.getTxtEmail());
 		Validator.restrictedPassword(view.getTxtPassword());
 	}
 	
+	// Procesa el intento de inicio de sesión
     private void handleLogin() {
     	view.clearErrors();
     	boolean valid = true;
 
+    	// Validar los datos ingresados
     	if (!validateEmail()) valid = false;
     	if (!validatePassword()) valid = false;
 
@@ -89,6 +101,7 @@ public class LoginController {
     	String email = view.getEmail();
     	String password = view.getPassword();
 
+    	// Verificar las credenciales en la bd
     	User user = repository.login(email, password);
     	
         if (user == null) {
@@ -96,23 +109,28 @@ public class LoginController {
             return;
         }
 
+        // Guardar la sesión del usuario y abrir la ventana principal
         Session.login(user);
         new MainWindow(user);
 
+        // Cerrar la ventana de inicio de sesión
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) {
             window.dispose();
         }
     }
 
+    // Abre la ventana de registro de usuarios
     private void handleRegister() {
         RegistrationWindow reg = new RegistrationWindow();
         new RegistrationController(reg.getRegistrationView());
 
+        // Cerrar la ventana actual
         Window window = SwingUtilities.getWindowAncestor(view);
         if (window != null) window.dispose();
     }
 	
+    // Valida que la contraseña haya sido ingresada
     public boolean validatePassword() {
         view.clearWrongError();
         String password = view.getPassword();
@@ -126,6 +144,7 @@ public class LoginController {
         return true;
     }
     
+    // Valida que el correo tenga un formato correcto
     public boolean validateEmail() {
         view.clearWrongError();
         String email = view.getEmail();

@@ -83,11 +83,10 @@ public class RoomCard extends RoundedPanel {
 
         List<Amenity> amenities = room.getAmenities();
 
+        //crear un maximo de 4 amenidades
         for (int i = 0; i < Math.min(4, amenities.size()); i++) {
 
-            JPanel featureItem = new JPanel(
-                new FlowLayout(FlowLayout.LEFT, 5, 0)
-            );
+            JPanel featureItem = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
             featureItem.setOpaque(false);
 
             JLabel icon = new JLabel(
@@ -97,8 +96,9 @@ public class RoomCard extends RoundedPanel {
                 )
             );
 
-            String amenityName = amenities.get(i).getName();
+            String amenityName = amenities.get(i).getName(); //nombre de la amenidad
 
+            //acortar si está muy largo el nombre
             if (amenityName.length() > 15) {
                 amenityName =
                     amenityName.substring(0, 12) + "...";
@@ -124,19 +124,7 @@ public class RoomCard extends RoundedPanel {
             "/assets/img/btn-icons/button-reserve-icon.png",
             "Reservar habitación"
         );
-        /*
-        boolean available =
-    	    new RoomRepository().hasActiveRoomsByType(
-    	        room.getTypeId()
-    	    );
 
-    	if(!available) {
-    	    btnReserve.setEnabled(false);
-    	    btnReserve.setToolTipText("No hay habitaciones disponibles de este tipo");
-    	    btnReserve.setText("No disponible");
-    	    btnReserve.setBackground(UIColors.FIELD_BORDER);
-    	}*/
-        
         btnDetails = ButtonFactory.createGoldButton(
             "Ver detalles",
             "/assets/img/btn-icons/button-search-icon.png",
