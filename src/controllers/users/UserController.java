@@ -14,6 +14,7 @@ import tablemodels.UserTableModel;
 import views.users.UserFormDialog;
 import views.users.UsersView;
 
+//Controla el panel de admin de usuarios. cargar datos, abrir formulario, editar, eliminar y exportar pdf
 public class UserController {
 
 	private UsersView view;
@@ -36,6 +37,8 @@ public class UserController {
 		view.getBtnPdf().addActionListener(e -> generatePdf());
 	}
 	
+    // Si el modelo todavía no existe lo crea y lo asigna a la tabla,
+    // si ya existe solo actualiza sus datos
 	public void loadUsers() {	
 		try {
 			List<User> users = repo.getUsers();
@@ -52,6 +55,9 @@ public class UserController {
 		}
 	}
 	
+    // Abre el formulario para crear o editar
+    // Después de cerrar el dialog, si se guardo algo, aplica los cambios
+    // en la bd y refresca la tabla y las vistas relacionadas
 	private void openForm(User user) {
 		UserFormDialog dialog = new UserFormDialog(null, user);
 		new UserFormController(dialog);
@@ -63,10 +69,13 @@ public class UserController {
 			try {
 				//Añadir nuevo
 				if(user == null) {
+                    // CREAR. guardar en la bd y agregar solo esa fila
 					repo.save(savedUser);
 					model.addRow(savedUser); //Agrega el registro a la tabla
 				}else {
-					//Editar existente
+					//Editar. recuperar el id original del modelo porque el diálogo no lo guarda,
+                    // asignarselo al objeto modificado y actualizar solo esa fila
+
 					int row = view.getSelectedModelRow();
 					User originalUser = model.getUserAt(row);
 					savedUser.setId(originalUser.getId());
@@ -76,8 +85,6 @@ public class UserController {
 						model.updateRow(row, savedUser); //Actualiza el registro de la tabla
 					}
 				}
-				//Ya no actualizamos toda la tabla
-				//loadUsers();
 			}catch(Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(view, e.getMessage());
@@ -100,6 +107,8 @@ public class UserController {
 		openForm(model.getUserAt(row));
 	}
 	
+    // crea el pdf con la lista de usuarios y lo abre automaticamente si el sistema lo soporta
+    // El archivo de destino lo elige el usuario desde la vista con un selector de archivos
 	public void generatePdf() {
 		File file = view.selectPdfFile();
 		
@@ -109,6 +118,8 @@ public class UserController {
 		
 		try {
 			pdfExporter.exportUsers(repo.getUsers(), file);
+			
+            // Abrir el pdf automaticamente con el visor predeterminado del sistema
 			if(Desktop.isDesktopSupported()) {
 				Desktop.getDesktop().open(file);
 			}
@@ -118,6 +129,8 @@ public class UserController {
 		}	
 	}
 	
+    // Elimina el usuario seleccionado, pero primero revisa que no tenga reservaciones registradas
+    // para no dejar reservaciones sin usuario valido en la bd
 	private void deleteUser(){
 
 	    int row = view.getSelectedModelRow();
@@ -134,6 +147,9 @@ public class UserController {
 	    
 	    User user = model.getUserAt(row);
 
+        // Bloquear el eliminar si el usuario tiene reservaciones, aunque esten canceladas o completadas,
+        // para no romper el historial de pagos conectadoss a esas reservaciones
+
 	    ReservationRepository reservationRepo = new ReservationRepository();
 
 	    if(reservationRepo.hasReservationsByUser(user.getId())){
@@ -149,6 +165,7 @@ public class UserController {
 	    boolean deleted = repo.delete(model.getUserAt(row).getId());
 
 	    if(deleted){
+            // Quitar solo la fila eliminada del modelo sin recargar toda la tabla
 	        model.removeRow(row);
 	    }
 	}

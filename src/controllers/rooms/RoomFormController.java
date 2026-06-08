@@ -27,6 +27,8 @@ public class RoomFormController {
 		initListeners();
 	}
 
+    // Llena el combo de tipos de habitación con los datos de la bd
+    // Si es modo editar, selecciona el tipo que ya tenía la habitación buscandolo por typeId
 	private void loadRoomTypes(){
 		roomTypes = roomTypeRepository.getRoomTypes();
 
@@ -34,10 +36,12 @@ public class RoomFormController {
 			view.getComboRoomType().addItem(roomType.getName());
 		}
 
+		//en modo de editar
 		if(view.getRoom() != null){
 			
 			for(int i = 0; i < roomTypes.size(); i++){
 				
+				//busca el tipo actual por typeId, y seleccionarlo en el combo (+1 por el placeholder)
 				if(roomTypes.get(i).getTypeId() == view.getRoom().getTypeId()){
 					view.getComboRoomType().setSelectedIndex(i+1);
 					break;
@@ -56,6 +60,10 @@ public class RoomFormController {
 		view.getComboStatus().addActionListener(e->validateStatus());
 	}
 
+    // Guarda la habitación nueva o actualiza la existente
+    // Primero valida el formulario, luego verifica que el numero de habitacion no esta duplicado,
+    // y después crea o modifica la Room
+
 	private void handleSave(){
 	    if(!validateForm()){
 	        return;
@@ -63,8 +71,10 @@ public class RoomFormController {
 
 	    int roomNumber = view.getRoomNumber();
 	    
-	    //VALIDACIÓN ANTES DE CREAR EL OBJETO
+        // Verificar numero duplicado antes de crear el objeto
 	    if(view.getRoom() == null){
+	    	
+            // Al crear. el número no puede existir en ninguna otra habitación
 	        if(roomRepository.existsRoomNumber(roomNumber)){
 	            JOptionPane.showMessageDialog(
 	                null,
@@ -76,11 +86,11 @@ public class RoomFormController {
 	            return;
 	        }
 	    }else{
-	        // Al editar, permitir mismo número si es el mismo registro
+            // Al editar, el número puede ser el mismo del registro actual,
+            // pero no puede coincidir con el de otra habitación diferente
 	        Room current = view.getRoom();
 
-	        if(current.getRoomNumber() != roomNumber &&
-	           roomRepository.existsRoomNumber(roomNumber)){
+	        if(current.getRoomNumber() != roomNumber && roomRepository.existsRoomNumber(roomNumber)){
 	            JOptionPane.showMessageDialog(
 	                null,
 	                "Ese número ya está en uso",
@@ -92,7 +102,7 @@ public class RoomFormController {
 	        }
 	    }
 
-	    // DESPUÉS DE VALIDAR, CREAR EL ROOM
+        // Se resta 1 al índice del combo, por el placeholder en la posición 0
 	    int index = view.getComboRoomType().getSelectedIndex()-1;
 
 	    RoomType roomType = roomTypes.get(index);
@@ -101,26 +111,8 @@ public class RoomFormController {
 
 	    Room room = view.getRoom();
 	    
-	    /*
-	    ReservationRepository reservationRepo = new ReservationRepository();
-
-	    if (room != null) {
-
-	        boolean hasActiveReservation =
-	            reservationRepo.hasActiveReservation(room.getRoomId());
-
-	        String status = view.getStatus();
-
-	        if (hasActiveReservation && status.equals(RoomStatus.OUT_OF_SERVICE)) {
-	            JOptionPane.showMessageDialog(
-	                null,
-	                "No puedes poner fuera de servicio una habitación con reservas activas"
-	            );
-	            return;
-	        }
-	    }*/
-	    
 	    if(room == null){
+            // Crear nueva habitación con id 0 (la bd asigna el definitivo)
 	        room = new Room(
 	            0,
 	            roomNumber,
@@ -129,12 +121,14 @@ public class RoomFormController {
 	            view.getStatus()
 	        );
 	    }else{
+            // Actualizar los campos de la habitación existente
 	        room.setRoomNumber(roomNumber);
 	        room.setFloor(view.getFloor());
 	        room.setTypeId(typeId);
 	        room.setStatus(view.getStatus());
 	    }
 
+        // Pasar el objeto actualizado a la vista y cerrar el dialog
 	    view.setSaved(true);
 	    view.setRoom(room);
 	    view.dispose();

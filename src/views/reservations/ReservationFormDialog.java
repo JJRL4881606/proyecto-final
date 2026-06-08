@@ -33,6 +33,8 @@ import utils.FormUtils;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+// Dialog para crear o editar una reservación desde el panel de admin
 public class ReservationFormDialog extends JDialog {
 
     private JComboBox<String> comboUser;
@@ -69,6 +71,7 @@ public class ReservationFormDialog extends JDialog {
     
     private JLabel lblPayment;
     
+    // indica si el usuario guardó o cerró sin guardar (lo usa quien abre el diálogo)
     private boolean saved = false;
     
     private final int FIELD_WIDTH = 300;
@@ -84,11 +87,17 @@ public class ReservationFormDialog extends JDialog {
             e.printStackTrace();
         }
         
+        // Se incluyen las habitaciones activas + la habitación de la reservación que se está editando
+       
+        // Obtiene todas las habitaciones, las filtra
         rooms = new RoomRepository().getRooms().stream().filter(room -> {
+        		
+        	//si está editando una reservación y esta habitación es la que ya tiene asignada la reservación, la incluye aunque no esté activa
 	        if(reservation != null && room.getRoomId() == reservation.getRoomId()){
 	            return true;
 	        }
-
+	        
+	        // Para todas las demás habitaciones solo incluir las que estén activas
 	        return room.getStatus().equals(
 	            RoomStatus.ACTIVE
 	        );
@@ -115,7 +124,9 @@ public class ReservationFormDialog extends JDialog {
         panel.add(new JLabel("Formulario reservación"));
         return panel;
     }
-
+    
+    // Arma el formulario con todos sus campos
+    // La sección de pago solo se agrega cuando es una reservación nueva, porque al editar el pago ya existe
     private JScrollPane createFormPanel() {
     	JPanel panel = new JPanel();
         panel.setBackground(UIColors.CARD);
@@ -128,6 +139,7 @@ public class ReservationFormDialog extends JDialog {
 		scroll.setHorizontalScrollBar(null);
 		scroll.getVerticalScrollBar().setUnitIncrement(14);
 
+        // Construir el arreglo de nombres completos para el combo, índice 0 es el placeholder
         String[] userNames = new String[users.size()+1];
         userNames[0] = "Seleccione un usuario";
 
@@ -139,6 +151,7 @@ public class ReservationFormDialog extends JDialog {
         lblUserError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Usuario", comboUser, lblUserError, "", FIELD_WIDTH));
 
+        // Mostrar número de habitación + nombre del tipo
         String[] roomNames = new String[rooms.size()+1];
         roomNames[0]="Seleccione una habitación";
 
@@ -178,6 +191,7 @@ public class ReservationFormDialog extends JDialog {
         lblTotalError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Total", txtTotal, lblTotalError, "Ingrese el total", FIELD_WIDTH));
         
+        // La sección de pago solo aparece al crear una nueva reservación
         if(reservation == null) {
             lblPayment = new JLabel("Pago de la reservación");
             lblPayment.setFont(AppFont.big());
@@ -216,6 +230,7 @@ public class ReservationFormDialog extends JDialog {
 		return panel;
 	}
 
+    // Rellena los campos con los datos de la reservacion existente,solo se llama al editar
     private void loadData(){
 
         if(reservation == null){
@@ -230,7 +245,17 @@ public class ReservationFormDialog extends JDialog {
         comboStatus.setSelectedItem(reservation.getStatus());
         txtTotal.setText(String.valueOf(reservation.getTotal()));
     }
+    
+    public int confirmCancel(){
+        return JOptionPane.showConfirmDialog(
+            null,
+            "¿Seguro que deseas cancelar?",
+            "Confirmar",
+            JOptionPane.YES_NO_OPTION
+        );
+    }
 
+    // Busca la posicion del usuario en la lista para seleccionarlo en el combo (+ 1 por el placeholder)
     private int findUserIndex(int id) {
         for(int i = 0; i < users.size(); i++){
             if(users.get(i).getId() == id){
@@ -240,6 +265,7 @@ public class ReservationFormDialog extends JDialog {
         return 0;
     }
 
+    // Busca la posicion de la habitación en la lista para seleccionarla en el combo (+1 por el placeholder)
     private int findRoomIndex(int id) {
         for(int i = 0; i < rooms.size(); i++){
             if(rooms.get(i).getRoomId() == id){
@@ -249,6 +275,7 @@ public class ReservationFormDialog extends JDialog {
         return 0;
     }
 
+    // Se resta 1 al indice para compensar el placeholder en la posiciion 0
     public int getUserId() {
         return users.get(comboUser.getSelectedIndex()-1).getId();
     }
@@ -257,12 +284,21 @@ public class ReservationFormDialog extends JDialog {
         return rooms.get(comboRoom.getSelectedIndex()-1).getRoomId();
     }
 
+    //getters y setters
     public JSpinner getSpCheckIn() { return spCheckIn; }
     public JSpinner getSpCheckOut() { return spCheckOut; }
     public JSpinner getSpGuests() { return spGuests; }
     public JTextField getTxtTotal() { return txtTotal; }
 
     public JComboBox<String> getComboStatus() { return comboStatus; }
+    
+    public JComboBox<String> getComboUser(){
+        return comboUser;
+    }
+
+    public JComboBox<String> getComboRoom(){
+        return comboRoom;
+    }
     
     public JComboBox<String> getComboPaymentMethod() { return comboPaymentMethod; }
     public JCheckBox getChkTerms() { return chkTerms; }
@@ -289,13 +325,13 @@ public class ReservationFormDialog extends JDialog {
         return Double.parseDouble(txtTotal.getText());
     }
     
-	//LABELS ERROR
+    // Limpia todos los mensajes de error del formulario
+    //los campos de pago solo se limpian si existen
 	public void clearErrors() {
 		clearUserError();
 		clearRoomError();
 		clearGuestsError();
 		clearStatusError();
-		clearTotalError();
 		clearCheckOutError();
 		clearCheckInError();
 		
@@ -303,11 +339,9 @@ public class ReservationFormDialog extends JDialog {
 		if(chkPolicies != null) { clearPoliciesError(); }
 		if(comboPaymentMethod != null) { clearPaymentMethodError(); }
 	}
-	
-    public JLabel getLblTotalError(){
-        return lblTotalError;
-    }
     
+	//setters y clears errores
+	
     public void setGuestsError(String msg){
         lblGuestsError.setText(msg);
         spGuests.setBorder(FormUtils.redBorder);
@@ -316,10 +350,6 @@ public class ReservationFormDialog extends JDialog {
     public void clearGuestsError(){
         FormUtils.clearError(lblGuestsError,spGuests);
     }
-
-    public void setTotalError(String msg){ }
-
-    public void clearTotalError(){ }
 
     public void setCheckOutError(String msg){
         lblCheckOutError.setText(msg);
@@ -379,36 +409,15 @@ public class ReservationFormDialog extends JDialog {
 	    lblTermsError.setText(msg);
 	}
 	
-	public void setPoliciesError(String msg) {
-	    lblPoliciesError.setText(msg);
-	}
-
 	public void clearTermsError(){
 	    lblTermsError.setText("");
+	}
+	
+	public void setPoliciesError(String msg) {
+	    lblPoliciesError.setText(msg);
 	}
 
 	public void clearPoliciesError(){
 	    lblPoliciesError.setText("");
 	}
-	
-    public int confirmCancel(){
-        return JOptionPane.showConfirmDialog(
-            null,
-            "¿Seguro que deseas cancelar?",
-            "Confirmar",
-            JOptionPane.YES_NO_OPTION
-        );
-    }
-    
-    
-    public JComboBox<String> getComboUser(){
-        return comboUser;
-    }
-
-    public JComboBox<String> getComboRoom(){
-        return comboRoom;
-    }
-
-    
-    
 }

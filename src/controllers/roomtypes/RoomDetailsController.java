@@ -9,14 +9,15 @@ import javax.swing.SwingUtilities;
 
 import utils.Session;
 
+// Controla la pantalla de detalle de habitacion
+//solo sirve manejar el botón de reservar
+
 public class RoomDetailsController {
 
     private RoomDetailsView view;
 
     public RoomDetailsController(RoomDetailsView view){
-
         this.view = view;
-
         initListeners();
     }
 
@@ -24,6 +25,7 @@ public class RoomDetailsController {
 
     	view.getBtnReserve().addActionListener(e -> {
 
+            // No hacer nada si todavia no se cargó un roomtype
     	    if(view.getRoomType() == null){
     	        return;
     	    }

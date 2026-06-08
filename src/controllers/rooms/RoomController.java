@@ -20,7 +20,9 @@ public class RoomController {
 	private RoomsView view;
 	private RoomRepository repo;
 	private RoomTableModel model;
-	private MainView mainView; //para actualizar visualmente cambios en las vistas (showRooms)
+	
+    // se necesita para refrescar otras partes del programa cuando cambian las habitaciones (showRooms)
+	private MainView mainView;
 
 	public RoomController(RoomsView view, MainView mainView){
 		this.view = view;
@@ -36,6 +38,9 @@ public class RoomController {
 		view.getBtnDelete().addActionListener(e -> { handleDelete(); });
 	}
 
+    // Si el modelo todavía no existe lo crea y lo asigna a la tabla,
+    // si ya existe solo actualiza sus datos
+    // También necesita la lista de roomTypes para mostrar el nombre del tipo en la tabla
 	public void loadRooms() {
 	    List<Room> rooms = repo.getRooms();
 	    List<RoomType> roomTypes = new RoomTypeRepository().getRoomTypes();
@@ -48,6 +53,9 @@ public class RoomController {
 	    }
 	}
 	
+    // Abre el formulario para crear o editar (room con datos)
+    // Después de cerrar el dialog, si se guardó algo, aplica los cambios
+    // en la bd, en la tabla y refresca las vistas relacionadas
 	private void openForm(Room room){
 		RoomFormDialog dialog = new RoomFormDialog(null, room);
 		new RoomFormController(dialog);
@@ -58,16 +66,23 @@ public class RoomController {
 
 			try{
 				if(room == null){
-					
+                    // CREAR. guardar en la base de datos, agregar la fila a la tabla
 					repo.save(savedRoom);
 					model.addRow(savedRoom);
+                    // refrescar otras vistas que muestran habitaciones
 					mainView.refreshRoomViews();
 					
 				}else{
+                    // EDITAR. recuperar el id original del modelo porque el dialog
+                    // no lo guarda, y asignarselo al objeto modificado antes de actualizar
+
 					int row = view.getSelectedModelRow();
 					Room originalRoom = model.getRoomAt(row);
 					
 					savedRoom.setRoomId(originalRoom.getRoomId());
+
+                    // Bloquear el cambio a out of service si la habitación tiene reservas activas,
+                    // porque eso deja reservaciones confirmadas sin habitación disponible
 
 					ReservationRepository reservationRepo = new ReservationRepository();
 
@@ -82,6 +97,7 @@ public class RoomController {
 					    return;
 					}
 
+                    // Si la actualización salió bien, reflejar el cambio en la tabla
 					boolean updated = repo.update(savedRoom);
 					
 					if(updated){
@@ -115,6 +131,8 @@ public class RoomController {
 		openForm(model.getRoomAt(row));
 	}
 
+    // Elimina la habitación seleccionada, pero primero checa que no tenga
+    // reservaciones asociadas (esten activas o solo en el historial) para no dejar datos huérfanos
 	private void handleDelete(){
 
 	    int row = view.getSelectedModelRow();
@@ -133,6 +151,9 @@ public class RoomController {
 
 	    Room room = model.getRoomAt(row);
 
+        // No se puede eliminar si tiene reservaciones, aunque estén canceladas o completadas,
+        // porque se rompería el historial de pagos vinculado a esas reservaciones
+
 	    ReservationRepository reservationRepo = new ReservationRepository();
 
     	if(reservationRepo.hasReservationsByRoom(room.getRoomId())){
@@ -149,6 +170,7 @@ public class RoomController {
 	    boolean deleted = repo.delete(room.getRoomId());
 
 	    if(deleted){
+            // Quitar la fila de la tabla y refrescar las vistas que muestran habitaciones
 	        model.removeRow(row);
 	        mainView.refreshRoomViews();
 	    }

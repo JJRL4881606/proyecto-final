@@ -17,6 +17,8 @@ import models.RoomType;
 import utils.AppFont;
 
 @SuppressWarnings("serial")
+
+//Pantalla que muestra todas las habitaciones disponibles como tarjetas en un grid flexible
 public class ShowRoomsView extends JPanel {
 
     private JPanel roomsContainer;
@@ -39,6 +41,7 @@ public class ShowRoomsView extends JPanel {
         
         add(Box.createRigidArea(new Dimension(0,20)));
 
+        // WrapLayout hace que las tarjetas pasen a la siguiente fila automaticamente si no caben
         roomsContainer = new JPanel(new WrapLayout(FlowLayout.CENTER, 20, 20));
         roomsContainer.setOpaque(false);
         roomsContainer.setMaximumSize( new Dimension(1200, Integer.MAX_VALUE));
@@ -47,6 +50,8 @@ public class ShowRoomsView extends JPanel {
         add(Box.createRigidArea(new Dimension(0,20)));
     }
 
+    // Reemplaza las cards mostradas con la nueva lista de habitaciones
+    // Si la lista viene vacia muestra un mensaje en lugar de las cards
     public void setRooms(List<RoomType> rooms){
         roomsContainer.removeAll();
         roomCards.clear();
@@ -68,6 +73,7 @@ public class ShowRoomsView extends JPanel {
             }
         }
 
+        // refrescar panel para que los cambios se vean
         roomsContainer.revalidate();
         roomsContainer.repaint();
     }

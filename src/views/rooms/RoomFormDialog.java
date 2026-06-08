@@ -23,6 +23,9 @@ import utils.FormUtils;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+//Diálogo para crear o editar una habitación
+//Si se pasa null crea una nueva; si se pasa una Room existente la edita
 public class RoomFormDialog extends JDialog {
 
     private JSpinner spRoomNumber;
@@ -40,7 +43,9 @@ public class RoomFormDialog extends JDialog {
 
     private Room room;
 
+    // indica si el usuario guardó o cerró sin guardar
     private boolean saved = false;
+    
     private int fieldWidth = 300;
 
     public RoomFormDialog(JFrame parent, Room room) {
@@ -89,6 +94,7 @@ public class RoomFormDialog extends JDialog {
         panel.add(FormUtils.createField("Piso", spFloor, lblFloorError, "Ingrese piso", fieldWidth));
 
         //TIPO HABITACION
+        // El combo de tipos se llena desde el controlador porque necesita consultar la bd
         String[] options = {"Seleccione tipo"};
         comboRoomType = FormUtils.createCombo(options);
         lblRoomTypeError = FormUtils.createErrorLabel();
@@ -127,6 +133,8 @@ public class RoomFormDialog extends JDialog {
         return panel;
     }
 
+    // Rellena los campos con los datos de la habitación existente, solo se ejecuta al editar
+    // El roomType no se llena aquí sino en el controller, cuando ya están cargados los tipos
     private void loadData(){
         if(room != null){
             spRoomNumber.setValue(room.getRoomNumber());

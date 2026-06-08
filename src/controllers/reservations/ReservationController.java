@@ -9,6 +9,7 @@ import tablemodels.ReservationTableModel;
 import views.reservations.ReservationFormDialog;
 import views.reservations.ReservationsView;
 
+//Controla el panel de administración de reservaciones. cargar datos, abrir formulario, editar y eliminar
 public class ReservationController {
 
     private ReservationsView view;
@@ -27,6 +28,8 @@ public class ReservationController {
         view.getBtnDelete().addActionListener(e -> handleDelete());
     }
 
+    // Si el modelo todavía no existe lo crea y lo asigna a la tabla
+    // si ya existe solo actualiza sus datos 
     public void loadReservations() {
         List<Reservation> reservations = repo.getReservations();
 
@@ -38,6 +41,8 @@ public class ReservationController {
         }
     }
 
+    // Abre el formulario en dialog. si se guardó algo, recarga la tabla para ver los cambios
+    // Se usa tanto para agregar  como editar 
     private void openForm(Reservation reservation) {
         ReservationFormDialog dialog = new ReservationFormDialog(null, reservation);
         new ReservationFormController(dialog);
@@ -58,7 +63,9 @@ public class ReservationController {
         }
         openForm(model.getReservationAt(row));
     }
-
+    
+    // Solo permite eliminar reservaciones canceladas, las confirmadas o completadas están protegidas
+    // porque eliminarlas afectaría el historial de pagos y disponibilidad de habitaciones
     private void handleDelete() {
 
         int row = view.getSelectedModelRow();
@@ -69,8 +76,7 @@ public class ReservationController {
 
         Reservation r = model.getReservationAt(row);
 
-        if (r.getStatus().equals(ReservationStatus.CONFIRMED) ||
-            r.getStatus().equals(ReservationStatus.COMPLETED)) {
+        if (r.getStatus().equals(ReservationStatus.CONFIRMED) || r.getStatus().equals(ReservationStatus.COMPLETED)) {
 
             JOptionPane.showMessageDialog(null,
                 "No puedes eliminar una reservación activa o completada"

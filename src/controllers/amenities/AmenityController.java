@@ -30,7 +30,6 @@ public class AmenityController {
 
     //cargar amenities desde la bd
     public void loadAmenities(){
-
         List<Amenity> amenities=repo.getAmenities();
 
         if(model == null){

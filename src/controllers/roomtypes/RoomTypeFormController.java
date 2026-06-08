@@ -38,7 +38,10 @@ public class RoomTypeFormController {
 	    view.getBtnSelectImage().addActionListener(e->{selectImage();});
 		view.getSpCapacity().addChangeListener(e -> validateCapacity());
         view.getComboBedType().addActionListener(e -> validateBedType());
+        
+		view.getBtnExtraImages().addActionListener( e->selectExtraImages() );
 
+        //document listeners para validar tiempo real
 		view.getTxtName().getDocument().addDocumentListener(new DocumentListener(){
 			public void insertUpdate(DocumentEvent e){validateName();}
 			public void removeUpdate(DocumentEvent e){validateName();}
@@ -56,9 +59,7 @@ public class RoomTypeFormController {
 			public void removeUpdate(DocumentEvent e){validateDescription();}
 			public void changedUpdate(DocumentEvent e){validateDescription();}
 		});
-		
-		view.getBtnExtraImages().addActionListener( e->selectExtraImages() );
-		
+				
 		FormUtils.addFocusEffect(view.getTxtName(),view.getLblNameError());
 		FormUtils.addFocusEffect(view.getTxtPrice(),view.getLblPriceError());
 		FormUtils.addFocusEffect(view.getTxtDescription(),view.getLblDescriptionError());
@@ -66,11 +67,16 @@ public class RoomTypeFormController {
 		FormUtils.addFocusEffect(view.getTxtExtraImages(),view.getLblExtraImagesError());
 	}
 
+	//restricciones de los campos
 	private void initInputRestrictions(){
 		Validator.onlyLetters(view.getTxtName());
 		Validator.onlyDecimalNumbers(view.getTxtPrice());
 	}
 	
+    // Valida el formulario y si todo esta bien crea o actualiza el RoomType
+    // Si es nuevo lo construye con todos los datos del formulario
+    // si es edición actualiza cada campo del objeto existente
+    // En los 2 casos convierte el texto de imagens extra a un List<RoomImage>
 	private void handleSave(){
 		if(!validateForm()){
 			return;
@@ -79,7 +85,7 @@ public class RoomTypeFormController {
 		RoomType roomType = view.getRoomType();
 
 		if(roomType == null){
-
+            // Crear nuevo tipo de habitación con los datos del formulario
 			roomType = new RoomType(
 			    0,
 			    view.getName(),
@@ -96,6 +102,7 @@ public class RoomTypeFormController {
 		    	)
 			);
 		}else{
+            // Actualizar cada campo del tipo existente
 			roomType.setName(view.getName());
 			roomType.setBedType(view.getBedType());
 			roomType.setCapacity(view.getCapacity());
@@ -122,6 +129,10 @@ public class RoomTypeFormController {
 		}
 	}
 
+    // Abre un selector de archivo para la imagen principal del tipo de habitación
+    // Copia el archivo seleccionado a src y bin
+    // Guarda la ruta en el campo de texto y muestra una prevista en el formulario
+    // y recuerda la ultima carpeta usada para que el selector la abra la siguiente vez
 	private void selectImage(){
 		String lastFolder = Config.get(
             "room.image.folder",
@@ -149,10 +160,8 @@ public class RoomTypeFormController {
 	    try{
 	        File selected = chooser.getSelectedFile();
 	        
-	        Config.set(
-        	    "room.image.folder",
-        	    selected.getParent()
-        	);
+            // Guardar la carpeta para que el selector la recuerde la siugiente vez
+	        Config.set("room.image.folder", selected.getParent());
 	        
 	        String fileName = selected.getName();
 
@@ -162,6 +171,8 @@ public class RoomTypeFormController {
 	        srcFolder.mkdirs();
 	        binFolder.mkdirs();
 
+	        //copiar a src y bin
+	        
 	        File srcDestination =new File(srcFolder,fileName);
 	        File binDestination =new File(binFolder,fileName);
 
@@ -177,11 +188,13 @@ public class RoomTypeFormController {
 	                StandardCopyOption.REPLACE_EXISTING
 	        );
 	        
+	        //ruta que se guarda en la bd
 	        String dbPath = "/assets/img/rooms/" + fileName;
 	        view.getTxtImagePath().setText(dbPath);
 	        
 	        validateImage();
 
+	        //mostrar la preview de la img
 	        ImageIcon icon = new ImageIcon(srcDestination.getAbsolutePath());
 	        Image image = icon.getImage().getScaledInstance(220, 120, Image.SCALE_SMOOTH);
 	        view.getLblPreview().setIcon(new ImageIcon(image));
@@ -192,6 +205,7 @@ public class RoomTypeFormController {
 	    }
 	}
 	
+    // Igual que selectImage pero deja elegir varias imagenes a la vez
 	private void selectExtraImages(){
 
 	    String lastFolder = Config.get(
@@ -200,9 +214,10 @@ public class RoomTypeFormController {
 	    );
 
 	    JFileChooser chooser = new JFileChooser(lastFolder);
+	    
+        // Habilitar seleccionar varias a la vez para el carrusel de fotos extras
 	    chooser.setMultiSelectionEnabled(true);
 	    chooser.setAcceptAllFileFilterUsed(false);
-
 	    chooser.setFileFilter(new FileNameExtensionFilter(
 	        "Imágenes (*.png, *.jpg, *.jpeg)",
 	        "png","jpg","jpeg"
@@ -235,6 +250,7 @@ public class RoomTypeFormController {
 
 	            String dbPath = "/assets/img/rooms/" + fileName;
 
+                // Agregar | entre rutas, pero no antes de la primera
 	            if(paths.length() > 0) {
 	                paths.append("|");
 	            }
@@ -250,6 +266,8 @@ public class RoomTypeFormController {
 	    }
 	}
 	
+    // Convierte el string de rutas separadas por | en una lista de RoomImage
+    // Si el texto está vacio devuelve una lista vacia, ignora rutas nulas o vacia
 	private List<RoomImage> parseExtraImages(String text){
 
 	    List<RoomImage> images = new ArrayList<>();
@@ -323,6 +341,9 @@ public class RoomTypeFormController {
 	    return true;
 	}
 	
+    // Valida que el precio no sea vacio, sea un numero valido y sea mayor a 0
+    // El trycatch maneja el caso donde el texto no se puede convertir a double
+
 	public boolean validatePrice(){
 	    String price = view.getTxtPrice().getText().trim();
 

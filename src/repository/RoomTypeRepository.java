@@ -347,7 +347,7 @@ public class RoomTypeRepository {
     }
     
     // Método para obtener los tipos de habitación visibles
-    // Solo muestra aquellos que tienen habitaciones activas
+    // Solo muestra los roomtypes que tienen habitaciones activas
     
     public List<RoomType> getVisibleRoomTypes(){
 

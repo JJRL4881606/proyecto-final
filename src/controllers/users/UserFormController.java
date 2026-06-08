@@ -2,6 +2,7 @@ package controllers.users;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
@@ -37,7 +38,7 @@ public class UserFormController {
         view.getRbtnFemale().addActionListener(e -> validateGender());
         view.getComboRole().addActionListener(e -> validateRole());
         
-        // DOCUMENT LISTENERs
+        // DOCUMENT LISTENERs para validar en tiempo real
         view.getTxtName().getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent e) { validateName(); }
             public void removeUpdate(DocumentEvent e) { validateName(); }
@@ -56,6 +57,7 @@ public class UserFormController {
             public void changedUpdate(DocumentEvent e) { validateEmail(); }
         });
         
+        // el campo contraseña solo existe al crear un usuario nuevo
         if(view.getTxtPassword() != null) {
 	        view.getTxtPassword().getDocument().addDocumentListener(new DocumentListener() {
 	            public void insertUpdate(DocumentEvent e) { validatePassword(); }
@@ -72,10 +74,11 @@ public class UserFormController {
             public void changedUpdate(DocumentEvent e) { validatePhone(); }
         });
         
+        // Checkbox para mostrar/ocultar contraseña
         if(view.getChkShowPassword() != null) {
             view.getChkShowPassword().addActionListener(e -> {
                 if(view.getChkShowPassword().isSelected()) {
-                    view.getTxtPassword().setEchoChar((char) 0);
+                    view.getTxtPassword().setEchoChar((char) 0); // char0 elimina el carácter de ocultamiento
                 } else {
                     view.getTxtPassword().setEchoChar('•');
                 }
@@ -88,6 +91,7 @@ public class UserFormController {
 	    FormUtils.addFocusEffect(view.getTxtPhone(), view.getLblPhoneError());
 	}
 	 
+	//restriccion de campos
 	private void initInputRestrictions() {
 		Validator.onlyLetters(view.getTxtName());
 		Validator.onlyLetters(view.getTxtSurname());
@@ -96,6 +100,8 @@ public class UserFormController {
 		FormUtils.onlyDateNumbers(view.getSpBirthDate());
 	}
 	
+    // Valida el formulario , si está bien crea o actualiza el user
+    // Al crear se incluye la contraseña, al editar no se toca porque eso no se modifica aqui
 	private void handleSave() {
 	    if (!validateForm()) {
 	        return;
@@ -104,6 +110,8 @@ public class UserFormController {
 	    User user = view.getUser();
 
 	    if (user == null) {
+	    	
+            // Crear nuevo usuario con todos los datos del formulario, incluye contraseña
 	        user = new User(
 	            view.getName(),
 	            view.getSurname(),
@@ -116,6 +124,8 @@ public class UserFormController {
 	            view.getRole()
 	        );
 	    } else {
+	    	
+            // Al editar solo se actualizan los datos editables, la contraseña no se toca
 	        user.setName(view.getName());
 	        user.setSurname(view.getSurname());
 	        user.setEmail(view.getEmail());
@@ -186,6 +196,8 @@ public class UserFormController {
 		return true;
 	}
 	
+    // Si el campo no existe es porque estamos editando, en ese caso siempre regresa true
+    // La contraseña ocupa minmimo 8 caracteres
 	public boolean validatePassword() {
 
 	    if(view.getTxtPassword() == null) {
@@ -208,6 +220,8 @@ public class UserFormController {
 	    return true;
 	}
 	 
+    // Valida formato del email y consulta la bd para buscar duplicados
+    // Al editar, deja que el usuario mantenga su propio email sin marcarlo como duplicado
 	public boolean validateEmail() {
 	    String email = view.getEmail();
 
@@ -221,6 +235,8 @@ public class UserFormController {
 
 	    try {
 	        User currentUser = view.getUser();
+	        
+            // Solo checar duplicado si es usuario nuevo o si cambio su propio email
 	        if (currentUser == null || !currentUser.getEmail().equalsIgnoreCase(email)) {
 	            repository.validateDuplicateEmail(email);
 	        }
@@ -256,15 +272,16 @@ public class UserFormController {
 		return true;
 	}
 	 
+    // Convierte la fecha del spiner a localdate y calcula la edad
+    // Valida que no sea futura, que el usuario sea mayor de edad y no más de 120
 	public boolean validateBirthDate() {		 
 	    Date date = view.getBirthDate();
 
-	    LocalDate birthDate = date.toInstant()
-	            .atZone(java.time.ZoneId.systemDefault())
-	            .toLocalDate();
+	    LocalDate birthDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
 	    LocalDate today = LocalDate.now();
 
+        // calcula la diferencia exacta en años considerando el día de cumpleaños
 	    int age = Period.between(birthDate, today).getYears();
 	    
 	    if (birthDate.isAfter(today)) {

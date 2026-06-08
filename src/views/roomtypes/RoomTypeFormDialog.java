@@ -31,6 +31,9 @@ import utils.FormUtils;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+//dialog para crear o editar un tipo de habitacion
+//Si se pasa null crea uno nuevo, si se pasa un RoomType existente lo edita
 public class RoomTypeFormDialog extends JDialog {
 
     private JTextField txtName;
@@ -45,8 +48,9 @@ public class RoomTypeFormDialog extends JDialog {
     private List<JCheckBox> amenitiesChecks = new ArrayList<>();
     private List<Amenity> amenities = new ArrayList<>();
     
-    
     private JTextArea txtDescription;
+    
+    // Campo de texto que guarda las rutas de las imagenes extra separadas por |
     private JTextField txtExtraImages;
     private RoundedButton btnExtraImages;
 
@@ -63,6 +67,7 @@ public class RoomTypeFormDialog extends JDialog {
 
     private RoomType roomType;
 
+    // indica si el usuario guardó o cerró sin guardar
     private boolean saved = false;
     private int fieldWidth = 300;
 
@@ -129,7 +134,9 @@ public class RoomTypeFormDialog extends JDialog {
                 
         panel.add(FormUtils.createField("Descripción", txtDescription, lblDescriptionError, "Ingrese la descripción", fieldWidth));
 
-        //IMAGEN        
+        //  IMAGEN PRINCIPAL. botón para abrir el selector, campo con la ruta
+        // y una preview que aparece solo cuando ya hay imagen seleccionada
+ 
         JLabel lblImageTitle = new JLabel("Imagen");
         lblImageTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -165,7 +172,9 @@ public class RoomTypeFormDialog extends JDialog {
         panel.add(imagePanel);
         panel.add(Box.createRigidArea(new Dimension(0,20)));
         
-        //Imagenes adicionales
+        // imagenes extra. Deja seleccionar varias a la vez
+        // Las rutas se guardan en txtExtraImages separadas por |
+
         JLabel lblExtraImagesTitle = new JLabel("Imagenes extra");
         lblExtraImagesTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
         
@@ -184,7 +193,7 @@ public class RoomTypeFormDialog extends JDialog {
         panel.add(lblExtraImagesError);
         panel.add(Box.createRigidArea(new Dimension(0,20)));
 
-        //AMENIDADES
+        // sección de amenidades. se carga desde la bd y se muestra un checkbox por cada una
         JPanel amenityPanel = new JPanel();
         amenityPanel.setOpaque(false);
         amenityPanel.setLayout(new BoxLayout(amenityPanel, BoxLayout.Y_AXIS));
@@ -250,6 +259,9 @@ public class RoomTypeFormDialog extends JDialog {
         return panel;
     }
 
+    // Rellena todos los campos con los datos del tipo de habitación existente (solo al editar)
+    // Las imagenes extra se juntan en un solo string con | como separador
+    // Las amenidades se marcan comparando el nombre del checkbox con el de cada amenidad del tipo
     private void loadData(){
         if(roomType != null){
             txtName.setText(roomType.getName());
@@ -266,6 +278,7 @@ public class RoomTypeFormDialog extends JDialog {
                 lblPreview.setVisible(true);
             }
             
+            // Unir todas las rutas de imágenes extra con | para mostrarlas en el campo de texto
             String images = roomType.getExtraImages()
         	    .stream()
         	    .map(RoomImage::getImagePath)
@@ -274,6 +287,7 @@ public class RoomTypeFormDialog extends JDialog {
 
         	txtExtraImages.setText(images);
             	
+            // Marcar los checkboxes que su nombre coincide con una amenidad del tipo
             for(JCheckBox chk:amenitiesChecks) {
                 for(Amenity a:roomType.getAmenities()) {
                     if(chk.getText().equals(a.getName())) {
@@ -295,6 +309,21 @@ public class RoomTypeFormDialog extends JDialog {
         );
     }
 
+    // Recorre los checkboxes y devuelve solo las amenidades que están marcadas
+    public List<Amenity> getSelectedAmenities(){
+
+        List<Amenity> selected = new ArrayList<>();
+
+        for(int i=0;i<amenitiesChecks.size();i++) {
+            if(amenitiesChecks.get(i).isSelected()) {
+                selected.add(amenities.get(i)); {
+                }
+            }
+        }
+
+        return selected;
+    }
+    
     //GETTERS
     public String getName(){
         return txtName.getText().trim();
@@ -330,20 +359,6 @@ public class RoomTypeFormDialog extends JDialog {
 
     public boolean isFeatured(){
         return chkFeatured.isSelected();
-    }
-    
-    public List<Amenity> getSelectedAmenities(){
-
-        List<Amenity> selected = new ArrayList<>();
-
-        for(int i=0;i<amenitiesChecks.size();i++) {
-            if(amenitiesChecks.get(i).isSelected()) {
-                selected.add(amenities.get(i)); {
-                }
-            }
-        }
-
-        return selected;
     }
 
     public RoundedButton getBtnSave() {
@@ -396,6 +411,17 @@ public class RoomTypeFormDialog extends JDialog {
     }
     
     //LIMPIAR ERRORES
+
+    public void clearErrors(){
+    	clearNameError();
+    	clearBedTypeError();
+    	clearCapacityError();
+    	clearPriceError();
+    	clearImageError();
+        clearDescriptionError();
+        clearExtraImagesError();
+    }
+    
     public void clearNameError(){
     	FormUtils.clearError(lblNameError,txtName);
     }
@@ -422,18 +448,8 @@ public class RoomTypeFormDialog extends JDialog {
     public void clearExtraImagesError(){
         FormUtils.clearError(lblExtraImagesError,txtExtraImages);
     }
-
-    public void clearErrors(){
-    	clearNameError();
-    	clearBedTypeError();
-    	clearCapacityError();
-    	clearPriceError();
-    	clearImageError();
-        clearDescriptionError();
-        clearExtraImagesError();
-    }
     
-  //SETTERS ERRORES
+    //SETTERS ERRORES
     public void setNameError(String msg){
     	lblNameError.setText(msg);
     	txtName.setBorder(FormUtils.redBorder);

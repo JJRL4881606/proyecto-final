@@ -145,13 +145,21 @@ public class AmenitiesView extends JPanel {
         table.getColumnModel().getColumn(0).setCellRenderer(center);
         table.getColumnModel().getColumn(1).setCellRenderer(center);
     }
-
-    //getters
     
+    // Obtiene la fila seleccionada del modelo
     public int getSelectedModelRow() {
         int row = table.getSelectedRow();
-        return row == -1 ? -1 : table.convertRowIndexToModel(row);
+
+        // Si no hay una fila seleccionada
+        if(row == -1) {
+            return -1;
+        }
+
+        // Devuelve el índice real de la fila seleccionada
+        return table.convertRowIndexToModel(row);
     }
+
+    //getters
 
     public JTable getTable(){ return table; }
 

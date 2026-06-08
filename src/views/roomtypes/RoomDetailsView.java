@@ -30,6 +30,9 @@ import utils.UIColors;
 import utils.VisualUtils;
 
 @SuppressWarnings("serial")
+
+//Pantalla de detalle de un tipo de habitación: imagen principal, descripción,
+//precio, amenidades y carrusel de fotos adicionales
 public class RoomDetailsView extends JPanel {
 
     private JPanel imageContainer;
@@ -43,7 +46,7 @@ public class RoomDetailsView extends JPanel {
     private JTextArea lblDescription;
     private RoomType roomType;
     
-    //para que el panel de descripcion crezca segun necesite
+    // referencia al panel izquierdo para poder ajustar su altura cuando cambia la descripción
     private RoundedPanel bookingLeftPanel;
     
     private JPanel carouselPanel;
@@ -100,12 +103,15 @@ public class RoomDetailsView extends JPanel {
         return lblName;
     }
     
+    // Sección con descripción a la izquierda, y el precio y botón de reserva a la derecha
     private JPanel createBookingSection() {
 
         JPanel wrapper = new JPanel(new FlowLayout(FlowLayout.CENTER,40,0));
         wrapper.setOpaque(false);
 
         // izquierda
+        // Se guarda la referencia en bookingLeftPanel para poder redimensionarlo en setRoomType
+
         bookingLeftPanel = new RoundedPanel(30);
         
         RoundedPanel left = bookingLeftPanel;
@@ -119,6 +125,7 @@ public class RoomDetailsView extends JPanel {
         title.setFont(AppFont.subtitle2());
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // textarea para que el texto de descripción haga salto de linea automatico
         lblDescription = new JTextArea();
         lblDescription.setOpaque(false);
         lblDescription.setEditable(false);
@@ -134,7 +141,7 @@ public class RoomDetailsView extends JPanel {
         left.add(lblDescription);
         left.add(Box.createRigidArea(new Dimension(0,20)));
 
-        // derecha
+        // Panel derecho: precio, tipo de cama, capacidad y botón de reservar
         RoundedPanel right = new RoundedPanel(30);
         right.setBackground(UIColors.CARD);
         right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
@@ -181,6 +188,7 @@ public class RoomDetailsView extends JPanel {
         return wrapper;
     }
     
+    // Crea un panel pequeno de info con icono y label, se usa para precio, cama y capacidad
     private JPanel createInfoItem(String iconPath, JLabel label){
         JPanel card = new JPanel();
 
@@ -205,6 +213,8 @@ public class RoomDetailsView extends JPanel {
         return card;
     }
 
+    // grid de 5 columnas con icon y nombre de cada amenidad
+    // El tamaño de featuresPanel se calcula en setRoomType según cuantas amenidades hay
     private JPanel createFeaturesSection() {
         JPanel container = new JPanel();
         container.setOpaque(false);
@@ -233,6 +243,7 @@ public class RoomDetailsView extends JPanel {
         return container;
     }
     
+    // Sección del carrusel de fotos extra con scroll horizontal y botones
     private JPanel createCarouselSection() {
         JPanel container = new JPanel();
         container.setOpaque(false);
@@ -310,6 +321,7 @@ public class RoomDetailsView extends JPanel {
         return container;
     }
     
+    // crea una imagen para el carrusel. devuelve null si la ruta esta vacia
     private RoundedImagePanel createCarouselImage(String path) {
 
         if (path == null || path.trim().isEmpty()) {
@@ -327,11 +339,14 @@ public class RoomDetailsView extends JPanel {
         return panel;
     }
     
+    // Carga todos los datos de un RoomType en la vista y calcula tamaños de varias s ecciones
+    // actualiza imagen, texto, amenidades y carrusel
+
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
 
+        // cambia la imagen principal por la del tipo de habitación
         imageContainer.removeAll();
-        
         imagePanel = new RoundedImagePanel(roomType.getImagePath(), 900, 500, 30);
         imageContainer.add(imagePanel);
 
@@ -340,6 +355,7 @@ public class RoomDetailsView extends JPanel {
         lblBed.setText(roomType.getBedType());
         lblCapacity.setText(roomType.getCapacity() + " huéspedes");
 
+        // calcula la altura que necesita el texto de descripcion para que no se corte el texto
         lblDescription.setText(roomType.getDescription());
         lblDescription.setSize(730, Short.MAX_VALUE);
 
@@ -350,7 +366,7 @@ public class RoomDetailsView extends JPanel {
         lblDescription.setMinimumSize(descSize);
         lblDescription.setMaximumSize(descSize);
 
-        // altura total tarjeta
+        // altura total del panel para dar espacio para titulo y margenes
         int panelHeight = size.height + 110;
 
         bookingLeftPanel.setPreferredSize(new Dimension(800, panelHeight));
@@ -358,6 +374,7 @@ public class RoomDetailsView extends JPanel {
         bookingLeftPanel.revalidate();
         bookingLeftPanel.repaint();
          
+        // limpiar amenidades anteriores y agregar las nuevas
         featuresPanel.removeAll();
 
         for(Amenity amenity : roomType.getAmenities()){
@@ -393,13 +410,16 @@ public class RoomDetailsView extends JPanel {
             featuresPanel.add(item);
         }
 
+        // calcular la altura del grid según cuantas filas de 5 columnas se ocupan
         int rows = (int) Math.ceil(roomType.getAmenities().size() / 5.0);
 
         featuresPanel.setPreferredSize(new Dimension(1200, rows * 170));
         featuresPanel.revalidate();
         featuresPanel.repaint();
         
-        //carrusel        
+        // Limpiar el carrusel viejo y agregar las nuevas imagenes extra,
+        // salta las entrada con ruta nula o vacia
+  
         carouselPanel.removeAll();
         carouselPanel.setSize(carouselPanel.getPreferredSize());
 
@@ -421,15 +441,15 @@ public class RoomDetailsView extends JPanel {
                 }
             }
         }
-
-        int count = roomType.getExtraImages() != null ? roomType.getExtraImages().size() : 0;
-
-        int width = (count * 320) + 20;
         
+        // Calcular el ancho del carrusel segun la cantidad de imgs
+        int count = roomType.getExtraImages() != null ? roomType.getExtraImages().size() : 0;
+        int width = (count * 320) + 20;
         carouselPanel.setPreferredSize(new Dimension(width,170));
         carouselPanel.revalidate();
         carouselPanel.repaint();
 
+        // refresca scroll
         carouselScroll.revalidate();
         carouselScroll.repaint();
         carouselScroll.getViewport().revalidate();

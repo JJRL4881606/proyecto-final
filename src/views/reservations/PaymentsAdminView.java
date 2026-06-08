@@ -19,6 +19,8 @@ import utils.AppFont;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+//Pantalla del panel admin que muestra todos los pagos en una tabla
 public class PaymentsAdminView extends JPanel {
 
     private JTable table;
@@ -33,6 +35,7 @@ public class PaymentsAdminView extends JPanel {
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         scroll.setPreferredSize(new Dimension(1200, 400));
 
+        // Panel que centra el scroll horizontalmente
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         centerPanel.setOpaque(false);
         centerPanel.add(scroll);
@@ -101,7 +104,7 @@ public class PaymentsAdminView extends JPanel {
         DefaultTableCellRenderer center = new DefaultTableCellRenderer();
         center.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // centrar: ID Pago, ID Reservación, Monto, Fecha
+        // centrar id pago, id reservación, monto, fecha
         int[] centeredColumns = {0, 1, 2, 4};
         for (int col : centeredColumns) {
             table.getColumnModel().getColumn(col).setCellRenderer(center);

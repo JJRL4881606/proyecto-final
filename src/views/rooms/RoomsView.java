@@ -23,6 +23,8 @@ import utils.ButtonFactory;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+//Pantalla del panel de admin de habitaciones con tabla y botones de agregar, editar y eliminar
 public class RoomsView extends JPanel{
 
 	private JTable table;
@@ -43,6 +45,7 @@ public class RoomsView extends JPanel{
 		scroll.getVerticalScrollBar().setUnitIncrement(16);
 		scroll.setPreferredSize(new Dimension(1000, 400));
 
+        // Panel que centra el scroll horizontalmente
 		JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		centerPanel.setOpaque(false);
 		centerPanel.add(scroll);
@@ -185,19 +188,24 @@ public class RoomsView extends JPanel{
 		table.getColumnModel().getColumn(3).setCellRenderer(center);
 	}
 
-	public int getSelectedModelRow(){
-		int row = table.getSelectedRow();
+    // Obtiene la fila seleccionada del modelo
+    public int getSelectedModelRow() {
+        int row = table.getSelectedRow();
 
-		if (row == -1){
-			return -1;
-		}
+        // Si no hay una fila seleccionada
+        if(row == -1) {
+            return -1;
+        }
 
-		return table.convertRowIndexToModel(row);
-	}
+        // Devuelve el índice real de la fila seleccionada
+        return table.convertRowIndexToModel(row);
+    }
 
 	public JTable getTable(){
 		return table;
 	}
+	
+	//getters
 
 	public RoundedButton getBtnAdd(){
 		return btnAdd;

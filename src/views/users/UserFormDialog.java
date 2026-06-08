@@ -29,6 +29,10 @@ import utils.FormUtils;
 import utils.UIColors;
 
 @SuppressWarnings("serial")
+
+//dialog para crear o editar un usuario
+//Si se pasa null crea uno nuevo, si se pasa un usuario existente lo edita
+//En modo crear aparece tmbn el campo de contraseña con su checkbox de mostrar/ocultar
 public class UserFormDialog extends JDialog{
 
 	private JTextField txtName;
@@ -48,6 +52,8 @@ public class UserFormDialog extends JDialog{
     private RoundedButton btnCancel;
 
     private User user;
+    
+    // indica si el usuario guardó o cerró sin guardar
     private boolean saved = false;
 	
     private JLabel lblNameError;
@@ -60,7 +66,7 @@ public class UserFormDialog extends JDialog{
 	private JLabel lblRoleError;
 	private JLabel lblPasswordError;
 	
-	int fieldWidth = 300;
+	private final int fieldWidth = 300;
     		
     public UserFormDialog(JFrame parent, User user) {
     	super(parent, true);
@@ -130,7 +136,8 @@ public class UserFormDialog extends JDialog{
         lblSurnameError = FormUtils.createErrorLabel();
         panel.add(FormUtils.createField("Apellidos", txtSurname, lblSurnameError, "Ingrese su(s) apellido(s)", fieldWidth));
         
-        //PASSWORD (SOLO AL CREAR USUARIO, NO AL EDITAR)
+        //PASSWORD solo visible al crear un usuario nuevo
+
         if(user == null) {
             txtPassword = FormUtils.createPasswordField();
             lblPasswordError = FormUtils.createErrorLabel();
@@ -161,7 +168,7 @@ public class UserFormDialog extends JDialog{
     	lblCountryError = FormUtils.createErrorLabel();
     	panel.add(FormUtils.createField("País", comboCountry, lblCountryError, "", fieldWidth));
         
-    	//GÉNERO
+    	//GÉNERO, agrupar radiobutons
     	rbtnMale = FormUtils.createRadioButton("Hombre");
     	rbtnFemale = FormUtils.createRadioButton("Mujer");
     	    	
@@ -180,6 +187,8 @@ public class UserFormDialog extends JDialog{
 		return scroll;
     }
     
+    // Rellena todos los campos con los datos del usuario existente, solo al editar
+    // El genero se selecciona comparando el char guardado con M o F
     private void loadData() {
     	if(user != null) {
     		txtName.setText(user.getName());
@@ -204,6 +213,7 @@ public class UserFormDialog extends JDialog{
 	}
 	
 	//LIMPIAR LABELS ERROR
+    // el de contraseña solo si el campo existe , en elmodo de crear
 	public void clearErrors() {
 		clearNameError();
 		clearSurnameError();

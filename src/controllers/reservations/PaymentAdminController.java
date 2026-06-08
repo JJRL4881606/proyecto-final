@@ -6,6 +6,7 @@ import repository.PaymentRepository;
 import tablemodels.PaymentTableModel;
 import views.reservations.PaymentsAdminView;
 
+//controller del panel de pagos. carga los datos desde la bd y los pasa a la tabla
 public class PaymentAdminController {
 
     private PaymentsAdminView view;
@@ -17,6 +18,8 @@ public class PaymentAdminController {
         this.repo = new PaymentRepository();
     }
 
+    // Si el modelo todavía no existe lo crea y lo asigna a la tabla
+    // si ya existe solo actualiza sus datos 
     public void loadPayments() {
         List<Payment> payments = repo.getAll();
 
