@@ -42,6 +42,7 @@ public class PaymentController {
         calculateNights();
         initListeners();
         setupDateValidation();
+        updateUI();
     }
 
     // Calcula cuántas noches hay entre check-in y check-out convirtiendo la diferencia de milisegundos a días
@@ -162,7 +163,7 @@ public class PaymentController {
         }
 
         if (roomId == -1) {
-            JOptionPane.showMessageDialog(null, "No hay habitaciones disponibles");
+            JOptionPane.showMessageDialog(null, "No hay habitaciones disponibles en ese rango de fechas");
             return;
         }
 

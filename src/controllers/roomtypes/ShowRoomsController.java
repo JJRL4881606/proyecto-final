@@ -68,5 +68,6 @@ public class ShowRoomsController {
         view.setRooms(
             repository.getVisibleRoomTypes()
         );
+        loadRoomEvents();
     }
 }
